@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:aaryapay/screens/Home/components/topbar.dart';
 import 'package:aaryapay/screens/Home/components/midsection.dart';
+import 'package:aaryapay/screens/Home/components/navbar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -21,6 +22,12 @@ class HomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [TopBar(size: size), Midsection(size: size)],
             ),
+            Positioned(
+              bottom: 10,
+              child: NavBar(
+                size: size,
+              ),
+            )
           ],
         ),
       ),

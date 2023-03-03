@@ -27,7 +27,7 @@ class TopBar extends StatelessWidget {
                   child: ImageIcon(
                     const AssetImage("assets/icons/menu-rounded.png"),
                     color: Theme.of(context).colorScheme.onBackground,
-                    size: 30,
+                    size: 25,
                   ),
                 ),
                 Container(
@@ -37,14 +37,31 @@ class TopBar extends StatelessWidget {
                 ),
               ],
             ),
-            Container(
-              margin: EdgeInsets.all(10),
-              // decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(20)),
-              child: CircleAvatar(
-                backgroundImage: AssetImage("assets/images/pfp.jpeg"),
-                // radius: ,
-              ),
+            Stack(
+              children: [
+             
+                Container(
+                  margin: EdgeInsets.all(10),
+                  // decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(20)),
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage("assets/images/pfp.jpeg"),
+                    // radius: ,
+                  ),
+                ),
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: Container(
+                    width: 10,
+                    height: 10,
+                    alignment: Alignment(-0.1, -0.1),
+                    decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+              ],
             ),
           ]),
     );
