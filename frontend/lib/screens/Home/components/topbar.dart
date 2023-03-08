@@ -15,31 +15,42 @@ class TopBar extends StatelessWidget {
       //     border: Border.all(
       //         color: Theme.of(context).colorScheme.primary)),
       width: size.width,
+      margin: EdgeInsets.only(left: 20),
       height: size.height / 10,
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  margin: EdgeInsets.all(10),
-                  child: ImageIcon(
-                    const AssetImage("assets/icons/menu-rounded.png"),
-                    color: Theme.of(context).colorScheme.onBackground,
-                    size: 25,
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.all(10),
-                  child: Text("HOME",
-                      style: Theme.of(context).textTheme.headlineMedium),
+                    child: Text(
+                  "Balance",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                )),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      child: Text(
+                        "\$18,5333",
+                        style: Theme.of(context).textTheme.labelLarge!.merge(
+                            TextStyle(
+                                color: Theme.of(context).colorScheme.primary)),
+                      ),
+                    ),
+                    Container(
+                      child: ImageIcon(AssetImage("assets/icons/hide.png")),
+                    )
+                  ],
                 ),
               ],
             ),
             Stack(
               children: [
-             
                 Container(
                   margin: EdgeInsets.all(10),
                   // decoration: BoxDecoration(

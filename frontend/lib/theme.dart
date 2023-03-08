@@ -18,7 +18,7 @@ class AppTheme with ChangeNotifier {
         brightness: Brightness.light,
         primary: Color(0xff5484F5),
         tertiary: Color(0xff5B84E5),
-        onPrimary: Color(0xFFFFFFFF),
+        onPrimary: Color.fromARGB(255, 224, 224, 224),
         secondary: Color(0xFFEFF3FF),
         onSecondary: Color(0xff1A1B24),
         error: Color(0xFFFFCE37),
@@ -90,7 +90,7 @@ class AppTheme with ChangeNotifier {
             color: const Color(0xFFA0A6AC),
             height: 1.5),
         labelLarge: GoogleFonts.questrial(
-            fontSize: 14,
+            fontSize: 25,
             fontWeight: FontWeight.w600,
             letterSpacing: 1.25,
             height: 1.0,

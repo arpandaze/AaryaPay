@@ -1,6 +1,7 @@
 import 'package:aaryapay/screens/Home/components/recent_card.dart';
 import 'package:flutter/material.dart';
-import 'package:aaryapay/screens/Home/components/greetings_card.dart';
+import 'package:aaryapay/screens/Home/components/frequent_operations_card.dart';
+
 
 class Midsection extends StatelessWidget {
   const Midsection({
@@ -13,8 +14,9 @@ class Midsection extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: size.width * 0.9,
-      height: size.height * 0.75,
+      height: size.height * 0.8,
       child: Container(
+        clipBehavior: Clip.none,
         // decoration: BoxDecoration(
         //     border:
         //         Border.all(color: Theme.of(context).colorScheme.onBackground)),
@@ -23,7 +25,8 @@ class Midsection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              GreetingsCard(size: size),
+              FrequentOperationsCard(),
+              
               RecentCard(size: size),
             ],
           ),
