@@ -5,7 +5,7 @@ CREATE TABLE Users (
     last_name VARCHAR(50) NOT NULL,
     dob DATE,
     password VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
     two_factor_auth VARCHAR(255),
     pubkey VARCHAR(32),
     pubkey_updated_at TIMESTAMP DEFAULT NOW(),

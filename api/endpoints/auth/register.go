@@ -25,8 +25,16 @@ func (RegisterController) Register(c *gin.Context) {
 	}
 
 	if err := c.Bind(&user); err != nil {
-		fmt.Println(err)
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
+		return
+	}
+
+	// Check if email is already used
+	var exists bool
+	core.DB.QueryRow("SELECT EXISTS (SELECT id FROM Users WHERE email=$1)", user.Email).Scan(&exists)
+
+	if exists {
+		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"error": "Email already exists!"})
 		return
 	}
 
