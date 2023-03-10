@@ -33,7 +33,7 @@ POSTGRES_USER : "postadmin"
 POSTGRES_PASSWORD : "postpass"
 POSTGRES_DB : "aaryapay"
 
-SMTP_TLS : False
+SMTP_TLS : True
 SMTP_PORT : 1025
 SMTP_HOST : localhost
 SMTP_USER : smptuser

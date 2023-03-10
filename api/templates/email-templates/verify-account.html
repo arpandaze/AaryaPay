@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Verify Account</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+            body {
+                margin: 0px;
+                padding: 0px;
+                text-align: center;
+                font-family: 'Roboto', sans-serif;
+                font-size: 20px;
+            }
+
+            #container {
+                width: 600px;
+                height: 800px;
+                margin: 0px auto;
+                position: relative;
+                top: 20px;
+            }
+
+            #logo {
+                width: 250px;
+                margin: 0px auto;
+            }
+
+            img {
+                width: 100%;
+            }
+
+            #mainTextContainer {
+                width: 500px;
+                margin: 0px auto;
+            }
+
+
+            #topText {
+                text-align: justify;
+            }
+
+            #accentLine1 {
+                width: 400px;
+                height: 2px;
+                margin: 40px auto;
+                position: relative;
+                top: -10px;
+                background-color: #b6b0b0b9;
+            }
+
+            #accentLine2 {
+                width: 130px;
+                height: 2px;
+                margin: 0px auto;
+                position: relative;
+                top: -52px;
+                background-color: #F24F4F;
+            }
+
+            #actionButton {
+                width: 220px;
+                height: 55px;
+                margin: 0px auto;
+                outline: none;
+                border: none;
+                border-radius: 10px;
+                color: #ffffff;
+                font-size: 22px;
+                cursor: pointer;
+                background-color: #F24F4F;
+            }
+
+            #link {
+                font-size: 12px;
+            }
+
+            #bottomText {
+                font-size: 15px;
+            }
+
+            a {
+                color: #000000;
+            }
+
+            #footer {
+                color: #676F79;
+                font-size: 16px;
+            }
+        </style>
+    </head>
+
+<body>
+    <div id="container">
+        <div id="logo">
+            <img src="{{.Frontbase}}/logo-large.svg" />
+        </div>
+        <div id="accentLine1"></div>
+        <div id="accentLine2"></div>
+        <div id="mainTextContainer">
+            <p id="mainText">
+                Hi {{.Name}},
+            </p><br />
+            <p id="topText">You have created account on Sikshyalaya. Please
+                click the button below to verify your ownership of this email.
+                Your account cannot be verified until you do so.
+            </p>
+        </div>
+        <div id="accentLine1"></div>
+        <div>
+            <a href="{{.Link}}"><button id="actionButton">Verify Email</button></a>
+            <p id="bottomText">or click this link: <a href="{{.Link}}"></a>{{.Link}}</a></p>
+        </div>
+        <div id="footer">&copy 2023 AaryaPay <br /> University Road, 28Kilo, Dhulikhel, Kavre
+        </div>
+    </div>
+
+</body>
+
+</html>
