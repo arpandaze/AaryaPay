@@ -33,6 +33,11 @@ POSTGRES_USER : "postadmin"
 POSTGRES_PASSWORD : "postpass"
 POSTGRES_DB : "aaryapay"
 
+REDIS_SERVER : localhost
+REDIS_PORT : 6379
+REDIS_USER : default
+REDIS_PASSWORD : redispass
+
 SMTP_TLS : True
 SMTP_PORT : 1025
 SMTP_HOST : localhost

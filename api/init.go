@@ -12,6 +12,7 @@ import (
 func Init() *gin.Engine {
 	core.LoadConfig()
 	core.ConnectDatabase()
+	core.ConnectRedis()
 
 	router := gin.New()
 	router.Use(otelgin.Middleware("aaryapay"))

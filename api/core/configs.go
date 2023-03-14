@@ -41,6 +41,11 @@ type Settings struct {
 	POSTGRES_PASSWORD string `yaml:"POSTGRES_PASSWORD"`
 	POSTGRES_DB       string `yaml:"POSTGRES_DB"`
 
+	REDIS_SERVER   string `yaml:"REDIS_SERVER"`
+	REDIS_PORT     int    `yaml:"REDIS_PORT"`
+	REDIS_USER     string `yaml:"REDIS_USER"`
+	REDIS_PASSWORD string `yaml:"REDIS_PASSWORD"`
+
 	SMTP_TLS      bool   `yaml:"SMTP_TLS"`
 	SMTP_PORT     int    `yaml:"SMTP_PORT"`
 	SMTP_HOST     string `yaml:"SMTP_HOST"`
