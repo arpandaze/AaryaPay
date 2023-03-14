@@ -18,7 +18,7 @@ class AppTheme with ChangeNotifier {
         brightness: Brightness.light,
         primary: Color(0xff5484F5),
         tertiary: Color(0xff5B84E5),
-        onPrimary: Color.fromARGB(255, 224, 224, 224),
+        onPrimary: Color.fromARGB(255, 240, 235, 235),
         secondary: Color(0xFFEFF3FF),
         onSecondary: Color(0xff1A1B24),
         error: Color(0xFFFFCE37),
@@ -50,7 +50,7 @@ class AppTheme with ChangeNotifier {
             fontWeight: FontWeight.w500,
             color: const Color(0xFF000000)),
         headlineMedium: GoogleFonts.questrial(
-          fontSize: 22,
+          fontSize: 20,
           fontWeight: FontWeight.w600,
           color: const Color(0xFF000000),
           letterSpacing: 0.25,
@@ -62,14 +62,14 @@ class AppTheme with ChangeNotifier {
           color: const Color(0xFF000000),
         ),
         titleLarge: GoogleFonts.questrial(
-            fontSize: 18,
+            fontSize: 15,
             fontWeight: FontWeight.w400,
             letterSpacing: 0.9,
             color: const Color(0xFF000000),
             height: 1.0),
-        titleMedium: GoogleFonts.inconsolata(
-            fontSize: 22,
-            fontWeight: FontWeight.w500,
+        titleMedium: GoogleFonts.questrial(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
             letterSpacing: 0.15,
             color: const Color(0xFF000000)),
         titleSmall: GoogleFonts.questrial(
@@ -84,7 +84,7 @@ class AppTheme with ChangeNotifier {
             color: const Color(0xFF000000),
             height: 1.8),
         bodyMedium: GoogleFonts.questrial(
-            fontSize: 15,
+            fontSize: 12,
             fontWeight: FontWeight.w400,
             letterSpacing: 0.9,
             color: const Color(0xFFA0A6AC),

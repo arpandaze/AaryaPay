@@ -36,7 +36,7 @@ class TopBar extends StatelessWidget {
                   children: [
                     Container(
                       child: Text(
-                        "\$18,5333",
+                        "\$18,5333.45",
                         style: Theme.of(context).textTheme.labelLarge!.merge(
                             TextStyle(
                                 color: Theme.of(context).colorScheme.primary)),

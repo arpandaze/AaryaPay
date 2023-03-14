@@ -10,66 +10,101 @@ class NavBar extends StatelessWidget {
   final Size size;
   @override
   Widget build(BuildContext context) {
+    
     return Container(
       clipBehavior: Clip.none,
-      // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      // alignment: Alignment(-0.5, 0.5),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.background,
+      ),
+      // border: Border.all(color: Colors.black)),
       width: size.width,
+      height: size.height * 0.05,
       child: Stack(
+        alignment: Alignment.bottomCenter,
         clipBehavior: Clip.none,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                width: size.width * 0.25,
-                child: ImageIcon(
-                  AssetImage(
-                    "assets/icons/home.png",
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SizedBox(
+                    // decoration:
+                    //     BoxDecoration(border: Border.all(color: Colors.black54)),
+                    width: size.width * 0.20,
+                    child: ImageIcon(
+                      const AssetImage(
+                        "assets/icons/home.png",
+                      ),
+                      size: 30,
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
                   ),
-                  size: 30,
-                  color: Theme.of(context).colorScheme.onBackground,
-                ),
+                  SizedBox(
+                      // decoration:
+                      //     BoxDecoration(border: Border.all(color: Colors.black54)),
+                      width: size.width * 0.20,
+                      child: ImageIcon(
+                        const AssetImage("assets/icons/statements.png"),
+                        size: 30,
+                        color: Theme.of(context).colorScheme.onBackground,
+                      )),
+                ],
               ),
-              Container(
-                  width: size.width * 0.25,
-                  child: ImageIcon(
-                    AssetImage("assets/icons/statements.png"),
-                    size: 30,
-                    color: Theme.of(context).colorScheme.onBackground,
-                  )),
-              Container(
-                  width: size.width * 0.25,
-                  child: ImageIcon(
-                    AssetImage("assets/icons/payments.png"),
-                    size: 27,
-                    color: Theme.of(context).colorScheme.onBackground,
-                  )),
-              Container(
-                  width: size.width * 0.25,
-                  child: ImageIcon(
-                    AssetImage("assets/icons/settings.png"),
-                    size: 30,
-                    color: Theme.of(context).colorScheme.onBackground,
-                  )),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SizedBox(
+                      // decoration:
+                      //     BoxDecoration(border: Border.all(color: Colors.black54)),
+                      width: size.width * 0.20,
+                      child: ImageIcon(
+                        const AssetImage("assets/icons/payments.png"),
+                        size: 27,
+                        color: Theme.of(context).colorScheme.onBackground,
+                      )),
+                  SizedBox(
+                      // decoration:
+                      //     BoxDecoration(border: Border.all(color: Colors.black54)),
+                      width: size.width * 0.20,
+                      // height: double.infinity,
+                      child: ImageIcon(
+                        const AssetImage("assets/icons/settings.png"),
+                        size: 30,
+                        color: Theme.of(context).colorScheme.onBackground,
+                      )),
+                ],
+              ),
+              
             ],
           ),
-          Positioned(
-              bottom: 10,
-              left: size.width / 2 - 22,
-              child: Container(
-                width: 50,
-                height: 50,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
-                    borderRadius: BorderRadius.circular(50)),
-                child: ImageIcon(
-                  AssetImage("assets/icons/scan.png"),
-                  size: 35,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-              )),
+          Container(
+            // height: 100,
+            // padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Positioned(
+                bottom: -20,
+                left: size.width / 2 - 35,
+                child: Container(
+                  width: 60,
+                  height: 70,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      boxShadow: kElevationToShadow[2],
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(10))),
+                  child: ImageIcon(
+                    const AssetImage("assets/icons/scan.png"),
+                    size: 30,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                )),
+          ),
+          
         ],
       ),
     );

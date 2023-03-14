@@ -1,6 +1,5 @@
 import 'package:aaryapay/screens/Home/components/recent_transfer.dart';
 import 'package:flutter/material.dart';
-import 'package:aaryapay/components/iconed_operations.dart';
 import 'package:aaryapay/screens/Home/components/recent_transfer.dart';
 import 'package:aaryapay/components/CustomAddButton.dart';
 import 'package:aaryapay/screens/Home/components/recent_payment_card.dart';
@@ -31,10 +30,12 @@ class RecentCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
+                      padding: EdgeInsets.only(right: 20),
                       child: CustomAddButton(),
                     ),
                     Expanded(
                       child: Container(
+                        
                         // decoration: BoxDecoration(
                         //     border: Border.all(color: Colors.black)),
                         width: size.width * 0.8,

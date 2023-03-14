@@ -1,6 +1,6 @@
 import 'package:aaryapay/screens/Home/components/recent_card.dart';
 import 'package:flutter/material.dart';
-import 'package:aaryapay/screens/Home/components/frequent_operations_card.dart';
+import 'package:aaryapay/screens/Home/components/send_money_card.dart';
 
 
 class Midsection extends StatelessWidget {
@@ -25,7 +25,7 @@ class Midsection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              FrequentOperationsCard(),
+              SendMoneyCard(),
               
               RecentCard(size: size),
             ],
