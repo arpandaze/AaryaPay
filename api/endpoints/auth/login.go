@@ -11,10 +11,13 @@ import (
 type LoginController struct{}
 
 func (LoginController) Login(c *gin.Context) {
+	l := core.Logger(c).Sugar()
+
 	var loginFormInput struct {
 		Email    string `form:"email"`
 		Password string `form:"password"`
 	}
+
 	type loginUser struct {
 		ID              string `db:"id"`
 		FirstName       string `db:"first_name"`
@@ -23,13 +26,19 @@ func (LoginController) Login(c *gin.Context) {
 		DOB             string `db:"dob"`
 		Email           string `db:"email"`
 		Password        string `db:"password"`
-		IsVerified      string `db:"is_verified"`
+		IsVerified      bool   `db:"is_verified"`
 		PubKey          string `db:"pubkey"`
 		PubKeyUpdatedAt string `db:"pub_key_updated_at"`
 	}
 
 	if err := c.Bind(&loginFormInput); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
+		msg := "Invalid Request Payload"
+
+		l.Errorw(msg,
+			"error", err,
+		)
+
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg})
 		return
 	}
 
@@ -40,30 +49,56 @@ func (LoginController) Login(c *gin.Context) {
 
 	switch err {
 	case sql.ErrNoRows:
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "No account associated with the email exists"})
+		msg := "No account associated with the email was found"
+
+		l.Warnw(msg,
+			"email", loginFormInput.Email,
+		)
+
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg})
 	case nil:
 		passwordTest, err := core.VerifyPassword(c, loginFormInput.Password, queryUser.Password)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to verify password!"})
+			msg := "Failed to verify password!"
+			l.Warnw(msg, "error", err)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": core.TraceIDFromContext(c)})
 			return
 		}
-		if queryUser.Email == loginFormInput.Email {
-			if passwordTest {
-				//TODO: token generation and REDIS
-				if queryUser.IsVerified == "true" {
-					c.JSON(http.StatusAccepted, gin.H{"message": "Logged in Successful"})
-					return
-				} else {
-					c.JSON(http.StatusUnauthorized, gin.H{"message": "Please Verify the Account First"})
-					return
-				}
+		if passwordTest {
+			//TODO: token generation and REDIS
+			if queryUser.IsVerified {
+				msg := "User Logged in Successfully"
+				l.Infow(msg,
+					"id", queryUser.ID,
+					"email", queryUser.Email,
+					"first_name", queryUser.FirstName,
+					"middle_name", queryUser.MiddleName,
+					"last_name", queryUser.LastName,
+				)
+				c.JSON(http.StatusAccepted, gin.H{"msg": msg})
+				return
 			} else {
-				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "The password entered is incorrect"})
+				msg := "Please verify the account first!"
+				l.Warnw(msg,
+					"email", queryUser.Email,
+				)
+				c.JSON(http.StatusUnauthorized, gin.H{"msg": msg})
 				return
 			}
+		} else {
+			msg := "The password entered is incorrect"
+			l.Warnw(msg,
+				"email", queryUser.Email,
+			)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
+			return
 		}
 	default:
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to execute SQL statement"})
+		msg := "Failed to execute SQL statement"
+		l.Errorw(msg,
+			"error", err,
+		)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": core.TraceIDFromContext(c)})
 		return
 	}
 }

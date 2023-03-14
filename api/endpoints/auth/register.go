@@ -56,7 +56,7 @@ func (RegisterController) Register(c *gin.Context) {
 			"error", err,
 		)
 
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"context": core.TraceIDFromContext(c), "msg": msg})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured", "context": core.TraceIDFromContext(c)})
 		return
 	}
 
@@ -73,13 +73,13 @@ func (RegisterController) Register(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": core.TraceIDFromContext(c)})
 		return
 	}
-
+	msg := "User created successfully!"
 	// Return success response
-	l.Infow("User created successfully!",
+	l.Infow(msg,
 		"email", user.Email,
 		"first_name", user.FirstName,
 		"middle_name", user.MiddleName,
 		"last_name", user.LastName,
 	)
-	c.JSON(http.StatusCreated, gin.H{"message": "User created successfully"})
+	c.JSON(http.StatusCreated, gin.H{"msg": msg})
 }

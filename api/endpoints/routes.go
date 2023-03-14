@@ -14,23 +14,26 @@ func InitAuthRoutes(routeGroup *gin.RouterGroup) {
 	login := new(auth.LoginController)
 
 	password_recovery := new(auth.PasswordRecoveryController)
-	// password_change :=new(auth.PasswordChangeController)
+	password_change := new(auth.PasswordChangeController)
 	verify := new(auth.VerifyController)
+
+	logout :=new(auth.LogoutController)
 
 	two_fa := new(auth.TwoFaController)
 	refresh := new(auth.RefreshController)
 
 	routeGroup.POST("/register", register.Register)
-	routeGroup.GET("/login", login.Login)
+	routeGroup.POST("/login", login.Login)
 
-	// routeGroup.GET("/password-change", password_change.status)
 	routeGroup.POST("/password-recovery", password_recovery.PasswordRecovery)
+	routeGroup.POST("/password-change", password_change.PasswordChange)
 	routeGroup.POST("/reset-password", password_recovery.PasswordReset)
-
 	routeGroup.POST("/verify", verify.VerifyUser)
 	routeGroup.POST("/resend-verification-email", verify.ResendVerificationEmail)
 
-	routeGroup.GET("/2fa", two_fa.Status)
+	routeGroup.GET("/logout", logout.Status)
+
+	routeGroup.GET("/2fa/request", two_fa.TwoFAEnableRequest)
 	routeGroup.GET("/refresh", refresh.Status)
 }
 

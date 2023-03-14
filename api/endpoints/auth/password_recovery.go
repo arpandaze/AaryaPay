@@ -12,65 +12,126 @@ import (
 type PasswordRecoveryController struct{}
 
 func (PasswordRecoveryController) PasswordRecovery(c *gin.Context) {
-	var email string
-	if err := c.Bind(&email); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
+	l := core.Logger(c).Sugar()
+
+	var recoverPassword struct {
+		Email string `form:"email"`
+	}
+	if err := c.Bind(&recoverPassword); err != nil {
+		msg := "Invalid Request Payload"
+
+		l.Errorw(msg,
+			"error", err,
+		)
+
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg})
 		return
 	}
+
 	queryUser := &core.CommonUser{}
-	row := core.DB.QueryRow("SELECT (first_name, middle_name, last_name, email, pubkey_updated_at) FROM Users WHERE email=$1", email)
-	err := row.Scan(&queryUser.FirstName, &queryUser.MiddleName, &queryUser.LastName, &queryUser.Email, &queryUser.PubKeyUpdatedAt)
+	row := core.DB.QueryRow("SELECT (first_name, middle_name, last_name, email, is_verified,pubkey_updated_at) FROM Users WHERE email=$1", recoverPassword.Email)
+	err := row.Scan(&queryUser.FirstName, &queryUser.MiddleName, &queryUser.LastName, &queryUser.Email, &queryUser.IsVerified, &queryUser.PubKeyUpdatedAt)
 
 	switch err {
 	case sql.ErrNoRows:
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "No account associated with the email exists"})
+
+		msg := "No account associated with the email was found"
+
+		l.Warnw(msg,
+			"email", recoverPassword.Email,
+		)
+
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg})
+
 	case nil:
-		res, resErr := smtp.SendResetPasswordEmail(queryUser)
-		if res && resErr == nil {
-			c.JSON(http.StatusAccepted, gin.H{"message": "Password recovery email has been sent"})
-			return
+		if queryUser.IsVerified {
+			res, err := smtp.SendResetPasswordEmail(queryUser)
+			if res && err == nil {
+				msg := "Password recovery email has been sent"
+				l.Infow(msg,
+					"email", queryUser.Email,
+				)
+				c.JSON(http.StatusAccepted, gin.H{"msg": msg})
+				return
+			} else {
+				msg := "Failed to send recovery email"
+				l.Errorw(msg,
+					"email", queryUser.Email)
+				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": core.TraceIDFromContext(c)})
+				return
+			}
 		} else {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to send recovery email"})
+			msg := "Please verify the user first"
+			l.Errorw(msg,
+				"email", queryUser.Email)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg, "context": core.TraceIDFromContext(c)})
 			return
 		}
 	default:
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to execute SQL statement"})
+		msg := "Failed to execute SQL statement"
+		l.Errorw(msg,
+			"error", err,
+		)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": core.TraceIDFromContext(c)})
 		return
 	}
 }
 
 func (PasswordRecoveryController) PasswordReset(c *gin.Context) {
+	l := core.Logger(c).Sugar()
 	var resetPass struct {
-		token        string
-		new_password string
+		token        string `form:"token"`
+		new_password string `form:"new_password"`
 	}
 	if err := c.Bind(&resetPass); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
+		msg := "Invalid Request Payload"
+
+		l.Errorw(msg,
+			"error", err,
+		)
+
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg})
 		return
 	}
 
 	uid, err := VerifyPasswordResetToken(resetPass.token)
 
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "invalid or expired token"})
+		msg := "invalid or expired token"
+		l.Warnw(msg,
+			"err", msg,
+		)
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid or expired token"})
 		return
 	}
 
 	passwordHash, err := core.HashPassword(c, resetPass.new_password)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password!"})
+		msg := "Failed to hash password!"
+
+		l.Errorw(msg,
+			"error", err,
+		)
+
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured", "context": core.TraceIDFromContext(c)})
 		return
 	}
 
 	_, err = core.DB.Exec("UPDATE Users SET password=$1 WHERE id=$2", passwordHash, uid)
 
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to execute SQL statement"})
+		msg := "Failed to execute SQL statement"
+		l.Errorw(msg,
+			"error", err,
+		)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": core.TraceIDFromContext(c)})
 		return
 	}
-
-	c.JSON(http.StatusAccepted, gin.H{"message": "Password changed successfully"})
-
+	msg := "Password Reset Successfully"
+	l.Infow(msg,
+		"id", uid,
+	)
+	c.JSON(http.StatusAccepted, gin.H{"msg": msg})
 }
 
 func VerifyPasswordResetToken(token string) (string, error) {
