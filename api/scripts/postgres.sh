@@ -38,4 +38,4 @@ done
 
 DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@localhost:${DB_PORT}/${DB_NAME}?sslmode=disable
 
-migrate -source file://db/migrations -database=$DATABASE_URL up
+migrate -source file://migrations -database=$DATABASE_URL up

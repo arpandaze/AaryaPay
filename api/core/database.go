@@ -15,5 +15,11 @@ func ConnectDatabase() {
 		panic(err)
 	}
 
+	_, err = db.Query("SELECT 1")
+
+	if err != nil {
+		Logger(nil).Panic("Failed to connect to database!")
+	}
+
 	DB = db
 }

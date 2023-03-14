@@ -1,13 +1,9 @@
 package auth
 
 import (
-	"fmt"
 	"main/core"
 
 	"net/http"
-	// "time"
-
-	// "github.com/google/uuid"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,6 +11,8 @@ import (
 type RegisterController struct{}
 
 func (RegisterController) Register(c *gin.Context) {
+	l := core.Logger(c).Sugar()
+
 	var user struct {
 		FirstName  string `form:"first_name"`
 		MiddleName string `form:"middle_name"`
@@ -25,7 +23,13 @@ func (RegisterController) Register(c *gin.Context) {
 	}
 
 	if err := c.Bind(&user); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
+		msg := "Invalid request payload"
+
+		l.Errorw(msg,
+			"error", err,
+		)
+
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg})
 		return
 	}
 
@@ -34,13 +38,25 @@ func (RegisterController) Register(c *gin.Context) {
 	core.DB.QueryRow("SELECT EXISTS (SELECT id FROM Users WHERE email=$1)", user.Email).Scan(&exists)
 
 	if exists {
-		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"error": "Email already exists!"})
+		msg := "Email already exists!"
+
+		l.Warnw(msg,
+			"email", user.Email,
+		)
+
+		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg})
 		return
 	}
 
-	passwordHash, err := core.HashPassword(user.Password)
+	passwordHash, err := core.HashPassword(c, user.Password)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password!"})
+		msg := "Failed to hash password!"
+
+		l.Errorw(msg,
+			"error", err,
+		)
+
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"context": core.TraceIDFromContext(c), "msg": msg})
 		return
 	}
 
@@ -48,11 +64,22 @@ func (RegisterController) Register(c *gin.Context) {
 
 	_, err = core.DB.Exec(query, user.FirstName, user.MiddleName, user.LastName, user.DOB, passwordHash, user.Email, nil)
 	if err != nil {
-		fmt.Println(err)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to execute SQL statement"})
+		msg := "Failed to execute SQL statement"
+
+		l.Errorw(msg,
+			"error", err,
+		)
+
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": core.TraceIDFromContext(c)})
 		return
 	}
 
 	// Return success response
+	l.Infow("User created successfully!",
+		"email", user.Email,
+		"first_name", user.FirstName,
+		"middle_name", user.MiddleName,
+		"last_name", user.LastName,
+	)
 	c.JSON(http.StatusCreated, gin.H{"message": "User created successfully"})
 }
