@@ -1,16 +1,17 @@
 import 'package:libaaryapay/libaaryapay.dart';
-import 'package:test/test.dart';
+import "dart:convert";
 
-void main() {
-  group('A group of tests', () {
-    final awesome = Awesome();
+void main() async{
+  final keyPair =  await LibAaryaPay().generateKeyPair();
+  final message = "Hello";
+  final encodedMessage = utf8.encode(message);
 
-    setUp(() {
-      // Additional setup goes here.
-    });
+  final signature = await LibAaryaPay().sign(encodedMessage, keyPair);
 
-    test('First Test', () {
-      expect(awesome.isAwesome, isTrue);
-    });
-  });
+  print("Message: $message");
+  print("Signature: ${signature.bytes}");
+
+  final isValid = await LibAaryaPay().verify(encodedMessage, signature);
+
+  print("Validity: $isValid");
 }
