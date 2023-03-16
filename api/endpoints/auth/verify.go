@@ -3,14 +3,10 @@ package auth
 import (
 	"database/sql"
 	"main/core"
-	"main/core/smtp"
 	"net/http"
 
-	// "time"
-
-	// "github.com/google/uuid"
-
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type VerifyController struct{}
@@ -18,7 +14,7 @@ type VerifyController struct{}
 func (VerifyController) VerifyUser(c *gin.Context) {
 	l := core.Logger(c).Sugar()
 	var verifyUser struct {
-		Token string `form:"token"`
+		Token uuid.UUID `form:"token"`
 	}
 
 	if err := c.Bind(&verifyUser); err != nil {
@@ -32,7 +28,7 @@ func (VerifyController) VerifyUser(c *gin.Context) {
 		return
 	}
 
-	uid, err := VerifyUserToken(verifyUser.Token)
+	uid, err := core.GetUserFromVerificationToken(c, verifyUser.Token)
 
 	if err != nil {
 		msg := "invalid or expired token"
@@ -43,7 +39,7 @@ func (VerifyController) VerifyUser(c *gin.Context) {
 		return
 	}
 
-	_, err = core.DB.Exec("UPDATE Users SET is_verified=$1 WHERE id=$2", "true", uid)
+	_, err = core.DB.Exec("UPDATE Users SET is_verified=$1 WHERE id=$2", true, uid)
 
 	if err != nil {
 		msg := "Failed to execute SQL statement"
@@ -103,7 +99,7 @@ func (VerifyController) ResendVerificationEmail(c *gin.Context) {
 
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg})
 	case nil:
-		res, err := smtp.SendVerificationEmail(queryUser)
+		res, err := core.SendVerificationEmail(c, queryUser)
 		if res && err == nil {
 			msg := "Account verification email has been sent"
 			l.Infow(msg,

@@ -60,9 +60,42 @@ func (RegisterController) Register(c *gin.Context) {
 		return
 	}
 
-	query := "INSERT INTO Users (first_name, middle_name, last_name, dob, password, email, pubkey_updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7)"
+	query := `
+      INSERT INTO users
+      (
+        first_name,
+        middle_name,
+        last_name,
+        dob,
+        password,
+        email,
+        pubkey_updated_at
+      )
+      VALUES
+      (
+        $1,
+        $2,
+        $3,
+        $4,
+        $5,
+        $6,
+        $7
+      )
+      RETURNING 
+      first_name,
+      middle_name,
+      last_name,
+      email,
+      is_verified,
+      pubkey_updated_at;
+  `
 
-	_, err = core.DB.Exec(query, user.FirstName, user.MiddleName, user.LastName, user.DOB, passwordHash, user.Email, nil)
+	row := core.DB.QueryRow(query, user.FirstName, user.MiddleName, user.LastName, user.DOB, passwordHash, user.Email, nil)
+
+	returnedUser := core.CommonUser{}
+
+	err = row.Scan(&returnedUser.FirstName, &returnedUser.MiddleName, &returnedUser.LastName, &returnedUser.Email, &returnedUser.IsVerified, &returnedUser.PubKeyUpdatedAt)
+
 	if err != nil {
 		msg := "Failed to execute SQL statement"
 
@@ -73,8 +106,11 @@ func (RegisterController) Register(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": core.TraceIDFromContext(c)})
 		return
 	}
+
 	msg := "User created successfully!"
-	// Return success response
+
+	core.SendVerificationEmail(c, &returnedUser)
+
 	l.Infow(msg,
 		"email", user.Email,
 		"first_name", user.FirstName,

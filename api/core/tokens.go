@@ -1,7 +1,9 @@
 package core
 
 import (
+	"crypto/rand"
 	"fmt"
+	"math/big"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -116,17 +118,39 @@ func GetUserFromResetToken(c *gin.Context, token uuid.UUID) (uuid.UUID, error) {
 	return idFromRedis, nil
 }
 
-func GenerateVerificationToken(c *gin.Context, userID uuid.UUID) uuid.UUID {
+func generateVerificationCode() (string, error) {
+	const numDigits = 6
+	max := big.NewInt(0).Exp(big.NewInt(10), big.NewInt(numDigits), nil)
+	randomNum, err := rand.Int(rand.Reader, max)
+	if err != nil {
+		return "", err
+	}
+	code := randomNum.String()
+	// Pad the code with leading zeros if necessary
+	for len(code) < numDigits {
+		code = "0" + code
+	}
+	return code, nil
+}
+
+func GenerateVerificationToken(c *gin.Context, userID uuid.UUID) string {
 	_, span := Tracer.Start(c.Request.Context(), "GenerateVerificationToken()")
 	defer span.End()
 
-	token := uuid.New()
+	token, err := generateVerificationCode()
+
+	if err != nil {
+		Logger(c).Sugar().Errorw("Failed to generate verification code!",
+			"error", err,
+		)
+		panic(err)
+	}
 
 	duration := time.Duration(Configs.SESSION_EXPIRE_TIME * int(time.Second))
 
-	key := fmt.Sprint("verification_", token.String())
+	key := fmt.Sprint("verification_", userID.String())
 
-	status := Redis.SetEx(c, key, userID.String(), duration)
+	status := Redis.SetEx(c, key, token, duration)
 
 	if err := status.Err(); err != nil {
 		Logger(c).Sugar().Errorw("Failed to set verification token!",

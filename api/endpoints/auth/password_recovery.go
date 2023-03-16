@@ -3,7 +3,6 @@ package auth
 import (
 	"database/sql"
 	"main/core"
-	"main/core/smtp"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -45,7 +44,7 @@ func (PasswordRecoveryController) PasswordRecovery(c *gin.Context) {
 
 	case nil:
 		if queryUser.IsVerified {
-			res, err := smtp.SendResetPasswordEmail(queryUser)
+			res, err := core.SendResetPasswordEmail(c, queryUser)
 			if res && err == nil {
 				msg := "Password recovery email has been sent"
 				l.Infow(msg,
