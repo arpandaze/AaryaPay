@@ -28,8 +28,16 @@ func (PasswordRecoveryController) PasswordRecovery(c *gin.Context) {
 	}
 
 	queryUser := &core.CommonUser{}
-	row := core.DB.QueryRow("SELECT (first_name, middle_name, last_name, email, is_verified,pubkey_updated_at) FROM Users WHERE email=$1", recoverPassword.Email)
-	err := row.Scan(&queryUser.FirstName, &queryUser.MiddleName, &queryUser.LastName, &queryUser.Email, &queryUser.IsVerified, &queryUser.PubKeyUpdatedAt)
+	row := core.DB.QueryRow(`
+	SELECT id, first_name, middle_name, last_name, email, is_verified,pubkey_updated_at 
+	FROM 
+		Users 
+	WHERE 
+		email=$1
+	`, recoverPassword.Email,
+	)
+
+	err := row.Scan(&queryUser.Id, &queryUser.FirstName, &queryUser.MiddleName, &queryUser.LastName, &queryUser.Email, &queryUser.IsVerified, &queryUser.PubKeyUpdatedAt)
 
 	switch err {
 	case sql.ErrNoRows:
@@ -43,29 +51,31 @@ func (PasswordRecoveryController) PasswordRecovery(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg})
 
 	case nil:
-		if queryUser.IsVerified {
-			res, err := core.SendResetPasswordEmail(c, queryUser)
-			if res && err == nil {
-				msg := "Password recovery email has been sent"
-				l.Infow(msg,
-					"email", queryUser.Email,
-				)
-				c.JSON(http.StatusAccepted, gin.H{"msg": msg})
-				return
-			} else {
-				msg := "Failed to send recovery email"
-				l.Errorw(msg,
-					"email", queryUser.Email)
-				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": core.TraceIDFromContext(c)})
-				return
-			}
-		} else {
+		if !queryUser.IsVerified {
 			msg := "Please verify the user first"
 			l.Errorw(msg,
 				"email", queryUser.Email)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg, "context": core.TraceIDFromContext(c)})
 			return
 		}
+
+		res, err := core.SendResetPasswordEmail(c, queryUser)
+
+		if res && err == nil {
+			msg := "Password recovery email has been sent"
+			l.Infow(msg,
+				"email", queryUser.Email,
+			)
+			c.JSON(http.StatusAccepted, gin.H{"msg": msg})
+			return
+		} else {
+			msg := "Failed to send recovery email"
+			l.Errorw(msg,
+				"email", queryUser.Email)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": core.TraceIDFromContext(c)})
+			return
+		}
+
 	default:
 		msg := "Failed to execute SQL statement"
 		l.Errorw(msg,

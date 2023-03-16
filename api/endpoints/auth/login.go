@@ -46,11 +46,11 @@ func (LoginController) Login(c *gin.Context) {
 
 	queryUser := loginUser{}
 	row := core.DB.QueryRow(`
-      SELECT id, first_name, middle_name, last_name, dob, email, password, is_verified, pubkey, pubkey_updated_at
-      FROM 
-        Users 
-      WHERE 
-        email=$1
+	SELECT id, first_name, middle_name, last_name, dob, email, password, is_verified, pubkey, pubkey_updated_at
+	FROM 
+	Users 
+	WHERE 
+	email=$1
     `, loginFormInput.Email,
 	)
 

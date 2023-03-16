@@ -47,7 +47,13 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 	}
 
 	queryUser := &loginUser{}
-	row := core.DB.QueryRow("SELECT (email,password,is_verified,pubkey,pub_key_updated_at) FROM Users WHERE id=$1", uid)
+	row := core.DB.QueryRow(`
+	SELECT email, password, is_verified, pubkey, pubkey_updated_at 
+	FROM 
+		Users 
+	WHERE id=$1
+	`, uid,
+	)
 
 	err = row.Scan(&queryUser.Email, &queryUser.Password, &queryUser.IsVerified, &queryUser.PubKey, &queryUser.PubKeyUpdatedAt)
 
@@ -60,6 +66,7 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 		)
 
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg})
+
 	case nil:
 		passwordTest, err := core.VerifyPassword(c, passwordChange.current_password, queryUser.Password)
 		if err != nil {
@@ -68,49 +75,8 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": core.TraceIDFromContext(c)})
 			return
 		}
-		if passwordTest {
-			//TODO: token generation and REDIS
-			if queryUser.IsVerified {
-
-				passwordHash, err := core.HashPassword(c, passwordChange.new_password)
-				if err != nil {
-					msg := "Failed to hash password!"
-
-					l.Errorw(msg,
-						"error", err,
-					)
-
-					c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured", "context": core.TraceIDFromContext(c)})
-					return
-				}
-
-				_, err = core.DB.Exec("UPDATE Users SET password=$1 WHERE id=$2", passwordHash, uid)
-
-				if err != nil {
-					msg := "Failed to execute SQL statement"
-					l.Errorw(msg,
-						"error", err,
-					)
-					c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": core.TraceIDFromContext(c)})
-					return
-				}
-
-				msg := "Password Changed Successfully"
-				l.Infow(msg,
-					"id", uid,
-					"email", queryUser.Email,
-				)
-				c.JSON(http.StatusAccepted, gin.H{"msg": msg})
-				return
-			} else {
-				msg := "Please verify the account first!"
-				l.Warnw(msg,
-					"email", queryUser.Email,
-				)
-				c.JSON(http.StatusUnauthorized, gin.H{"msg": msg})
-				return
-			}
-		} else {
+		if !passwordTest {
+		
 			msg := "The password entered is incorrect"
 			l.Warnw(msg,
 				"email", queryUser.Email,
@@ -118,6 +84,46 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
 			return
 		}
+		if !queryUser.IsVerified {
+			msg := "Please verify the account first!"
+			l.Warnw(msg,
+				"email", queryUser.Email,
+			)
+			c.JSON(http.StatusUnauthorized, gin.H{"msg": msg})
+			return
+		}
+
+		passwordHash, err := core.HashPassword(c, passwordChange.new_password)
+		if err != nil {
+			msg := "Failed to hash password!"
+
+			l.Errorw(msg,
+				"error", err,
+			)
+
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured", "context": core.TraceIDFromContext(c)})
+			return
+		}
+
+		_, err = core.DB.Exec("UPDATE Users SET password=$1 WHERE id=$2", passwordHash, uid)
+
+		if err != nil {
+			msg := "Failed to execute SQL statement"
+			l.Errorw(msg,
+				"error", err,
+			)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": core.TraceIDFromContext(c)})
+			return
+		}
+
+		msg := "Password Changed Successfully"
+		l.Infow(msg,
+			"id", uid,
+			"email", queryUser.Email,
+		)
+		c.JSON(http.StatusAccepted, gin.H{"msg": msg})
+		return
+
 	default:
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to execute SQL statement"})
 		return

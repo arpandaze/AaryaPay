@@ -114,7 +114,7 @@ func SendResetPasswordEmail(c *gin.Context, user *CommonUser) (bool, error) {
 	re.to = user.Email
 	re.subject = fmt.Sprintf("%s - Password Recovery\n", Configs.PROJECT_NAME)
 
-	var tokenLink = "generatelinkherewithtoken"
+	token := GenerateResetToken(c, user.Id)
 
 	templateData := struct {
 		Frontbase string
@@ -123,7 +123,7 @@ func SendResetPasswordEmail(c *gin.Context, user *CommonUser) (bool, error) {
 	}{
 		Frontbase: Configs.FRONTEND_HOST,
 		Name:      user.FirstName,
-		Link:      tokenLink,
+		Link:      token,
 	}
 
 	if err := re.ParseTemplate(c, fmt.Sprintf("%s/reset-password.html", Configs.EMAIL_TEMPLATES_DIR), templateData); err == nil {
