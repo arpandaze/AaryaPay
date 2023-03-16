@@ -8,13 +8,13 @@ import (
 	"github.com/google/uuid"
 )
 
-func GenerateSessionToken(c *gin.Context, userID uuid.UUID) uuid.UUID {
+func GenerateSessionToken(c *gin.Context, userID uuid.UUID, expiry int) uuid.UUID {
 	_, span := Tracer.Start(c.Request.Context(), "GenerateSessionToken()")
 	defer span.End()
 
 	token := uuid.New()
 
-	duration := time.Duration(Configs.SESSION_EXPIRE_TIME * int(time.Second))
+	duration := time.Duration(expiry * int(time.Second))
 
 	key := fmt.Sprint("session_", token.String())
 

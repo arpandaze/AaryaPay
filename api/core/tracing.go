@@ -12,7 +12,8 @@ import (
 )
 
 func InitTracer() func() {
-	exporter, err := stdout.New(stdout.WithPrettyPrint())
+	// exporter, err := stdout.New(stdout.WithPrettyPrint())
+	exporter, err := stdout.New()
 
 	if err != nil {
 		log.Fatal(err)

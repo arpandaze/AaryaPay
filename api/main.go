@@ -1,12 +1,12 @@
 package main
 
 import (
-	"main/core"
+	// "main/core"
 )
 
 func main() {
-	tracerShutdown := core.InitTracer()
-	defer tracerShutdown()
+	// tracerShutdown := core.InitTracer()
+	// defer tracerShutdown()
 
 	r := Init()
 	
