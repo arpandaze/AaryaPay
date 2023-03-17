@@ -3,6 +3,7 @@ package auth
 import (
 	"database/sql"
 	"main/core"
+	"main/telemetry"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +12,7 @@ import (
 type PasswordRecoveryController struct{}
 
 func (PasswordRecoveryController) PasswordRecovery(c *gin.Context) {
-	l := core.Logger(c).Sugar()
+	l := telemetry.Logger(c).Sugar()
 
 	var recoverPassword struct {
 		Email string `form:"email"`
@@ -55,7 +56,7 @@ func (PasswordRecoveryController) PasswordRecovery(c *gin.Context) {
 			msg := "Please verify the user first"
 			l.Errorw(msg,
 				"email", queryUser.Email)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg, "context": core.TraceIDFromContext(c)})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 			return
 		}
 
@@ -72,7 +73,7 @@ func (PasswordRecoveryController) PasswordRecovery(c *gin.Context) {
 			msg := "Failed to send recovery email"
 			l.Errorw(msg,
 				"email", queryUser.Email)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": core.TraceIDFromContext(c)})
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 			return
 		}
 
@@ -81,13 +82,13 @@ func (PasswordRecoveryController) PasswordRecovery(c *gin.Context) {
 		l.Errorw(msg,
 			"error", err,
 		)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": core.TraceIDFromContext(c)})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 }
 
 func (PasswordRecoveryController) PasswordReset(c *gin.Context) {
-	l := core.Logger(c).Sugar()
+	l := telemetry.Logger(c).Sugar()
 	var resetPass struct {
 		token        string `form:"token"`
 		new_password string `form:"new_password"`
@@ -122,7 +123,7 @@ func (PasswordRecoveryController) PasswordReset(c *gin.Context) {
 			"error", err,
 		)
 
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured", "context": core.TraceIDFromContext(c)})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured", "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 
@@ -133,7 +134,7 @@ func (PasswordRecoveryController) PasswordReset(c *gin.Context) {
 		l.Errorw(msg,
 			"error", err,
 		)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": core.TraceIDFromContext(c)})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 	msg := "Password Reset Successfully"

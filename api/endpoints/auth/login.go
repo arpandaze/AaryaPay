@@ -3,6 +3,7 @@ package auth
 import (
 	"database/sql"
 	"main/core"
+	"main/telemetry"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,7 +13,7 @@ import (
 type LoginController struct{}
 
 func (LoginController) Login(c *gin.Context) {
-	l := core.Logger(c).Sugar()
+	l := telemetry.Logger(c).Sugar()
 
 	var loginFormInput struct {
 		Email      string `form:"email"`
@@ -73,7 +74,7 @@ func (LoginController) Login(c *gin.Context) {
 			if err != nil {
 				msg := "Failed to verify password!"
 				l.Warnw(msg, "error", err)
-				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": core.TraceIDFromContext(c)})
+				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 				return
 			}
 
@@ -125,7 +126,7 @@ func (LoginController) Login(c *gin.Context) {
 			l.Errorw(msg,
 				"error", err,
 			)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": core.TraceIDFromContext(c)})
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
 			return
 		}
 	}

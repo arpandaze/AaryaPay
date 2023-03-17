@@ -3,6 +3,7 @@ package auth
 import (
 	"database/sql"
 	"main/core"
+	"main/telemetry"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +12,7 @@ import (
 type PasswordChangeController struct{}
 
 func (PasswordChangeController) PasswordChange(c *gin.Context) {
-	l := core.Logger(c).Sugar()
+	l := telemetry.Logger(c).Sugar()
 	var passwordChange struct {
 		token            string `form:"token"`
 		current_password string `form:"current_password"`
@@ -72,7 +73,7 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 		if err != nil {
 			msg := "Failed to verify password!"
 			l.Warnw(msg, "error", err)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": core.TraceIDFromContext(c)})
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 			return
 		}
 		if !passwordTest {
@@ -101,7 +102,7 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 				"error", err,
 			)
 
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured", "context": core.TraceIDFromContext(c)})
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured", "context": telemetry.TraceIDFromContext(c)})
 			return
 		}
 
@@ -112,7 +113,7 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 			l.Errorw(msg,
 				"error", err,
 			)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": core.TraceIDFromContext(c)})
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
 			return
 		}
 

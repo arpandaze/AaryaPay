@@ -3,6 +3,7 @@ package main
 import (
 	"main/core"
 	routes "main/endpoints"
+	"main/telemetry"
 
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
@@ -17,8 +18,8 @@ func Init() *gin.Engine {
 	router := gin.New()
 	router.Use(otelgin.Middleware("aaryapay"))
 
-	router.Use(core.GinzapInstance)
-	router.Use(ginzap.RecoveryWithZap(core.Logger(nil), true))
+	router.Use(telemetry.GinzapInstance)
+	router.Use(ginzap.RecoveryWithZap(telemetry.Logger(nil), true))
 
 	routes.RegisterRoutes(router)
 

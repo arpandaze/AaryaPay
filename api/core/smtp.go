@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
+	"main/telemetry"
 	"net/smtp"
 
 	"github.com/gin-gonic/gin"
@@ -26,7 +27,7 @@ type User struct {
 }
 
 func (r *Request) ParseTemplate(c *gin.Context, templateFileName string, data interface{}) error {
-	_, span := Tracer.Start(c.Request.Context(), "ParseTemplate()")
+	_, span := telemetry.Tracer.Start(c.Request.Context(), "ParseTemplate()")
 	defer span.End()
 
 	t, err := template.ParseFiles(templateFileName)
@@ -44,7 +45,7 @@ func (r *Request) ParseTemplate(c *gin.Context, templateFileName string, data in
 }
 
 func SendEmail(c *gin.Context, emailRequest *Request) (bool, error) {
-	_, span := Tracer.Start(c.Request.Context(), "SendEmail()")
+	_, span := telemetry.Tracer.Start(c.Request.Context(), "SendEmail()")
 	defer span.End()
 
 	if Configs.EMAILS_ENABLED() {
@@ -66,7 +67,7 @@ func SendEmail(c *gin.Context, emailRequest *Request) (bool, error) {
 		err := email.Send(client)
 
 		if err != nil {
-			Logger(c).Sugar().Errorw("Failed to send email!",
+			telemetry.Logger(c).Sugar().Errorw("Failed to send email!",
 				"error", err,
 			)
 			panic(err)
@@ -75,13 +76,13 @@ func SendEmail(c *gin.Context, emailRequest *Request) (bool, error) {
 		return true, nil
 
 	} else {
-		Logger(c).Sugar().Errorw("Email is disabled!")
+		telemetry.Logger(c).Sugar().Errorw("Email is disabled!")
 		return false, nil
 	}
 }
 
 func SendVerificationEmail(c *gin.Context, user *CommonUser) (bool, error) {
-	_, span := Tracer.Start(c.Request.Context(), "SendVerificationEmail()")
+	_, span := telemetry.Tracer.Start(c.Request.Context(), "SendVerificationEmail()")
 	defer span.End()
 
 	re := &Request{}

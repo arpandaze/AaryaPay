@@ -5,6 +5,7 @@ import (
 	"crypto/subtle"
 	"encoding/base64"
 	"fmt"
+	"main/telemetry"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -14,12 +15,12 @@ import (
 )
 
 func HashPassword(c *gin.Context, password string) (string, error) {
-	_, span := Tracer.Start(c.Request.Context(), "HashPassword")
+	_, span := telemetry.Tracer.Start(c.Request.Context(), "HashPassword")
 	defer span.End()
 
 	salt := make([]byte, Configs.ARGON_SALT_LENGTH)
 	if _, err := rand.Read(salt); err != nil {
-		Logger(c).Error("Failed to generate random salt!")
+		telemetry.Logger(c).Error("Failed to generate random salt!")
 		return "", err
 	}
 
@@ -38,25 +39,25 @@ func HashPassword(c *gin.Context, password string) (string, error) {
 }
 
 func VerifyPassword(c *gin.Context, password, hash string) (bool, error) {
-	_, span := Tracer.Start(c.Request.Context(), "VerifyPassword")
+	_, span := telemetry.Tracer.Start(c.Request.Context(), "VerifyPassword")
 	defer span.End()
 	hashParts := strings.Split(hash, "$")
 
 	_, err := fmt.Sscanf(hashParts[3], "m=%d,t=%d,p=%d", &Configs.ARGON_MEMORY, &Configs.ARGON_TIME, &Configs.ARGON_PARALLELISM)
 	if err != nil {
-		Logger(c).Error("Got malformed hashed password from the database!")
+		telemetry.Logger(c).Error("Got malformed hashed password from the database!")
 		return false, err
 	}
 
 	salt, err := base64.RawStdEncoding.DecodeString(hashParts[4])
 	if err != nil {
-		Logger(c).Error("Failed to decode base64 password salt!")
+		telemetry.Logger(c).Error("Failed to decode base64 password salt!")
 		return false, err
 	}
 
 	decodedHash, err := base64.RawStdEncoding.DecodeString(hashParts[5])
 	if err != nil {
-		Logger(c).Error("Failed to decode base64 password hash!")
+		telemetry.Logger(c).Error("Failed to decode base64 password hash!")
 		return false, err
 	}
 

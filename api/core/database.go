@@ -2,6 +2,7 @@ package core
 
 import (
 	"database/sql"
+	"main/telemetry"
 
 	_ "github.com/lib/pq"
 )
@@ -18,7 +19,7 @@ func ConnectDatabase() {
 	_, err = db.Query("SELECT 1")
 
 	if err != nil {
-		Logger(nil).Panic("Failed to connect to database!")
+		telemetry.Logger(nil).Panic("Failed to connect to database!")
 	}
 
 	DB = db

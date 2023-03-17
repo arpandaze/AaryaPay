@@ -2,6 +2,7 @@ package auth
 
 import (
 	"main/core"
+	"main/telemetry"
 
 	"net/http"
 
@@ -11,7 +12,7 @@ import (
 type RegisterController struct{}
 
 func (RegisterController) Register(c *gin.Context) {
-	l := core.Logger(c).Sugar()
+	l := telemetry.Logger(c).Sugar()
 
 	var user struct {
 		FirstName  string `form:"first_name"`
@@ -56,7 +57,7 @@ func (RegisterController) Register(c *gin.Context) {
 			"error", err,
 		)
 
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured", "context": core.TraceIDFromContext(c)})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured", "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 
@@ -104,7 +105,7 @@ func (RegisterController) Register(c *gin.Context) {
 			"error", err,
 		)
 
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": core.TraceIDFromContext(c)})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 

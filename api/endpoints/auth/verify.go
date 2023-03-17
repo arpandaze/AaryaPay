@@ -3,6 +3,7 @@ package auth
 import (
 	"database/sql"
 	"main/core"
+	"main/telemetry"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,7 +13,7 @@ import (
 type VerifyController struct{}
 
 func (VerifyController) VerifyUser(c *gin.Context) {
-	l := core.Logger(c).Sugar()
+	l := telemetry.Logger(c).Sugar()
 	var verifyUser struct {
 		UserID string `form:"user_id"`
 		Token  int    `form:"token"`
@@ -32,7 +33,7 @@ func (VerifyController) VerifyUser(c *gin.Context) {
 	userID, parseErr := uuid.Parse(verifyUser.UserID)
 
 	if parseErr != nil {
-		core.Logger(c).Sugar().Errorw("Failed to parse uuid!",
+		telemetry.Logger(c).Sugar().Errorw("Failed to parse uuid!",
 			"error", parseErr,
 		)
 		panic(parseErr)
@@ -57,7 +58,7 @@ func (VerifyController) VerifyUser(c *gin.Context) {
 		l.Errorw(msg,
 			"error", err,
 		)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": core.TraceIDFromContext(c)})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 	msg := "User verified successfully"
@@ -68,7 +69,7 @@ func (VerifyController) VerifyUser(c *gin.Context) {
 }
 
 func (VerifyController) ResendVerificationEmail(c *gin.Context) {
-	l := core.Logger(c).Sugar()
+	l := telemetry.Logger(c).Sugar()
 	var resendVerify struct {
 		Email string `form:"email"`
 		Token string `form:"token"`
@@ -130,7 +131,7 @@ func (VerifyController) ResendVerificationEmail(c *gin.Context) {
 		l.Errorw(msg,
 			"error", err,
 		)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": core.TraceIDFromContext(c)})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 }

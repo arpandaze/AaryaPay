@@ -3,6 +3,7 @@ package core
 import (
 	"context"
 	"fmt"
+	"main/telemetry"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -23,7 +24,7 @@ func ConnectRedis() {
 
 	err := Redis.Ping(ctx).Err()
 	if err != nil {
-		Logger(nil).Fatal("Failed to connect to Redis!")
+		telemetry.Logger(nil).Fatal("Failed to connect to Redis!")
 		panic(err)
 	}
 }

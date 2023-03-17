@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"main/core"
+	"main/telemetry"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,7 +10,7 @@ import (
 type TwoFaController struct{}
 
 func (TwoFaController) TwoFAEnableRequest(c *gin.Context) {
-	l := core.Logger(c).Sugar()
+	l := telemetry.Logger(c).Sugar()
 	var twoFA struct {
 		token string `form:"token"`
 	}

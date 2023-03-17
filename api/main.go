@@ -1,14 +1,14 @@
 package main
 
 import (
-	// "main/core"
+	"main/telemetry"
 )
 
 func main() {
-	// tracerShutdown := core.InitTracer()
-	// defer tracerShutdown()
+	tracerShutdown := telemetry.InitTracer()
+	defer tracerShutdown()
 
 	r := Init()
-	
+
 	r.Run()
 }
