@@ -14,7 +14,8 @@ type VerifyController struct{}
 func (VerifyController) VerifyUser(c *gin.Context) {
 	l := core.Logger(c).Sugar()
 	var verifyUser struct {
-		Token uuid.UUID `form:"token"`
+		UserID string `form:"user_id"`
+		Token  int    `form:"token"`
 	}
 
 	if err := c.Bind(&verifyUser); err != nil {
@@ -28,9 +29,18 @@ func (VerifyController) VerifyUser(c *gin.Context) {
 		return
 	}
 
-	uid, err := core.GetUserFromVerificationToken(c, verifyUser.Token)
+	userID, parseErr := uuid.Parse(verifyUser.UserID)
 
-	if err != nil {
+	if parseErr != nil {
+		core.Logger(c).Sugar().Errorw("Failed to parse uuid!",
+			"error", parseErr,
+		)
+		panic(parseErr)
+	}
+
+	verified := core.VerifyVerificationToken(c, userID, verifyUser.Token)
+
+	if !verified {
 		msg := "invalid or expired token"
 		l.Warnw(msg,
 			"err", msg,
@@ -39,7 +49,8 @@ func (VerifyController) VerifyUser(c *gin.Context) {
 		return
 	}
 
-	_, err = core.DB.Exec("UPDATE Users SET is_verified=$1 WHERE id=$2", true, uid)
+	var err error
+	_, err = core.DB.Exec("UPDATE Users SET is_verified=$1 WHERE id=$2", true, userID)
 
 	if err != nil {
 		msg := "Failed to execute SQL statement"
@@ -51,10 +62,9 @@ func (VerifyController) VerifyUser(c *gin.Context) {
 	}
 	msg := "User verified successfully"
 	l.Infow(msg,
-		"id", uid)
+		"id", verifyUser.UserID)
 
 	c.JSON(http.StatusAccepted, gin.H{"msg": msg})
-
 }
 
 func (VerifyController) ResendVerificationEmail(c *gin.Context) {

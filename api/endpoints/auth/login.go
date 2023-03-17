@@ -92,7 +92,7 @@ func (LoginController) Login(c *gin.Context) {
 				l.Warnw(msg,
 					"email", queryUser.Email,
 				)
-				c.JSON(http.StatusUnauthorized, gin.H{"msg": msg})
+				c.JSON(http.StatusUnauthorized, gin.H{"msg": msg, "user_id": queryUser.ID})
 				return
 			}
 

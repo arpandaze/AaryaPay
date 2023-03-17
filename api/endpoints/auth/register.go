@@ -82,6 +82,7 @@ func (RegisterController) Register(c *gin.Context) {
         $7
       )
       RETURNING 
+      id,
       first_name,
       middle_name,
       last_name,
@@ -94,7 +95,7 @@ func (RegisterController) Register(c *gin.Context) {
 
 	returnedUser := core.CommonUser{}
 
-	err = row.Scan(&returnedUser.FirstName, &returnedUser.MiddleName, &returnedUser.LastName, &returnedUser.Email, &returnedUser.IsVerified, &returnedUser.PubKeyUpdatedAt)
+	err = row.Scan(&returnedUser.Id, &returnedUser.FirstName, &returnedUser.MiddleName, &returnedUser.LastName, &returnedUser.Email, &returnedUser.IsVerified, &returnedUser.PubKeyUpdatedAt)
 
 	if err != nil {
 		msg := "Failed to execute SQL statement"
@@ -117,5 +118,5 @@ func (RegisterController) Register(c *gin.Context) {
 		"middle_name", user.MiddleName,
 		"last_name", user.LastName,
 	)
-	c.JSON(http.StatusCreated, gin.H{"msg": msg})
+	c.JSON(http.StatusCreated, gin.H{"msg": msg, "user_id": returnedUser.Id})
 }

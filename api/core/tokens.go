@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"fmt"
 	"math/big"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -171,31 +172,44 @@ func GenerateVerificationToken(c *gin.Context, userID uuid.UUID) string {
 	return token
 }
 
-func GetUserFromVerificationToken(c *gin.Context, token uuid.UUID) (uuid.UUID, error) {
+func VerifyVerificationToken(c *gin.Context, userID uuid.UUID, token int) bool {
 	_, span := Tracer.Start(c.Request.Context(), "GetUserFromVerificationToken()")
 	defer span.End()
 
-	key := fmt.Sprint("verification_", token.String())
+	key := fmt.Sprint("verification_", userID.String())
 
 	status := Redis.Get(c, key)
 
 	if err := status.Err(); err != nil {
-		Logger(c).Sugar().Errorw("Failed to get user from verification token!",
+		Logger(c).Sugar().Errorw("Failed to get verification token from key!",
 			"error", err,
 		)
 
-		return uuid.UUID{}, err
+		return false
 	}
 
-	idFromRedis, err := uuid.Parse(status.Val())
+	tokenRedis, err := strconv.Atoi(status.Val())
 
 	if err != nil {
-		Logger(c).Sugar().Errorw("Failed to parse uuid received from Redis!",
+		Logger(c).Sugar().Errorw("Failed to parse redis returned value into int",
 			"error", err,
-			"uuid", idFromRedis,
 		)
 		panic(err)
 	}
 
-	return idFromRedis, nil
+	if token != tokenRedis {
+		Logger(c).Sugar().Errorw("Verification token didn't match!",
+			"user_id", userID.String())
+		return false
+	}
+
+	delStatus := Redis.Del(c, key)
+
+	if err := delStatus.Err(); err != nil {
+		Logger(c).Sugar().Errorw("Failed to remote verification token from Redis!",
+			"error", err,
+		)
+	}
+
+	return true
 }
