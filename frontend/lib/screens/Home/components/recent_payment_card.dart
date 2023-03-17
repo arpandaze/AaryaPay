@@ -40,7 +40,7 @@ class RecentPaymentCard extends StatelessWidget {
                             label ??= "Amazon Payment",
                             style: Theme.of(context)
                                 .textTheme
-                                .titleLarge!
+                                .bodyLarge!
                                 .merge(const TextStyle(
                                     fontWeight: FontWeight.w600)),
                           ),
@@ -57,9 +57,10 @@ class RecentPaymentCard extends StatelessWidget {
             ),
           ),
           Container(
+            margin: EdgeInsets.only(right: 10),
             child: Text(
               transactionAmt ??= "+ \$50.00",
-              style: Theme.of(context).textTheme.bodyMedium!.merge(TextStyle(
+              style: Theme.of(context).textTheme.labelSmall!.merge(TextStyle(
                   color: transactionColor ??=
                       Theme.of(context).colorScheme.outline)),
             ),

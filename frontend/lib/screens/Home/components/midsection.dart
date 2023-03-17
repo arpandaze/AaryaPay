@@ -4,28 +4,29 @@ import 'package:aaryapay/screens/Home/components/send_money_card.dart';
 
 
 class Midsection extends StatelessWidget {
-  const Midsection({
+  Midsection({
     super.key,
     required this.size,
   });
   final Size size;
+  
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: size.width * 0.9,
-      height: size.height * 0.8,
+      width: size.width,
+      height: size.height * 0.7,
       child: Container(
         clipBehavior: Clip.none,
-        // decoration: BoxDecoration(
-        //     border:
-        //         Border.all(color: Theme.of(context).colorScheme.onBackground)),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.background,
+        ),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SendMoneyCard(),
+              const SendMoneyCard(),
               
               RecentCard(size: size),
             ],
