@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       routes: routes,
       title: 'Flutter Demo',
-      initialRoute: '/home',
+      initialRoute: '/welcome',
       theme: AppTheme.lightTheme,
     );
   }
