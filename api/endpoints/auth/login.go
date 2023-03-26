@@ -106,7 +106,13 @@ func (LoginController) Login(c *gin.Context) {
 
 			sessionToken := core.GenerateSessionToken(c, queryUser.ID, expiry)
 
-			c.SetCookie("session", sessionToken.String(), expiry, "/", core.Configs.FRONTEND_HOST, true, true)
+			secure := true
+			if core.Configs.DEV_MODE() {
+				secure = false
+
+			}
+
+			c.SetCookie("session", sessionToken.String(), expiry, "/", core.Configs.FRONTEND_HOST, secure, true)
 
 			msg := "User Logged in Successfully"
 			l.Infow(msg,

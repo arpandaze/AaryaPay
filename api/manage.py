@@ -5,11 +5,6 @@ import platform
 system = platform.system()
 
 def main(args):
-    if len(args) == 1:
-        print("No args provided!")
-        print("Available args: dk")
-        return None
-
     if args[1] == "dkstart":
         if system == "Darwin":
             os.system("mailhog > /dev/null 2>&1 &")
@@ -22,14 +17,17 @@ def main(args):
         else:
             os.system("./scripts/redis.sh")
             os.system("./scripts/postgres.sh")
+        exit()
 
     elif args[1] == "start":
         os.system("air")
+        exit()
 
     elif args[1] == "mig":
         os.system(
             "migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapay\\?sslmode=disable up"
         )
+        exit()
 
     elif args[1] == "cm":
         os.system(
@@ -38,6 +36,11 @@ def main(args):
         os.system(
             "migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapay\\?sslmode=disable up"
         )
+        exit()
+
+    print("No args or invalid args provided!")
+    print("Available args: dkstart, start, mig, cm")
+
 
 if __name__ == "__main__":
     main(sys.argv)
