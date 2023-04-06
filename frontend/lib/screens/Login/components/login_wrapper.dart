@@ -1,11 +1,7 @@
-import 'dart:ffi' as ffi;
-
-import 'package:aaryapay/components/CustomTextField.dart';
+import 'package:aaryapay/screens/Register/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:aaryapay/components/CustomActionButton.dart';
-import "package:aaryapay/screens/Login/welcome_screen.dart";
 
 class LoginWrapper extends StatelessWidget {
   const LoginWrapper(
@@ -48,7 +44,7 @@ class LoginWrapper extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
+            SizedBox(
               // decoration:
               //     BoxDecoration(border: Border.all(color: Colors.cyanAccent)),
               height: size.height * 0.4,
@@ -60,7 +56,7 @@ class LoginWrapper extends StatelessWidget {
                       // padding: EdgeInsets.symmetric(vertical: 30),
                       // decoration: BoxDecoration(
                       //     border: Border.all(color: Colors.cyanAccent)),
-                      child: CircleAvatar(
+                      child: const CircleAvatar(
                         backgroundImage: AssetImage("assets/images/pfp.jpeg"),
                         minRadius: 90,
                         maxRadius: 120,
@@ -73,7 +69,7 @@ class LoginWrapper extends StatelessWidget {
                         child: GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: backButttonFunction,
-                            child: Container(
+                            child: const SizedBox(
                                 // decoration: BoxDecoration(
                                 //     border: Border.all(color: Colors.deepPurple)),
                                 width: 30,
@@ -90,7 +86,7 @@ class LoginWrapper extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: children),
-            Container(
+            SizedBox(
               // decoration:
               //     BoxDecoration(border: Border.all(color: Colors.cyanAccent)),
               height: size.height * 0.15,
@@ -101,7 +97,7 @@ class LoginWrapper extends StatelessWidget {
                     label: actionButtonLabel,
                     onClick: actionButtonFunction,
                   ),
-                  Container(
+                  SizedBox(
                     height: 30,
                     // decoration:
                     //     BoxDecoration(border: Border.all(color: Colors.black)),
@@ -114,19 +110,28 @@ class LoginWrapper extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                           GestureDetector(
-                              behavior: HitTestBehavior.translucent,
-                              child: Text(
-                                "Register",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall!
-                                    .merge(TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary)),
+                            behavior: HitTestBehavior.translucent,
+                            child: Text(
+                              "Register",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .merge(TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary)),
+                            ),
+                            onTap: () => Navigator.of(context).push(
+                              PageRouteBuilder(
+                                pageBuilder:
+                                    (context, animation1, animation2) =>
+                                        const RegisterScreen(),
+                                transitionDuration: Duration.zero,
+                                reverseTransitionDuration: Duration.zero,
                               ),
-                              onTap: () => print("lol"))
+                            ),
+                          )
                         ]),
                   ),
                 ],
