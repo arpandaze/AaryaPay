@@ -67,33 +67,36 @@ class LibAaryaPay {
   }
 
   Future<List<int>> encodeMessage() async {
-    ByteData buffer = ByteData(20);
+    if (initialized) {
+      ByteData buffer = ByteData(20);
 
-    buffer.setUint32(0, message["amount"]);
-    buffer.setUint64(4, message["to"]);
-    buffer.setUint64(12, message["to"] << 64);
+      buffer.setUint32(0, message["amount"]);
+      buffer.setUint64(4, message["to"]);
+      buffer.setUint64(12, message["to"] << 64);
 
-    List<int> messageBuffer = buffer.buffer.asUint8List();
-    messageBuffer = [...messageBuffer, ...bVCertificate];
+      List<int> messageBuffer = buffer.buffer.asUint8List();
+      messageBuffer = [...messageBuffer, ...bVCertificate];
 
-    final signature =
-        await algorithm.sign(messageBuffer, keyPair: clientKeyPair);
+      final signature =
+          await algorithm.sign(messageBuffer, keyPair: clientKeyPair);
 
-    final clientPublicKey = await clientKeyPair.extractPublicKey();
-    final signedMessage = [
-      ...messageBuffer,
-      ...signature.bytes,
-      ...clientPublicKey.bytes,
-      ...clientKeySign
-    ];
+      final clientPublicKey = await clientKeyPair.extractPublicKey();
+      final signedMessage = [
+        ...messageBuffer,
+        ...signature.bytes,
+        ...clientPublicKey.bytes,
+        ...clientKeySign
+      ];
 
-    return signedMessage;
+      return signedMessage;
+    }
+    throw ("Signature Verification Failed.");
   }
 
   Map<String, dynamic> decodeBalance() {
-    Map<String, dynamic> balanceCertificate = {};
-
     if (initialized) {
+      Map<String, dynamic> balanceCertificate = {};
+
       Uint8List balanceMessage =
           Uint8List.fromList(bVCertificate.sublist(0, 24));
 
@@ -101,12 +104,13 @@ class LibAaryaPay {
 
       balanceCertificate["user_id"] = balanceByte.getInt64(8);
       balanceCertificate["user_id"] >> 64;
-      balanceCertificate["user_id"] += balanceByte.getInt64(0);
+      balanceCertificate["user_id"] =
+          balanceCertificate["user_id"] | balanceByte.getInt64(0);
       balanceCertificate["available_balance"] = balanceByte.getFloat32(16);
       balanceCertificate["time_stamp"] = balanceByte.getInt32(20);
+      return balanceCertificate;
     }
-
-    return balanceCertificate;
+    throw ("Signature Verification Failed.");
   }
 }
 
@@ -162,18 +166,33 @@ void main() async {
   print(encodedMessage.length);
 
   print(payment.decodeBalance());
-  // ByteData finalBuffer = ByteData(20);
 
-  // finalBuffer.setUint32(0, message["amount"]);
-  // finalBuffer.setUint64(4, message["to"]);
-  // finalBuffer.setUint64(12, message["to"] << 64);
+  //Check - Encoded Message
 
-  // List<int> newBytes = finalBuffer.buffer.asUint8List();
-  // newBytes = [...newBytes, ...balanceVerificationSignature];
-  // final newKeyPair = await algorithm.newKeyPair();
-  // final newSignature = await algorithm.sign(newBytes, keyPair: newKeyPair);
-  // // backend signature required
+  Map<String, dynamic> balanceCertificate = {};
 
-  // final pubKey = (await newKeyPair.extractPublicKey()).bytes;
-  // final signedMessage = [...newBytes, ...newSignature.bytes, ...pubKey];
+  Uint8List balanceMessage = Uint8List.fromList(encodedMessage.sublist(20, 44));
+
+  ByteData balanceByte = ByteData.view(balanceMessage.buffer);
+
+  balanceCertificate["user_id"] = balanceByte.getInt64(8);
+  balanceCertificate["user_id"] >> 64;
+  balanceCertificate["user_id"] =
+      balanceCertificate["user_id"] | balanceByte.getInt64(0);
+  balanceCertificate["available_balance"] = balanceByte.getFloat32(16);
+  balanceCertificate["time_stamp"] = balanceByte.getInt32(20);
+
+  Map<String, dynamic> messageDecoded = {};
+
+  Uint8List decodedMessage = Uint8List.fromList(encodedMessage.sublist(0, 20));
+
+  ByteData decodedByte = ByteData.view(decodedMessage.buffer);
+
+  messageDecoded["amount"] = decodedByte.getInt32(0);
+  messageDecoded["to"] = decodedByte.getInt64(12);
+  messageDecoded["to"] >> 64;
+  messageDecoded["to"] = messageDecoded["to"] | decodedByte.getInt64(4);
+  messageDecoded["balance_verification"] = balanceCertificate;
+
+  print(messageDecoded);
 }
