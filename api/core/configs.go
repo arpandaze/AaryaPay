@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path"
+	"path/filepath"
+	"runtime"
 
 	"gopkg.in/yaml.v3"
 )
@@ -101,6 +104,14 @@ func (r Settings) DEV_MODE() bool {
 	}
 }
 
+func (r Settings) TEMPLATE_DIR() string {
+	_, b, _, _ := runtime.Caller(0)
+	d := path.Join(path.Dir(b))
+	rootDir := filepath.Dir(d)
+
+	return rootDir + "/" + r.EMAIL_TEMPLATES_DIR
+}
+
 func (r Settings) POSTGRES_DATABASE_URI(ssl bool) string {
 	if ssl {
 		return fmt.Sprintf("postgres://%s:%s@%s:%d/%s", r.POSTGRES_USER, r.POSTGRES_PASSWORD, r.POSTGRES_SERVER, r.POSTGRES_PORT, r.POSTGRES_DB)
@@ -119,8 +130,12 @@ func (r Settings) EMAILS_ENABLED() bool {
 
 var Configs Settings
 
-func LoadConfig() {
-	f, err := os.ReadFile("./etc/dev.yaml")
+func LoadConfig(mode string) {
+	_, b, _, _ := runtime.Caller(0)
+	d := path.Join(path.Dir(b))
+	rootDir := filepath.Dir(d)
+
+	f, err := os.ReadFile(rootDir + "/etc/" + mode + ".yaml")
 	if err != nil {
 		log.Fatal(err)
 	}
