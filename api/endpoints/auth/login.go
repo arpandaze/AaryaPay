@@ -24,14 +24,14 @@ func (LoginController) Login(c *gin.Context) {
 	type loginUser struct {
 		ID              uuid.UUID      `db:"id"`
 		FirstName       string         `db:"first_name"`
-		MiddleName      string         `db:"middle_name"`
+		MiddleName      sql.NullString `db:"middle_name"`
 		LastName        string         `db:"last_name"`
 		DOB             string         `db:"dob"`
 		Email           string         `db:"email"`
 		Password        string         `db:"password"`
 		IsVerified      bool           `db:"is_verified"`
 		PubKey          sql.NullString `db:"pubkey"`
-		PubKeyUpdatedAt sql.NullInt16  `db:"pubkey_updated_at"`
+		PubKeyUpdatedAt sql.NullTime   `db:"pubkey_updated_at"`
 	}
 
 	if err := c.Bind(&loginFormInput); err != nil {

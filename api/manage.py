@@ -1,8 +1,9 @@
-import sys
 import os
 import platform
+import sys
 
 system = platform.system()
+
 
 def main(args):
     if args[1] == "dkstart":
@@ -27,6 +28,9 @@ def main(args):
         os.system(
             "migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapay\\?sslmode=disable up"
         )
+        os.system(
+            "migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapaytest\\?sslmode=disable up"
+        )
         exit()
 
     elif args[1] == "cm":
@@ -36,6 +40,24 @@ def main(args):
         os.system(
             "migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapay\\?sslmode=disable up"
         )
+
+        os.system(
+            "migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapaytest\\?sslmode=disable down"
+        )
+        os.system(
+            "migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapaytest\\?sslmode=disable up"
+        )
+        exit()
+
+    elif args[1] == "test":
+        os.system(
+            "yes | migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapaytest\\?sslmode=disable down"
+        )
+        os.system(
+            "migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapaytest\\?sslmode=disable up"
+        )
+        os.system("go clean -testcache")
+        os.system("go test ./tests/... -v")
         exit()
 
     print("No args or invalid args provided!")

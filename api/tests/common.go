@@ -1,8 +1,7 @@
-package main
+package tests
 
 import (
 	"main/core"
-	routes "main/endpoints"
 	"main/telemetry"
 
 	ginzap "github.com/gin-contrib/zap"
@@ -10,8 +9,15 @@ import (
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 )
 
-func Init() *gin.Engine {
-	core.LoadConfig("dev")
+func TestMain() *gin.Engine {
+	tracerShutdown := telemetry.InitTracer()
+	defer tracerShutdown()
+	return InitTestRouter()
+}
+
+func InitTestRouter() *gin.Engine {
+	gin.SetMode(gin.TestMode)
+	core.LoadConfig("test")
 	core.ConnectDatabase()
 	core.ConnectRedis()
 
@@ -21,7 +27,7 @@ func Init() *gin.Engine {
 	router.Use(telemetry.GinzapInstance)
 	router.Use(ginzap.RecoveryWithZap(telemetry.Logger(nil), true))
 
-	routes.RegisterRoutes(router)
-
 	return router
 }
+
+var TestRouter *gin.Engine = TestMain()
