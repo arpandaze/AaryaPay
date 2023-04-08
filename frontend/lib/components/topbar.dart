@@ -1,6 +1,7 @@
 import 'package:aaryapay/screens/Login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:aaryapay/screens/Login/login_screen.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class TopBar extends StatelessWidget {
   const TopBar({
@@ -19,7 +20,7 @@ class TopBar extends StatelessWidget {
               bottomLeft: Radius.circular(10),
               bottomRight: Radius.circular(10))),
       width: size.width,
-      padding: EdgeInsets.only(left: 10),
+      padding: EdgeInsets.symmetric(horizontal: 25),
       height: size.height * 0.15,
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -29,32 +30,47 @@ class TopBar extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                    child: Text(
-                  "Balance",
-                  style: Theme.of(context).textTheme.bodyLarge!.merge(TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary)),
-                )),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Container(
+                      child: Text(
+                    "Balance",
+                    style: Theme.of(context).textTheme.bodyLarge!.merge(
+                        TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary)),
+                  )),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Container(
+                        child: SvgPicture.asset(
+                          "assets/icons/rupee.svg",
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          width: 15,
+                          height: 15,
+                        ),
+                      ),
+                    ),
                     Container(
                       child: Text(
-                        "\$18,5333.45",
-                        style: Theme.of(context).textTheme.displaySmall!.merge(
+                        "18,5333.45",
+                        style: Theme.of(context).textTheme.titleLarge!.merge(
                             TextStyle(
                                 color:
                                     Theme.of(context).colorScheme.onPrimary)),
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(left: 10),
-                      child: ImageIcon(
-                        AssetImage("assets/icons/hide.png"),
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                    )
+                    // Container(
+                    //   margin: EdgeInsets.only(left: 10),
+                    //   child: ImageIcon(
+                    //     AssetImage("assets/icons/hide.png"),
+                    //     color: Theme.of(context).colorScheme.onPrimary,
+                    //   ),
+                    // )
                   ],
                 ),
               ],
