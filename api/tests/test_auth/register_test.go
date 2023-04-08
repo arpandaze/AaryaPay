@@ -5,7 +5,6 @@ import (
 	"main/endpoints/auth"
 	. "main/tests"
 	"net/http"
-	"net/http/httptest"
 	"net/url"
 	"testing"
 
@@ -13,6 +12,7 @@ import (
 )
 
 func TestRegister(t *testing.T) {
+	r, _, w := TestInit()
 	// Set up the Gin router and controller
 	authController := auth.RegisterController{}
 
@@ -33,16 +33,15 @@ func TestRegister(t *testing.T) {
 	req.PostForm = values
 
 	// Create a test response recorder and execute the request
-	resp := httptest.NewRecorder()
-	TestRouter.POST("/v1/auth/register", authController.Register)
-	TestRouter.ServeHTTP(resp, req)
+	r.POST("/v1/auth/register", authController.Register)
+	r.ServeHTTP(w, req)
 
 	// Check the response status code
-	assert.Equal(t, http.StatusCreated, resp.Code)
+	assert.Equal(t, http.StatusCreated, w.Code)
 
 	// Check the response data
 	var respData map[string]interface{}
-	err = json.Unmarshal(resp.Body.Bytes(), &respData)
+	err = json.Unmarshal(w.Body.Bytes(), &respData)
 
 	assert.Nil(t, err)
 	assert.Equal(t, "User created successfully!", respData["msg"])

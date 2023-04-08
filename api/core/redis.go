@@ -20,8 +20,6 @@ func ConnectRedis() {
 		DB:       0,
 	})
 
-	fmt.Println(Redis)
-
 	err := Redis.Ping(ctx).Err()
 	if err != nil {
 		telemetry.Logger(nil).Fatal("Failed to connect to Redis!")

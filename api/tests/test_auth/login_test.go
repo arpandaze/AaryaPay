@@ -3,51 +3,23 @@ package test_auth
 import (
 	"bytes"
 	"encoding/json"
-	"main/core"
 	"main/endpoints/auth"
 	. "main/tests"
+	test "main/tests/commons"
 	"net/http"
-	"net/http/httptest"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestLogin(t *testing.T) {
+	r, c, w := TestInit()
+
 	loginController := auth.LoginController{}
 
-	// Create a test user.
-	user := struct {
-		FirstName string `form:"email"`
-		LastName  string `form:"email"`
-		Email     string `form:"email"`
-		Password  string `form:"password"`
-		DOB       string `form:"dob"`
-		Remember  bool   `form:"remember"`
-	}{
-		FirstName: "John",
-		LastName:  "Doe",
-		DOB:       "1999-01-02",
-		Email:     "test@example.com",
-		Password:  "password",
-		Remember:  false,
-	}
+	user := test.CreateRandomVerifiedUser(t, c)
 
-	TestRouter.POST("/v1/auth/login", loginController.Login)
-	w := httptest.NewRecorder()
-
-	hashedPassword, err := core.HashPassword(nil, user.Password)
-
-	if err != nil {
-		t.Fatalf("failed to hash password: %v", err)
-	}
-
-	if _, err := core.DB.Exec(`
-		INSERT INTO users (first_name, last_name, dob, email, password, is_verified)
-		VALUES ($1, $2, $3, $4, $5, true)
-	`, user.FirstName, user.LastName, user.DOB, user.Email, hashedPassword); err != nil {
-		t.Fatalf("failed to create test user: %v", err)
-	}
+	r.POST("/v1/auth/login", loginController.Login)
 
 	// Make a test request to log in the user.
 	requestBody, err := json.Marshal(map[string]interface{}{
@@ -62,7 +34,7 @@ func TestLogin(t *testing.T) {
 		t.Fatalf("failed to create test request: %v", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	TestRouter.ServeHTTP(w, req)
+	r.ServeHTTP(w, req)
 
 	// Check that the response status code is as expected.
 	assert.Equal(t, http.StatusAccepted, w.Code)
