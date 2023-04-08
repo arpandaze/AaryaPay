@@ -15,10 +15,8 @@ import (
 )
 
 func HashPassword(c *gin.Context, password string) (string, error) {
-	if c != nil {
-		_, span := telemetry.Tracer.Start(c.Request.Context(), "HashPassword")
-		defer span.End()
-	}
+	_, span := telemetry.Tracer.Start(c.Request.Context(), "HashPassword")
+	defer span.End()
 
 	salt := make([]byte, Configs.ARGON_SALT_LENGTH)
 	if _, err := rand.Read(salt); err != nil {

@@ -57,7 +57,7 @@ def main(args):
             "migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapaytest\\?sslmode=disable up"
         )
         os.system("go clean -testcache")
-        os.system("go test ./tests/... -v")
+        os.system("go test ./tests/...")
         exit()
 
     print("No args or invalid args provided!")
