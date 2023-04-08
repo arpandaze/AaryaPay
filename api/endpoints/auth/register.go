@@ -43,7 +43,7 @@ func (RegisterController) Register(c *gin.Context) {
 
 	// Check if firstname and lastname are empty
 	if user.FirstName == "" || user.LastName == "" {
-		msg := "First name and last name are required!"
+		msg := "First Name and Last Name are required!"
 
 		l.Warnw(msg,
 			"first_name", user.FirstName,

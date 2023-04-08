@@ -37,6 +37,10 @@ func InitAuthRoutes(routeGroup *gin.RouterGroup) {
 	routeGroup.GET("/refresh", refresh.Status)
 }
 
+func InitFavoriteRoute(routeGroup *gin.RouterGroup){
+
+}
+
 func InitTransactionRoutes(routeGroup *gin.RouterGroup) {
 	verify := new(transaction.TransactionVerifyController)
 	refresh_controller := new(transaction.RefreshController)
