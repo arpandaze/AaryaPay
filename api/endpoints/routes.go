@@ -2,14 +2,14 @@ package endpoints
 
 import (
 	auth "main/endpoints/auth"
-	"main/endpoints/tools"
+	keys "main/endpoints/keys"
+	tools "main/endpoints/tools"
 	transaction "main/endpoints/transaction"
 
 	"github.com/gin-gonic/gin"
 )
 
 func InitAuthRoutes(routeGroup *gin.RouterGroup) {
-
 	register := new(auth.RegisterController)
 	login := new(auth.LoginController)
 
@@ -45,6 +45,12 @@ func InitTransactionRoutes(routeGroup *gin.RouterGroup) {
 	routeGroup.GET("/refresh", refresh_controller.Status)
 }
 
+func InitKeysRoutes(routeGroup *gin.RouterGroup) {
+	serverKeysController := new(keys.ServerKeysController)
+
+	routeGroup.GET("/server_keys", serverKeysController.ServerPubKey)
+}
+
 func InitToolsRoutes(routeGroup *gin.Engine) {
 	health := new(tools.HealthController)
 	authCheck := new(tools.AuthCheckController)
@@ -60,6 +66,7 @@ func RegisterRoutes(router *gin.Engine) *gin.Engine {
 	{
 		InitAuthRoutes(v1.Group("auth"))
 		InitTransactionRoutes(v1.Group("transaction"))
+		InitKeysRoutes(v1.Group("keys"))
 	}
 
 	return router
