@@ -31,7 +31,7 @@ func InitAuthRoutes(routeGroup *gin.RouterGroup) {
 	routeGroup.POST("/verify", verify.VerifyUser)
 	routeGroup.POST("/resend-verification-email", verify.ResendVerificationEmail)
 
-	routeGroup.GET("/logout", logout.Status)
+	routeGroup.POST("/logout", logout.Logout)
 
 	routeGroup.GET("/2fa/request", two_fa.TwoFAEnableRequest)
 	routeGroup.GET("/refresh", refresh.Status)

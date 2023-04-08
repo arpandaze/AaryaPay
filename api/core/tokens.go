@@ -51,6 +51,27 @@ func GenerateSessionToken(c *gin.Context, userID uuid.UUID, expiry int) uuid.UUI
 	return token
 }
 
+func ExpireSession(c *gin.Context) error {
+	_, span := Tracer.Start(c.Request.Context(), "ExpireSession()")
+	defer span.End()
+
+	sessionToken, _ := c.Cookie("session")
+
+	key := fmt.Sprint("session_", sessionToken)
+
+	status := Redis.Del(c, key)
+
+	if err := status.Err(); err != nil {
+		Logger(c).Sugar().Errorw("Failed to delete session token!",
+			"error", err,
+		)
+
+		return err
+	}
+
+	return nil
+}
+
 func GetUserFromSession(c *gin.Context, token uuid.UUID) (uuid.UUID, error) {
 	_, span := Tracer.Start(c.Request.Context(), "GetUserFromSession()")
 	defer span.End()
