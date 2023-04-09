@@ -14,15 +14,14 @@ class LibAaryaPay {
   final SimpleKeyPair clientKeyPair;
   final List<int> clientKeySign;
   final dynamic message;
-  bool initialized = false;
+  bool _verified = false;
 
   LibAaryaPay(
       {required this.bVCertificate,
       required this.serverPublicKey,
       required this.clientKeyPair,
       required this.clientKeySign,
-      required this.message,
-      this.initialized = false});
+      required this.message});
 
   static Future<LibAaryaPay> createObject(
       {required List<int> bVCertificate,
@@ -30,6 +29,19 @@ class LibAaryaPay {
       required SimpleKeyPair clientKeyPair,
       required List<int> clientKeySign,
       required message}) async {
+    LibAaryaPay paymentObject = LibAaryaPay(
+      bVCertificate: bVCertificate,
+      serverPublicKey: serverPublicKey,
+      clientKeyPair: clientKeyPair,
+      clientKeySign: clientKeySign,
+      message: message,
+    );
+
+    await paymentObject.verify();
+    return paymentObject;
+  }
+
+  Future<void> verify() async {
     SimplePublicKey publicKey =
         SimplePublicKey(serverPublicKey, type: KeyPairType.ed25519);
 
@@ -44,30 +56,15 @@ class LibAaryaPay {
           Signature(bVCertificate.sublist(24), publicKey: publicKey);
       verification = await algorithm.verify(bVCertificate.sublist(0, 24),
           signature: signatureBalance);
-
       if (verification) {
         print("Balance Verified");
-
-        return LibAaryaPay(
-          bVCertificate: bVCertificate,
-          serverPublicKey: serverPublicKey,
-          clientKeyPair: clientKeyPair,
-          clientKeySign: clientKeySign,
-          message: message,
-          initialized: true,
-        );
+        _verified = true;
       }
     }
-    return LibAaryaPay(
-        bVCertificate: bVCertificate,
-        serverPublicKey: serverPublicKey,
-        clientKeyPair: clientKeyPair,
-        clientKeySign: clientKeySign,
-        message: message);
   }
 
   Future<List<int>> encodeMessage() async {
-    if (initialized) {
+    if (_verified) {
       ByteData buffer = ByteData(20);
 
       buffer.setUint32(0, message["amount"]);
@@ -94,7 +91,7 @@ class LibAaryaPay {
   }
 
   Map<String, dynamic> decodeBalance() {
-    if (initialized) {
+    if (_verified) {
       Map<String, dynamic> balanceCertificate = {};
 
       Uint8List balanceMessage =
@@ -162,8 +159,6 @@ void main() async {
       message: message);
 
   final encodedMessage = await payment.encodeMessage();
-
-  print(encodedMessage.length);
 
   print(payment.decodeBalance());
 
