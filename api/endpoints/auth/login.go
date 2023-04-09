@@ -41,7 +41,7 @@ func (LoginController) Login(c *gin.Context) {
 			"error", err,
 		)
 
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 
@@ -65,7 +65,7 @@ func (LoginController) Login(c *gin.Context) {
 			"email", loginFormInput.Email,
 		)
 
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 
 	case nil:
 		{
@@ -83,7 +83,7 @@ func (LoginController) Login(c *gin.Context) {
 				l.Warnw(msg,
 					"email", queryUser.Email,
 				)
-				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
+				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 				return
 			}
 

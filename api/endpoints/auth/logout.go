@@ -19,7 +19,7 @@ func (LogoutController) Logout(c *gin.Context) {
 			"error", err,
 		)
 
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": "User not logged in!"})
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": "User not logged in!", "context": TraceIDFromContext(c)})
 	}
 
 	// Get the session token from the cookie
@@ -30,7 +30,7 @@ func (LogoutController) Logout(c *gin.Context) {
 			"error", err,
 		)
 
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error!"})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error!", "context": TraceIDFromContext(c)})
 	}
 
 	// Delete the session cookie client side

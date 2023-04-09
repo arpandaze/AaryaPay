@@ -20,7 +20,7 @@ func (AuthCheckController) AuthCheck(c *gin.Context) {
 			"error", err,
 		)
 		msg := "Invalid or expired session!"
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 	}
 
 	var userName string

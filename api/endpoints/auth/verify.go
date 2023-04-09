@@ -26,7 +26,7 @@ func (VerifyController) VerifyUser(c *gin.Context) {
 			"error", err,
 		)
 
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 
@@ -36,7 +36,7 @@ func (VerifyController) VerifyUser(c *gin.Context) {
 		telemetry.Logger(c).Sugar().Errorw("Failed to parse uuid!",
 			"error", parseErr,
 		)
-		panic(parseErr)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "Invalid user id!", "context": telemetry.TraceIDFromContext(c)})
 	}
 
 	verified := core.VerifyVerificationToken(c, userID, verifyUser.Token)
@@ -46,7 +46,7 @@ func (VerifyController) VerifyUser(c *gin.Context) {
 		l.Warnw(msg,
 			"err", msg,
 		)
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid or expired token"})
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid or expired token", "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 
@@ -81,7 +81,7 @@ func (VerifyController) ResendVerificationEmail(c *gin.Context) {
 			"error", err,
 		)
 
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 
@@ -91,7 +91,7 @@ func (VerifyController) ResendVerificationEmail(c *gin.Context) {
 		l.Warnw(msg,
 			"err", msg,
 		)
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid or expired token"})
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid or expired token", "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 
@@ -108,7 +108,7 @@ func (VerifyController) ResendVerificationEmail(c *gin.Context) {
 			"email", queryUser.Email,
 		)
 
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 	case nil:
 		res, err := core.SendVerificationEmail(c, queryUser)
 		if res && err == nil {
@@ -123,7 +123,7 @@ func (VerifyController) ResendVerificationEmail(c *gin.Context) {
 			l.Errorw(msg,
 				"email", queryUser.Email,
 			)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg})
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 			return
 		}
 	default:
