@@ -39,7 +39,7 @@ class ResetPassword extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineMedium!.merge(
                   TextStyle(
                       fontWeight: FontWeight.w900,
-                      color: Theme.of(context).colorScheme.secondary),
+                      color: Theme.of(context).colorScheme.primary),
                 ),
           ),
         ),

@@ -27,7 +27,7 @@ class Wrapper extends StatelessWidget {
               ),
             ),
             Positioned(
-              bottom: 10,
+              bottom: 0,
               child: NavBar(
                 size: size,
               ),
