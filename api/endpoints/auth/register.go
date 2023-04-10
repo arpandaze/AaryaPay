@@ -50,6 +50,7 @@ func (RegisterController) Register(c *gin.Context) {
 			"last_name", user.LastName)
 
 		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+		return
 	}
 
 	// Ceck if DOB is empty
@@ -60,6 +61,7 @@ func (RegisterController) Register(c *gin.Context) {
 			"dob", user.DOB)
 
 		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+		return
 	}
 
 	// Check if email is already used
@@ -145,6 +147,7 @@ func (RegisterController) Register(c *gin.Context) {
 			"error", err,
 		)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
+		return
 	}
 
 	l.Infow(msg,

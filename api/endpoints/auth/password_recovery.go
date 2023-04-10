@@ -50,6 +50,7 @@ func (PasswordRecoveryController) PasswordRecovery(c *gin.Context) {
 		)
 
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+    return
 
 	case nil:
 		if !queryUser.IsVerified {

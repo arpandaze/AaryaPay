@@ -67,6 +67,7 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 		)
 
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+    return
 
 	case nil:
 		passwordTest, err := core.VerifyPassword(c, passwordChange.current_password, queryUser.Password)

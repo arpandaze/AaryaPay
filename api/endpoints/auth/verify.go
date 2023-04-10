@@ -37,6 +37,7 @@ func (VerifyController) VerifyUser(c *gin.Context) {
 			"error", parseErr,
 		)
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "Invalid user id!", "context": telemetry.TraceIDFromContext(c)})
+    return
 	}
 
 	verified := core.VerifyVerificationToken(c, userID, verifyUser.Token)
@@ -109,6 +110,7 @@ func (VerifyController) ResendVerificationEmail(c *gin.Context) {
 		)
 
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+    return
 	case nil:
 		res, err := core.SendVerificationEmail(c, queryUser)
 		if res && err == nil {

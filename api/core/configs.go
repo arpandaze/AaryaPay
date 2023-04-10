@@ -72,6 +72,8 @@ type Settings struct {
 	ARGON_PARALLELISM uint8  `yaml:"ARGON_PARALLELISM"`
 	ARGON_SALT_LENGTH uint32 `yaml:"ARGON_SALT_LENGTH"`
 	ARGON_KEY_LENGTH  uint32 `yaml:"ARGON_KEY_LENGTH"`
+
+	KEY_VALIDITY_TIME_HOURS int `yaml:"KEY_VALIDITY_TIME_HOURS"`
 }
 
 func (r Settings) BACKEND_URL_BASE() string {

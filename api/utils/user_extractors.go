@@ -56,7 +56,6 @@ func GetActiveUser(c *gin.Context) (uuid.UUID, error) {
 	}
 
 	row := core.DB.QueryRow("SELECT is_verified FROM Users WHERE id=$1", user)
-	// row := core.DB.QueryRow("SELECT is_verified FROM Users WHERE id='d87a0b01-80f4-4a6a-8747-9f9891968adf'::uuid;")
 
 	var isActive bool
 	err = row.Scan(&isActive)

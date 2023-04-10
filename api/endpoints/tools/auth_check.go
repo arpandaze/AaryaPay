@@ -21,6 +21,7 @@ func (AuthCheckController) AuthCheck(c *gin.Context) {
 		)
 		msg := "Invalid or expired session!"
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+		return
 	}
 
 	var userName string
@@ -31,7 +32,8 @@ func (AuthCheckController) AuthCheck(c *gin.Context) {
 		telemetry.Logger(c).Sugar().Errorw("Failed to query user!",
 			"error", err,
 		)
-		panic(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Internal Server Error", "context": telemetry.TraceIDFromContext(c)})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{

@@ -19,6 +19,7 @@ func (TwoFaController) TwoFAEnableRequest(c *gin.Context) {
 	_, err := VerifyUserToken(twoFA.token)
 	if false {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
+		return
 	}
 	if err != nil {
 
