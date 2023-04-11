@@ -16,9 +16,10 @@ func (TwoFaController) TwoFAEnableRequest(c *gin.Context) {
 	}
 
 	//TODO token gen
-	uid, err := VerifyUserToken(twoFA.token)
+	_, err := VerifyUserToken(twoFA.token)
 	if false {
-		panic(uid)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
+		return
 	}
 	if err != nil {
 
@@ -26,7 +27,7 @@ func (TwoFaController) TwoFAEnableRequest(c *gin.Context) {
 		l.Warnw(msg,
 			"err", msg,
 		)
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid or expired token"})
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid or expired token", "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 

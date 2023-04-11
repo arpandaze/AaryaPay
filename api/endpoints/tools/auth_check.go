@@ -3,8 +3,7 @@ package tools
 import (
 	"fmt"
 	"main/core"
-	"main/telemetry"
-	"main/utils"
+	. "main/telemetry"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,14 +12,16 @@ import (
 type AuthCheckController struct{}
 
 func (AuthCheckController) AuthCheck(c *gin.Context) {
-	user, err := utils.GetActiveUser(c)
+	user, err := core.GetActiveUser(c)
+	l := Logger(c).Sugar()
 
 	if err != nil {
-		telemetry.Logger(c).Sugar().Errorw("Failed to extract user!",
+		l.Errorw("Failed to extract user!",
 			"error", err,
 		)
 		msg := "Invalid or expired session!"
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
+		return
 	}
 
 	var userName string
@@ -28,10 +29,11 @@ func (AuthCheckController) AuthCheck(c *gin.Context) {
 
 	err = row.Scan(&userName)
 	if err != nil {
-		telemetry.Logger(c).Sugar().Errorw("Failed to query user!",
+		Logger(c).Sugar().Errorw("Failed to query user!",
 			"error", err,
 		)
-		panic(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Internal Server Error", "context": TraceIDFromContext(c)})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{

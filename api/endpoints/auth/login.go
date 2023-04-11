@@ -3,8 +3,9 @@ package auth
 import (
 	"database/sql"
 	"main/core"
-	"main/telemetry"
+	. "main/telemetry"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -13,7 +14,7 @@ import (
 type LoginController struct{}
 
 func (LoginController) Login(c *gin.Context) {
-	l := telemetry.Logger(c).Sugar()
+	l := Logger(c).Sugar()
 
 	var loginFormInput struct {
 		Email      string `form:"email"`
@@ -41,7 +42,7 @@ func (LoginController) Login(c *gin.Context) {
 			"error", err,
 		)
 
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
 		return
 	}
 
@@ -65,7 +66,8 @@ func (LoginController) Login(c *gin.Context) {
 			"email", loginFormInput.Email,
 		)
 
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
+		return
 
 	case nil:
 		{
@@ -74,7 +76,7 @@ func (LoginController) Login(c *gin.Context) {
 			if err != nil {
 				msg := "Failed to verify password!"
 				l.Warnw(msg, "error", err)
-				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
 				return
 			}
 
@@ -83,7 +85,7 @@ func (LoginController) Login(c *gin.Context) {
 				l.Warnw(msg,
 					"email", queryUser.Email,
 				)
-				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
+				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
 				return
 			}
 
@@ -106,24 +108,53 @@ func (LoginController) Login(c *gin.Context) {
 
 			sessionToken := core.GenerateSessionToken(c, queryUser.ID, expiry)
 
-			secure := true
-			if core.Configs.DEV_MODE() {
-				secure = false
+			_, lastRefreshedAt, err := core.GetUserKey(c, queryUser.ID)
 
+			if err != nil {
+				Logger(c).Sugar().Errorw("Failed to get existing user key",
+					"error", err,
+				)
+				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
+				return
 			}
 
-			c.SetCookie("session", sessionToken.String(), expiry, "/", core.Configs.FRONTEND_HOST, secure, true)
+			duration := time.Since(lastRefreshedAt)
 
-			msg := "User Logged in Successfully"
-			l.Infow(msg,
-				"id", queryUser.ID,
-				"email", queryUser.Email,
-				"first_name", queryUser.FirstName,
-				"middle_name", queryUser.MiddleName,
-				"last_name", queryUser.LastName,
-			)
-			c.JSON(http.StatusAccepted, gin.H{"msg": msg})
-			return
+			if duration.Hours() < float64(core.Configs.KEY_VALIDITY_TIME_HOURS) {
+				msg := "Please logout from previous device or wait for the key to expire!"
+				l.Errorw(msg)
+
+				c.AbortWithStatusJSON(http.StatusTooEarly, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
+				return
+			} else {
+				pubKey, privKey, lastRefreshedAt, signature, err := core.GenerateKeyPair(c, queryUser.ID)
+
+				if err != nil {
+					Logger(c).Sugar().Errorw("Failed to generate key pair",
+						"error", err,
+					)
+					c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
+					return
+				}
+
+				secure := true
+				if core.Configs.DEV_MODE() {
+					secure = false
+				}
+
+				c.SetCookie("session", sessionToken.String(), expiry, "/", core.Configs.FRONTEND_HOST, secure, true)
+
+				msg := "User Logged in Successfully"
+				l.Infow(msg,
+					"id", queryUser.ID,
+					"email", queryUser.Email,
+					"first_name", queryUser.FirstName,
+					"middle_name", queryUser.MiddleName,
+					"last_name", queryUser.LastName,
+				)
+				c.JSON(http.StatusAccepted, gin.H{"msg": msg, "user_id": queryUser.ID, "pub_key": pubKey, "priv_key": privKey, "signature": signature, "last_refreshed": lastRefreshedAt.Unix()})
+				return
+			}
 		}
 
 	default:
@@ -132,7 +163,7 @@ func (LoginController) Login(c *gin.Context) {
 			l.Errorw(msg,
 				"error", err,
 			)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
 			return
 		}
 	}

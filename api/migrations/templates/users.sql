@@ -8,7 +8,6 @@ CREATE TABLE Users (
     email VARCHAR(255) NOT NULL UNIQUE,
     is_verified BOOLEAN DEFAULT false NOT NULL,
     two_factor_auth VARCHAR(255),
-    pubkey VARCHAR(32),
-    pubkey_updated_at TIMESTAMP DEFAULT NOW(),
+    last_sync TIMESTAMP,
     created_at TIMESTAMP DEFAULT NOW()
 );

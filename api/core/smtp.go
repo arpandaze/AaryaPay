@@ -70,7 +70,7 @@ func SendEmail(c *gin.Context, emailRequest *Request) (bool, error) {
 			Logger(c).Sugar().Errorw("Failed to send email!",
 				"error", err,
 			)
-			panic(err)
+			return false, err
 		}
 
 		return true, nil
@@ -107,7 +107,7 @@ func SendVerificationEmail(c *gin.Context, user *CommonUser) (bool, error) {
 		Logger(c).Sugar().Errorw("Failed to parse email template!",
 			"error", err,
 		)
-		panic(err)
+		return false, err
 	}
 
 	res, err := SendEmail(c, re)

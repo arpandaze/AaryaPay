@@ -10,10 +10,10 @@ def main(args):
         if system == "Darwin":
             os.system("mailhog > /dev/null 2>&1 &")
             os.system(
-                "redis-server --appendonly yes --requirepass redispass > /dev/null 2>&1 &"
+                "redis-server --requirepass redispass > /dev/null 2>&1 &"
             )
             os.system(
-                "export DATABASE_URL=postgres://postuser:postpass@localhost:5432/actix && sqlx database create && sqlx migrate run"
+                "migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapay\\?sslmode=disable up"
             )
         else:
             os.system("./scripts/redis.sh")

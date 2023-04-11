@@ -32,7 +32,7 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 			"error", err,
 		)
 
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 
@@ -43,7 +43,7 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 		l.Warnw(msg,
 			"err", msg,
 		)
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 
@@ -66,7 +66,8 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 			"email", queryUser.Email,
 		)
 
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+    return
 
 	case nil:
 		passwordTest, err := core.VerifyPassword(c, passwordChange.current_password, queryUser.Password)
@@ -77,12 +78,11 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 			return
 		}
 		if !passwordTest {
-		
 			msg := "The password entered is incorrect"
 			l.Warnw(msg,
 				"email", queryUser.Email,
 			)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 			return
 		}
 		if !queryUser.IsVerified {
@@ -126,7 +126,10 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 		return
 
 	default:
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Failed to execute SQL statement"})
+		l.Errorw("Failed to execute SQL statement",
+			"error", err,
+		)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 }
