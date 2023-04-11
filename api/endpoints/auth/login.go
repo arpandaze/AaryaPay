@@ -5,6 +5,7 @@ import (
 	"main/core"
 	"main/telemetry"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -30,6 +31,7 @@ func (LoginController) Login(c *gin.Context) {
 		Email           string         `db:"email"`
 		Password        string         `db:"password"`
 		IsVerified      bool           `db:"is_verified"`
+		TwoFactorAuth   sql.NullString `db:"two_factor_auth"`
 		PubKey          sql.NullString `db:"pubkey"`
 		PubKeyUpdatedAt sql.NullTime   `db:"pubkey_updated_at"`
 	}
@@ -47,7 +49,7 @@ func (LoginController) Login(c *gin.Context) {
 
 	queryUser := loginUser{}
 	row := core.DB.QueryRow(`
-	SELECT id, first_name, middle_name, last_name, dob, email, password, is_verified, pubkey, pubkey_updated_at
+	SELECT id, first_name, middle_name, last_name, dob, email, password, is_verified, two_factor_auth, pubkey, pubkey_updated_at
 	FROM 
 	Users 
 	WHERE 
@@ -55,7 +57,7 @@ func (LoginController) Login(c *gin.Context) {
     `, loginFormInput.Email,
 	)
 
-	err := row.Scan(&queryUser.ID, &queryUser.FirstName, &queryUser.MiddleName, &queryUser.LastName, &queryUser.DOB, &queryUser.Email, &queryUser.Password, &queryUser.IsVerified, &queryUser.PubKey, &queryUser.PubKeyUpdatedAt)
+	err := row.Scan(&queryUser.ID, &queryUser.FirstName, &queryUser.MiddleName, &queryUser.LastName, &queryUser.DOB, &queryUser.Email, &queryUser.Password, &queryUser.IsVerified, &queryUser.TwoFactorAuth, &queryUser.PubKey, &queryUser.PubKeyUpdatedAt)
 
 	switch err {
 	case sql.ErrNoRows:
@@ -104,14 +106,25 @@ func (LoginController) Login(c *gin.Context) {
 				expiry = core.Configs.SESSION_EXPIRE_TIME
 			}
 
-			sessionToken := core.GenerateSessionToken(c, queryUser.ID, expiry)
-
 			secure := true
 			if core.Configs.DEV_MODE() {
 				secure = false
 
 			}
 
+			if queryUser.TwoFactorAuth.Valid {
+
+				temp_token := core.CreateTwoFATempToken(c, queryUser.ID, loginFormInput.RememberMe)
+
+				tempExpiry := core.Configs.TWO_FA_TIMEOUT * int(time.Second)
+				c.SetCookie("temp_session", temp_token.String(), tempExpiry, "/", core.Configs.FRONTEND_HOST, secure, true)
+
+				c.JSON(http.StatusAccepted, gin.H{"msg": "TwoFA required!", "two_fa_required": true})
+
+				return
+			}
+
+			sessionToken := core.GenerateSessionToken(c, queryUser.ID, expiry)
 			c.SetCookie("session", sessionToken.String(), expiry, "/", core.Configs.FRONTEND_HOST, secure, true)
 
 			msg := "User Logged in Successfully"
@@ -122,7 +135,7 @@ func (LoginController) Login(c *gin.Context) {
 				"middle_name", queryUser.MiddleName,
 				"last_name", queryUser.LastName,
 			)
-			c.JSON(http.StatusAccepted, gin.H{"msg": msg})
+			c.JSON(http.StatusAccepted, gin.H{"msg": msg, "user": queryUser})
 			return
 		}
 

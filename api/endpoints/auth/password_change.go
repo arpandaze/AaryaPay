@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"main/core"
 	"main/telemetry"
+	"main/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,8 +14,8 @@ type PasswordChangeController struct{}
 
 func (PasswordChangeController) PasswordChange(c *gin.Context) {
 	l := telemetry.Logger(c).Sugar()
+
 	var passwordChange struct {
-		token            string `form:"token"`
 		current_password string `form:"current_password"`
 		new_password     string `form:"new_password"`
 	}
@@ -36,15 +37,14 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 		return
 	}
 
-	uid, err := VerifyUserToken(passwordChange.token)
+	user, err := utils.GetActiveUser(c)
 
 	if err != nil {
-		msg := "invalid or expired token"
-		l.Warnw(msg,
-			"err", msg,
+		l.Errorw("Failed to extract user!",
+			"error", err,
 		)
+		msg := "Invalid or expired session!"
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
-		return
 	}
 
 	queryUser := &loginUser{}
@@ -53,7 +53,7 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 	FROM 
 		Users 
 	WHERE id=$1
-	`, uid,
+	`, user,
 	)
 
 	err = row.Scan(&queryUser.Email, &queryUser.Password, &queryUser.IsVerified, &queryUser.PubKey, &queryUser.PubKeyUpdatedAt)
@@ -77,7 +77,6 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 			return
 		}
 		if !passwordTest {
-		
 			msg := "The password entered is incorrect"
 			l.Warnw(msg,
 				"email", queryUser.Email,
@@ -93,7 +92,6 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 			c.JSON(http.StatusUnauthorized, gin.H{"msg": msg})
 			return
 		}
-
 		passwordHash, err := core.HashPassword(c, passwordChange.new_password)
 		if err != nil {
 			msg := "Failed to hash password!"
@@ -106,7 +104,7 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 			return
 		}
 
-		_, err = core.DB.Exec("UPDATE Users SET password=$1 WHERE id=$2", passwordHash, uid)
+		_, err = core.DB.Exec("UPDATE Users SET password=$1 WHERE id=$2", passwordHash, user)
 
 		if err != nil {
 			msg := "Failed to execute SQL statement"
@@ -119,7 +117,7 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 
 		msg := "Password Changed Successfully"
 		l.Infow(msg,
-			"id", uid,
+			"id", user,
 			"email", queryUser.Email,
 		)
 		c.JSON(http.StatusAccepted, gin.H{"msg": msg})
@@ -130,3 +128,4 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 		return
 	}
 }
+

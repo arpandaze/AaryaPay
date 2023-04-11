@@ -2,6 +2,7 @@ package endpoints
 
 import (
 	auth "main/endpoints/auth"
+	favorites "main/endpoints/favorites"
 	"main/endpoints/tools"
 	transaction "main/endpoints/transaction"
 
@@ -29,16 +30,24 @@ func InitAuthRoutes(routeGroup *gin.RouterGroup) {
 	routeGroup.POST("/password-change", password_change.PasswordChange)
 	routeGroup.POST("/reset-password", password_recovery.PasswordReset)
 	routeGroup.POST("/verify", verify.VerifyUser)
-	routeGroup.POST("/resend-verification-email", verify.ResendVerificationEmail)
+	// routeGroup.POST("/resend-verification-email", verify.ResendVerificationEmail)
 
 	routeGroup.POST("/logout", logout.Logout)
 
-	routeGroup.GET("/2fa/request", two_fa.TwoFAEnableRequest)
+	routeGroup.GET("/twofa/enable/request", two_fa.TwoFAEnableRequest)
+	routeGroup.POST("/twofa/enable/confirm", two_fa.TwoFAEnableConfirm)
+	routeGroup.POST("/twofa/login/confirm", two_fa.TwoFALoginConfirm)
 	routeGroup.GET("/refresh", refresh.Status)
 }
 
-func InitFavoriteRoute(routeGroup *gin.RouterGroup){
+func InitFavoritesRoute(routeGroup *gin.RouterGroup) {
+	addFavorite := new(favorites.AddFavoriteController)
+	retrieveFavorite := new(favorites.RetrieveFavoriteController)
+	removeFavorite := new(favorites.RemoveFavoriteController)
 
+	routeGroup.POST("/add", addFavorite.AddFavorite)
+	routeGroup.GET("/get", retrieveFavorite.RetrieveFavorites)
+	routeGroup.DELETE("/remove", removeFavorite.RemoveFavorite)
 }
 
 func InitTransactionRoutes(routeGroup *gin.RouterGroup) {
@@ -63,6 +72,7 @@ func RegisterRoutes(router *gin.Engine) *gin.Engine {
 	v1 := router.Group("v1")
 	{
 		InitAuthRoutes(v1.Group("auth"))
+		InitFavoritesRoute(v1.Group("favorites"))
 		InitTransactionRoutes(v1.Group("transaction"))
 	}
 

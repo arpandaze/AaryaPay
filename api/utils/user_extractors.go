@@ -12,7 +12,7 @@ import (
 type UserExtractionError struct{}
 
 func (r *UserExtractionError) Error() string {
-	return fmt.Sprintf("Failed to extract user!")
+	return fmt.Sprint("Failed to extract user!")
 }
 
 func GetUser(c *gin.Context) (uuid.UUID, error) {
