@@ -31,6 +31,7 @@ func (LoginController) Login(c *gin.Context) {
 		Email           string         `db:"email"`
 		Password        string         `db:"password"`
 		IsVerified      bool           `db:"is_verified"`
+		TwoFactorAuth   sql.NullString `db:"two_factor_auth"`
 		PubKey          sql.NullString `db:"pubkey"`
 		PubKeyUpdatedAt sql.NullTime   `db:"pubkey_updated_at"`
 	}
@@ -48,7 +49,7 @@ func (LoginController) Login(c *gin.Context) {
 
 	queryUser := loginUser{}
 	row := core.DB.QueryRow(`
-	SELECT id, first_name, middle_name, last_name, dob, email, password, is_verified, pubkey, pubkey_updated_at
+	SELECT id, first_name, middle_name, last_name, dob, email, password, is_verified, two_factor_auth, pubkey, pubkey_updated_at
 	FROM 
 	Users 
 	WHERE 
@@ -56,7 +57,7 @@ func (LoginController) Login(c *gin.Context) {
     `, loginFormInput.Email,
 	)
 
-	err := row.Scan(&queryUser.ID, &queryUser.FirstName, &queryUser.MiddleName, &queryUser.LastName, &queryUser.DOB, &queryUser.Email, &queryUser.Password, &queryUser.IsVerified, &queryUser.PubKey, &queryUser.PubKeyUpdatedAt)
+	err := row.Scan(&queryUser.ID, &queryUser.FirstName, &queryUser.MiddleName, &queryUser.LastName, &queryUser.DOB, &queryUser.Email, &queryUser.Password, &queryUser.IsVerified, &queryUser.TwoFactorAuth, &queryUser.PubKey, &queryUser.PubKeyUpdatedAt)
 
 	switch err {
 	case sql.ErrNoRows:
@@ -99,15 +100,24 @@ func (LoginController) Login(c *gin.Context) {
 				return
 			}
 
-			var expiry int
-			if loginFormInput.RememberMe {
-				expiry = core.Configs.SESSION_EXPIRE_TIME_EXTENDED
-			} else {
-				expiry = core.Configs.SESSION_EXPIRE_TIME
+			if queryUser.TwoFactorAuth.Valid {
+				temp_token := core.CreateTwoFATempToken(c, queryUser.ID, loginFormInput.RememberMe)
+
+				tempExpiry := core.Configs.TWO_FA_TIMEOUT * int(time.Second)
+
+				secure := true
+				if core.Configs.DEV_MODE() {
+					secure = false
+				}
+
+				c.SetCookie("temp_session", temp_token.String(), tempExpiry, "/", core.Configs.FRONTEND_HOST, secure, true)
+
+				c.JSON(http.StatusAccepted, gin.H{"msg": "TwoFA required!", "two_fa_required": true})
+
+				return
 			}
 
-			sessionToken := core.GenerateSessionToken(c, queryUser.ID, expiry)
-
+			// Check for last key refresh time
 			_, lastRefreshedAt, err := core.GetUserKey(c, queryUser.ID)
 
 			if err != nil {
@@ -126,35 +136,44 @@ func (LoginController) Login(c *gin.Context) {
 
 				c.AbortWithStatusJSON(http.StatusTooEarly, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
 				return
-			} else {
-				pubKey, privKey, lastRefreshedAt, signature, err := core.GenerateKeyPair(c, queryUser.ID)
+			}
 
-				if err != nil {
-					Logger(c).Sugar().Errorw("Failed to generate key pair",
-						"error", err,
-					)
-					c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
-					return
-				}
+			pubKey, privKey, lastRefreshedAt, signature, err := core.GenerateKeyPair(c, queryUser.ID)
 
-				secure := true
-				if core.Configs.DEV_MODE() {
-					secure = false
-				}
-
-				c.SetCookie("session", sessionToken.String(), expiry, "/", core.Configs.FRONTEND_HOST, secure, true)
-
-				msg := "User Logged in Successfully"
-				l.Infow(msg,
-					"id", queryUser.ID,
-					"email", queryUser.Email,
-					"first_name", queryUser.FirstName,
-					"middle_name", queryUser.MiddleName,
-					"last_name", queryUser.LastName,
+			if err != nil {
+				Logger(c).Sugar().Errorw("Failed to generate key pair",
+					"error", err,
 				)
-				c.JSON(http.StatusAccepted, gin.H{"msg": msg, "user_id": queryUser.ID, "pub_key": pubKey, "priv_key": privKey, "signature": signature, "last_refreshed": lastRefreshedAt.Unix()})
+				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
 				return
 			}
+
+			secure := true
+			if core.Configs.DEV_MODE() {
+				secure = false
+			}
+
+			var expiry int
+			if loginFormInput.RememberMe {
+				expiry = core.Configs.SESSION_EXPIRE_TIME_EXTENDED
+			} else {
+				expiry = core.Configs.SESSION_EXPIRE_TIME
+			}
+
+			sessionToken := core.GenerateSessionToken(c, queryUser.ID, expiry)
+
+			c.SetCookie("session", sessionToken.String(), expiry, "/", core.Configs.FRONTEND_HOST, secure, true)
+
+			msg := "User Logged in Successfully"
+			l.Infow(msg,
+				"id", queryUser.ID,
+				"email", queryUser.Email,
+				"first_name", queryUser.FirstName,
+				"middle_name", queryUser.MiddleName,
+				"last_name", queryUser.LastName,
+			)
+			c.JSON(http.StatusAccepted, gin.H{"msg": msg, "user_id": queryUser.ID, "pub_key": pubKey, "priv_key": privKey, "signature": signature, "last_refreshed": lastRefreshedAt.Unix()})
+			return
 		}
 
 	default:
