@@ -39,72 +39,55 @@ class RegisterWrapper extends StatelessWidget {
   }
 
   Widget body(Size size, BuildContext context) {
-    return Container(
-      alignment: Alignment.topCenter,
-      width: double.infinity,
-      height: size.height,
-      // decoration: BoxDecoration(
-      //     border: Border.all(color: Color.fromARGB(255, 250, 0, 0), width: 5)),
-      child: SingleChildScrollView(
-        child: Column(
+    return Column(
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              height: size.height * 0.35,
+              height: size.height * 0.09,
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
                   Container(
-                    alignment: Alignment.topCenter,
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Text(
-                      title ?? "",
-                      style: Theme.of(context).textTheme.titleMedium!.merge(
-                          TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.primary)),
-                    ),
-                  ),
-                  Container(
-                      alignment: Alignment.bottomCenter,
-                      // decoration: BoxDecoration(
-                      //     border: Border.all(color: Colors.deepPurple)),
-                      padding: const EdgeInsets.symmetric(vertical: 25),
-                      child: const CircleAvatar(
-                        backgroundImage: AssetImage("assets/images/pfp.jpeg"),
-                        minRadius: 70,
-                        maxRadius: 100,
-                      )),
-                  Visibility(
-                    visible: backButton ?? false,
-                    child: Positioned(
-                        top: 10,
-                        left: 15,
+                    padding: const EdgeInsets.all(15),
+                    alignment: Alignment.centerLeft,
+                    child: Visibility(
+                        visible: backButton ?? false,
                         child: GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: backButttonFunction,
-                            child: const SizedBox(
-                                child: Icon(FontAwesomeIcons.arrowLeftLong)))),
+                            child: const Icon(FontAwesomeIcons.arrowLeftLong))),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(15),
+                    child: Text("Send Money",
+                        style: Theme.of(context).textTheme.headlineMedium!),
                   ),
                 ],
               ),
-            ),
-            Container(
-                height: size.height * 0.5,
-                // decoration:
-                //     BoxDecoration(border: Border.all(color: Colors.cyanAccent)),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                child: children),
-
-            // decoration:
-            //     BoxDecoration(border: Border.all(color: Colors.cyanAccent)),
-            CustomActionButton(
-              label: actionButtonLabel,
-              onClick: actionButtonFunction,
-            ),
+            )
           ],
         ),
-      ),
+        Container(
+            alignment: Alignment.bottomCenter,
+            margin: EdgeInsets.only(top: 20),
+            child: const CircleAvatar(
+              backgroundImage: AssetImage("assets/images/pfp.jpeg"),
+              minRadius: 70,
+              maxRadius: 100,
+            )),
+        Container(
+            height: size.height * 0.5,
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            child: children),
+        CustomActionButton(
+          label: actionButtonLabel,
+          onClick: actionButtonFunction,
+        ),
+      ],
     );
   }
 }

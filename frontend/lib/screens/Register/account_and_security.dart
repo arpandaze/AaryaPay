@@ -4,6 +4,7 @@ import 'package:aaryapay/screens/Home/home_screen.dart';
 import 'package:aaryapay/screens/Register/components/register_wrapper.dart';
 import 'package:aaryapay/screens/Register/verify_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -71,11 +72,7 @@ class AccountScreen extends StatelessWidget {
         CustomTextField(
           width: size.width,
           padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
-          prefixIcon: Icon(
-            FontAwesomeIcons.solidEnvelope,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          // height: ,
+          prefixIcon: SvgPicture.asset('assets/icons/calendar.svg', width: 20, height: 20, color: Theme.of(context).colorScheme.primary),          // height: ,
           placeHolder: "Date of Birth",
         ),
         // CustomDateButton(
