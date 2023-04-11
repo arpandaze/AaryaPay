@@ -27,7 +27,7 @@ class AppTheme with ChangeNotifier {
         onBackground: Color(0xFF2A292F),
         surface: Color(0xFFFFFFFF),
         onSurface: Color.fromARGB(255, 231, 14, 14),
-        outline: Color(0xff47C70B),
+        outline: Color(0xffC0C0C0),
       ),
       textTheme: TextTheme(
         displayLarge: GoogleFonts.mulish(
@@ -68,26 +68,24 @@ class AppTheme with ChangeNotifier {
             color: const Color(0xFF000000),
             height: 1.0),
         titleMedium: GoogleFonts.mulish(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
             letterSpacing: 0.15,
             color: const Color(0xFF000000)),
         titleSmall: GoogleFonts.mulish(
-            fontSize: 12,
+            fontSize: 18,
             fontWeight: FontWeight.w500,
             letterSpacing: 0.1,
             color: const Color(0xFF000000)),
         bodyLarge: GoogleFonts.mulish(
-          fontSize: 16,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 0.1,
+          fontSize: 32,
             color: const Color(0xFF000000),
         ),
         bodyMedium: GoogleFonts.mulish(
-            fontSize: 12,
-            fontWeight: FontWeight.w900,
+            fontSize: 22,
+            fontWeight: FontWeight.w400,
             letterSpacing: 0.2,
-            color: const Color(0xFFA0A6AC),
+            color: const Color(0xFF000000),
             height: 1.5),
         labelLarge: GoogleFonts.mulish(
             fontSize: 25,
@@ -102,8 +100,8 @@ class AppTheme with ChangeNotifier {
           color: const Color(0xFF000000),
         ),
         labelSmall: GoogleFonts.mulish(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
           letterSpacing: 0.5,
         ),
       ),
