@@ -7,5 +7,5 @@ CREATE TABLE Favorites(
     FOREIGN KEY (favorite_account) REFERENCES Users(id) ON DELETE SET NULL
 );
 
-CREATE INDEX idx_favorites_owner_id ON favorites (favorite_owner_id);
-CREATE INDEX idx_favorites_account_id ON favorites (favorite_account_id);
+CREATE INDEX idx_favorites_owner_id ON favorites (favorite_owner);
+CREATE INDEX idx_favorites_account_id ON favorites (favorite_account);

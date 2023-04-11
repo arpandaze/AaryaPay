@@ -308,65 +308,96 @@ func (TwoFaController) TwoFALoginConfirm(c *gin.Context) {
 
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg})
 	case nil:
+		{
+			if !queryUser.TwoFactorAuth.Valid {
+				msg := "TwoFA is not enabled!"
+				l.Errorw(msg,
+					"error", err,
+				)
+				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
 
-		if !queryUser.TwoFactorAuth.Valid {
-			msg := "TwoFA is not enabled!"
-			l.Errorw(msg,
-				"error", err,
+				return
+			}
+
+			valid := totp.Validate(twoFACode.Passcode, queryUser.TwoFactorAuth.String)
+
+			if !valid {
+				msg := "Invalid OTP!"
+				l.Errorw(msg,
+					"error", err,
+				)
+				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
+				return
+			}
+
+			// Check for last key refresh time
+			_, lastRefreshedAt, err := core.GetUserKey(c, queryUser.ID)
+
+			if err != nil {
+				l.Errorw("Failed to get existing user key",
+					"error", err,
+				)
+				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
+				return
+			}
+
+			duration := time.Since(lastRefreshedAt)
+
+			if duration.Hours() < float64(core.Configs.KEY_VALIDITY_TIME_HOURS) {
+				msg := "Please logout from previous device or wait for the key to expire!"
+				l.Errorw(msg)
+
+				c.AbortWithStatusJSON(http.StatusTooEarly, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+				return
+			}
+
+			pubKey, privKey, lastRefreshedAt, signature, err := core.GenerateKeyPair(c, queryUser.ID)
+
+			if err != nil {
+				l.Errorw("Failed to generate key pair",
+					"error", err,
+				)
+				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
+				return
+			}
+			secure := true
+			if core.Configs.DEV_MODE() {
+				secure = false
+
+			}
+
+			var expiry int
+			if tempData.RememberMe {
+				expiry = core.Configs.SESSION_EXPIRE_TIME_EXTENDED
+			} else {
+				expiry = core.Configs.SESSION_EXPIRE_TIME
+			}
+
+			sessionToken := core.GenerateSessionToken(c, queryUser.ID, expiry)
+
+			c.SetCookie("temp_session", "", -1, "/", "", false, true)
+			c.SetCookie("session", sessionToken.String(), expiry, "/", core.Configs.FRONTEND_HOST, secure, true)
+
+			status := core.Redis.Del(c, key)
+			if err := status.Err(); err != nil {
+				l.Errorw("Failed to delete session token!",
+					"error", err,
+				)
+
+				return
+			}
+
+			msg := "User Logged in Successfully"
+			l.Infow(msg,
+				"id", queryUser.ID,
+				"email", queryUser.Email,
+				"first_name", queryUser.FirstName,
+				"middle_name", queryUser.MiddleName,
+				"last_name", queryUser.LastName,
 			)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
-
+			c.JSON(http.StatusAccepted, gin.H{"msg": msg, "user_id": queryUser.ID, "pub_key": pubKey, "priv_key": privKey, "signature": signature, "last_refreshed": lastRefreshedAt.Unix()})
 			return
 		}
-
-		valid := totp.Validate(twoFACode.Passcode, queryUser.TwoFactorAuth.String)
-
-		if !valid {
-			msg := "Invalid OTP!"
-			l.Errorw(msg,
-				"error", err,
-			)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
-			return
-		}
-		var expiry int
-		if tempData.RememberMe {
-			expiry = core.Configs.SESSION_EXPIRE_TIME_EXTENDED
-		} else {
-			expiry = core.Configs.SESSION_EXPIRE_TIME
-		}
-
-		secure := true
-		if core.Configs.DEV_MODE() {
-			secure = false
-
-		}
-
-		sessionToken := core.GenerateSessionToken(c, queryUser.ID, expiry)
-
-		c.SetCookie("temp_session", "", -1, "/", "", false, true)
-		c.SetCookie("session", sessionToken.String(), expiry, "/", core.Configs.FRONTEND_HOST, secure, true)
-
-		status := core.Redis.Del(c, key)
-		if err := status.Err(); err != nil {
-			l.Errorw("Failed to delete session token!",
-				"error", err,
-			)
-
-			return
-		}
-
-		msg := "User Logged in Successfully"
-		l.Infow(msg,
-			"id", queryUser.ID,
-			"email", queryUser.Email,
-			"first_name", queryUser.FirstName,
-			"middle_name", queryUser.MiddleName,
-			"last_name", queryUser.LastName,
-		)
-
-		c.JSON(http.StatusAccepted, gin.H{"msg": msg, "user": queryUser})
-		return
 	default:
 		{
 			msg := "Failed to execute SQL statement"
