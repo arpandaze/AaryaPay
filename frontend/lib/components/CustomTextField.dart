@@ -13,6 +13,10 @@ class CustomTextField extends StatelessWidget {
   final Widget? counter;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final bool? outlined;
+  final String? label;
+  final String? topText;
+  final bool? enableTopText;
 
   const CustomTextField({
     Key? key,
@@ -28,6 +32,10 @@ class CustomTextField extends StatelessWidget {
     this.counter,
     this.prefixIcon,
     this.suffixIcon,
+    this.outlined = false,
+    this.label,
+    this.topText = "",
+    this.enableTopText = false,
   }) : super(key: key);
 
   @override
@@ -37,26 +45,61 @@ class CustomTextField extends StatelessWidget {
       padding: padding,
       width: width,
       margin: margin,
-      child: TextField(
-        style: Theme.of(context).textTheme.bodySmall,
-        controller: messageController,
-        obscureText: isPassword,
-        onChanged: onChanged,
-        decoration: InputDecoration(
-            icon: prefixIcon,
-            suffixIcon: suffixIcon,
-            // errorText: error,
-            counter: counter,
-            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            enabledBorder: UnderlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
-                borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.primary, width: 1.0)),
-            hintText: placeHolder,
-            focusedBorder: UnderlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
-                borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.primary, width: 2.0))),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Visibility(
+              visible: enableTopText!,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: Text(
+                  topText!,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .merge(TextStyle(fontWeight: FontWeight.w700)),
+                ),
+              )),
+          TextField(
+              style: Theme.of(context).textTheme.bodySmall,
+              controller: messageController,
+              obscureText: isPassword,
+              onChanged: onChanged,
+              decoration: InputDecoration(
+                  // labelText: label ?? " ",
+                  icon: prefixIcon,
+                  suffixIcon: suffixIcon,
+                  // errorText: error,
+                  counter: counter,
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  enabledBorder: !outlined!
+                      ? UnderlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 1.0))
+                      : OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              width: 1.0)),
+                  hintText: placeHolder,
+                  focusedBorder: !outlined!
+                      ? UnderlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 2.0,
+                          ),
+                        )
+                      : OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 2.0)))),
+        ],
       ),
     );
   }

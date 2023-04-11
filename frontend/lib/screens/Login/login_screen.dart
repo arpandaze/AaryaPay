@@ -17,7 +17,7 @@ class LoginScreen extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return LoginWrapper(
       children: _midsection(context, size),
-      backButton: true,
+      backButton: false,
       backButttonFunction: () => {
         Navigator.pop(context),
       },

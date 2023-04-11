@@ -45,7 +45,7 @@ class VerifyScreen extends StatelessWidget {
                     TextStyle(
                         height: 1.8,
                         fontWeight: FontWeight.w900,
-                        color: Theme.of(context).colorScheme.secondary),
+                        color: Theme.of(context).colorScheme.primary),
                   ),
             ),
             Column(
@@ -58,7 +58,7 @@ class VerifyScreen extends StatelessWidget {
                         TextStyle(
                         height: 1.8,
                             // fontWeight: FontWeight.w500,
-                            color: Theme.of(context).colorScheme.secondary),
+                            color: Theme.of(context).colorScheme.primary),
                       ),
                 ),
                 Text(
@@ -67,7 +67,7 @@ class VerifyScreen extends StatelessWidget {
                         TextStyle(
                         height: 1.8,
                             fontWeight: FontWeight.w900,
-                            color: Theme.of(context).colorScheme.secondary),
+                            color: Theme.of(context).colorScheme.primary),
                       ),
                 ),
               ],
