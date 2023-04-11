@@ -3,7 +3,6 @@ package auth
 import (
 	"main/core"
 	. "main/telemetry"
-	"main/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,7 +11,7 @@ import (
 type LogoutController struct{}
 
 func (LogoutController) Logout(c *gin.Context) {
-	_, err := utils.GetUser(c)
+	_, err := core.GetUser(c)
 
 	if err != nil {
 		Logger(c).Sugar().Errorw("Failed to get user from context",

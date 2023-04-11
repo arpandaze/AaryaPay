@@ -3,8 +3,9 @@ package auth
 import (
 	"database/sql"
 	"main/core"
-	"main/telemetry"
+	. "main/telemetry"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -13,7 +14,7 @@ import (
 type LoginController struct{}
 
 func (LoginController) Login(c *gin.Context) {
-	l := telemetry.Logger(c).Sugar()
+	l := Logger(c).Sugar()
 
 	var loginFormInput struct {
 		Email      string `form:"email"`
@@ -41,7 +42,7 @@ func (LoginController) Login(c *gin.Context) {
 			"error", err,
 		)
 
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
 		return
 	}
 
@@ -65,7 +66,7 @@ func (LoginController) Login(c *gin.Context) {
 			"email", loginFormInput.Email,
 		)
 
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
 		return
 
 	case nil:
@@ -75,7 +76,7 @@ func (LoginController) Login(c *gin.Context) {
 			if err != nil {
 				msg := "Failed to verify password!"
 				l.Warnw(msg, "error", err)
-				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
 				return
 			}
 
@@ -84,7 +85,7 @@ func (LoginController) Login(c *gin.Context) {
 				l.Warnw(msg,
 					"email", queryUser.Email,
 				)
-				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
 				return
 			}
 
@@ -162,7 +163,7 @@ func (LoginController) Login(c *gin.Context) {
 			l.Errorw(msg,
 				"error", err,
 			)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
 			return
 		}
 	}

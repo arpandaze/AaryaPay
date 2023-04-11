@@ -1,8 +1,7 @@
-package utils
+package core
 
 import (
 	"fmt"
-	"main/core"
 	"main/telemetry"
 
 	"github.com/gin-gonic/gin"
@@ -30,7 +29,7 @@ func GetUser(c *gin.Context) (uuid.UUID, error) {
 		panic(err)
 	}
 
-	user, err := core.GetUserFromSession(c, cookieUUID)
+	user, err := GetUserFromSession(c, cookieUUID)
 
 	if err != nil {
 		telemetry.Logger(c).Sugar().Errorw("Error while getting user from session",
@@ -55,7 +54,7 @@ func GetActiveUser(c *gin.Context) (uuid.UUID, error) {
 		return uuid.UUID{}, err
 	}
 
-	row := core.DB.QueryRow("SELECT is_verified FROM Users WHERE id=$1", user)
+	row := DB.QueryRow("SELECT is_verified FROM Users WHERE id=$1", user)
 
 	var isActive bool
 	err = row.Scan(&isActive)
