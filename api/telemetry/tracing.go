@@ -13,7 +13,7 @@ import (
 
 func InitTracer() func() {
 	// exporter, err := stdout.New(stdout.WithPrettyPrint())
-	exporter, err := stdout.New()
+	exporter, err := stdout.New(stdout.WithPrettyPrint())
 
 	if err != nil {
 		log.Fatal(err)

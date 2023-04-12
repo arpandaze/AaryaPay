@@ -1,42 +1,30 @@
 version: "3"
 
 services:
-  redis:
-    image: redis:6-alpine
-    container_name: redis
-    env_file:
-      - .env
-    command: redis-server --requirepass ${REDIS_PASSWORD}
-    networks:
-      - internal
-    ports:
-      - "6379:6379"
-
-  postgres:
-    image: postgres:13-alpine
-    container_name: postgres
-    networks:
-      - internal
+  otel-collector:
+    image: otel/opentelemetry-collector
+    command: [ --config=/etc/otel-collector-config.yaml ]
     volumes:
-      - persistent:/var/lib/postgres/data
-    env_file:
-      - .env
-    environment:
-      - PGDATA=/var/lib/postgres/data
+      - ./api/etc/logging/otel-collector-config.yaml:/etc/otel-collector-config.yaml
     ports:
-      - "5432:5432"
+      - 1888:1888 # pprof extension
+      - 8888:8888 # Prometheus metrics exposed by the collector
+      - 8889:8889 # Prometheus exporter metrics
+      - 13133:13133 # health_check extension
+      - 4317:4317 # OTLP gRPC receiver
+      - 4318:4318 # OTLP http receiver
+      - 55679:55679 # zpages extension
 
-  mailhog:
-    image: mailhog/mailhog:latest
-    container_name: mailhog
-    networks:
-      - internal
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./api/etc/logging/prometheus-config.yaml:/etc/prometheus-config.yaml
     ports:
-      - "8025:8025"
-      - "1025:1025"
+      - 9090:9090
 
 volumes:
   persistent:
+
 
 networks:
   internal:
