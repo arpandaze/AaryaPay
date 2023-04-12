@@ -60,7 +60,10 @@ class QrScanScreen extends StatelessWidget {
                       child: IconButton(
                         onPressed: () => Navigator.pop(context),
                         icon: SvgPicture.asset('assets/icons/close.svg',
-                            width: 20, height: 20, color: Colors.white),
+                            width: 20,
+                            height: 20,
+                            colorFilter: const ColorFilter.mode(
+                                Colors.white, BlendMode.srcIn)),
                       ),
                     )
                   ],
@@ -70,8 +73,10 @@ class QrScanScreen extends StatelessWidget {
                   child: Text(
                     "Scan QR Code",
                     style: Theme.of(context).textTheme.bodyLarge!.merge(
-                        const TextStyle(height: 1.5)
-                            .merge(const TextStyle(color: Colors.white))),
+                          const TextStyle(height: 1.5).merge(
+                            const TextStyle(color: Colors.white),
+                          ),
+                        ),
                   ),
                 ),
                 Container(
@@ -91,5 +96,3 @@ class QrScanScreen extends StatelessWidget {
     );
   }
 }
-
-

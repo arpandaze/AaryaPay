@@ -94,8 +94,8 @@ class AppTheme with ChangeNotifier {
             height: 1.0,
             color: Color(0xff5484F5)),
         bodySmall: GoogleFonts.mulish(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
+          fontSize: 20,
+          fontWeight: FontWeight.w500,
           letterSpacing: 0.2,
           color: const Color(0xFF000000),
         ),
