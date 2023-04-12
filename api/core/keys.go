@@ -7,7 +7,6 @@ import (
 	. "main/telemetry"
 	"main/utils"
 	"time"
-	"unsafe"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -56,9 +55,11 @@ func GenerateKeyPair(c *gin.Context, userID uuid.UUID) ([]byte, []byte, time.Tim
 
 	lastRefreshedAtBytes := utils.Int32ToByteArray(int32(lastRefreshedAt.Unix()))
 
+	userIdByte, _ := userID.MarshalBinary()
+
 	mergedPayload := utils.MergeByteArray(pubKey, lastRefreshedAtBytes)
 
-	_ = unsafe.Sizeof(mergedPayload)
+	mergedPayload = utils.MergeByteArray(mergedPayload, userIdByte)
 
 	sig := ed25519.Sign(Configs.PRIVATE_KEY(), mergedPayload)
 
