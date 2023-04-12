@@ -3,20 +3,14 @@ receivers:
     protocols:
       grpc:
       http:
-  otlp/2:
-    protocols:
-      grpc:
-        endpoint: 0.0.0.0:55690
 
 processors:
   batch:
   batch/test:
 
 exporters:
-  otlp:
-    endpoint: otelcol:4317
-  otlp/2:
-    endpoint: otelcol2:4317
+  logging:
+    loglevel: debug
 
 extensions:
   health_check:
@@ -29,16 +23,13 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp]
-    traces/2:
-      receivers: [otlp/2]
-      processors: [batch/test]
-      exporters: [otlp/2]
+      exporters: [logging]
+
     metrics:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp]
+      exporters: [logging]
     logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp]
+      exporters: [logging]

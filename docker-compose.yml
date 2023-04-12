@@ -15,12 +15,17 @@ services:
       - 4318:4318 # OTLP http receiver
       - 55679:55679 # zpages extension
 
-  prometheus:
-    image: prom/prometheus
-    volumes:
-      - ./api/etc/logging/prometheus-config.yaml:/etc/prometheus-config.yaml
-    ports:
-      - 9090:9090
+  # prometheus:
+  #   image: prom/prometheus
+  #   volumes:
+  #     - ./api/etc/logging/prometheus.yml:/etc/prometheus/prometheus.yml
+  #   ports:
+  #     - 9090:9090
+
+  # grafana:
+  #   image: grafana/grafana-enterprise
+  #   ports:
+  #     - 3000:3000
 
 volumes:
   persistent:

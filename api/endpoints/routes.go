@@ -2,9 +2,10 @@ package endpoints
 
 import (
 	auth "main/endpoints/auth"
+	favorites "main/endpoints/favorites"
 	keys "main/endpoints/keys"
 	tools "main/endpoints/tools"
-	favorites "main/endpoints/favorites"
+	traces "main/endpoints/traces"
 	transaction "main/endpoints/transaction"
 
 	"github.com/gin-gonic/gin"
@@ -50,6 +51,11 @@ func InitFavoritesRoute(routeGroup *gin.RouterGroup) {
 	routeGroup.DELETE("/remove", removeFavorite.RemoveFavorite)
 }
 
+func InitTracesRoutes(routeGroup *gin.RouterGroup) {
+	test := new(traces.TestController)
+	routeGroup.POST(".", test.Test)
+}
+
 func InitTransactionRoutes(routeGroup *gin.RouterGroup) {
 	verify := new(transaction.TransactionVerifyController)
 	refresh_controller := new(transaction.RefreshController)
@@ -79,6 +85,7 @@ func RegisterRoutes(router *gin.Engine) *gin.Engine {
 	{
 		InitAuthRoutes(v1.Group("auth"))
 		InitFavoritesRoute(v1.Group("favorites"))
+		InitTracesRoutes(v1.Group("traces"))
 		InitTransactionRoutes(v1.Group("transaction"))
 		InitKeysRoutes(v1.Group("keys"))
 	}
