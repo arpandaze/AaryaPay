@@ -72,7 +72,7 @@ class QrScanScreen extends StatelessWidget {
                   margin: const EdgeInsets.only(top: 40),
                   child: Text(
                     "Scan QR Code",
-                    style: Theme.of(context).textTheme.bodyLarge!.merge(
+                    style: Theme.of(context).textTheme.displaySmall!.merge(
                           const TextStyle(height: 1.5).merge(
                             const TextStyle(color: Colors.white),
                           ),
@@ -82,7 +82,7 @@ class QrScanScreen extends StatelessWidget {
                 Container(
                   child: Text(
                     "to Pay",
-                    style: Theme.of(context).textTheme.bodyLarge!.merge(
+                    style: Theme.of(context).textTheme.displaySmall!.merge(
                         const TextStyle(height: 1.5)
                             .merge(const TextStyle(color: Colors.white))),
                   ),

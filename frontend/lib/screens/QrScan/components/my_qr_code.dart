@@ -39,7 +39,7 @@ class MyQRCode extends StatelessWidget {
                 margin: const EdgeInsets.only(left: 15),
                 child: Text(
                   "My QR Code",
-                  style: Theme.of(context).textTheme.titleSmall!.merge(
+                  style: Theme.of(context).textTheme.headlineSmall!.merge(
                         const TextStyle(color: Colors.white),
                       ),
                 ),
@@ -66,13 +66,16 @@ class MyQRCode extends StatelessWidget {
             size: 250,
           ),
         ),
-        Text(
-          "AaryaPay Nepali",
-          style: Theme.of(context).textTheme.titleMedium!,
+        Container(
+          margin: EdgeInsets.only(bottom: 10),
+          child: Text(
+            "AaryaPay Nepali",
+            style: Theme.of(context).textTheme.titleMedium!.merge(TextStyle(fontWeight: FontWeight.w700)),
+          ),
         ),
         Text(
           "Scan QR Code to receive Money",
-          style: Theme.of(context).textTheme.bodyMedium!,
+          style: Theme.of(context).textTheme.titleMedium!,
           textAlign: TextAlign.center
         )
       ]),
