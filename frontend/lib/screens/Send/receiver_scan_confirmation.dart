@@ -25,7 +25,7 @@ class ReceiverConfirmation extends StatelessWidget {
   }
 
   Widget body(Size size, BuildContext context) {
-    return ListView(
+    return Column(
       children: <Widget>[
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -74,13 +74,13 @@ class ReceiverConfirmation extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(top: 10),
               child: Text("Let the Sender Scan the",
-                  style: Theme.of(context).textTheme.bodySmall),
+                  style: Theme.of(context).textTheme.headlineSmall),
             ),
             Container(
               margin: EdgeInsets.only(top: 10, bottom: 20),
               child: Text(
                 "QR Code to complete Offline Transaction",
-                style: Theme.of(context).textTheme.bodySmall,
+                style: Theme.of(context).textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),
             ),

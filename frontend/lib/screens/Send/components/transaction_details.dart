@@ -16,7 +16,7 @@ class TransactionDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(25),
+      margin: const EdgeInsets.fromLTRB(25,25,25,35),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
           border: Border.all(color: Theme.of(context).colorScheme.outline),
@@ -28,8 +28,8 @@ class TransactionDetails extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 35),
             child: Text(
               "Transaction Details",
-              style: Theme.of(context).textTheme.titleMedium!.merge(
-                    TextStyle(color: Theme.of(context).colorScheme.primary),
+              style: Theme.of(context).textTheme.titleLarge!.merge(
+                    TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w800),
                   ),
             ),
           ),

@@ -38,7 +38,7 @@ class BottomQrBar extends StatelessWidget {
                 margin: EdgeInsets.only(left: 15),
                 child: Text(
                   "My QR Code",
-                  style: Theme.of(context).textTheme.titleSmall!.merge(
+                  style: Theme.of(context).textTheme.headlineSmall!.merge(
                         const TextStyle(color: Colors.white),
                       ),
                 ),

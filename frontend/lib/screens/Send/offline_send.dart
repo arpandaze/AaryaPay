@@ -27,6 +27,7 @@ class OfflineSend extends StatelessWidget {
   }
 
   Widget body(Size size, BuildContext context) {
+
     void onClick() {
       Navigator.of(context).push(
         PageRouteBuilder(
@@ -38,7 +39,7 @@ class OfflineSend extends StatelessWidget {
       );
     }
 
-    return ListView(
+    return Column(
       children: <Widget>[
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -86,22 +87,30 @@ class OfflineSend extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(top: 10),
               child: Text("Let the Receiver Scan the",
-                  style: Theme.of(context).textTheme.bodySmall),
+                  style: Theme.of(context).textTheme.headlineSmall),
             ),
             Container(
               margin: EdgeInsets.only(top: 10, bottom: 20),
               child: Text(
                 "QR Code to complete Offline Transaction",
-                style: Theme.of(context).textTheme.bodySmall,
+                style: Theme.of(context).textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),
             ),
             TransactionDetails(),
-            CustomActionButton(
-              label: "Scan Confirmation",
-              onClick: onClick,
-            )
           ],
+        ),
+        Expanded(
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: CustomActionButton(
+                label: "Scan Confirmation",
+                onClick: onClick,
+              ),
+            ),
+          ),
         )
       ],
     );

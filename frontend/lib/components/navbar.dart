@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:aaryapay/screens/Home/home_screen.dart';
 import 'package:aaryapay/screens/Payments/payments.dart';
+import 'package:aaryapay/screens/QrScan/qrscan_screen.dart';
 import 'package:aaryapay/screens/Settings/settings.dart';
 import 'package:aaryapay/screens/TransactionHistory/transaction_history.dart';
 import 'package:flutter/material.dart';
@@ -149,7 +150,7 @@ class NavBar extends StatelessWidget {
                             SvgPicture.asset(
                               pageName == "statements"
                                   ? "assets/icons/bill-fill.svg"
-                                  : "assets/icons/statements.svg", 
+                                  : "assets/icons/statements.svg",
                               width: 25,
                               height: 25,
                             ),
@@ -215,26 +216,35 @@ class NavBar extends StatelessWidget {
           Container(
             // height: 100,
             // padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Positioned(
-                bottom: 30,
-                left: size.width / 2 - 30,
-                child: Container(
-                  width: 60,
-                  height: 60,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      boxShadow: kElevationToShadow[4],
-                      color: Theme.of(context).colorScheme.primary,
-                      borderRadius: const BorderRadius.vertical(
-                          bottom: Radius.circular(50),
-                          top: Radius.circular(50))),
-                  child: SvgPicture.asset(
-                    "assets/icons/qrcode.svg",
-                    width: 25,
-                    height: 25,
-                    color: colorScheme.background,
-                  ),
-                )),
+            child: GestureDetector(
+              onTap: () => Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) => QrScanScreen(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              ),
+              child: Positioned(
+                  bottom: 30,
+                  left: size.width / 2 - 30,
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        boxShadow: kElevationToShadow[4],
+                        color: Theme.of(context).colorScheme.primary,
+                        borderRadius: const BorderRadius.vertical(
+                            bottom: Radius.circular(50),
+                            top: Radius.circular(50))),
+                    child: SvgPicture.asset(
+                      "assets/icons/qrcode.svg",
+                      width: 25,
+                      height: 25,
+                      color: colorScheme.background,
+                    ),
+                  )),
+            ),
           ),
         ],
       ),

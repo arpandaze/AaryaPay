@@ -4,6 +4,7 @@ import 'package:aaryapay/screens/Home/home_screen.dart';
 import 'package:aaryapay/screens/QrScan/qrscan_screen.dart';
 import 'package:aaryapay/screens/Register/components/register_wrapper.dart';
 import 'package:aaryapay/screens/Register/verify_screen.dart';
+import 'package:aaryapay/screens/Send/offline_send.dart';
 import 'package:aaryapay/screens/Send/send_money.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -24,7 +25,7 @@ class CompletedScreen extends StatelessWidget {
       actionButtonFunction: () => Navigator.of(context).push(
         PageRouteBuilder(
           pageBuilder: (context, animation1, animation2) =>
-              SendMoney(),
+              OfflineSend(),
           transitionDuration: Duration.zero,
           reverseTransitionDuration: Duration.zero,
         ),
