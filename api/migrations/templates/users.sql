@@ -3,12 +3,11 @@ CREATE TABLE Users (
     first_name VARCHAR(50) NOT NULL,
     middle_name VARCHAR(50),
     last_name VARCHAR(50) NOT NULL,
-    dob DATE,
+    dob DATE NOT NULL,
     password VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     is_verified BOOLEAN DEFAULT false NOT NULL,
     two_factor_auth VARCHAR(255),
-    pubkey VARCHAR(32),
-    pubkey_updated_at TIMESTAMP DEFAULT NOW(),
+    last_sync TIMESTAMP,
     created_at TIMESTAMP DEFAULT NOW()
 );

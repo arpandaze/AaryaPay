@@ -1,18 +1,19 @@
-import sys
 import os
 import platform
+import sys
 
 system = platform.system()
+
 
 def main(args):
     if args[1] == "dkstart":
         if system == "Darwin":
             os.system("mailhog > /dev/null 2>&1 &")
             os.system(
-                "redis-server --appendonly yes --requirepass redispass > /dev/null 2>&1 &"
+                "redis-server --requirepass redispass > /dev/null 2>&1 &"
             )
             os.system(
-                "export DATABASE_URL=postgres://postuser:postpass@localhost:5432/actix && sqlx database create && sqlx migrate run"
+                "migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapay\\?sslmode=disable up"
             )
         else:
             os.system("./scripts/redis.sh")
@@ -27,6 +28,9 @@ def main(args):
         os.system(
             "migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapay\\?sslmode=disable up"
         )
+        os.system(
+            "migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapaytest\\?sslmode=disable up"
+        )
         exit()
 
     elif args[1] == "cm":
@@ -36,6 +40,24 @@ def main(args):
         os.system(
             "migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapay\\?sslmode=disable up"
         )
+
+        os.system(
+            "migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapaytest\\?sslmode=disable down"
+        )
+        os.system(
+            "migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapaytest\\?sslmode=disable up"
+        )
+        exit()
+
+    elif args[1] == "test":
+        os.system(
+            "yes | migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapaytest\\?sslmode=disable down"
+        )
+        os.system(
+            "migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapaytest\\?sslmode=disable up"
+        )
+        os.system("go clean -testcache")
+        os.system("go test ./tests/...")
         exit()
 
     print("No args or invalid args provided!")

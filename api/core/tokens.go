@@ -2,8 +2,10 @@ package core
 
 import (
 	"crypto/rand"
+	"encoding/json"
+
 	"fmt"
-	"main/telemetry"
+	. "main/telemetry"
 	"math/big"
 	"strconv"
 	"time"
@@ -28,7 +30,7 @@ func generateVerificationCode() (string, error) {
 }
 
 func GenerateSessionToken(c *gin.Context, userID uuid.UUID, expiry int) uuid.UUID {
-	_, span := telemetry.Tracer.Start(c.Request.Context(), "GenerateSessionToken()")
+	_, span := Tracer.Start(c.Request.Context(), "GenerateSessionToken()")
 	defer span.End()
 
 	token := uuid.New()
@@ -40,7 +42,7 @@ func GenerateSessionToken(c *gin.Context, userID uuid.UUID, expiry int) uuid.UUI
 	status := Redis.SetEx(c, key, userID.String(), duration)
 
 	if err := status.Err(); err != nil {
-		telemetry.Logger(c).Sugar().Errorw("Failed to set session token!",
+		Logger(c).Sugar().Errorw("Failed to set session token!",
 			"userID", userID.String(),
 			"error", err,
 		)
@@ -51,8 +53,29 @@ func GenerateSessionToken(c *gin.Context, userID uuid.UUID, expiry int) uuid.UUI
 	return token
 }
 
+func ExpireSession(c *gin.Context) error {
+	_, span := Tracer.Start(c.Request.Context(), "ExpireSession()")
+	defer span.End()
+
+	sessionToken, _ := c.Cookie("session")
+
+	key := fmt.Sprint("session_", sessionToken)
+
+	status := Redis.Del(c, key)
+
+	if err := status.Err(); err != nil {
+		Logger(c).Sugar().Errorw("Failed to delete session token!",
+			"error", err,
+		)
+
+		return err
+	}
+
+	return nil
+}
+
 func GetUserFromSession(c *gin.Context, token uuid.UUID) (uuid.UUID, error) {
-	_, span := telemetry.Tracer.Start(c.Request.Context(), "GetUserFromSession()")
+	_, span := Tracer.Start(c.Request.Context(), "GetUserFromSession()")
 	defer span.End()
 
 	key := fmt.Sprint("session_", token.String())
@@ -60,7 +83,7 @@ func GetUserFromSession(c *gin.Context, token uuid.UUID) (uuid.UUID, error) {
 	status := Redis.Get(c, key)
 
 	if err := status.Err(); err != nil {
-		telemetry.Logger(c).Sugar().Errorw("Failed to get session details!",
+		Logger(c).Sugar().Errorw("Failed to get session details!",
 			"error", err,
 		)
 
@@ -70,7 +93,7 @@ func GetUserFromSession(c *gin.Context, token uuid.UUID) (uuid.UUID, error) {
 	idFromRedis, err := uuid.Parse(status.Val())
 
 	if err != nil {
-		telemetry.Logger(c).Sugar().Errorw("Failed to parse uuid received from Redis!",
+		Logger(c).Sugar().Errorw("Failed to parse uuid received from Redis!",
 			"error", err,
 			"uuid", idFromRedis,
 		)
@@ -82,13 +105,13 @@ func GetUserFromSession(c *gin.Context, token uuid.UUID) (uuid.UUID, error) {
 }
 
 func GenerateResetToken(c *gin.Context, userID uuid.UUID) string {
-	_, span := telemetry.Tracer.Start(c.Request.Context(), "GenerateResetToken()")
+	_, span := Tracer.Start(c.Request.Context(), "GenerateResetToken()")
 	defer span.End()
 
 	token, err := generateVerificationCode()
 
 	if err != nil {
-		telemetry.Logger(c).Sugar().Errorw("Failed to generate verification code!",
+		Logger(c).Sugar().Errorw("Failed to generate verification code!",
 			"error", err,
 		)
 		panic(err)
@@ -101,7 +124,7 @@ func GenerateResetToken(c *gin.Context, userID uuid.UUID) string {
 	status := Redis.SetEx(c, key, token, duration)
 
 	if err := status.Err(); err != nil {
-		telemetry.Logger(c).Sugar().Errorw("Failed to set password reset token!",
+		Logger(c).Sugar().Errorw("Failed to set password reset token!",
 			"userID", userID.String(),
 			"error", err,
 		)
@@ -113,15 +136,15 @@ func GenerateResetToken(c *gin.Context, userID uuid.UUID) string {
 }
 
 func GetUserFromResetToken(c *gin.Context, token uuid.UUID) (uuid.UUID, error) {
-	_, span := telemetry.Tracer.Start(c.Request.Context(), "GetUserFromResetToken()")
+	_, span := Tracer.Start(c.Request.Context(), "GetUserFromResetToken()")
 	defer span.End()
 
 	key := fmt.Sprint("reset_", token.String())
 
-	status := Redis.Get(c, key)
+	status := Redis.GetDel(c, key)
 
 	if err := status.Err(); err != nil {
-		telemetry.Logger(c).Sugar().Errorw("Failed to get user from reset token!",
+		Logger(c).Sugar().Errorw("Failed to get user from reset token!",
 			"error", err,
 		)
 
@@ -131,7 +154,7 @@ func GetUserFromResetToken(c *gin.Context, token uuid.UUID) (uuid.UUID, error) {
 	idFromRedis, err := uuid.Parse(status.Val())
 
 	if err != nil {
-		telemetry.Logger(c).Sugar().Errorw("Failed to parse uuid received from Redis!",
+		Logger(c).Sugar().Errorw("Failed to parse uuid received from Redis!",
 			"error", err,
 			"uuid", idFromRedis,
 		)
@@ -143,13 +166,13 @@ func GetUserFromResetToken(c *gin.Context, token uuid.UUID) (uuid.UUID, error) {
 }
 
 func GenerateVerificationToken(c *gin.Context, userID uuid.UUID) string {
-	_, span := telemetry.Tracer.Start(c.Request.Context(), "GenerateVerificationToken()")
+	_, span := Tracer.Start(c.Request.Context(), "GenerateVerificationToken()")
 	defer span.End()
 
 	token, err := generateVerificationCode()
 
 	if err != nil {
-		telemetry.Logger(c).Sugar().Errorw("Failed to generate verification code!",
+		Logger(c).Sugar().Errorw("Failed to generate verification code!",
 			"error", err,
 		)
 		panic(err)
@@ -162,7 +185,7 @@ func GenerateVerificationToken(c *gin.Context, userID uuid.UUID) string {
 	status := Redis.SetEx(c, key, token, duration)
 
 	if err := status.Err(); err != nil {
-		telemetry.Logger(c).Sugar().Errorw("Failed to set verification token!",
+		Logger(c).Sugar().Errorw("Failed to set verification token!",
 			"userID", userID.String(),
 			"error", err,
 		)
@@ -174,7 +197,7 @@ func GenerateVerificationToken(c *gin.Context, userID uuid.UUID) string {
 }
 
 func VerifyVerificationToken(c *gin.Context, userID uuid.UUID, token int) bool {
-	_, span := telemetry.Tracer.Start(c.Request.Context(), "GetUserFromVerificationToken()")
+	_, span := Tracer.Start(c.Request.Context(), "GetUserFromVerificationToken()")
 	defer span.End()
 
 	key := fmt.Sprint("verification_", userID.String())
@@ -182,7 +205,7 @@ func VerifyVerificationToken(c *gin.Context, userID uuid.UUID, token int) bool {
 	status := Redis.Get(c, key)
 
 	if err := status.Err(); err != nil {
-		telemetry.Logger(c).Sugar().Errorw("Failed to get verification token from key!",
+		Logger(c).Sugar().Errorw("Failed to get verification token from key!",
 			"error", err,
 		)
 
@@ -192,14 +215,14 @@ func VerifyVerificationToken(c *gin.Context, userID uuid.UUID, token int) bool {
 	tokenRedis, err := strconv.Atoi(status.Val())
 
 	if err != nil {
-		telemetry.Logger(c).Sugar().Errorw("Failed to parse redis returned value into int",
+		Logger(c).Sugar().Errorw("Failed to parse redis returned value into int",
 			"error", err,
 		)
 		panic(err)
 	}
 
 	if token != tokenRedis {
-		telemetry.Logger(c).Sugar().Errorw("Verification token didn't match!",
+		Logger(c).Sugar().Errorw("Verification token didn't match!",
 			"user_id", userID.String())
 		return false
 	}
@@ -207,10 +230,50 @@ func VerifyVerificationToken(c *gin.Context, userID uuid.UUID, token int) bool {
 	delStatus := Redis.Del(c, key)
 
 	if err := delStatus.Err(); err != nil {
-		telemetry.Logger(c).Sugar().Errorw("Failed to remote verification token from Redis!",
+		Logger(c).Sugar().Errorw("Failed to remote verification token from Redis!",
 			"error", err,
 		)
 	}
 
 	return true
+}
+
+func CreateTwoFATempToken(c *gin.Context, userID uuid.UUID, rememberMe bool) uuid.UUID {
+
+	_, span := Tracer.Start(c.Request.Context(), "GetUserFromVerificationToken()")
+	defer span.End()
+
+	session_token := uuid.New()
+	key := fmt.Sprint("two_fa_temp_", session_token.String())
+	tempExpiry := time.Duration(Configs.TWO_FA_TIMEOUT * int(time.Second))
+
+	type tempTokenStruct struct {
+		UserId     uuid.UUID `json:"UserId"`
+		RememberMe bool      `json:"RememberMe"`
+	}
+
+	var tempTokenValue tempTokenStruct
+	tempTokenValue.UserId = userID
+	tempTokenValue.RememberMe = rememberMe
+
+	tempTokenValueStr, err := json.Marshal(tempTokenValue)
+
+	if err != nil {
+		Logger(c).Sugar().Errorw("Failed to convert token struct to string",
+			"userID", userID.String(),
+			"error", err,
+		)
+	}
+
+	status := Redis.SetEx(c, key, tempTokenValueStr, tempExpiry)
+	if err := status.Err(); err != nil {
+		Logger(c).Sugar().Errorw("Failed to set session token!",
+			"userID", userID.String(),
+			"error", err,
+		)
+
+		panic(err)
+	}
+
+	return session_token
 }

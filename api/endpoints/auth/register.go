@@ -15,12 +15,12 @@ func (RegisterController) Register(c *gin.Context) {
 	l := telemetry.Logger(c).Sugar()
 
 	var user struct {
-		FirstName  string `form:"first_name"`
+		FirstName  string `form:"first_name" validate:"required"`
 		MiddleName string `form:"middle_name"`
-		LastName   string `form:"last_name"`
-		DOB        string `form:"dob"`
-		Email      string `form:"email"`
-		Password   string `form:"password"`
+		LastName   string `form:"last_name" validate:"required"`
+		DOB        string `form:"dob" validate:"required"`
+		Email      string `form:"email" validate:"required,email"`
+		Password   string `form:"password" validate:"required,min=8,max=128"`
 	}
 
 	if err := c.Bind(&user); err != nil {
@@ -30,7 +30,37 @@ func (RegisterController) Register(c *gin.Context) {
 			"error", err,
 		)
 
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+		return
+	}
+
+	err := core.Validator.Struct(user)
+
+	if err != nil {
+		core.HandleValidationError(c, err)
+		return
+	}
+
+	// Check if firstname and lastname are empty
+	if user.FirstName == "" || user.LastName == "" {
+		msg := "First Name and Last Name are required!"
+
+		l.Warnw(msg,
+			"first_name", user.FirstName,
+			"last_name", user.LastName)
+
+		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+		return
+	}
+
+	// Ceck if DOB is empty
+	if user.DOB == "" {
+		msg := "Date of birth is required!"
+
+		l.Warnw(msg,
+			"dob", user.DOB)
+
+		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 
@@ -45,7 +75,7 @@ func (RegisterController) Register(c *gin.Context) {
 			"email", user.Email,
 		)
 
-		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 
@@ -111,7 +141,14 @@ func (RegisterController) Register(c *gin.Context) {
 
 	msg := "User created successfully!"
 
-	core.SendVerificationEmail(c, &returnedUser)
+	_, err = core.SendVerificationEmail(c, &returnedUser)
+	if err != nil {
+		telemetry.Logger(c).Sugar().Errorw("Failed to send verification email",
+			"error", err,
+		)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
+		return
+	}
 
 	l.Infow(msg,
 		"email", user.Email,

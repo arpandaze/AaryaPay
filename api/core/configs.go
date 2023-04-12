@@ -1,9 +1,13 @@
 package core
 
 import (
+	"encoding/base64"
 	"fmt"
 	"log"
 	"os"
+	"path"
+	"path/filepath"
+	"runtime"
 
 	"gopkg.in/yaml.v3"
 )
@@ -68,6 +72,8 @@ type Settings struct {
 	ARGON_PARALLELISM uint8  `yaml:"ARGON_PARALLELISM"`
 	ARGON_SALT_LENGTH uint32 `yaml:"ARGON_SALT_LENGTH"`
 	ARGON_KEY_LENGTH  uint32 `yaml:"ARGON_KEY_LENGTH"`
+
+	KEY_VALIDITY_TIME_HOURS int `yaml:"KEY_VALIDITY_TIME_HOURS"`
 }
 
 func (r Settings) BACKEND_URL_BASE() string {
@@ -101,6 +107,14 @@ func (r Settings) DEV_MODE() bool {
 	}
 }
 
+func (r Settings) TEMPLATE_DIR() string {
+	_, b, _, _ := runtime.Caller(0)
+	d := path.Join(path.Dir(b))
+	rootDir := filepath.Dir(d)
+
+	return rootDir + "/" + r.EMAIL_TEMPLATES_DIR
+}
+
 func (r Settings) POSTGRES_DATABASE_URI(ssl bool) string {
 	if ssl {
 		return fmt.Sprintf("postgres://%s:%s@%s:%d/%s", r.POSTGRES_USER, r.POSTGRES_PASSWORD, r.POSTGRES_SERVER, r.POSTGRES_PORT, r.POSTGRES_DB)
@@ -117,10 +131,43 @@ func (r Settings) EMAILS_ENABLED() bool {
 	return len(r.SMTP_HOST) != 0 && r.SMTP_PORT != 0 && len(r.EMAILS_FROM_EMAIL) != 0
 }
 
+func (r Settings) PRIVATE_KEY() []byte {
+	decodedKey, err := base64.StdEncoding.DecodeString(r.SECRET_KEY)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return decodedKey
+}
+
+func (r Settings) PRIVATE_KEY_ONLY() []byte {
+	decodedKey, err := base64.StdEncoding.DecodeString(r.SECRET_KEY)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return decodedKey[:32]
+}
+
+func (r Settings) PUBLIC_KEY() []byte {
+	decodedKey, err := base64.StdEncoding.DecodeString(r.SECRET_KEY)
+	if err != nil {
+		panic(err)
+	}
+
+	return decodedKey[32:]
+}
+
 var Configs Settings
 
-func LoadConfig() {
-	f, err := os.ReadFile("./etc/dev.yaml")
+func LoadConfig(mode string) {
+	_, b, _, _ := runtime.Caller(0)
+	d := path.Join(path.Dir(b))
+	rootDir := filepath.Dir(d)
+
+	f, err := os.ReadFile(rootDir + "/etc/" + mode + ".yaml")
 	if err != nil {
 		log.Fatal(err)
 	}

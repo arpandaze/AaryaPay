@@ -1,16 +1,4 @@
 import 'package:libaaryapay/libaaryapay.dart';
-import 'package:test/test.dart';
+import "dart:convert";
 
-void main() {
-  group('A group of tests', () {
-    final awesome = Awesome();
-
-    setUp(() {
-      // Additional setup goes here.
-    });
-
-    test('First Test', () {
-      expect(awesome.isAwesome, isTrue);
-    });
-  });
-}
+void main() async {}

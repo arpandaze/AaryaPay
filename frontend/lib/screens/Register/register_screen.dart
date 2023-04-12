@@ -42,7 +42,7 @@ class RegisterScreen extends StatelessWidget {
                     TextStyle(
                         height: 1.8,
                         fontWeight: FontWeight.w900,
-                        color: Theme.of(context).colorScheme.secondary),
+                        color: Theme.of(context).colorScheme.primary),
                   ),
             ),
             Text(
@@ -51,7 +51,7 @@ class RegisterScreen extends StatelessWidget {
                     TextStyle(
                         height: 2,
                         // fontWeight: FontWeight.w900,
-                        color: Theme.of(context).colorScheme.secondary),
+                        color: Theme.of(context).colorScheme.primary),
                   ),
             ),
           ],

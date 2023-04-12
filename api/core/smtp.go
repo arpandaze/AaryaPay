@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
-	"main/telemetry"
+	. "main/telemetry"
 	"net/smtp"
 
 	"github.com/gin-gonic/gin"
@@ -27,7 +27,7 @@ type User struct {
 }
 
 func (r *Request) ParseTemplate(c *gin.Context, templateFileName string, data interface{}) error {
-	_, span := telemetry.Tracer.Start(c.Request.Context(), "ParseTemplate()")
+	_, span := Tracer.Start(c.Request.Context(), "ParseTemplate()")
 	defer span.End()
 
 	t, err := template.ParseFiles(templateFileName)
@@ -45,7 +45,7 @@ func (r *Request) ParseTemplate(c *gin.Context, templateFileName string, data in
 }
 
 func SendEmail(c *gin.Context, emailRequest *Request) (bool, error) {
-	_, span := telemetry.Tracer.Start(c.Request.Context(), "SendEmail()")
+	_, span := Tracer.Start(c.Request.Context(), "SendEmail()")
 	defer span.End()
 
 	if Configs.EMAILS_ENABLED() {
@@ -67,22 +67,22 @@ func SendEmail(c *gin.Context, emailRequest *Request) (bool, error) {
 		err := email.Send(client)
 
 		if err != nil {
-			telemetry.Logger(c).Sugar().Errorw("Failed to send email!",
+			Logger(c).Sugar().Errorw("Failed to send email!",
 				"error", err,
 			)
-			panic(err)
+			return false, err
 		}
 
 		return true, nil
 
 	} else {
-		telemetry.Logger(c).Sugar().Errorw("Email is disabled!")
+		Logger(c).Sugar().Errorw("Email is disabled!")
 		return false, nil
 	}
 }
 
 func SendVerificationEmail(c *gin.Context, user *CommonUser) (bool, error) {
-	_, span := telemetry.Tracer.Start(c.Request.Context(), "SendVerificationEmail()")
+	_, span := Tracer.Start(c.Request.Context(), "SendVerificationEmail()")
 	defer span.End()
 
 	re := &Request{}
@@ -101,13 +101,22 @@ func SendVerificationEmail(c *gin.Context, user *CommonUser) (bool, error) {
 		Link:      token,
 	}
 
-	if err := re.ParseTemplate(c, fmt.Sprintf("%s/verify-account.html", Configs.EMAIL_TEMPLATES_DIR), templateData); err == nil {
-		res, resErr := SendEmail(c, re)
-		if res {
-			return true, resErr
-		}
+	err := re.ParseTemplate(c, fmt.Sprintf("%s/verify-account.html", Configs.TEMPLATE_DIR()), templateData)
+
+	if err != nil {
+		Logger(c).Sugar().Errorw("Failed to parse email template!",
+			"error", err,
+		)
+		return false, err
 	}
-	return false, fmt.Errorf("email could not be sent at this moment")
+
+	res, err := SendEmail(c, re)
+
+	if err != nil {
+		return false, err
+	} else {
+		return res, nil
+	}
 }
 
 func SendResetPasswordEmail(c *gin.Context, user *CommonUser) (bool, error) {

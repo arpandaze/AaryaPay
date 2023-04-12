@@ -39,7 +39,7 @@ class ForgotPassword extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineMedium!.merge(
                   TextStyle(
                       fontWeight: FontWeight.w900,
-                      color: Theme.of(context).colorScheme.secondary),
+                      color: Theme.of(context).colorScheme.primary),
                 ),
           ),
         ),
@@ -48,7 +48,7 @@ class ForgotPassword extends StatelessWidget {
           style: Theme.of(context).textTheme.bodySmall!.merge(
                 TextStyle(
                     // fontWeight: FontWeight.w500,
-                    color: Theme.of(context).colorScheme.secondary),
+                    color: Theme.of(context).colorScheme.primary),
               ),
         ),
         CustomTextField(

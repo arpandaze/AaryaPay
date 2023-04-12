@@ -5,6 +5,7 @@ import 'package:aaryapay/screens/Login/reset_password.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class OTPScreen extends StatelessWidget {
   const OTPScreen({Key? key}) : super(key: key);
@@ -41,7 +42,7 @@ class OTPScreen extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineMedium!.merge(
                   TextStyle(
                       fontWeight: FontWeight.w900,
-                      color: Theme.of(context).colorScheme.secondary),
+                      color: Theme.of(context).colorScheme.primary),
                 ),
           ),
         ),
@@ -54,7 +55,7 @@ class OTPScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.bodySmall!.merge(
                     TextStyle(
                         // fontWeight: FontWeight.w500,
-                        color: Theme.of(context).colorScheme.secondary),
+                        color: Theme.of(context).colorScheme.primary),
                   ),
             ),
             Text(
@@ -62,7 +63,7 @@ class OTPScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.bodySmall!.merge(
                     TextStyle(
                         fontWeight: FontWeight.w900,
-                        color: Theme.of(context).colorScheme.secondary),
+                        color: Theme.of(context).colorScheme.primary),
                   ),
             ),
           ],
@@ -70,7 +71,7 @@ class OTPScreen extends StatelessWidget {
         PinCodeTextField(
           length: 6,
           hapticFeedbackTypes: HapticFeedbackTypes.light,
-          textStyle: TextStyle(color: Theme.of(context).colorScheme.secondary),
+          textStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
           // obscureText: true,
           animationType: AnimationType.fade,
           pinTheme: PinTheme(
