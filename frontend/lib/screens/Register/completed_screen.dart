@@ -42,7 +42,7 @@ class CompletedScreen extends StatelessWidget {
             Text(
               "You Are, All Set",
               style: Theme.of(context).textTheme.headlineLarge!.merge(
-                    TextStyle(color: Theme.of(context).colorScheme.secondary),
+                    TextStyle(color: Theme.of(context).colorScheme.primary),
                   ),
             ),
             Padding(

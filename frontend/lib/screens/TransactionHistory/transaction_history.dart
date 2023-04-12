@@ -19,20 +19,21 @@ class TransactionHistory extends StatelessWidget {
     var textTheme = Theme.of(context).textTheme;
     var colorScheme = Theme.of(context).colorScheme;
     return Wrapper(
+      pageName: "statements",
       children: Container(
         decoration: BoxDecoration(border: Border.all(color: Colors.black12)),
         clipBehavior: Clip.none,
         width: size.width,
         height: size.height * 0.75,
         child: Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.fromLTRB(15.0, 0, 15, 0),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 10),
+                  padding: EdgeInsets.symmetric(vertical: 15),
                   child: Text(
                     "Transaction History",
                     style: textTheme.titleMedium,

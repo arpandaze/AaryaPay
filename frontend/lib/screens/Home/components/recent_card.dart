@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:aaryapay/components/CustomAddButton.dart';
+import 'package:aaryapay/components/CustomArrowedButton.dart';
 import 'package:aaryapay/components/TransactionsCard.dart';
 
 class RecentCard extends StatelessWidget {

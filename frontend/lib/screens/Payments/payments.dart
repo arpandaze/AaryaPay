@@ -68,7 +68,9 @@ class Payments extends StatelessWidget {
       ),
     ];
     return Wrapper(
+      pageName: "payments",
       children: Container(
+        // margin: EdgeInsets.only(bottom: 10),
         child: Expanded(
           child: SingleChildScrollView(
               child: Column(
