@@ -10,6 +10,7 @@ class HomeScreen extends StatelessWidget {
   Widget body(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Wrapper(
+      pageName: "home",
       children: Midsection(size: size),
     );
   }

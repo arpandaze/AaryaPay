@@ -17,7 +17,7 @@ class LoginScreen extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return LoginWrapper(
       children: _midsection(context, size),
-      backButton: true,
+      backButton: false,
       backButttonFunction: () => {
         Navigator.pop(context),
       },
@@ -60,14 +60,7 @@ class LoginScreen extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
             ),
             width: size.width,
-            suffixIcon: Align(
-              heightFactor: 1,
-              widthFactor: 3,
-              child: Icon(
-                FontAwesomeIcons.eyeSlash,
-                size: 20,
-              ),
-            ),
+      
 
             // height: 1,
             // error: "Incorrect Password",

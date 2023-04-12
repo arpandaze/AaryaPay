@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:aaryapay/screens/Home/home_screen.dart';
 import 'package:aaryapay/screens/Payments/payments.dart';
+import 'package:aaryapay/screens/Settings/settings.dart';
 import 'package:aaryapay/screens/TransactionHistory/transaction_history.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -12,8 +13,10 @@ class NavBar extends StatelessWidget {
   const NavBar({
     Key? key,
     required this.size,
+    required this.pageName,
   }) : super(key: key);
   final Size size;
+  final String pageName;
   @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
@@ -63,7 +66,9 @@ class NavBar extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SvgPicture.asset(
-                              "assets/icons/home.svg",
+                              pageName == "home"
+                                  ? "assets/icons/home-fill.svg"
+                                  : "assets/icons/home.svg",
                               width: 25,
                               height: 25,
                             ),
@@ -71,6 +76,9 @@ class NavBar extends StatelessWidget {
                               "Home",
                               style: TextStyle(
                                   fontSize: 10,
+                                  fontWeight: pageName == "home"
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
                                   color: Theme.of(context).colorScheme.primary),
                             )
                           ],
@@ -96,15 +104,19 @@ class NavBar extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SvgPicture.asset(
-                              "assets/icons/payments.svg",
+                              pageName == "payments"
+                                  ? "assets/icons/wallet-fill.svg"
+                                  : "assets/icons/payments.svg",
                               width: 25,
                               height: 25,
                             ),
                             Text(
                               "Payments",
-                              
                               style: TextStyle(
                                   fontSize: 10,
+                                  fontWeight: pageName == "payments"
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
                                   color: Theme.of(context).colorScheme.primary),
                             )
                           ],
@@ -135,15 +147,19 @@ class NavBar extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SvgPicture.asset(
-                              "assets/icons/statements.svg",
+                              pageName == "statements"
+                                  ? "assets/icons/bill-fill.svg"
+                                  : "assets/icons/statements.svg", 
                               width: 25,
                               height: 25,
-                            ), 
-                          
+                            ),
                             Text(
                               "Statements",
                               style: TextStyle(
                                   fontSize: 10,
+                                  fontWeight: pageName == "statements"
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
                                   color: Theme.of(context).colorScheme.primary),
                             )
                           ],
@@ -160,7 +176,7 @@ class NavBar extends StatelessWidget {
                       onTap: () => Navigator.of(context).push(
                         PageRouteBuilder(
                           pageBuilder: (context, animation1, animation2) =>
-                              TransactionHistory(),
+                              Settings(),
                           transitionDuration: Duration.zero,
                           reverseTransitionDuration: Duration.zero,
                         ),
@@ -171,7 +187,9 @@ class NavBar extends StatelessWidget {
                           children: [
                             // SvgPicture.asset("assets/icons/home.svg"),
                             SvgPicture.asset(
-                              "assets/icons/settings.svg",
+                              (pageName == "settings")
+                                  ? "assets/icons/gear-fill.svg"
+                                  : "assets/icons/settings.svg",
                               width: 25,
                               height: 25,
                               color: colorScheme.primary,
@@ -180,6 +198,9 @@ class NavBar extends StatelessWidget {
                               "Settings",
                               style: TextStyle(
                                   fontSize: 10,
+                                  fontWeight: pageName == "settings"
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
                                   color: Theme.of(context).colorScheme.primary),
                             )
                           ],
