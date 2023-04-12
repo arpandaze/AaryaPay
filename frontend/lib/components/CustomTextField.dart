@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class CustomTextField extends StatelessWidget {
   final EdgeInsets margin;
@@ -69,7 +70,13 @@ class CustomTextField extends StatelessWidget {
               decoration: InputDecoration(
                   // labelText: label ?? " ",
                   icon: prefixIcon,
-                  suffixIcon: suffixIcon,
+                  suffixIcon: isPassword
+                      ? Container(
+                          padding: EdgeInsets.all(10),
+                          child: SvgPicture.asset("assets/icons/invisible.svg",
+                              width: 10, height: 10),
+                        )
+                      : suffixIcon,
                   // errorText: error,
                   counter: counter,
                   contentPadding:

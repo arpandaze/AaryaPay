@@ -8,14 +8,15 @@ class CustomActionButton extends StatelessWidget {
       this.onClick,
       this.width,
       this.height,
-      this.borderRadius})
+      this.borderRadius,
+      this.actionLogo})
       : super(key: key);
   final String? label;
   final Function()? onClick;
   final double? width;
   final double? height;
   final double? borderRadius;
-
+  final Widget? actionLogo;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -31,10 +32,16 @@ class CustomActionButton extends StatelessWidget {
             color: Theme.of(context).colorScheme.primary,
             borderRadius:
                 BorderRadius.all(Radius.circular(borderRadius ?? 50))),
-        child: Text(
-          label ?? "LOGIN",
-          style: Theme.of(context).textTheme.titleLarge!.merge(
-              TextStyle(color: Theme.of(context).colorScheme.background)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            actionLogo ?? Container(),
+            Text(
+              label ?? "LOGIN",
+              style: Theme.of(context).textTheme.titleLarge!.merge(
+                  TextStyle(color: Theme.of(context).colorScheme.background)),
+            ),
+          ],
         ),
       ),
     );

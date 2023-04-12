@@ -7,11 +7,10 @@ class SettingsWrapper extends StatelessWidget {
       {Key? key,
       required this.children,
       required this.pageName,
-      this.backButtonFunction})
+  })
       : super(key: key);
 
   final Widget children;
-  final Function()? backButtonFunction;
   final String pageName;
 
   @override
@@ -33,14 +32,16 @@ class SettingsWrapper extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SettingsTopBar(
-                    label: pageName, backButtonFunction: backButtonFunction),
-                Flexible(child: children ?? Container()),
-                Positioned(
+                  label: pageName,
+                ),
+                Flexible(child: children),
+                const Positioned(
                   bottom: 0,
                   child: SettingsBottomBar(),
                 )
               ],
             ),
+        
           ],
         ),
       ),

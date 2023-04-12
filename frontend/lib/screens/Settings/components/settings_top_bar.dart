@@ -5,10 +5,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:math' as math;
 
 class SettingsTopBar extends StatelessWidget {
-  const SettingsTopBar({Key? key, required this.label, this.backButtonFunction})
+  const SettingsTopBar({
+    Key? key,
+    required this.label,
+  })
       : super(key: key);
   final String label;
-  final Function()? backButtonFunction;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class SettingsTopBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           GestureDetector(
-            onTap: backButtonFunction,
+            onTap: () => Navigator.pop(context),
             child: Transform.rotate(
                 angle: -math.pi,
                 child: SvgPicture.asset("assets/icons/arrow2.svg",

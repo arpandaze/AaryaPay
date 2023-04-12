@@ -22,7 +22,6 @@ class ChangePassword extends StatelessWidget {
       TextTheme textTheme, Size size) {
     return SettingsWrapper(
       pageName: "Change Password",
-      backButtonFunction: () => Navigator.pop(context),
       children: Column(
         children: [
           SizedBox(

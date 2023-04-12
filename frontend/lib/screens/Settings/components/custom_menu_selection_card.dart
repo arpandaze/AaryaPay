@@ -7,46 +7,51 @@ class CustomMenuSelectionCard extends StatelessWidget {
       {Key? key,
       required this.icon,
       required this.label,
-      required this.trailingWidget})
+      required this.trailingWidget,
+      this.onTap})
       : super(key: key);
   final Widget icon;
   final String label;
   final Widget trailingWidget;
+  final Function()? onTap;
   @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
     var colorScheme = Theme.of(context).colorScheme;
     Size size = MediaQuery.of(context).size;
 
-    return Container(
-      margin: EdgeInsets.only(top: 15),
-      padding: EdgeInsets.all(15),
-      width: size.width * 0.9,
-      height: size.height * 0.07,
-      decoration: BoxDecoration(
-          border: Border.all(color: colorScheme.surface),
-          borderRadius: BorderRadius.circular(10)),
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  icon,
-                  Container(
-                      margin: EdgeInsets.only(left: 15),
-                      child: Text(
-                        label,
-                        style: textTheme.bodyLarge,
-                      ))
-                ],
+    return GestureDetector(
+      onTap: onTap ?? () => {},
+      child: Container(
+        margin: EdgeInsets.only(top: 15),
+        padding: EdgeInsets.all(15),
+        width: size.width * 0.9,
+        height: size.height * 0.07,
+        decoration: BoxDecoration(
+            border: Border.all(color: colorScheme.surface),
+            borderRadius: BorderRadius.circular(10)),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    icon,
+                    Container(
+                        margin: EdgeInsets.only(left: 15),
+                        child: Text(
+                          label,
+                          style: textTheme.bodyLarge,
+                        ))
+                  ],
+                ),
               ),
-            ),
-            trailingWidget
-          ]),
+              trailingWidget
+            ]),
+      ),
     );
   }
 }
