@@ -16,7 +16,7 @@ func HandleValidationError(c *gin.Context, err error) {
 		telemetry.Logger(c).Sugar().Errorw("Failed to validate user",
 			"error", err,
 		)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Internal Server Error"})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Internal Server Error", "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 
@@ -32,6 +32,6 @@ func HandleValidationError(c *gin.Context, err error) {
 		"errors", errors,
 	)
 
-	c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "Validation error", "errors": errors})
+	c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "Validation error", "errors": errors, "context": telemetry.TraceIDFromContext(c)})
 	return
 }

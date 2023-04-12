@@ -2,6 +2,8 @@ package core
 
 import (
 	"crypto/rand"
+	"encoding/json"
+
 	"fmt"
 	. "main/telemetry"
 	"math/big"
@@ -234,4 +236,44 @@ func VerifyVerificationToken(c *gin.Context, userID uuid.UUID, token int) bool {
 	}
 
 	return true
+}
+
+func CreateTwoFATempToken(c *gin.Context, userID uuid.UUID, rememberMe bool) uuid.UUID {
+
+	_, span := Tracer.Start(c.Request.Context(), "GetUserFromVerificationToken()")
+	defer span.End()
+
+	session_token := uuid.New()
+	key := fmt.Sprint("two_fa_temp_", session_token.String())
+	tempExpiry := time.Duration(Configs.TWO_FA_TIMEOUT * int(time.Second))
+
+	type tempTokenStruct struct {
+		UserId     uuid.UUID `json:"UserId"`
+		RememberMe bool      `json:"RememberMe"`
+	}
+
+	var tempTokenValue tempTokenStruct
+	tempTokenValue.UserId = userID
+	tempTokenValue.RememberMe = rememberMe
+
+	tempTokenValueStr, err := json.Marshal(tempTokenValue)
+
+	if err != nil {
+		Logger(c).Sugar().Errorw("Failed to convert token struct to string",
+			"userID", userID.String(),
+			"error", err,
+		)
+	}
+
+	status := Redis.SetEx(c, key, tempTokenValueStr, tempExpiry)
+	if err := status.Err(); err != nil {
+		Logger(c).Sugar().Errorw("Failed to set session token!",
+			"userID", userID.String(),
+			"error", err,
+		)
+
+		panic(err)
+	}
+
+	return session_token
 }

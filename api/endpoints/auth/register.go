@@ -30,7 +30,7 @@ func (RegisterController) Register(c *gin.Context) {
 			"error", err,
 		)
 
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 
@@ -43,13 +43,14 @@ func (RegisterController) Register(c *gin.Context) {
 
 	// Check if firstname and lastname are empty
 	if user.FirstName == "" || user.LastName == "" {
-		msg := "First name and last name are required!"
+		msg := "First Name and Last Name are required!"
 
 		l.Warnw(msg,
 			"first_name", user.FirstName,
 			"last_name", user.LastName)
 
-		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+		return
 	}
 
 	// Ceck if DOB is empty
@@ -59,7 +60,8 @@ func (RegisterController) Register(c *gin.Context) {
 		l.Warnw(msg,
 			"dob", user.DOB)
 
-		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+		return
 	}
 
 	// Check if email is already used
@@ -73,7 +75,7 @@ func (RegisterController) Register(c *gin.Context) {
 			"email", user.Email,
 		)
 
-		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 
@@ -144,7 +146,8 @@ func (RegisterController) Register(c *gin.Context) {
 		telemetry.Logger(c).Sugar().Errorw("Failed to send verification email",
 			"error", err,
 		)
-		panic(err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
+		return
 	}
 
 	l.Infow(msg,
