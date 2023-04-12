@@ -2,9 +2,9 @@ package endpoints
 
 import (
 	auth "main/endpoints/auth"
+	favorites "main/endpoints/favorites"
 	keys "main/endpoints/keys"
 	tools "main/endpoints/tools"
-	favorites "main/endpoints/favorites"
 	transaction "main/endpoints/transaction"
 
 	"github.com/gin-gonic/gin"
@@ -53,9 +53,11 @@ func InitFavoritesRoute(routeGroup *gin.RouterGroup) {
 func InitTransactionRoutes(routeGroup *gin.RouterGroup) {
 	verify := new(transaction.TransactionVerifyController)
 	refresh_controller := new(transaction.RefreshController)
+	submit_controller := new(transaction.SubmitController)
 
 	routeGroup.GET("/verify", verify.Status)
 	routeGroup.GET("/refresh", refresh_controller.Status)
+	routeGroup.POST("/submit", submit_controller.Submit)
 }
 
 func InitKeysRoutes(routeGroup *gin.RouterGroup) {
