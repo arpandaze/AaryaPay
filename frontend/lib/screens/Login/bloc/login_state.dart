@@ -10,13 +10,14 @@ class LoginState extends Equatable {
   final bool? twoFARequired;
   final String? temporaryToken;
 
-  const LoginState(
-      {this.email = "",
-      this.password = "",
-      this.errorText = "",
-      this.loginSucess = false,
-      this.twoFARequired,
-      this.temporaryToken});
+  const LoginState({
+    this.email = "",
+    this.password = "",
+    this.errorText = "",
+    this.loginSucess = false,
+    this.twoFARequired,
+    this.temporaryToken,
+  });
 
   bool get isEmailValid => EmailValidator.validate(email);
 
