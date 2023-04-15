@@ -1,4 +1,3 @@
-import 'package:aaryapay/components/CustomArrowedButton.dart';
 import 'package:aaryapay/screens/Settings/components/custom_menu_selection.dart';
 import 'package:aaryapay/screens/Settings/components/settings_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +73,7 @@ class _LanguageSelectionState extends State<LanguageSelection> {
     ];
 
     return SettingsWrapper(
-        children: CustomMenuSelection(itemList: itemList),
-        pageName: "Language");
+        pageName: "Language",
+        children: CustomMenuSelection(itemList: itemList));
   }
 }

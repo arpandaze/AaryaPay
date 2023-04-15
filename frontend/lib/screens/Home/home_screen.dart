@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:aaryapay/components/topbar.dart';
 import 'package:aaryapay/screens/Home/components/midsection.dart';
-import 'package:aaryapay/components/navbar.dart';
 import 'package:aaryapay/components/Wrapper.dart';
 
 class HomeScreen extends StatelessWidget {

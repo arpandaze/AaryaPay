@@ -4,7 +4,6 @@ import 'package:aaryapay/components/Wrapper.dart';
 import 'package:aaryapay/screens/Login/welcome_screen.dart';
 import 'package:aaryapay/screens/Settings/AccountInformation/account_information.dart';
 import 'package:aaryapay/screens/Settings/components/custom_menu_selection.dart';
-import 'package:aaryapay/screens/Settings/components/custom_menu_selection_card.dart';
 import 'package:aaryapay/screens/Settings/Favourites/favourites_screen.dart';
 import 'package:aaryapay/screens/Settings/Language/language_selection.dart';
 import 'package:aaryapay/screens/Settings/Password/password_screen.dart';
@@ -38,7 +37,7 @@ class Settings extends StatelessWidget {
               height: 20,
             ),
             label: "Account Information",
-            trailingWidget: CustomArrowedButton()),
+            trailingWidget: const CustomArrowedButton()),
         MenuItemModal(
             onTap: () => Navigator.of(context).push(
                   PageRouteBuilder(
@@ -54,7 +53,7 @@ class Settings extends StatelessWidget {
               height: 20,
             ),
             label: "Password & Security",
-            trailingWidget: CustomArrowedButton()),
+            trailingWidget: const CustomArrowedButton()),
         MenuItemModal(
             onTap: () => Navigator.of(context).push(
                   PageRouteBuilder(
@@ -70,7 +69,7 @@ class Settings extends StatelessWidget {
               height: 20,
             ),
             label: "Favourites",
-            trailingWidget: CustomArrowedButton()),
+            trailingWidget: const CustomArrowedButton()),
       ]),
       MenuModal("General", [
         MenuItemModal(
@@ -88,7 +87,7 @@ class Settings extends StatelessWidget {
               height: 20,
             ),
             label: "Synchronization",
-            trailingWidget: CustomArrowedButton()),
+            trailingWidget: const CustomArrowedButton()),
         MenuItemModal(
             onTap: () => Navigator.of(context).push(
                   PageRouteBuilder(
@@ -114,7 +113,7 @@ class Settings extends StatelessWidget {
                     "English",
                     style: textTheme.labelSmall,
                   ),
-                  CustomArrowedButton(),
+                  const CustomArrowedButton(),
                 ],
               ),
             )),

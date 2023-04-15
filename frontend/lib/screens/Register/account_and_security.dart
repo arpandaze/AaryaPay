@@ -1,6 +1,4 @@
-import 'package:aaryapay/components/CustomDatePicker.dart';
 import 'package:aaryapay/components/CustomTextField.dart';
-import 'package:aaryapay/screens/Home/home_screen.dart';
 import 'package:aaryapay/screens/Register/components/register_wrapper.dart';
 import 'package:aaryapay/screens/Register/verify_screen.dart';
 import 'package:flutter/material.dart';

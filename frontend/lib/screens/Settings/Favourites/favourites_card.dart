@@ -21,8 +21,8 @@ class FavouritesCard extends StatelessWidget {
     var textTheme = Theme.of(context).textTheme;
     var colorScheme = Theme.of(context).colorScheme;
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 5),
-      padding: EdgeInsets.all(5),
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.all(5),
       width: size.width,
       height: size.height * 0.1,
       decoration: BoxDecoration(
@@ -45,7 +45,7 @@ class FavouritesCard extends StatelessWidget {
                   Text(
                     name ?? "Mukesh",
                     style: textTheme.titleSmall!
-                        .merge(TextStyle(fontWeight: FontWeight.w700)),
+                        .merge(const TextStyle(fontWeight: FontWeight.w700)),
                   ),
                   Text(
                     userTag ?? "@iownindia",
@@ -61,8 +61,8 @@ class FavouritesCard extends StatelessWidget {
             children: [
               Container(
                   width: size.width * 0.18,
-                  margin: EdgeInsets.only(top: 10),
-                  padding: EdgeInsets.all(5),
+                  margin: const EdgeInsets.only(top: 10),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: colorScheme.secondary,
                       borderRadius: BorderRadius.circular(10)),
@@ -84,7 +84,7 @@ class FavouritesCard extends StatelessWidget {
                   Text(
                     dateAdded ?? "10th Dec 2020",
                     style: textTheme.labelSmall!
-                        .merge(TextStyle(fontWeight: FontWeight.w700)),
+                        .merge(const TextStyle(fontWeight: FontWeight.w700)),
                   )
                 ],
               )

@@ -25,7 +25,7 @@ class TwoFactorAuthFirst extends StatelessWidget {
     return SettingsWrapper(
         pageName: "Enable Two Factor Auth",
         children: Container(
-            padding: EdgeInsets.all(15),
+            padding: const EdgeInsets.all(15),
             width: size.width * 0.9,
             height: size.height,
             child: Column(
@@ -36,7 +36,7 @@ class TwoFactorAuthFirst extends StatelessWidget {
                   onTap: () => Navigator.of(context).push(
                     PageRouteBuilder(
                       pageBuilder: (context, animation1, animation2) =>
-                          TwoFactorAuthSecond(),
+                          const TwoFactorAuthSecond(),
                       transitionDuration: Duration.zero,
                       reverseTransitionDuration: Duration.zero,
                     ),
@@ -50,7 +50,7 @@ class TwoFactorAuthFirst extends StatelessWidget {
                 Text(
                   "Please Scan the Code",
                   style: textTheme.headlineSmall!
-                      .merge(TextStyle(fontWeight: FontWeight.w700)),
+                      .merge(const TextStyle(fontWeight: FontWeight.w700)),
                 ),
                 Text(
                   "Scan QR Code with a 3rd Party Authenticator Application of your choice to Enable Two Factor Authentication",
@@ -59,14 +59,14 @@ class TwoFactorAuthFirst extends StatelessWidget {
                 ),
                 Text("OR",
                     style: textTheme.headlineSmall!
-                        .merge(TextStyle(fontWeight: FontWeight.w700))),
+                        .merge(const TextStyle(fontWeight: FontWeight.w700))),
                 Text(
                   "Enter this code manually:(but where ?)",
                   style: textTheme.bodySmall,
                 ),
                 Text("dytv9PNd47qc0yxBmIm1IuiJMnsk2DZRdLIw2yTo",
                     style: textTheme.bodySmall!
-                        .merge(TextStyle(fontWeight: FontWeight.w700)))
+                        .merge(const TextStyle(fontWeight: FontWeight.w700)))
               ],
             )));
   }

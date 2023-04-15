@@ -1,7 +1,3 @@
-import 'dart:ffi' as ffi;
-import 'dart:typed_data';
-import 'dart:math' as math;
-import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:aaryapay/screens/QrScan/components/bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -89,7 +85,7 @@ class QrScanScreen extends StatelessWidget {
                 ),
               ],
             ),
-            BottomQrBar(),
+            const BottomQrBar(),
           ],
         );
       },

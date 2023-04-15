@@ -1,11 +1,10 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomArrowedButton extends StatelessWidget {
   final VoidCallback? onPressed;
-  CustomArrowedButton({
+  const CustomArrowedButton({
     Key? key,
     this.onPressed,
   }) : super(key: key);
@@ -17,7 +16,7 @@ class CustomArrowedButton extends StatelessWidget {
       child: GestureDetector(
         onTap: onPressed,
         child: Container(
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               vertical: 10,
               horizontal: 10,
             ),

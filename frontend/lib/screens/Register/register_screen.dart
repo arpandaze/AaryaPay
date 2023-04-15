@@ -58,7 +58,7 @@ class RegisterScreen extends StatelessWidget {
         ),
         CustomTextField(
           width: size.width,
-          padding: EdgeInsets.fromLTRB(0,15,15,15),
+          padding: const EdgeInsets.fromLTRB(0,15,15,15),
           prefixIcon: Icon(
             FontAwesomeIcons.solidEnvelope,
             color: Theme.of(context).colorScheme.primary,
@@ -68,7 +68,7 @@ class RegisterScreen extends StatelessWidget {
         ),
         CustomTextField(
           width: size.width,
-          padding: EdgeInsets.fromLTRB(0,15,15,15),
+          padding: const EdgeInsets.fromLTRB(0,15,15,15),
           prefixIcon: Icon(
             FontAwesomeIcons.solidEnvelope,
             color: Theme.of(context).colorScheme.primary,
@@ -78,7 +78,7 @@ class RegisterScreen extends StatelessWidget {
         ),
         CustomTextField(
           width: size.width,
-          padding: EdgeInsets.fromLTRB(0,15,15,15),
+          padding: const EdgeInsets.fromLTRB(0,15,15,15),
           prefixIcon: Icon(
             FontAwesomeIcons.solidEnvelope,
             color: Theme.of(context).colorScheme.primary,

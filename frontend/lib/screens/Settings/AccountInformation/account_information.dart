@@ -1,13 +1,10 @@
 import 'package:aaryapay/components/CustomActionButton.dart';
-import 'package:aaryapay/components/CustomDatePicker.dart';
 import 'package:aaryapay/components/CustomStatusButton.dart';
 import 'package:aaryapay/components/CustomTextField.dart';
-import 'package:aaryapay/screens/Login/welcome_screen.dart';
 import 'package:aaryapay/screens/Settings/components/settings_wrapper.dart';
 import 'package:aaryapay/screens/Settings/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:math' as math;
 
 class AccountInformation extends StatelessWidget {
   const AccountInformation({Key? key}) : super(key: key);
@@ -29,7 +26,7 @@ class AccountInformation extends StatelessWidget {
       pageName: "Account Information",
       children: Expanded(
         child: SingleChildScrollView(
-          child: Container(
+          child: SizedBox(
             width: size.width * 0.9,
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -40,7 +37,7 @@ class AccountInformation extends StatelessWidget {
                       Container(
                           width: 100,
                           height: 100,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10)),
                               image: DecorationImage(
@@ -60,32 +57,32 @@ class AccountInformation extends StatelessWidget {
                       )
                     ],
                   ),
-                  CustomTextField(
+                  const CustomTextField(
                     outlined: true,
                     topText: "First Name",
                     enableTopText: true,
                     placeHolder: "Mukesh",
                   ),
-                  CustomTextField(
+                  const CustomTextField(
                     outlined: true,
                     topText: "Middle Name",
                     enableTopText: true,
                     placeHolder: "gau",
                   ),
-                  CustomTextField(
+                  const CustomTextField(
                     outlined: true,
                     topText: "Last Name",
                     enableTopText: true,
                     placeHolder: "Ambani",
                   ),
-                  CustomTextField(
+                  const CustomTextField(
                     outlined: true,
                     topText: "Email",
                     enableTopText: true,
                     placeHolder: "mukesh@india.com",
                   ),
 
-                  CustomTextField(
+                  const CustomTextField(
                     outlined: true,
                     topText: "Date",
                     enableTopText: true,

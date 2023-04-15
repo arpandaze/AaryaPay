@@ -1,11 +1,5 @@
 import 'package:aaryapay/components/CustomStatusButton.dart';
-import 'package:aaryapay/components/CustomTextField.dart';
-import 'package:aaryapay/screens/Home/home_screen.dart';
-import 'package:aaryapay/screens/Login/components/login_wrapper.dart';
-import 'package:aaryapay/screens/Login/reset_password.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class LastSynchronized extends StatelessWidget {
@@ -17,7 +11,7 @@ class LastSynchronized extends StatelessWidget {
     var colorScheme = Theme.of(context).colorScheme;
     Size size = MediaQuery.of(context).size;
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 15),
+      margin: const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
           border: Border(
         bottom: BorderSide(width: 2.0, color: colorScheme.onPrimary),
@@ -58,7 +52,7 @@ class LastSynchronized extends StatelessWidget {
                       label: "Sync"),
                   Container(
                       width: size.width * 0.18,
-                      padding: EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
                           color: colorScheme.secondary,
                           borderRadius: BorderRadius.circular(10)),

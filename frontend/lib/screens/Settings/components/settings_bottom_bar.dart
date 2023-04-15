@@ -14,7 +14,7 @@ class SettingsBottomBar extends StatelessWidget {
       height: size.height * 0.07,
       decoration: BoxDecoration(
           border: Border(top: BorderSide(color: colorScheme.onPrimary))),
-      child: Text("© AaryaPay 2023"),
+      child: const Text("© AaryaPay 2023"),
     );
   }
 }

@@ -24,7 +24,7 @@ class TwoFactorAuthSecond extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return SettingsWrapper(
         pageName: "Enter Verification Code",
-        children: Container(
+        children: SizedBox(
           height: size.height,
           width: size.width * 0.9,
           child: Column(
@@ -41,7 +41,7 @@ class TwoFactorAuthSecond extends StatelessWidget {
                     minRadius: 90,
                     maxRadius: 120,
                   )),
-              Container(
+              SizedBox(
                 width: 200,
                 child: Text(
                   "Enter OTP",
@@ -76,7 +76,7 @@ class TwoFactorAuthSecond extends StatelessWidget {
                   activeFillColor: Colors.white,
                 ),
                 // activeColor: Theme.of(context).colorScheme.secondary),
-                animationDuration: Duration(milliseconds: 300),
+                animationDuration: const Duration(milliseconds: 300),
                 // backgroundColor: Colors.blue.shade50,
                 // enableActiveFill: true,
                 // errorAnimationController: errorController.add(ErrorAnimationType.shake);,
@@ -104,7 +104,7 @@ class TwoFactorAuthSecond extends StatelessWidget {
                   onClick: () => Navigator.of(context).push(
                     PageRouteBuilder(
                       pageBuilder: (context, animation1, animation2) =>
-                          TwoFactorAuthThird(),
+                          const TwoFactorAuthThird(),
                       transitionDuration: Duration.zero,
                       reverseTransitionDuration: Duration.zero,
                     ),
