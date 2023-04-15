@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:aaryapay/components/topbar.dart';
-import 'package:aaryapay/screens/Home/components/midsection.dart';
-import 'package:aaryapay/components/navbar.dart';
-import 'package:aaryapay/components/Wrapper.dart';
 
 class PaymentsTopBar extends StatelessWidget {
   const PaymentsTopBar({Key? key, this.items_length}) : super(key: key);
@@ -14,8 +10,8 @@ class PaymentsTopBar extends StatelessWidget {
     var textTheme = Theme.of(context).textTheme;
     var colorScheme = Theme.of(context).colorScheme;
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 16),
-      padding: EdgeInsets.all(10),
+      margin: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.all(10),
       width: size.width * 0.9,
       height: size.height * 0.09,
       decoration: BoxDecoration(

@@ -28,27 +28,27 @@ class FavouritesScreen extends StatelessWidget {
 
   Widget body(BuildContext context) {
     List<FavouritesModal> itemList = [
-      FavouritesModal(AssetImage("assets/images/pfp.jpeg"), "Mukesh",
+      FavouritesModal(const AssetImage("assets/images/pfp.jpeg"), "Mukesh",
           "@iownindia", "10th Dec,2020"),
-      FavouritesModal(AssetImage("assets/images/pfp.jpeg"), "Mukesh",
+      FavouritesModal(const AssetImage("assets/images/pfp.jpeg"), "Mukesh",
           "@iownindia", "10 Dec,2020"),
-      FavouritesModal(AssetImage("assets/images/pfp.jpeg"), "Mukesh",
+      FavouritesModal(const AssetImage("assets/images/pfp.jpeg"), "Mukesh",
           "@iownindia", "10th Dec,2020"),
-      FavouritesModal(AssetImage("assets/images/pfp.jpeg"), "Mukesh",
+      FavouritesModal(const AssetImage("assets/images/pfp.jpeg"), "Mukesh",
           "@iownindia", "10th Dec,2020"),
-      FavouritesModal(AssetImage("assets/images/pfp.jpeg"), "Mukesh",
+      FavouritesModal(const AssetImage("assets/images/pfp.jpeg"), "Mukesh",
           "@iownindia", "10th Dec,2020"),
-      FavouritesModal(AssetImage("assets/images/pfp.jpeg"), "Mukesh",
+      FavouritesModal(const AssetImage("assets/images/pfp.jpeg"), "Mukesh",
           "@iownindia", "10th Dec,2020"),
-      FavouritesModal(AssetImage("assets/images/pfp.jpeg"), "Mukesh",
+      FavouritesModal(const AssetImage("assets/images/pfp.jpeg"), "Mukesh",
           "@iownindia", "10th Dec,2020"),
-      FavouritesModal(AssetImage("assets/images/pfp.jpeg"), "Mukesh",
+      FavouritesModal(const AssetImage("assets/images/pfp.jpeg"), "Mukesh",
           "@iownindia", "10th Dec,2020"),
-      FavouritesModal(AssetImage("assets/images/pfp.jpeg"), "Mukesh",
+      FavouritesModal(const AssetImage("assets/images/pfp.jpeg"), "Mukesh",
           "@iownindia", "10th Dec,2020"),
-      FavouritesModal(AssetImage("assets/images/pfp.jpeg"), "Mukesh",
+      FavouritesModal(const AssetImage("assets/images/pfp.jpeg"), "Mukesh",
           "@iownindia", "10th Dec,2020"),
-      FavouritesModal(AssetImage("assets/images/pfp.jpeg"), "Mukesh",
+      FavouritesModal(const AssetImage("assets/images/pfp.jpeg"), "Mukesh",
           "@iownindia", "10th Dec,2020"),
     ];
     var textTheme = Theme.of(context).textTheme;
@@ -57,7 +57,7 @@ class FavouritesScreen extends StatelessWidget {
     return SettingsWrapper(
         pageName: " Favourites",
         children: SingleChildScrollView(
-          child: Container(
+          child: SizedBox(
             width: size.width * 0.9,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +75,7 @@ class FavouritesScreen extends StatelessWidget {
                   child: CustomTextField(
                     outlined: true,
                     suffixIcon: Container(
-                      padding: EdgeInsets.all(15),
+                      padding: const EdgeInsets.all(15),
                       child: SvgPicture.asset(
                         "assets/icons/bill-fill.svg",
                         width: 1,
@@ -91,7 +91,7 @@ class FavouritesScreen extends StatelessWidget {
                     borderRadius: 10,
                     label: "Save",
                     onClick: () => itemList.add(FavouritesModal(
-                        AssetImage("assets/images/pfp.jpeg"),
+                        const AssetImage("assets/images/pfp.jpeg"),
                         "Aatish",
                         "@iamaatish",
                         "10th Dec, 2020")),

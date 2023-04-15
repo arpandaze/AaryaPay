@@ -1,9 +1,7 @@
 import 'package:aaryapay/components/CustomArrowedButton.dart';
 import 'package:aaryapay/screens/Settings/Password/change_password.dart';
 import 'package:aaryapay/screens/Settings/Password/two_factor_auth_first.dart';
-import 'package:aaryapay/screens/Settings/Password/two_factor_auth_third.dart';
 import 'package:aaryapay/screens/Settings/components/custom_menu_selection.dart';
-import 'package:aaryapay/screens/Settings/components/custom_menu_selection_card.dart';
 import 'package:aaryapay/screens/Settings/components/settings_wrapper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +37,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
             onTap: () => Navigator.of(context).push(
                   PageRouteBuilder(
                     pageBuilder: (context, animation1, animation2) =>
-                        ChangePassword(),
+                        const ChangePassword(),
                     transitionDuration: Duration.zero,
                     reverseTransitionDuration: Duration.zero,
                   ),
@@ -50,14 +48,14 @@ class _PasswordScreenState extends State<PasswordScreen> {
               height: 20,
             ),
             label: "Change Password",
-            trailingWidget: CustomArrowedButton()),
+            trailingWidget: const CustomArrowedButton()),
       ]),
       MenuModal("Additional Security", [
         MenuItemModal(
           onTap: () => Navigator.of(context).push(
             PageRouteBuilder(
               pageBuilder: (context, animation1, animation2) =>
-                  TwoFactorAuthFirst(),
+                  const TwoFactorAuthFirst(),
               transitionDuration: Duration.zero,
               reverseTransitionDuration: Duration.zero,
             ),
@@ -70,7 +68,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
           label: "Enable 2FA",
           trailingWidget: CupertinoSwitch(
               value: switchValue,
-              activeColor: colorScheme.outline,
+              activeColor: colorScheme.surfaceVariant,
               onChanged: (bool? value) {
                 setState(() {
                   switchValue = !switchValue;

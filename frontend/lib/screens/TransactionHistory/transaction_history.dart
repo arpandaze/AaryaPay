@@ -1,8 +1,6 @@
 import 'package:aaryapay/components/Wrapper.dart';
-import 'package:aaryapay/screens/Home/components/recent_card.dart';
 import 'package:aaryapay/components/TransactionsCard.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class TransactionHistory extends StatelessWidget {
   const TransactionHistory({Key? key}) : super(key: key);
@@ -33,7 +31,7 @@ class TransactionHistory extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 15),
+                  padding: const EdgeInsets.symmetric(vertical: 15),
                   child: Text(
                     "Transaction History",
                     style: textTheme.titleMedium,

@@ -1,9 +1,7 @@
-import 'dart:convert';
 
 import 'package:aaryapay/components/CustomCircularAvatar.dart';
 import 'package:aaryapay/components/CustomStatusButton.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer';
 
 class Favourites extends StatelessWidget {
   const Favourites({Key? key}) : super(key: key);
@@ -55,7 +53,7 @@ class Favourites extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
+                children: const [
                   CustomCircularAvatar(
                       imageSrc: AssetImage("assets/images/pfp.jpeg")),
                   CustomCircularAvatar(

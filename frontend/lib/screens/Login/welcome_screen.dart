@@ -1,8 +1,4 @@
-import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:line_icons/line_icons.dart';
-import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/screens/Login/login_screen.dart';
 import 'package:aaryapay/screens/Login/components/login_wrapper.dart';
 
@@ -17,7 +13,7 @@ class WelcomeScreen extends StatelessWidget {
       actionButtonFunction: () => {
         Navigator.of(context).push(
           PageRouteBuilder(
-            pageBuilder: (context, animation1, animation2) => LoginScreen(),
+            pageBuilder: (context, animation1, animation2) => const LoginScreen(),
             transitionDuration: Duration.zero,
             reverseTransitionDuration: Duration.zero,
           ),
@@ -45,7 +41,7 @@ class WelcomeScreen extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .bodySmall!
-                  .merge(TextStyle(height: 2)),
+                  .merge(const TextStyle(height: 2)),
               textAlign: TextAlign.center,
             ),
           ],
@@ -57,7 +53,7 @@ class WelcomeScreen extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .titleMedium!
-                .merge(TextStyle(height: 1.5)),
+                .merge(const TextStyle(height: 1.5)),
             textAlign: TextAlign.center,
           ),
         ),
