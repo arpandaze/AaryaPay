@@ -1,10 +1,6 @@
-import 'package:aaryapay/components/CustomDatePicker.dart';
-import 'package:aaryapay/components/CustomTextField.dart';
-import 'package:aaryapay/screens/Home/home_screen.dart';
 import 'package:aaryapay/screens/Register/completed_screen.dart';
 import 'package:aaryapay/screens/Register/components/register_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class VerifyScreen extends StatelessWidget {
@@ -75,7 +71,7 @@ class VerifyScreen extends StatelessWidget {
           ],
         ),
         Container(
-          margin: EdgeInsets.only(top: 40),
+          margin: const EdgeInsets.only(top: 40),
           child: PinCodeTextField(
             length: 6,
             hapticFeedbackTypes: HapticFeedbackTypes.light,

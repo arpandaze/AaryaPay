@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:aaryapay/routes.dart';
 import 'package:aaryapay/theme.dart';
-import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());

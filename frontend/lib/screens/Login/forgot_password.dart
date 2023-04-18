@@ -11,19 +11,19 @@ class ForgotPassword extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return LoginWrapper(
-      children: _midsection(context, size),
       backButton: true,
       actionButtonLabel: "SUBMIT",
       backButttonFunction: () => {Navigator.pop(context)},
       actionButtonFunction: () => {
         Navigator.of(context).push(
           PageRouteBuilder(
-            pageBuilder: (context, animation1, animation2) => ResetPassword(),
+            pageBuilder: (context, animation1, animation2) => const ResetPassword(),
             transitionDuration: Duration.zero,
             reverseTransitionDuration: Duration.zero,
           ),
         ),
       },
+      children: _midsection(context, size),
     );
   }
 
@@ -32,7 +32,7 @@ class ForgotPassword extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
+        SizedBox(
           width: 200,
           child: Text(
             "Forgot Password?",
@@ -52,7 +52,7 @@ class ForgotPassword extends StatelessWidget {
               ),
         ),
         CustomTextField(
-          padding: EdgeInsets.only(top: 20),
+          padding: const EdgeInsets.only(top: 20),
           width: size.width,
           prefixIcon: Icon(
             FontAwesomeIcons.solidEnvelope,

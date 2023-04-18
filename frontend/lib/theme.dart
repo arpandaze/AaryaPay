@@ -28,6 +28,7 @@ class AppTheme with ChangeNotifier {
         surface: Color.fromARGB(255, 209, 209, 209),
         onSurface: Color.fromARGB(255, 231, 14, 14),
         outline: Color(0xffC0C0C0),
+        surfaceVariant: Color.fromARGB(255, 13, 255, 13),
       ),
       textTheme: TextTheme(
         displayLarge: GoogleFonts.mulish(
@@ -94,7 +95,7 @@ class AppTheme with ChangeNotifier {
               fontWeight: FontWeight.w500,
             letterSpacing: 1.25,
             height: 1.0,
-            color: Color(0xff5484F5)),
+              color: const Color(0xff5484F5)),
         bodySmall: GoogleFonts.mulish(
             fontSize: 12,
             fontWeight: FontWeight.w500,

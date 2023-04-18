@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:aaryapay/components/topbar.dart';
-import 'package:aaryapay/screens/Home/components/midsection.dart';
-import 'package:aaryapay/components/navbar.dart';
-import 'package:aaryapay/components/Wrapper.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class PaymentsMidSectionCard extends StatelessWidget {
@@ -29,8 +25,8 @@ class PaymentsMidSectionCard extends StatelessWidget {
     var textTheme = Theme.of(context).textTheme;
     var colorScheme = Theme.of(context).colorScheme;
     return Container(
-      padding: EdgeInsets.all(10),
-      margin: EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.only(bottom: 10),
       width: size.width * 0.9,
       height: size.height * 0.25,
       decoration: BoxDecoration(
@@ -125,7 +121,7 @@ class PaymentsMidSectionCard extends StatelessWidget {
                 Text("Sale expiry in 3 days", style: textTheme.bodySmall),
                 Container(
                     width: size.width * 0.18,
-                    padding: EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                         color: colorScheme.secondary,
                         borderRadius: BorderRadius.circular(10)),

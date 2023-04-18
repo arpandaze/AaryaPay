@@ -1,13 +1,7 @@
-import 'dart:ffi' as ffi;
-import 'dart:typed_data';
 import 'dart:math' as math;
-import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:aaryapay/screens/QrScan/components/my_qr_code.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:aaryapay/screens/QrScan/qrscan_bloc.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class BottomQrBar extends StatelessWidget {
   const BottomQrBar({
@@ -35,7 +29,7 @@ class BottomQrBar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                margin: EdgeInsets.only(left: 15),
+                margin: const EdgeInsets.only(left: 15),
                 child: Text(
                   "My QR Code",
                   style: Theme.of(context).textTheme.headlineSmall!.merge(

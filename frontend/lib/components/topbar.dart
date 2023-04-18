@@ -1,6 +1,5 @@
 import 'package:aaryapay/screens/Login/login_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:aaryapay/screens/Login/login_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class TopBar extends StatelessWidget {
@@ -16,11 +15,11 @@ class TopBar extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.primary,
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(10),
               bottomRight: Radius.circular(10))),
       width: size.width,
-      padding: EdgeInsets.symmetric(horizontal: 25),
+      padding: const EdgeInsets.symmetric(horizontal: 25),
       height: size.height * 0.15,
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -78,7 +77,7 @@ class TopBar extends StatelessWidget {
             Stack(
               children: [
                 Container(
-                  margin: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
                   // decoration: BoxDecoration(
                   //     borderRadius: BorderRadius.circular(20)),
                   child: GestureDetector(
@@ -86,7 +85,7 @@ class TopBar extends StatelessWidget {
                     onTap: () => Navigator.of(context).push(
                       PageRouteBuilder(
                         pageBuilder: (context, animation1, animation2) =>
-                            LoginScreen(),
+                            const LoginScreen(),
                         transitionDuration: Duration.zero,
                         reverseTransitionDuration: Duration.zero,
                       ),
@@ -98,7 +97,7 @@ class TopBar extends StatelessWidget {
                     child: Container(
                         width: 80,
                         height: 80,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(20)),
                             image: DecorationImage(
                                 image: AssetImage("assets/images/pfp.jpeg")))),
@@ -112,7 +111,7 @@ class TopBar extends StatelessWidget {
                     height: 12,
                     // alignment: Alignment(-0.1, -0.1),
                     decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.outline,
+                        color: Theme.of(context).colorScheme.surfaceVariant,
                         borderRadius: BorderRadius.circular(10)),
                   ),
                 ),

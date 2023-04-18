@@ -5,7 +5,7 @@ import 'package:aaryapay/screens/Home/components/last_synchronized.dart';
 
 
 class Midsection extends StatelessWidget {
-  Midsection({
+  const Midsection({
     super.key,
     required this.size,
   });
@@ -28,8 +28,8 @@ class Midsection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Favourites(),
-                LastSynchronized(),
+                const Favourites(),
+                const LastSynchronized(),
                 RecentCard(size: size),
               ],
             ),

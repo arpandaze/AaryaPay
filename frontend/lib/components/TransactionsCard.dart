@@ -16,7 +16,7 @@ class RecentPaymentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 15),
+      margin: const EdgeInsets.only(bottom: 15),
       // decoration: BoxDecoration(border: Border.all(color: Colors.black12)),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Expanded(
@@ -26,7 +26,7 @@ class RecentPaymentCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                padding: EdgeInsets.only(right: 10),
+                padding: const EdgeInsets.only(right: 10),
                 child: const CustomCircularAvatar(
                     size: 20, imageSrc: AssetImage("assets/images/pfp.jpeg")),
               ),
@@ -54,12 +54,12 @@ class RecentPaymentCard extends StatelessWidget {
           ),
         ),
         Container(
-          margin: EdgeInsets.only(right: 10),
+          margin: const EdgeInsets.only(right: 10),
           child: Text(
             transactionAmt ??= "+ \$50.00",
             style: Theme.of(context).textTheme.labelSmall!.merge(TextStyle(
                 color: transactionColor ??=
-                    Theme.of(context).colorScheme.outline)),
+                    Theme.of(context).colorScheme.surfaceVariant)),
           ),
         )
       ]),

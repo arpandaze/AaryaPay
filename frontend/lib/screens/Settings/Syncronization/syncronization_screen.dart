@@ -17,7 +17,7 @@ class SyncronizationScreen extends StatelessWidget {
   }
 
   Widget body(BuildContext context) {
-    return SettingsWrapper(
+    return const SettingsWrapper(
       pageName: "Syncronization",
       children: LastSynchronized(),
     );

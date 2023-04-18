@@ -1,7 +1,6 @@
 import 'package:aaryapay/screens/Settings/components/settings_wrapper.dart';
 import 'package:aaryapay/screens/Settings/settings.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 import '../../../components/CustomActionButton.dart';
 
@@ -23,7 +22,7 @@ class TwoFactorAuthThird extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return SettingsWrapper(
         pageName: "Successful",
-        children: Container(
+        children: SizedBox(
           height: size.height,
           width: size.width * 0.9,
           child: Column(
@@ -81,7 +80,7 @@ class TwoFactorAuthThird extends StatelessWidget {
                   onClick: () => Navigator.of(context).push(
                     PageRouteBuilder(
                       pageBuilder: (context, animation1, animation2) =>
-                          Settings(),
+                          const Settings(),
                       transitionDuration: Duration.zero,
                       reverseTransitionDuration: Duration.zero,
                     ),

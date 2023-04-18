@@ -1,12 +1,5 @@
-import 'dart:ffi' as ffi;
 
-import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:line_icons/line_icons.dart';
-import 'package:aaryapay/components/CustomActionButton.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 class TransactionDetails extends StatelessWidget {
   const TransactionDetails({

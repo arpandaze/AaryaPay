@@ -59,7 +59,7 @@ class CustomTextField extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .bodySmall!
-                      .merge(TextStyle(fontWeight: FontWeight.w700)),
+                      .merge(const TextStyle(fontWeight: FontWeight.w700)),
                 ),
               )),
           TextField(
@@ -72,7 +72,7 @@ class CustomTextField extends StatelessWidget {
                   icon: prefixIcon,
                   suffixIcon: isPassword
                       ? Container(
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                           child: SvgPicture.asset("assets/icons/invisible.svg",
                               width: 10, height: 10),
                         )
@@ -80,7 +80,7 @@ class CustomTextField extends StatelessWidget {
                   // errorText: error,
                   counter: counter,
                   contentPadding:
-                      EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   enabledBorder: !outlined!
                       ? UnderlineInputBorder(
                           borderRadius: BorderRadius.circular(5),

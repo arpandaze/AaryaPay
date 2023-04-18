@@ -1,11 +1,7 @@
-import 'dart:ffi' as ffi;
 
-import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:aaryapay/components/CustomActionButton.dart';
-import "package:aaryapay/screens/Login/welcome_screen.dart";
 
 class RegisterWrapper extends StatelessWidget {
   const RegisterWrapper(
@@ -73,7 +69,7 @@ class RegisterWrapper extends StatelessWidget {
         ),
         Container(
             alignment: Alignment.bottomCenter,
-            margin: EdgeInsets.only(top: 20),
+            margin: const EdgeInsets.only(top: 20),
             child: const CircleAvatar(
               backgroundImage: AssetImage("assets/images/pfp.jpeg"),
               minRadius: 70,

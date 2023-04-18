@@ -1,10 +1,6 @@
-import 'dart:ffi' as ffi;
 
-import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:line_icons/line_icons.dart';
-import 'package:aaryapay/components/CustomActionButton.dart';
 
 class SendMoney extends StatelessWidget {
   const SendMoney({Key? key}) : super(key: key);
