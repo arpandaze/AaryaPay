@@ -3,7 +3,7 @@ package test_auth
 import (
 	"encoding/json"
 	"main/endpoints/auth"
-	. "main/tests"
+	. "main/tests/helpers"
 	"net/http"
 	"net/url"
 	"testing"
