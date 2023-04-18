@@ -33,112 +33,103 @@ class LoginWrapper extends StatelessWidget {
   }
 
   Widget body(Size size, BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      width: double.infinity,
-      height: size.height,
-      // decoration: BoxDecoration(
-      //     border: Border.all(color: Color.fromARGB(255, 250, 0, 0), width: 5)),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              // decoration:
-              //     BoxDecoration(border: Border.all(color: Colors.cyanAccent)),
-              height: size.height * 0.4,
-              child: Stack(
-                clipBehavior: Clip.none,
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(
+            height: size.height * 0.1,
+            child: Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                      alignment: Alignment.center,
-                      // padding: EdgeInsets.symmetric(vertical: 30),
-                      // decoration: BoxDecoration(
-                      //     border: Border.all(color: Colors.cyanAccent)),
-                      child: const CircleAvatar(
-                        backgroundImage: AssetImage("assets/images/pfp.jpeg"),
-                        minRadius: 90,
-                        maxRadius: 120,
-                      )),
-                  Visibility(
-                    visible: backButton ?? false,
-                    child: Positioned(
-                        top: 30,
-                        left: 10,
+                    width: size.width * 0.1,
+                    // padding: const EdgeInsets.all(15),
+                    alignment: Alignment.center,
+                    child: Visibility(
+                        visible: backButton ?? false,
                         child: GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: backButttonFunction,
-                            child: const SizedBox(
-                                // decoration: BoxDecoration(
-                                //     border: Border.all(color: Colors.deepPurple)),
-                                width: 30,
-                                height: 30,
-                                child: Icon(FontAwesomeIcons.arrowLeftLong)))),
+                            child: const Icon(
+                              FontAwesomeIcons.arrowLeftLong,
+                              size: 20,
+                            ))),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(15),
+                  ),
+                  Container(
+                    width: size.width * 0.1,
+                    alignment: Alignment.center,
+                    // padding: const EdgeInsets.all(15),
                   ),
                 ],
               ),
             ),
-            Container(
-                // decoration:
-                //     BoxDecoration(border: Border.all(color: Colors.cyanAccent)),
-                height: size.height * 0.35,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                child: children),
-            SizedBox(
-              // decoration:
-              //     BoxDecoration(border: Border.all(color: Colors.cyanAccent)),
-              height: size.height * 0.15,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  CustomActionButton(
-                    label: actionButtonLabel,
-                    onClick: actionButtonFunction,
-                  ),
-                  SizedBox(
-                    height: 30,
-                    // decoration:
-                    //     BoxDecoration(border: Border.all(color: Colors.black)),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Don't have an account, ",
-                            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          Container(
+            height: size.height * 0.3,
+            // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+            alignment: Alignment.center,
+            // margin: const EdgeInsets.only(top: 20),
+            child: const CircleAvatar(
+              backgroundImage: AssetImage("assets/images/logo.jpg"),
+              minRadius: 70,
+              maxRadius: 120,
+            ),
+          ),
+          Container(
+            height: size.height * 0.45,
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            child: children,
+          ),
+          Container(
+            height: size.height * 0.15,
+            child: Column(
+              children: [
+                CustomActionButton(
+                  width: size.width * 0.78,
+                  borderRadius: 10,
+                  label: actionButtonLabel,
+                  onClick: actionButtonFunction,
+                ),
+                SizedBox(
+                  height: 30,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Don't have an account, ",
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          child: Text(
+                            "Register",
+                            style: Theme.of(context).textTheme.bodySmall!.merge(
+                                TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    color:
+                                        Theme.of(context).colorScheme.primary)),
                           ),
-                          GestureDetector(
-                            behavior: HitTestBehavior.translucent,
-                            child: Text(
-                              "Register",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .merge(TextStyle(
-                                      fontWeight: FontWeight.w900,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary)),
+                          onTap: () => Navigator.of(context).push(
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation1, animation2) =>
+                                  const RegisterScreen(),
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero,
                             ),
-                            onTap: () => Navigator.of(context).push(
-                              PageRouteBuilder(
-                                pageBuilder:
-                                    (context, animation1, animation2) =>
-                                        const RegisterScreen(),
-                                transitionDuration: Duration.zero,
-                                reverseTransitionDuration: Duration.zero,
-                              ),
-                            ),
-                          )
-                        ]),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
+                          ),
+                        )
+                      ]),
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }

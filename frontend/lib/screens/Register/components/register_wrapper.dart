@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:aaryapay/components/CustomActionButton.dart';
@@ -9,6 +8,7 @@ class RegisterWrapper extends StatelessWidget {
       required this.children,
       this.backButton,
       this.title,
+      this.pageIndex,
       this.backButttonFunction,
       this.actionButtonFunction,
       this.actionButtonLabel})
@@ -16,6 +16,7 @@ class RegisterWrapper extends StatelessWidget {
   final Widget children;
   final bool? backButton;
   final String? title;
+  final String? pageIndex;
   final String? actionButtonLabel;
   final Function()? backButttonFunction;
   final Function()? actionButtonFunction;
@@ -35,55 +36,72 @@ class RegisterWrapper extends StatelessWidget {
   }
 
   Widget body(Size size, BuildContext context) {
-    return Column(
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: size.height * 0.09,
-              child: Stack(
-                clipBehavior: Clip.none,
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(
+            height: size.height * 0.1,
+            child: Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(15),
-                    alignment: Alignment.centerLeft,
+                    width: size.width * 0.1,
+                    // padding: const EdgeInsets.all(15),
+                    alignment: Alignment.center,
                     child: Visibility(
                         visible: backButton ?? false,
                         child: GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: backButttonFunction,
-                            child: const Icon(FontAwesomeIcons.arrowLeftLong))),
+                            child: const Icon(
+                              FontAwesomeIcons.arrowLeftLong,
+                              size: 20,
+                            ))),
                   ),
                   Container(
                     alignment: Alignment.center,
                     padding: const EdgeInsets.all(15),
-                    child: Text("Send Money",
-                        style: Theme.of(context).textTheme.headlineMedium!),
+                    child: Text(title!,
+                        style: Theme.of(context).textTheme.headlineSmall!),
+                  ),
+                  Container(
+                    width: size.width * 0.1,
+                    alignment: Alignment.center,
+                    // padding: const EdgeInsets.all(15),
+                    child: Text("${pageIndex}",
+                        style: Theme.of(context).textTheme.titleSmall!),
                   ),
                 ],
               ),
-            )
-          ],
-        ),
-        Container(
-            alignment: Alignment.bottomCenter,
-            margin: const EdgeInsets.only(top: 20),
+            ),
+          ),
+          Container(
+            height: size.height * 0.3,
+            // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+            alignment: Alignment.center,
+            // margin: const EdgeInsets.only(top: 20),
             child: const CircleAvatar(
-              backgroundImage: AssetImage("assets/images/pfp.jpeg"),
+              backgroundImage: AssetImage("assets/images/logo.jpg"),
               minRadius: 70,
-              maxRadius: 100,
-            )),
-        Container(
-            height: size.height * 0.5,
+              maxRadius: 120,
+            ),
+          ),
+          Container(
+            height: size.height * 0.48,
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-            child: children),
-        CustomActionButton(
-          label: actionButtonLabel,
-          onClick: actionButtonFunction,
-        ),
-      ],
+            child: children,
+          ),
+          Container(
+            child: CustomActionButton(
+              width: size.width * 0.78,
+              borderRadius: 10,
+              label: actionButtonLabel,
+              onClick: actionButtonFunction,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

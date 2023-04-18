@@ -18,6 +18,7 @@ class CustomTextField extends StatelessWidget {
   final String? label;
   final String? topText;
   final bool? enableTopText;
+  final TextStyle? placeHolderSize;
 
   const CustomTextField({
     Key? key,
@@ -36,6 +37,7 @@ class CustomTextField extends StatelessWidget {
     this.outlined = false,
     this.label,
     this.topText = "",
+    this.placeHolderSize,
     this.enableTopText = false,
   }) : super(key: key);
 
@@ -72,9 +74,13 @@ class CustomTextField extends StatelessWidget {
                   icon: prefixIcon,
                   suffixIcon: isPassword
                       ? Container(
-                          padding: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(12),
                           child: SvgPicture.asset("assets/icons/invisible.svg",
-                              width: 10, height: 10),
+                            width: 10,
+                            colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.primary,
+                                BlendMode.srcIn),
+                          ),
                         )
                       : suffixIcon,
                   // errorText: error,
@@ -93,6 +99,12 @@ class CustomTextField extends StatelessWidget {
                               color: Theme.of(context).colorScheme.onPrimary,
                               width: 1.0)),
                   hintText: placeHolder,
+                  hintStyle: placeHolderSize ??
+                      Theme.of(context).textTheme.titleSmall!.merge(
+                            TextStyle(
+                                color:
+                                    Theme.of(context).colorScheme.onTertiary),
+                          ),
                   focusedBorder: !outlined!
                       ? UnderlineInputBorder(
                           borderRadius: BorderRadius.circular(5),

@@ -12,7 +12,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return LoginWrapper(
-      backButton: false,
+      backButton: true,
       backButttonFunction: () => {
         Navigator.pop(context),
       },
@@ -69,7 +69,8 @@ class LoginScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 15),
                 child: (Text(
                   "Forgot Password?",
-                  style: Theme.of(context).textTheme.bodySmall!.merge(TextStyle(
+                  style: Theme.of(context).textTheme.titleSmall!.merge(
+                      TextStyle(
                       fontWeight: FontWeight.w900,
                       color: Theme.of(context).colorScheme.primary)),
                 )),
