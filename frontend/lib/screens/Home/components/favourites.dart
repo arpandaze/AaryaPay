@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:aaryapay/components/CustomCircularAvatar.dart';
 import 'package:aaryapay/components/CustomStatusButton.dart';
+import 'package:aaryapay/screens/Send/send_money.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
 
@@ -56,8 +57,18 @@ class Favourites extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CustomCircularAvatar(
-                      imageSrc: AssetImage("assets/images/pfp.jpeg")),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).push(
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation1, animation2) =>
+                            SendMoney(),
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
+                      ),
+                    ),
+                    child: CustomCircularAvatar(
+                        imageSrc: AssetImage("assets/images/pfp.jpeg")),
+                  ),
                   CustomCircularAvatar(
                       imageSrc: AssetImage("assets/images/pfp.jpeg")),
                   CustomCircularAvatar(
