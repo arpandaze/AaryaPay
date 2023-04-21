@@ -37,7 +37,8 @@ class TwoFactorAuthSecond extends StatelessWidget {
                   // decoration: BoxDecoration(
                   //     border: Border.all(color: Colors.cyanAccent)),
                   child: const CircleAvatar(
-                    backgroundImage: AssetImage("assets/images/pfp.jpeg"),
+                    backgroundImage:
+                        AssetImage("assets/images/default-pfp.png"),
                     minRadius: 90,
                     maxRadius: 120,
                   )),

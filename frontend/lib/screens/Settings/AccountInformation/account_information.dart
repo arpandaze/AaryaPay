@@ -42,7 +42,8 @@ class AccountInformation extends StatelessWidget {
                                   BorderRadius.all(Radius.circular(10)),
                               image: DecorationImage(
                                   image:
-                                      AssetImage("assets/images/pfp.jpeg")))),
+                                      AssetImage(
+                                      "assets/images/default-pfp.png")))),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: CustomStatusButton(

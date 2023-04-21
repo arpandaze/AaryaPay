@@ -37,7 +37,8 @@ class FavouritesCard extends StatelessWidget {
             children: [
               CustomCircularAvatar(
                   imageSrc:
-                      imageSrc ?? const AssetImage("assets/images/pfp.jpeg")),
+                      imageSrc ??
+                      const AssetImage("assets/images/default-pfp.png")),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,

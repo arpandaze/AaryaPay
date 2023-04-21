@@ -25,10 +25,10 @@ class AppTheme with ChangeNotifier {
         onError: Color(0xFFFFFFFF),
         background: Color(0xffFfffff),
         onBackground: Color(0xFF2A292F),
-        surface: Color.fromARGB(255, 209, 209, 209),
-        onSurface: Color.fromARGB(255, 231, 14, 14),
+        surface: Color.fromARGB(255, 160, 160, 160),
+        onSurface: Color.fromARGB(255, 206, 52, 52),
         outline: Color(0xffC0C0C0),
-        surfaceVariant: Color.fromARGB(255, 13, 255, 13),
+        surfaceVariant: Color.fromARGB(255, 29, 153, 84),
         onTertiary: Color.fromARGB(255, 137, 139, 137),
       ),
       textTheme: TextTheme(
@@ -75,7 +75,7 @@ class AppTheme with ChangeNotifier {
             letterSpacing: 0.15,
             color: const Color(0xFF000000)),
         titleSmall: GoogleFonts.mulish(
-              fontSize: 15,
+            fontSize: 15,
             fontWeight: FontWeight.w500,
             letterSpacing: 0.1,
             color: const Color(0xFF000000)),
@@ -103,16 +103,18 @@ class AppTheme with ChangeNotifier {
           letterSpacing: 0.2,
           color: const Color(0xFF000000),
         ),
-          labelMedium: GoogleFonts.mulish(
-          fontSize: 12,
+        labelMedium: GoogleFonts.questrial(
+          fontSize: 32,
             fontWeight: FontWeight.w500,
             letterSpacing: 0.1,
         ),
-          labelSmall: GoogleFonts.mulish(
-            fontSize: 10,
+        labelSmall: GoogleFonts.questrial(
+          fontSize: 15,
             fontWeight: FontWeight.w500,
             letterSpacing: 0.2,
-          )
+        ),
+          
+          
       ),
     );
   }

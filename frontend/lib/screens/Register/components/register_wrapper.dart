@@ -76,15 +76,13 @@ class RegisterWrapper extends StatelessWidget {
               ),
             ),
           ),
-          Container(
+          Container(  
             height: size.height * 0.3,
-            // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-            alignment: Alignment.center,
-            // margin: const EdgeInsets.only(top: 20),
-            child: const CircleAvatar(
-              backgroundImage: AssetImage("assets/images/logo.jpg"),
-              minRadius: 70,
-              maxRadius: 120,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.contain,
+                image: AssetImage("assets/images/logo.png"),
+              ),
             ),
           ),
           Container(
