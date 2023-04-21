@@ -95,8 +95,8 @@ class CustomTextField extends StatelessWidget {
                               width: 1.0))
                       : OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.onPrimary,
+                          borderSide: const BorderSide(
+                              color: Color.fromARGB(50, 0, 0, 0),
                               width: 1.0)),
                   hintText: placeHolder,
                   hintStyle: placeHolderSize ??

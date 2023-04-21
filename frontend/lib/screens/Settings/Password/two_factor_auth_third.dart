@@ -7,24 +7,12 @@ import '../../../components/CustomActionButton.dart';
 class TwoFactorAuthThird extends StatelessWidget {
   const TwoFactorAuthThird({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    var colorScheme = Theme.of(context).colorScheme;
-    return Scaffold(
-      backgroundColor: colorScheme.background,
-      body: body(context),
-    );
-  }
-
   Widget body(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
-    var colorScheme = Theme.of(context).colorScheme;
     Size size = MediaQuery.of(context).size;
     return SettingsWrapper(
         pageName: "Successful",
-        children: SizedBox(
-          height: size.height,
-          width: size.width * 0.9,
+        children: Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,7 +61,7 @@ class TwoFactorAuthThird extends StatelessWidget {
               ),
               Text(
                 "You are ready for secure tranfers to come along",
-                style: textTheme.bodySmall,
+                style: textTheme.titleSmall,
               ),
               Center(
                 child: CustomActionButton(
@@ -91,5 +79,14 @@ class TwoFactorAuthThird extends StatelessWidget {
             ],
           ),
         ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      color: colorScheme.background,
+      child: body(context),
+    );
   }
 }

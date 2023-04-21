@@ -55,7 +55,9 @@ class WelcomeScreen extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .titleMedium!
-                .merge(const TextStyle(height: 1.5)),
+                .merge(
+                  const TextStyle(height: 1.5),
+                ),
             textAlign: TextAlign.center,
           ),
         ),

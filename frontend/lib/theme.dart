@@ -91,18 +91,19 @@ class AppTheme with ChangeNotifier {
             letterSpacing: 0.2,
             color: const Color(0xFF000000),
             height: 1.5),
+        bodySmall: GoogleFonts.mulish(
+          fontSize: 10,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.2,
+          color: const Color(0xFF000000),
+        ),
         labelLarge: GoogleFonts.mulish(
               fontSize: 20,
               fontWeight: FontWeight.w500,
             letterSpacing: 1.25,
             height: 1.0,
               color: const Color(0xff5484F5)),
-        bodySmall: GoogleFonts.mulish(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          letterSpacing: 0.2,
-          color: const Color(0xFF000000),
-        ),
+       
         labelMedium: GoogleFonts.questrial(
           fontSize: 32,
             fontWeight: FontWeight.w500,

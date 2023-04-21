@@ -24,7 +24,7 @@ class Wrapper extends StatelessWidget {
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(150),
             child: TopBar(size: size),
-              ),
+          ),
           body: children ?? Container(),
         ),
       ),

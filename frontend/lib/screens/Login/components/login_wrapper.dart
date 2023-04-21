@@ -101,13 +101,16 @@ class LoginWrapper extends StatelessWidget {
                       children: [
                         Text(
                           "Don't have an account, ",
-                          style: Theme.of(context).textTheme.bodySmall,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         GestureDetector(
                           behavior: HitTestBehavior.translucent,
                           child: Text(
                             "Register",
-                            style: Theme.of(context).textTheme.bodySmall!.merge(
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .merge(
                                 TextStyle(
                                     fontWeight: FontWeight.w900,
                                     color:

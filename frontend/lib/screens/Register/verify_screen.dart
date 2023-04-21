@@ -113,11 +113,18 @@ class VerifyScreen extends StatelessWidget {
         ),
         Container(
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            const Text("Didn't Receive Code?"),
+            Text(
+              "Didn't Receive Code?",
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
             GestureDetector(
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text("Resend Code"),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Resend Code",
+                  style: Theme.of(context).textTheme.bodyMedium!.merge(
+                      TextStyle(color: Theme.of(context).colorScheme.primary)),
+                ),
               ),
             )
           ]),
