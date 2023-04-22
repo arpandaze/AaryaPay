@@ -26,3 +26,5 @@ class SendMoneyClearEvent extends SendMoneyEvent {}
 
 class SendMoneyEqualsEvent extends SendMoneyEvent {}
 
+class SendMoneyEraseEvent extends SendMoneyEvent {}
+

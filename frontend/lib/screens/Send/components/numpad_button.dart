@@ -1,11 +1,14 @@
 import 'package:aaryapay/screens/Send/bloc/send_money_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class NumPadButton extends StatelessWidget {
   final String text;
+  final SvgPicture? icon;
+  final Color? color;
 
-  NumPadButton({required this.text});
+  const NumPadButton({super.key, required this.text, this.icon, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +28,8 @@ class NumPadButton extends StatelessWidget {
           case '/':
             bloc.add(SendMoneyDivideEvent());
             break;
-          case 'C':
-            bloc.add(SendMoneyClearEvent());
+          case 'erase':
+            bloc.add(SendMoneyEraseEvent());
             break;
           case '=':
             bloc.add(SendMoneyEqualsEvent());
@@ -37,19 +40,20 @@ class NumPadButton extends StatelessWidget {
         }
       },
       child: Container(
-        constraints: BoxConstraints(minWidth: 70, minHeight: 60),
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 25),
+        constraints: const BoxConstraints(
+            minWidth: 60, minHeight: 55, maxWidth: 70, maxHeight: 65),
         decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary,
-            borderRadius: BorderRadius.all(Radius.circular(10))),
+            color: color ?? Theme.of(context).colorScheme.primary,
+            borderRadius: const BorderRadius.all(Radius.circular(10))),
         child: Center(
-          child: Text(
-            text,
-            style: Theme.of(context)
-                .textTheme
-                .titleSmall!
-                .merge(TextStyle(color: Colors.white)),
-          ),
+          child: icon ??
+              Text(
+                text,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleSmall!
+                    .merge(const TextStyle(color: Colors.white)),
+              ),
         ),
       ),
     );

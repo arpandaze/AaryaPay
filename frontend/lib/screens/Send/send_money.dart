@@ -84,7 +84,7 @@ class SendMoney extends StatelessWidget {
                   ),
                   Container(
                       margin: EdgeInsets.only(left: 15),
-                      child: Text("${state.amount}",
+                      child: Text("${state.displayAmount}",
                           style: Theme.of(context)
                               .textTheme
                               .displaySmall!
@@ -177,7 +177,16 @@ class SendMoney extends StatelessWidget {
                         children: [
                           NumPadButton(text: '.'),
                           NumPadButton(text: '0'),
-                          NumPadButton(text: 'C'),
+                          NumPadButton(
+                            icon: SvgPicture.asset("assets/icons/erase.svg",
+                                height: 15,
+                                width: 15,
+                                colorFilter: const ColorFilter.mode(
+                                    Colors.white, BlendMode.srcIn)),
+                            text: "erase",
+                            color: Theme.of(context).colorScheme.outline,
+                            
+                          ),
                           NumPadButton(text: '='),
                         ],
                       ),
