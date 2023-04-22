@@ -11,7 +11,6 @@ import (
 )
 
 func Init() *gin.Engine {
-	core.LoadConfig("dev")
 	core.ConnectDatabase()
 	core.ConnectRedis()
 
