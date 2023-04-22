@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/gin-contrib/zap v0.1.0
 	github.com/gin-gonic/gin v1.9.0
+	github.com/go-playground/assert/v2 v2.2.0
 	github.com/go-playground/validator/v10 v10.12.0
 	github.com/google/uuid v1.3.0
 	github.com/jhillyerd/enmime v0.11.0
@@ -51,7 +52,7 @@ require (
 	github.com/pquerna/otp v1.4.0
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
-	github.com/stretchr/testify v1.8.2 // indirect
+	github.com/stretchr/testify v1.8.2
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.10 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
