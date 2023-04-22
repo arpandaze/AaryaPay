@@ -3,6 +3,7 @@ package core
 import (
 	"crypto/ed25519"
 	"encoding/binary"
+	"fmt"
 	. "main/telemetry"
 	"math"
 	"time"
@@ -18,6 +19,7 @@ type Transaction struct {
 	To        uuid.UUID
 	BKVC      BalanceKeyVerificationCertificate
 	Signature [64]byte
+	TimeStamp time.Time
 }
 
 // ToBytes converts the transaction into a byte slice.
@@ -26,11 +28,12 @@ func (t *Transaction) ToBytes(c *gin.Context) []byte {
 	defer span.End()
 	l := Logger(c).Sugar()
 
-	data := make([]byte, 204)
+	data := make([]byte, 208)
 	binary.BigEndian.PutUint32(data[0:4], math.Float32bits(t.Amount))
 	copy(data[4:20], t.To[:])
-	copy(data[20:140], t.BKVC.ToBytes())
-	copy(data[140:204], t.Signature[:])
+	copy(data[20:140], t.BKVC.ToBytes(c))
+	binary.BigEndian.PutUint32(data[140:144], uint32(t.TimeStamp.Unix()))
+	copy(data[144:208], t.Signature[:])
 
 	l.Infow("Transaction converted to bytes")
 
@@ -48,7 +51,7 @@ func TransactionFromBytes(c *gin.Context, data []byte) (Transaction, error) {
 	copy(t.To[:], data[4:20])
 
 	var err error
-	t.BKVC, err = BKVCFromBytes(data[20:140])
+	t.BKVC, err = BKVCFromBytes(c, data[20:140])
 
 	if err != nil {
 		l.Errorw("Failed to convert byte slice into a transaction",
@@ -57,7 +60,9 @@ func TransactionFromBytes(c *gin.Context, data []byte) (Transaction, error) {
 		return t, err
 	}
 
-	copy(t.Signature[:], data[140:204])
+	t.TimeStamp = time.Unix(int64(binary.BigEndian.Uint32(data[140:144])), 0)
+
+	copy(t.Signature[:], data[144:208])
 
 	return t, nil
 }
@@ -68,11 +73,13 @@ func (t *Transaction) Sign(c *gin.Context, privateKey ed25519.PrivateKey) {
 	defer span.End()
 	l := Logger(c).Sugar()
 
-	data := make([]byte, 140)
+	data := make([]byte, 144)
 	binary.BigEndian.PutUint32(data[0:4], math.Float32bits(t.Amount))
 	copy(data[4:20], t.To[:])
-	copy(data[20:140], t.BKVC.ToBytes())
+	copy(data[20:140], t.BKVC.ToBytes(c))
+	binary.BigEndian.PutUint32(data[140:144], uint32(t.TimeStamp.Unix()))
 
+  fmt.Println("data: ", data)
 	sig := ed25519.Sign(privateKey, data)
 
 	l.Infow("Transaction signed")
@@ -81,11 +88,20 @@ func (t *Transaction) Sign(c *gin.Context, privateKey ed25519.PrivateKey) {
 }
 
 // Verify verifies the signature of the transaction.
-func (t *Transaction) Verify() bool {
-	data := make([]byte, 140)
+func (t *Transaction) Verify(c *gin.Context) bool {
+	_, span := Tracer.Start(c.Request.Context(), "Transaction.Verify()")
+	defer span.End()
+	l := Logger(c).Sugar()
+
+	data := make([]byte, 144)
 	binary.BigEndian.PutUint32(data[0:4], math.Float32bits(t.Amount))
 	copy(data[4:20], t.To[:])
-	copy(data[20:140], t.BKVC.ToBytes())
+	copy(data[20:140], t.BKVC.ToBytes(c))
+	binary.BigEndian.PutUint32(data[140:144], uint32(t.TimeStamp.Unix()))
+
+	l.Infow("Transaction verified")
+
+  fmt.Println("data: ", len( data ))
 
 	return ed25519.Verify(t.BKVC.PublicKey[:], data, t.Signature[:])
 }
@@ -101,7 +117,10 @@ type BalanceKeyVerificationCertificate struct {
 }
 
 // BKVCFromBytes converts the byte slice into a BKVC.
-func BKVCFromBytes(data []byte) (BalanceKeyVerificationCertificate, error) {
+func BKVCFromBytes(c *gin.Context, data []byte) (BalanceKeyVerificationCertificate, error) {
+	_, span := Tracer.Start(c.Request.Context(), "BKVCFromBytes()")
+	defer span.End()
+	l := Logger(c).Sugar()
 
 	b := BalanceKeyVerificationCertificate{}
 
@@ -109,6 +128,9 @@ func BKVCFromBytes(data []byte) (BalanceKeyVerificationCertificate, error) {
 	b.UserID, err = uuid.FromBytes(data[0:16])
 
 	if err != nil {
+		l.Errorw("Failed to convert byte slice into a BKVC",
+			"error", err,
+		)
 		return b, err
 	}
 
@@ -122,7 +144,11 @@ func BKVCFromBytes(data []byte) (BalanceKeyVerificationCertificate, error) {
 }
 
 // ToBytes converts the BKVC into a byte slice.
-func (b *BalanceKeyVerificationCertificate) ToBytes() []byte {
+func (b *BalanceKeyVerificationCertificate) ToBytes(c *gin.Context) []byte {
+	_, span := Tracer.Start(c.Request.Context(), "BalanceKeyVerificationCertificate.ToBytes()")
+	defer span.End()
+	l := Logger(c).Sugar()
+
 	data := make([]byte, 120)
 	copy(data[0:16], b.UserID[:])
 	binary.BigEndian.PutUint32(data[16:20], math.Float32bits(b.AvailableBalance))
@@ -130,36 +156,52 @@ func (b *BalanceKeyVerificationCertificate) ToBytes() []byte {
 	binary.BigEndian.PutUint32(data[52:56], uint32(b.TimeStamp.Unix()))
 	copy(data[56:120], b.Signature[:])
 
+	l.Infow("BKVC converted to bytes")
+
 	return data
 }
 
-func (b *BalanceKeyVerificationCertificate) Sign() {
+// Signs the BKVC with the server private key.
+func (b *BalanceKeyVerificationCertificate) Sign(c *gin.Context) {
+	_, span := Tracer.Start(c.Request.Context(), "Sign()")
+	defer span.End()
+	l := Logger(c).Sugar()
+
 	data := make([]byte, 56)
-	binary.BigEndian.PutUint64(data[0:8], uint64(b.UserID.Time()))
-	binary.BigEndian.PutUint64(data[8:16], uint64(b.UserID.ClockSequence()))
+	copy(data[0:16], b.UserID[:])
 	binary.BigEndian.PutUint32(data[16:20], math.Float32bits(b.AvailableBalance))
 	copy(data[20:52], b.PublicKey[:])
 	binary.BigEndian.PutUint32(data[52:56], uint32(b.TimeStamp.Unix()))
 
 	sig := ed25519.Sign(Configs.PRIVATE_KEY(), data)
 	copy(b.Signature[:], sig)
+
+	l.Infow("BKVC signed")
 }
 
-func (b *BalanceKeyVerificationCertificate) Verify() bool {
+// Verify verifies the signature of the BKVC.
+func (b *BalanceKeyVerificationCertificate) Verify(c *gin.Context) bool {
+	_, span := Tracer.Start(c.Request.Context(), "BalanceKeyVerificationCertificate.Verify()")
+	defer span.End()
+	l := Logger(c).Sugar()
+
 	data := make([]byte, 56)
-	binary.BigEndian.PutUint64(data[0:8], uint64(b.UserID.Time()))
-	binary.BigEndian.PutUint64(data[8:16], uint64(b.UserID.ClockSequence()))
+	copy(data[0:16], b.UserID[:])
 	binary.BigEndian.PutUint32(data[16:20], math.Float32bits(b.AvailableBalance))
 	copy(data[20:52], b.PublicKey[:])
 	binary.BigEndian.PutUint32(data[52:56], uint32(b.TimeStamp.Unix()))
 
 	sig := b.Signature[:]
 
-	pubKey := b.PublicKey[:]
+	var pubKeyBytes []byte
+	staticPublicKey := Configs.PUBLIC_KEY()
+	copy(pubKeyBytes, staticPublicKey[:])
 
-	if ed25519.Verify(pubKey, data, sig) {
+	if ed25519.Verify(staticPublicKey[:], data, sig) {
+		l.Infow("BKVC verified")
 		return true
 	} else {
+		l.Errorw("BKVC verification failed")
 		return false
 	}
 }
