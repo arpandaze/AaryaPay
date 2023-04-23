@@ -18,8 +18,8 @@ type Transaction struct {
 	Amount    float32
 	To        uuid.UUID
 	BKVC      BalanceKeyVerificationCertificate
-	Signature [64]byte
 	TimeStamp time.Time
+	Signature [64]byte
 }
 
 // ToBytes converts the transaction into a byte slice.

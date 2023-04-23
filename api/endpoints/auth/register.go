@@ -92,15 +92,14 @@ func (RegisterController) Register(c *gin.Context) {
 	}
 
 	query := `
-      INSERT INTO users
+      INSERT INTO Users
       (
         first_name,
         middle_name,
         last_name,
         dob,
         password,
-        email,
-        pubkey_updated_at
+        email
       )
       VALUES
       (
@@ -109,8 +108,7 @@ func (RegisterController) Register(c *gin.Context) {
         $3,
         $4,
         $5,
-        $6,
-        $7
+        $6
       )
       RETURNING 
       id,
@@ -119,14 +117,14 @@ func (RegisterController) Register(c *gin.Context) {
       last_name,
       email,
       is_verified,
-      pubkey_updated_at;
+      last_sync;
   `
 
-	row := core.DB.QueryRow(query, user.FirstName, user.MiddleName, user.LastName, user.DOB, passwordHash, user.Email, nil)
+	row := core.DB.QueryRow(query, user.FirstName, user.MiddleName, user.LastName, user.DOB, passwordHash, user.Email)
 
 	returnedUser := core.CommonUser{}
 
-	err = row.Scan(&returnedUser.Id, &returnedUser.FirstName, &returnedUser.MiddleName, &returnedUser.LastName, &returnedUser.Email, &returnedUser.IsVerified, &returnedUser.PubKeyUpdatedAt)
+	err = row.Scan(&returnedUser.Id, &returnedUser.FirstName, &returnedUser.MiddleName, &returnedUser.LastName, &returnedUser.Email, &returnedUser.IsVerified, &returnedUser.LastSync)
 
 	if err != nil {
 		msg := "Failed to execute SQL statement"
@@ -135,6 +133,17 @@ func (RegisterController) Register(c *gin.Context) {
 			"error", err,
 		)
 
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
+		return
+	}
+
+	accountsCreateQuery := "INSERT INTO Accounts (id, balance) VALUES ($1, $2)"
+	_, err = core.DB.Exec(accountsCreateQuery, returnedUser.Id, 0)
+
+	if err != nil {
+		l.Errorw("Failed to create account for user!",
+			"error", err,
+		)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
 		return
 	}

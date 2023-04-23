@@ -2,6 +2,7 @@ package auth
 
 import (
 	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 
@@ -282,21 +283,22 @@ func (TwoFaController) TwoFALoginConfirm(c *gin.Context) {
 		Password        string         `db:"password"`
 		IsVerified      bool           `db:"is_verified"`
 		TwoFactorAuth   sql.NullString `db:"two_factor_auth"`
-		PubKey          sql.NullString `db:"pubkey"`
+		KeyPair         sql.NullString `db:"pubkey"`
 		PubKeyUpdatedAt sql.NullTime   `db:"pubkey_updated_at"`
 	}
 
 	queryUser := loginUser{}
+	userBalance := 0.0
 	row := core.DB.QueryRow(`
-	SELECT id, first_name, middle_name, last_name, dob, email, password, is_verified, two_factor_auth, pubkey, pubkey_updated_at
-	FROM 
-	Users 
-	WHERE 
-	id=$1
+    SELECT users.id, users.first_name, users.middle_name, users.last_name, users.dob, users.email, users.password, users.is_verified, users.two_factor_auth, keys.value as keypair, keys.last_refreshed_at as pubkey_updated_at, a.balance
+    FROM Users users
+    LEFT JOIN Keys keys ON users.id = keys.associated_user AND keys.active = true
+    LEFT JOIN Accounts a ON users.id = a.id
+    WHERE users.email = $1;
     `, tempData.UserId,
 	)
 
-	err = row.Scan(&queryUser.ID, &queryUser.FirstName, &queryUser.MiddleName, &queryUser.LastName, &queryUser.DOB, &queryUser.Email, &queryUser.Password, &queryUser.IsVerified, &queryUser.TwoFactorAuth, &queryUser.PubKey, &queryUser.PubKeyUpdatedAt)
+	err = row.Scan(&queryUser.ID, &queryUser.FirstName, &queryUser.MiddleName, &queryUser.LastName, &queryUser.DOB, &queryUser.Email, &queryUser.Password, &queryUser.IsVerified, &queryUser.TwoFactorAuth, &queryUser.KeyPair, &queryUser.PubKeyUpdatedAt, &userBalance)
 
 	switch err {
 	case sql.ErrNoRows:
@@ -351,7 +353,7 @@ func (TwoFaController) TwoFALoginConfirm(c *gin.Context) {
 				return
 			}
 
-			pubKey, privKey, lastRefreshedAt, signature, err := core.GenerateKeyPair(c, queryUser.ID)
+			pubKey, privKey, lastRefreshedAt, err := core.GenerateKeyPair(c, queryUser.ID)
 
 			if err != nil {
 				l.Errorw("Failed to generate key pair",
@@ -395,7 +397,19 @@ func (TwoFaController) TwoFALoginConfirm(c *gin.Context) {
 				"middle_name", queryUser.MiddleName,
 				"last_name", queryUser.LastName,
 			)
-			c.JSON(http.StatusAccepted, gin.H{"msg": msg, "user_id": queryUser.ID, "pub_key": pubKey, "priv_key": privKey, "signature": signature, "last_refreshed": lastRefreshedAt.Unix()})
+
+			bkvc := core.BalanceKeyVerificationCertificate{
+				UserID:           queryUser.ID,
+				PublicKey:        [32]byte(pubKey),
+				AvailableBalance: float32(userBalance),
+				TimeStamp:        time.Now(),
+			}
+
+			bkvc.Sign(c)
+
+			base64EncodedBKVC := base64.StdEncoding.EncodeToString(bkvc.ToBytes(c))
+
+			c.JSON(http.StatusAccepted, gin.H{"msg": msg, "bkvc": base64EncodedBKVC, "private_key": base64.StdEncoding.EncodeToString(privKey)})
 			return
 		}
 	default:

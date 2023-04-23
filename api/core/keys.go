@@ -12,7 +12,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func GenerateKeyPair(c *gin.Context, userID uuid.UUID) ([]byte, []byte, time.Time, []byte, error) {
+func GenerateKeyPair(c *gin.Context, userID uuid.UUID) ([]byte, []byte, time.Time, error) {
 	_, span := Tracer.Start(c.Request.Context(), "GenerateKeyPair()")
 	defer span.End()
 
@@ -22,7 +22,7 @@ func GenerateKeyPair(c *gin.Context, userID uuid.UUID) ([]byte, []byte, time.Tim
 		Logger(c).Sugar().Errorw("Error generating key pair",
 			"error", err,
 		)
-		return nil, nil, time.Time{}, nil, err
+		return nil, nil, time.Time{}, err
 	}
 
 	// Make the previous active key inactive
@@ -32,7 +32,7 @@ func GenerateKeyPair(c *gin.Context, userID uuid.UUID) ([]byte, []byte, time.Tim
 		Logger(c).Sugar().Errorw("Failed to update active key",
 			"error", err,
 		)
-		return nil, nil, time.Time{}, nil, err
+		return nil, nil, time.Time{}, err
 	}
 
 	// Convert keys to base64-encoded strings
@@ -50,7 +50,7 @@ func GenerateKeyPair(c *gin.Context, userID uuid.UUID) ([]byte, []byte, time.Tim
 		Logger(c).Sugar().Errorw("Error inserting key pair into keys table",
 			"error", err,
 		)
-		return nil, nil, time.Time{}, nil, err
+		return nil, nil, time.Time{}, err
 	}
 
 	lastRefreshedAtBytes := utils.Int32ToByteArray(int32(lastRefreshedAt.Unix()))
@@ -61,9 +61,7 @@ func GenerateKeyPair(c *gin.Context, userID uuid.UUID) ([]byte, []byte, time.Tim
 
 	mergedPayload = utils.MergeByteArray(mergedPayload, userIdByte)
 
-	sig := ed25519.Sign(Configs.PRIVATE_KEY(), mergedPayload)
-
-	return pubKey, fullKey, lastRefreshedAt, sig, nil
+	return pubKey, fullKey, lastRefreshedAt, nil
 }
 
 func GetUserKey(c *gin.Context, userID uuid.UUID) ([]byte, time.Time, error) {
