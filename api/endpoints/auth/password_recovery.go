@@ -38,7 +38,7 @@ func (PasswordRecoveryController) PasswordRecovery(c *gin.Context) {
 	`, recoverPassword.Email,
 	)
 
-	err := row.Scan(&queryUser.Id, &queryUser.FirstName, &queryUser.MiddleName, &queryUser.LastName, &queryUser.Email, &queryUser.IsVerified, &queryUser.PubKeyUpdatedAt)
+	err := row.Scan(&queryUser.Id, &queryUser.FirstName, &queryUser.MiddleName, &queryUser.LastName, &queryUser.Email, &queryUser.IsVerified, &queryUser.LastSync)
 
 	switch err {
 	case sql.ErrNoRows:
