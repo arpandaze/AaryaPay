@@ -21,6 +21,18 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   void _onFormSubmitted(FormSubmitted event, Emitter<LoginState> emit) async {
+    if (!state.isEmailValid) {
+      return emit(state.copyWith(errorText: "Invalid Username!"));
+    }
+
+    if (!state.isPasswordValid) {
+      return emit(state.copyWith(errorText: "Invalid Password!"));
+    }
+
+    try{
+      final loginResponse = await auth.login(username: state.email, password: state.password);
+      
+    }
     //send login request and cchange parameters that way
   }
 }
