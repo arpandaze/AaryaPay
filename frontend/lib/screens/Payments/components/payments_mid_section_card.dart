@@ -1,27 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:aaryapay/components/topbar.dart';
-import 'package:aaryapay/screens/Home/components/midsection.dart';
-import 'package:aaryapay/components/navbar.dart';
-import 'package:aaryapay/components/Wrapper.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class PaymentsMidSectionCard extends StatelessWidget {
   const PaymentsMidSectionCard(
       {Key? key,
-      this.title,
-      this.amount,
-      this.sender,
-      this.reciever,
-      this.startDate,
-      this.endDate})
+      required this.title,
+      required this.amount,
+      required this.sender,
+      required this.reciever,
+      required this.startDate,
+      required this.endDate})
       : super(key: key);
 
-  final String? title;
-  final String? amount;
-  final String? sender;
-  final String? reciever;
-  final String? startDate;
-  final String? endDate;
+  final String title;
+  final String amount;
+  final String sender;
+  final String reciever;
+  final String startDate;
+  final String endDate;
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +25,12 @@ class PaymentsMidSectionCard extends StatelessWidget {
     var textTheme = Theme.of(context).textTheme;
     var colorScheme = Theme.of(context).colorScheme;
     return Container(
-      padding: EdgeInsets.all(10),
-      margin: EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.only(bottom: 10),
       width: size.width * 0.9,
       height: size.height * 0.25,
       decoration: BoxDecoration(
-          border: Border.all(color: colorScheme.surface),
+          border: Border.all(color: Color.fromARGB(50, 0, 0, 0)),
           borderRadius: BorderRadius.circular(10)),
       child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -43,27 +39,34 @@ class PaymentsMidSectionCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  title ?? "Payment For Momo",
-                  style: textTheme.headlineSmall,
+                Container(
+                  width: size.width * 0.4,
+                  child: Text(
+                    title,
+                    style: textTheme.titleMedium!
+                        .merge(TextStyle(fontWeight: FontWeight.w600)),
+                  ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 3),
-                      child: Text(
+                Container(
+                  width: size.width * 0.40,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
                         "Rs.",
-                        style: textTheme.bodyLarge,
+                        textAlign: TextAlign.left,
+                        style: textTheme.titleSmall,
                       ),
-                    ),
-                    Text(
-                      amount ?? "300",
-                      style: textTheme.headlineMedium,
-                    ),
-                  ],
+                      Container(
+                        child: Text(
+                          amount,
+                          textAlign: TextAlign.right,
+                          style: textTheme.headlineMedium,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -72,12 +75,11 @@ class PaymentsMidSectionCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Sender : ${sender ?? "32318"}",
-                  style: textTheme.labelSmall,
+                  "Sender : ${sender}", style: textTheme.bodyMedium
                 ),
                 Text(
-                  "Reciever  : ${reciever ?? "465823"}",
-                  style: textTheme.labelSmall,
+                  "Reciever  : ${reciever}",
+                  style: textTheme.bodyMedium,
                 ),
               ],
             ),
@@ -90,13 +92,16 @@ class PaymentsMidSectionCard extends StatelessWidget {
                   children: [
                     SvgPicture.asset(
                       "assets/icons/calendar.svg",
-                      width: 10,
-                      height: 10,
-                      color: colorScheme.primary,
+                      width: 18,
+                      height: 18,
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).colorScheme.primary,
+                        BlendMode.srcIn,
+                      ),
                     ),
                     Text(
-                      " Start Time: ${startDate ?? "March 21 2023"}",
-                      style: textTheme.labelSmall,
+                      " Start: ${startDate}",
+                      style: textTheme.bodyMedium,
                     )
                   ],
                 ),
@@ -106,17 +111,36 @@ class PaymentsMidSectionCard extends StatelessWidget {
                   children: [
                     SvgPicture.asset(
                       "assets/icons/bullseye.svg",
-                      width: 10,
-                      height: 10,
-                      color: colorScheme.primary,
+                      width: 18,
+                      height: 18,
+                      colorFilter: ColorFilter.mode(
+                          Theme.of(context).colorScheme.primary,
+                          BlendMode.srcIn),
                     ),
                     Text(
-                      " End Time: ${endDate ?? "March 21 2023"}",
-                      style: textTheme.labelSmall,
+                      " End: ${endDate}",
+                      style: textTheme.bodyMedium,
                     )
                   ],
                 )
               ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: size.width * 0.845,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surface,
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    ),
+                  )
+                ],
+              ),
             ),
             //bar
             Row(
@@ -125,7 +149,7 @@ class PaymentsMidSectionCard extends StatelessWidget {
                 Text("Sale expiry in 3 days", style: textTheme.bodySmall),
                 Container(
                     width: size.width * 0.18,
-                    padding: EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                         color: colorScheme.secondary,
                         borderRadius: BorderRadius.circular(10)),

@@ -2,6 +2,7 @@ import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:aaryapay/screens/Register/account_and_security.dart';
 import 'package:aaryapay/screens/Register/components/register_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -16,6 +17,7 @@ class RegisterScreen extends StatelessWidget {
         Navigator.pop(context),
       },
       title: "Identification",
+      pageIndex: "1/3",
       actionButtonLabel: "Next",
       actionButtonFunction: () => Navigator.of(context).push(
         PageRouteBuilder(
@@ -38,50 +40,58 @@ class RegisterScreen extends StatelessWidget {
           children: [
             Text(
               "Sign Up",
-              style: Theme.of(context).textTheme.headlineMedium!.merge(
+              style: Theme.of(context).textTheme.displaySmall!.merge(
                     TextStyle(
                         height: 1.8,
                         fontWeight: FontWeight.w900,
-                        color: Theme.of(context).colorScheme.secondary),
+                        color: Theme.of(context).colorScheme.primary),
                   ),
             ),
             Text(
               "Fill the form to Sign Up for AaryaPay. Pay Anywhere, You Go",
-              style: Theme.of(context).textTheme.bodySmall!.merge(
+              style: Theme.of(context).textTheme.titleSmall!.merge(
                     TextStyle(
                         height: 2,
                         // fontWeight: FontWeight.w900,
-                        color: Theme.of(context).colorScheme.secondary),
+                        color: Theme.of(context).colorScheme.primary),
                   ),
             ),
           ],
         ),
         CustomTextField(
           width: size.width,
-          padding: EdgeInsets.fromLTRB(0,15,15,15),
-          prefixIcon: Icon(
-            FontAwesomeIcons.solidEnvelope,
-            color: Theme.of(context).colorScheme.primary,
+          padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
+          prefixIcon: Container(
+            child: SvgPicture.asset(
+              "assets/icons/profile.svg",
+              width: 20,
+              colorFilter: ColorFilter.mode(
+                  Theme.of(context).colorScheme.primary, BlendMode.srcIn),
+            ), 
           ),
           // height: ,
           placeHolder: "First Name",
         ),
         CustomTextField(
           width: size.width,
-          padding: EdgeInsets.fromLTRB(0,15,15,15),
-          prefixIcon: Icon(
-            FontAwesomeIcons.solidEnvelope,
-            color: Theme.of(context).colorScheme.primary,
+          padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
+          prefixIcon: Container(
+            child: SvgPicture.asset(
+              "assets/icons/blank.svg",
+              width: 20,
+            ), 
           ),
           // height: ,
           placeHolder: "Middle Name",
         ),
         CustomTextField(
           width: size.width,
-          padding: EdgeInsets.fromLTRB(0,15,15,15),
-          prefixIcon: Icon(
-            FontAwesomeIcons.solidEnvelope,
-            color: Theme.of(context).colorScheme.primary,
+          padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
+          prefixIcon: Container(
+            child: SvgPicture.asset(
+              "assets/icons/blank.svg",
+              width: 20,
+            ), 
           ),
           // height: ,
           placeHolder: "Last Name",

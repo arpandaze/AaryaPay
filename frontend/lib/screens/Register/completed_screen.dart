@@ -1,10 +1,9 @@
-import 'package:aaryapay/components/CustomDatePicker.dart';
-import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:aaryapay/screens/Home/home_screen.dart';
+import 'package:aaryapay/screens/Login/login_screen.dart';
+import 'package:aaryapay/screens/Login/welcome_screen.dart';
 import 'package:aaryapay/screens/Register/components/register_wrapper.dart';
-import 'package:aaryapay/screens/Register/verify_screen.dart';
+import 'package:aaryapay/screens/Send/offline_send.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CompletedScreen extends StatelessWidget {
   const CompletedScreen({Key? key}) : super(key: key);
@@ -18,11 +17,12 @@ class CompletedScreen extends StatelessWidget {
         Navigator.pop(context),
       },
       title: "Completed",
+      pageIndex: "",
       actionButtonLabel: "Done",
       actionButtonFunction: () => Navigator.of(context).push(
         PageRouteBuilder(
           pageBuilder: (context, animation1, animation2) =>
-              const HomeScreen(),
+              const WelcomeScreen(),
           transitionDuration: Duration.zero,
           reverseTransitionDuration: Duration.zero,
         ),
@@ -41,8 +41,8 @@ class CompletedScreen extends StatelessWidget {
           children: [
             Text(
               "You Are, All Set",
-              style: Theme.of(context).textTheme.headlineLarge!.merge(
-                    TextStyle(color: Theme.of(context).colorScheme.secondary),
+              style: Theme.of(context).textTheme.displaySmall!.merge(
+                    TextStyle(color: Theme.of(context).colorScheme.primary),
                   ),
             ),
             Padding(
@@ -51,8 +51,8 @@ class CompletedScreen extends StatelessWidget {
                 "Does anyone even read this text. No. Why are you reading this text. Just login already, this text is worthless.",
                 style: Theme.of(context)
                     .textTheme
-                    .titleMedium!
-                    .merge(const TextStyle(height: 1.5)),
+                    .titleSmall!
+                    .merge(const TextStyle(height: 2.0)),
                 textAlign: TextAlign.center,
               ),
             ),

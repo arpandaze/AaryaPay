@@ -1,10 +1,6 @@
-import 'package:aaryapay/components/CustomDatePicker.dart';
-import 'package:aaryapay/components/CustomTextField.dart';
-import 'package:aaryapay/screens/Home/home_screen.dart';
 import 'package:aaryapay/screens/Register/completed_screen.dart';
 import 'package:aaryapay/screens/Register/components/register_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class VerifyScreen extends StatelessWidget {
@@ -19,6 +15,7 @@ class VerifyScreen extends StatelessWidget {
         Navigator.pop(context),
       },
       title: "Verify your account",
+      pageIndex: "3/3",
       actionButtonLabel: "Next",
       actionButtonFunction: () => Navigator.of(context).push(
         PageRouteBuilder(
@@ -41,11 +38,11 @@ class VerifyScreen extends StatelessWidget {
           children: [
             Text(
               "Verify Your Account",
-              style: Theme.of(context).textTheme.headlineMedium!.merge(
+              style: Theme.of(context).textTheme.displaySmall!.merge(
                     TextStyle(
                         height: 1.8,
                         fontWeight: FontWeight.w900,
-                        color: Theme.of(context).colorScheme.secondary),
+                        color: Theme.of(context).colorScheme.primary),
                   ),
             ),
             Column(
@@ -54,11 +51,11 @@ class VerifyScreen extends StatelessWidget {
               children: [
                 Text(
                   "Please enter the 6 digit code sent to: ",
-                  style: Theme.of(context).textTheme.bodySmall!.merge(
+                  style: Theme.of(context).textTheme.titleSmall!.merge(
                         TextStyle(
                         height: 1.8,
                             // fontWeight: FontWeight.w500,
-                            color: Theme.of(context).colorScheme.secondary),
+                            color: Theme.of(context).colorScheme.primary),
                       ),
                 ),
                 Text(
@@ -67,7 +64,7 @@ class VerifyScreen extends StatelessWidget {
                         TextStyle(
                         height: 1.8,
                             fontWeight: FontWeight.w900,
-                            color: Theme.of(context).colorScheme.secondary),
+                            color: Theme.of(context).colorScheme.primary),
                       ),
                 ),
               ],
@@ -75,7 +72,7 @@ class VerifyScreen extends StatelessWidget {
           ],
         ),
         Container(
-          margin: EdgeInsets.only(top: 40),
+          margin: const EdgeInsets.only(top: 40),
           child: PinCodeTextField(
             length: 6,
             hapticFeedbackTypes: HapticFeedbackTypes.light,
@@ -113,7 +110,25 @@ class VerifyScreen extends StatelessWidget {
             },
             appContext: context,
           ),
-        )
+        ),
+        Container(
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Text(
+              "Didn't Receive Code?",
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            GestureDetector(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Resend Code",
+                  style: Theme.of(context).textTheme.bodyMedium!.merge(
+                      TextStyle(color: Theme.of(context).colorScheme.primary)),
+                ),
+              ),
+            )
+          ]),
+        ),
       ],
     );
   }

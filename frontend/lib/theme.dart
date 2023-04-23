@@ -25,9 +25,11 @@ class AppTheme with ChangeNotifier {
         onError: Color(0xFFFFFFFF),
         background: Color(0xffFfffff),
         onBackground: Color(0xFF2A292F),
-        surface: Color.fromARGB(255, 209, 209, 209),
-        onSurface: Color.fromARGB(255, 231, 14, 14),
-        outline: Color(0xff47C70B),
+        surface: Color.fromARGB(255, 160, 160, 160),
+        onSurface: Color.fromARGB(255, 206, 52, 52),
+        outline: Color(0xffC0C0C0),
+        surfaceVariant: Color.fromARGB(255, 29, 153, 84),
+        onTertiary: Color.fromARGB(255, 137, 139, 137),
       ),
       textTheme: TextTheme(
         displayLarge: GoogleFonts.mulish(
@@ -44,7 +46,7 @@ class AppTheme with ChangeNotifier {
           color: const Color(0xFF000000),
         ),
         displaySmall: GoogleFonts.mulish(
-            fontSize: 30,
+              fontSize: 32,
             height: 1.0,
             letterSpacing: -0.5,
             fontWeight: FontWeight.w500,
@@ -73,7 +75,7 @@ class AppTheme with ChangeNotifier {
             letterSpacing: 0.15,
             color: const Color(0xFF000000)),
         titleSmall: GoogleFonts.mulish(
-              fontSize: 15,
+            fontSize: 15,
             fontWeight: FontWeight.w500,
             letterSpacing: 0.1,
             color: const Color(0xFF000000)),
@@ -87,30 +89,33 @@ class AppTheme with ChangeNotifier {
             fontSize: 12,
               fontWeight: FontWeight.w500,
             letterSpacing: 0.2,
-            color: const Color(0xFFA0A6AC),
+            color: const Color(0xFF000000),
             height: 1.5),
+        bodySmall: GoogleFonts.mulish(
+          fontSize: 10,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.2,
+          color: const Color(0xFF000000),
+        ),
         labelLarge: GoogleFonts.mulish(
               fontSize: 20,
               fontWeight: FontWeight.w500,
             letterSpacing: 1.25,
             height: 1.0,
-            color: Color(0xff5484F5)),
-        bodySmall: GoogleFonts.mulish(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          letterSpacing: 0.2,
-          color: const Color(0xFF000000),
-        ),
-          labelMedium: GoogleFonts.mulish(
-          fontSize: 12,
+              color: const Color(0xff5484F5)),
+       
+        labelMedium: GoogleFonts.questrial(
+          fontSize: 32,
             fontWeight: FontWeight.w500,
             letterSpacing: 0.1,
         ),
-          labelSmall: GoogleFonts.mulish(
-            fontSize: 10,
+        labelSmall: GoogleFonts.questrial(
+          fontSize: 15,
             fontWeight: FontWeight.w500,
             letterSpacing: 0.2,
-          )
+        ),
+          
+          
       ),
     );
   }

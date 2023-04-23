@@ -1,9 +1,8 @@
-import 'package:aaryapay/components/CustomDatePicker.dart';
 import 'package:aaryapay/components/CustomTextField.dart';
-import 'package:aaryapay/screens/Home/home_screen.dart';
 import 'package:aaryapay/screens/Register/components/register_wrapper.dart';
 import 'package:aaryapay/screens/Register/verify_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -18,10 +17,12 @@ class AccountScreen extends StatelessWidget {
         Navigator.pop(context),
       },
       title: "Account and Security",
+      pageIndex: "2/3",
       actionButtonLabel: "Next",
       actionButtonFunction: () => Navigator.of(context).push(
         PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => const VerifyScreen(),
+          pageBuilder: (context, animation1, animation2) =>
+              const VerifyScreen(),
           transitionDuration: Duration.zero,
           reverseTransitionDuration: Duration.zero,
         ),
@@ -40,20 +41,20 @@ class AccountScreen extends StatelessWidget {
           children: [
             Text(
               "Sign Up",
-              style: Theme.of(context).textTheme.headlineMedium!.merge(
+              style: Theme.of(context).textTheme.displaySmall!.merge(
                     TextStyle(
                         height: 1.8,
                         fontWeight: FontWeight.w900,
-                        color: Theme.of(context).colorScheme.secondary),
+                        color: Theme.of(context).colorScheme.primary),
                   ),
             ),
             Text(
               "Fill the form to Sign Up for AaryaPay. Pay Anywhere, You Go",
-              style: Theme.of(context).textTheme.bodySmall!.merge(
+              style: Theme.of(context).textTheme.titleSmall!.merge(
                     TextStyle(
                         height: 2,
                         // fontWeight: FontWeight.w900,
-                        color: Theme.of(context).colorScheme.secondary),
+                        color: Theme.of(context).colorScheme.primary),
                   ),
             ),
           ],
@@ -71,34 +72,26 @@ class AccountScreen extends StatelessWidget {
         CustomTextField(
           width: size.width,
           padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
-          prefixIcon: Icon(
-            FontAwesomeIcons.solidEnvelope,
-            color: Theme.of(context).colorScheme.primary,
+          prefixIcon: Container(
+            child: SvgPicture.asset(
+              "assets/icons/calendar.svg",
+              colorFilter: ColorFilter.mode(
+                  Theme.of(context).colorScheme.primary, BlendMode.srcIn),
+              width: 25,
+            ),
           ),
           // height: ,
           placeHolder: "Date of Birth",
         ),
-        // CustomDateButton(
-        //     onChangeVal: (a) => print("date"), initialD: DateTime.now()),
         CustomTextField(
+          width: size.width,
+          isPassword: true,
+          padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
           prefixIcon: Icon(
             FontAwesomeIcons.lock,
             color: Theme.of(context).colorScheme.primary,
           ),
-          width: size.width,
-          suffixIcon: const Align(
-            heightFactor: 1,
-            widthFactor: 3,
-            child: Icon(
-              FontAwesomeIcons.eyeSlash,
-              size: 20,
-            ),
-          ),
-
-          // height: 1,
-          // error: "Incorrect Password",
-          isPassword: true,
-          padding: const EdgeInsets.only(top: 20),
+          // height: ,
           placeHolder: "Password",
         ),
       ],

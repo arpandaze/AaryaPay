@@ -1,11 +1,7 @@
-import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:aaryapay/screens/Home/home_screen.dart';
 import 'package:aaryapay/screens/Login/components/login_wrapper.dart';
-import 'package:aaryapay/screens/Login/reset_password.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class OTPScreen extends StatelessWidget {
   const OTPScreen({Key? key}) : super(key: key);
@@ -14,19 +10,19 @@ class OTPScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return LoginWrapper(
-      children: _midsection(context, size),
       backButton: true,
       actionButtonLabel: "SUBMIT",
       backButttonFunction: () => {Navigator.pop(context)},
       actionButtonFunction: () => {
         Navigator.of(context).push(
           PageRouteBuilder(
-            pageBuilder: (context, animation1, animation2) => HomeScreen(),
+            pageBuilder: (context, animation1, animation2) => const HomeScreen(),
             transitionDuration: Duration.zero,
             reverseTransitionDuration: Duration.zero,
           ),
         ),
       },
+      children: _midsection(context, size),
     );
   }
 
@@ -35,7 +31,7 @@ class OTPScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
+        SizedBox(
           width: 200,
           child: Text(
             "Enter OTP",
@@ -83,7 +79,7 @@ class OTPScreen extends StatelessWidget {
             activeFillColor: Colors.white,
           ),
           // activeColor: Theme.of(context).colorScheme.secondary),
-          animationDuration: Duration(milliseconds: 300),
+          animationDuration: const Duration(milliseconds: 300),
           // backgroundColor: Colors.blue.shade50,
           // enableActiveFill: true,
           // errorAnimationController: errorController.add(ErrorAnimationType.shake);,

@@ -2,12 +2,8 @@ import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:aaryapay/screens/Home/home_screen.dart';
 import 'package:aaryapay/screens/Login/components/login_wrapper.dart';
 import 'package:aaryapay/screens/Login/forgot_password.dart';
-import 'package:aaryapay/screens/Login/reset_password.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:line_icons/line_icons.dart';
-import 'package:aaryapay/components/CustomActionButton.dart';
-import "package:aaryapay/screens/Login/welcome_screen.dart";
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -16,18 +12,18 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return LoginWrapper(
-      children: _midsection(context, size),
       backButton: true,
       backButttonFunction: () => {
         Navigator.pop(context),
       },
       actionButtonFunction: () => Navigator.of(context).push(
         PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => HomeScreen(),
+          pageBuilder: (context, animation1, animation2) => const HomeScreen(),
           transitionDuration: Duration.zero,
           reverseTransitionDuration: Duration.zero,
         ),
       ),
+      children: _midsection(context, size),
     );
   }
 
@@ -45,7 +41,7 @@ class LoginScreen extends StatelessWidget {
               ),
         ),
         CustomTextField(
-          padding: EdgeInsets.only(top: 20),
+          padding: const EdgeInsets.only(top: 20),
           width: size.width,
           prefixIcon: Icon(
             FontAwesomeIcons.solidEnvelope,
@@ -60,19 +56,12 @@ class LoginScreen extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
             ),
             width: size.width,
-            suffixIcon: Align(
-              heightFactor: 1,
-              widthFactor: 3,
-              child: Icon(
-                FontAwesomeIcons.eyeSlash,
-                size: 20,
-              ),
-            ),
+      
 
             // height: 1,
             // error: "Incorrect Password",
             isPassword: true,
-            padding: EdgeInsets.only(top: 20),
+            padding: const EdgeInsets.only(top: 20),
             placeHolder: "Password",
             counter: GestureDetector(
               behavior: HitTestBehavior.deferToChild,
@@ -80,7 +69,8 @@ class LoginScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 15),
                 child: (Text(
                   "Forgot Password?",
-                  style: Theme.of(context).textTheme.bodySmall!.merge(TextStyle(
+                  style: Theme.of(context).textTheme.titleSmall!.merge(
+                      TextStyle(
                       fontWeight: FontWeight.w900,
                       color: Theme.of(context).colorScheme.primary)),
                 )),
@@ -89,7 +79,7 @@ class LoginScreen extends StatelessWidget {
                 Navigator.of(context).push(
                   PageRouteBuilder(
                     pageBuilder: (context, animation1, animation2) =>
-                        ForgotPassword(),
+                        const ForgotPassword(),
                     transitionDuration: Duration.zero,
                     reverseTransitionDuration: Duration.zero,
                   ),

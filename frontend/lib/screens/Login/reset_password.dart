@@ -11,19 +11,19 @@ class ResetPassword extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return LoginWrapper(
-        children: _midsection(context, size),
         backButton: true,
         actionButtonLabel: "SUBMIT",
         backButttonFunction: () => {Navigator.pop(context)},
         actionButtonFunction: () => {
               Navigator.of(context).push(
                 PageRouteBuilder(
-                  pageBuilder: (context, animation1, animation2) => OTPScreen(),
+                  pageBuilder: (context, animation1, animation2) => const OTPScreen(),
                   transitionDuration: Duration.zero,
                   reverseTransitionDuration: Duration.zero,
                 ),
               ),
-            });
+            },
+        children: _midsection(context, size));
   }
 
   Widget _midsection(BuildContext context, Size size) {
@@ -31,7 +31,7 @@ class ResetPassword extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
+        SizedBox(
           width: 200,
           child: Text(
             "Reset Password?",
@@ -49,7 +49,7 @@ class ResetPassword extends StatelessWidget {
             color: Theme.of(context).colorScheme.primary,
           ),
           width: size.width,
-          suffixIcon: Align(
+          suffixIcon: const Align(
             heightFactor: 1,
             widthFactor: 3,
             child: Icon(
@@ -61,7 +61,7 @@ class ResetPassword extends StatelessWidget {
           // height: 1,
           // error: "Incorrect Password",
           isPassword: true,
-          padding: EdgeInsets.only(top: 20),
+          padding: const EdgeInsets.only(top: 20),
           placeHolder: "Password",
         ),
         CustomTextField(
@@ -70,7 +70,7 @@ class ResetPassword extends StatelessWidget {
             color: Theme.of(context).colorScheme.primary,
           ),
           width: size.width,
-          suffixIcon: Align(
+          suffixIcon: const Align(
             heightFactor: 1,
             widthFactor: 3,
             child: Icon(
@@ -82,7 +82,7 @@ class ResetPassword extends StatelessWidget {
           // height: 1,
           // error: "Incorrect Password",
           isPassword: true,
-          padding: EdgeInsets.only(top: 20),
+          padding: const EdgeInsets.only(top: 20),
           placeHolder: "Password",
         ),
       ],
