@@ -69,8 +69,12 @@ class _DateFieldState extends State<DateField> {
       children: [
         SvgPicture.asset(
           "assets/icons/calendar.svg",
-          height: 30,
-          width: 30,
+          height: 25,
+          width: 25,
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).colorScheme.primary,
+            BlendMode.srcIn,
+          ),
         ),
         Expanded(
           child: Row(
@@ -102,7 +106,6 @@ class _DateFieldState extends State<DateField> {
                     _selectedDay = value!;
                   });
                 },
-          
                 alignment: Alignment.center,
               ),
               DropdownButton<String>(

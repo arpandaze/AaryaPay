@@ -35,7 +35,7 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
       SendMoneyAddEvent event, Emitter<SendMoneyState> emit) async {
     _operand = state.amount;
     _operator = _getOperator(event);
-    final newOutput = "${state.amount.toInt()}$_operator";
+    final newOutput = "${_operand.toInt()}$_operator";
     emit(state.copyWith(amount: 0.0, displayAmount: newOutput));
   }
 
