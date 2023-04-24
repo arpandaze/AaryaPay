@@ -22,14 +22,15 @@ class LoginWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        body: SafeArea(
-          top: true,
-          bottom: true,
-          left: true,
-          right: true,
-          child: body(size, context),
-        ));
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: SafeArea(
+        top: true,
+        bottom: true,
+        left: true,
+        right: true,
+        child: body(size, context),
+      ),
+    );
   }
 
   Widget body(Size size, BuildContext context) {
@@ -69,7 +70,7 @@ class LoginWrapper extends StatelessWidget {
               ),
             ),
           ),
-          Container(  
+          Container(
             height: size.height * 0.3,
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -110,8 +111,7 @@ class LoginWrapper extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium!
-                                .merge(
-                                TextStyle(
+                                .merge(TextStyle(
                                     fontWeight: FontWeight.w900,
                                     color:
                                         Theme.of(context).colorScheme.primary)),

@@ -26,7 +26,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (!state.isEmailValid) {
       return emit(state.copyWith(errorText: "Invalid Username!"));
     }
-
     if (!state.isPasswordValid) {
       return emit(state.copyWith(errorText: "Invalid Password!"));
     }
@@ -34,6 +33,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       final loginResponse =
           await authRepo.login(email: state.email, password: state.password);
+
+      print(loginResponse["two_fa_required"]);
 
       if (loginResponse["two_fa_required"] == true) {
         emit(state.copyWith(twoFARequired: true));

@@ -20,7 +20,7 @@ class PasswordChanged extends LoginEvent {
   PasswordChanged(this.password);
 
   @override
-  List<Object> get propos => [password];
+  List<Object> get props => [password];
 }
 
 class FormSubmitted extends LoginEvent {}

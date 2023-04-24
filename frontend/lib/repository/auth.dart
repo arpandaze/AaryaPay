@@ -12,17 +12,24 @@ class AuthenticationRepository {
   Future<Map<String, dynamic>> login(
       {required String email, required String password}) async {
     final url = Uri.parse('$backendBase/auth/login');
+    print(url);
 
     var response = await http.post(
       url,
-      body: jsonEncode({
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      encoding: Encoding.getByName('utf-8'),
+      body: {
         "email": email,
         "password": password,
-        "remember_me": true,
-      }),
+        "remember_me": "true",
+      },
     );
 
-    if (response.statusCode != 200) {
+    print("Hello ${response.statusCode}");
+
+    if (response.statusCode != 202) {
       throw Exception("Login Failed! Check Email or Password!");
     }
 
