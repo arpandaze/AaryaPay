@@ -1,4 +1,3 @@
-
 import 'package:aaryapay/screens/Send/components/transaction_details.dart';
 import 'package:aaryapay/screens/Send/receiver_scan_confirmation.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +22,6 @@ class OfflineSend extends StatelessWidget {
   }
 
   Widget body(Size size, BuildContext context) {
-
     void onClick() {
       Navigator.of(context).push(
         PageRouteBuilder(
@@ -93,7 +91,10 @@ class OfflineSend extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            const TransactionDetails(),
+            const TransactionDetails(
+                initiator: "@abhijeetpoudel",
+                amount: "Rs. 240",
+                date: "4/7/2023 5:45 pm"),
           ],
         ),
         Expanded(

@@ -2,8 +2,14 @@
 import 'package:flutter/material.dart';
 
 class TransactionDetails extends StatelessWidget {
+  final String? initiator;
+  final String? amount;
+  final String? date;
   const TransactionDetails({
     super.key,
+    this.initiator,
+    this.amount,
+    this.date
   });
 
   @override
@@ -39,7 +45,7 @@ class TransactionDetails extends StatelessWidget {
                             fontWeight: FontWeight.w900),
                       ),
                 ),
-                Text("@abhijeetpoudel",
+                Text(initiator ?? "",
                     style: Theme.of(context).textTheme.titleSmall!),
               ],
             ),
@@ -57,7 +63,7 @@ class TransactionDetails extends StatelessWidget {
                             fontWeight: FontWeight.w900),
                       ),
                 ),
-                Text("Rs. 250", style: Theme.of(context).textTheme.titleSmall!),
+                Text(amount ?? "", style: Theme.of(context).textTheme.titleSmall!),
               ],
             ),
           ),
@@ -74,7 +80,7 @@ class TransactionDetails extends StatelessWidget {
                             fontWeight: FontWeight.w900),
                       ),
                 ),
-                Text("4/7/2023 5:45 pm",
+                Text(date ?? "",
                     style: Theme.of(context).textTheme.titleSmall!),
               ],
             ),
