@@ -109,12 +109,93 @@ func (SubmitController) Submit(c *gin.Context) {
 		return
 	}
 
+	var SenderAvailableBalance float32
+	var SenderPublicKey string
+	var SenderUpdatedTime time.Time
+
+	err = core.DB.QueryRow(`
+      SELECT a.balance, k.value, NOW()
+      FROM Users u
+      JOIN Accounts a ON u.id = a.id
+      JOIN Keys k ON u.id = k.associated_user AND k.active = TRUE
+      WHERE u.id = $1
+    `, transaction.BKVC.UserID).Scan(&SenderAvailableBalance, &SenderPublicKey, &SenderUpdatedTime)
+
+	senderKeyPairBytes, err := base64.StdEncoding.DecodeString(SenderPublicKey)
+
+	if err != nil {
+		l.Errorw("Failed to decode base64 public key!",
+			"error", err,
+		)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
+		return
+	}
+
+	senderPublicKey := senderKeyPairBytes[32:]
+
+	senderBKVC := core.BalanceKeyVerificationCertificate{
+		MessageType:      core.BKVCMessageType,
+		UserID:           transaction.BKVC.UserID,
+		AvailableBalance: SenderAvailableBalance,
+		PublicKey:        [32]byte(senderPublicKey),
+		TimeStamp:        SenderUpdatedTime,
+	}
+
+	senderBKVC.Sign(c)
+
+	senderTKVC := core.TransactionVerificationCertificate{
+		MessageType:          core.TVCMessageType,
+		TransactionSignature: transaction.Signature,
+		TransactionID:        transactionId,
+		BKVC:                 senderBKVC,
+	}
+
+	senderTKVC.Sign(c)
+
+	var ReceiverAvailableBalance float32
+	var ReceiverPublicKey string
+	var ReceiverUpdatedTime time.Time
+
+	err = core.DB.QueryRow(`
+      SELECT a.balance, k.value, NOW()
+      FROM Users u
+      JOIN Accounts a ON u.id = a.id
+      JOIN Keys k ON u.id = k.associated_user AND k.active = TRUE
+      WHERE u.id = $1
+    `, transaction.To).Scan(&ReceiverAvailableBalance, &ReceiverPublicKey, &ReceiverUpdatedTime)
+
+	receiverKeyPairBytes, err := base64.StdEncoding.DecodeString(ReceiverPublicKey)
+
+	if err != nil {
+		l.Errorw("Failed to decode base64 public key!",
+			"error", err,
+		)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
+		return
+	}
+
+	receiverPublicKey := receiverKeyPairBytes[32:]
+
+	receiverBKVC := core.BalanceKeyVerificationCertificate{
+		MessageType:      core.BKVCMessageType,
+		UserID:           transaction.To,
+		AvailableBalance: ReceiverAvailableBalance,
+		PublicKey:        [32]byte(receiverPublicKey),
+		TimeStamp:        ReceiverUpdatedTime,
+	}
+
+	receiverTKVC := core.TransactionVerificationCertificate{
+		MessageType:          core.TVCMessageType,
+		TransactionSignature: transaction.Signature,
+		TransactionID:        transactionId,
+		BKVC:                 receiverBKVC,
+	}
+
+	receiverTKVC.Sign(c)
+
 	c.JSON(http.StatusOK, gin.H{
-		"status":            "Transaction submitted successfully!",
-		"transaction_id":    transactionId,
-		"sender_id":         transaction.BKVC.UserID,
-		"amount":            transaction.Amount,
-		"generation_time":   transaction.TimeStamp,
-		"verification_time": verificationTime.Unix(),
+		"status":       "Transaction submitted successfully!",
+		"sender_tvc":   base64.StdEncoding.EncodeToString(senderTKVC.ToBytes(c)),
+		"receiver_tvc": base64.StdEncoding.EncodeToString(receiverTKVC.ToBytes(c)),
 	})
 }
