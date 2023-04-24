@@ -80,7 +80,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
 
     return SettingsWrapper(
       pageName: "Password & Security",
-      children: CustomMenuSelection(itemList: itemList),
+      children: Center(child: CustomMenuSelection(itemList: itemList)),
     );
   }
 }

@@ -13,18 +13,7 @@ class LanguageSelection extends StatefulWidget {
 class _LanguageSelectionState extends State<LanguageSelection> {
   String currentLanguage = "english";
 
-  @override
-  Widget build(BuildContext context) {
-    var textTheme = Theme.of(context).textTheme;
-    var colorScheme = Theme.of(context).colorScheme;
-    Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      backgroundColor: colorScheme.background,
-      body: body(context),
-    );
-  }
-
-  Widget body(BuildContext context) {
+  Widget body(BuildContext context, Size size) {
     List<MenuModal> itemList = [
       MenuModal("Select a Language", [
         MenuItemModal(
@@ -34,7 +23,7 @@ class _LanguageSelectionState extends State<LanguageSelection> {
           icon: SvgPicture.asset(
             currentLanguage == "english"
                 ? "assets/icons/us-flag-color.svg"
-                : "assets/icons/us-flag.svg",
+                : "assets/icons/us-flag-color.svg",
             width: 20,
             height: 20,
           ),
@@ -59,7 +48,7 @@ class _LanguageSelectionState extends State<LanguageSelection> {
             width: 20,
             height: 20,
           ),
-          label: "Password & Security",
+          label: "Nepali",
           trailingWidget: Visibility(
             visible: currentLanguage == "nepali",
             child: SvgPicture.asset(
@@ -74,6 +63,19 @@ class _LanguageSelectionState extends State<LanguageSelection> {
 
     return SettingsWrapper(
         pageName: "Language",
-        children: CustomMenuSelection(itemList: itemList));
+      children: Center(child: CustomMenuSelection(itemList: itemList)),
+    );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      color: colorScheme.background,
+      child: body(context, size),
+    );
+  }
+
+
 }

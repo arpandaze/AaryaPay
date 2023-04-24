@@ -17,7 +17,7 @@ class LastSynchronized extends StatelessWidget {
         bottom: BorderSide(width: 2.0, color: colorScheme.onPrimary),
       )),
       width: size.width,
-      height: size.height * 0.14,
+      height: size.height * 0.11,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(

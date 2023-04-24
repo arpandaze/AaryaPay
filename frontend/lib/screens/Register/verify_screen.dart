@@ -15,6 +15,7 @@ class VerifyScreen extends StatelessWidget {
         Navigator.pop(context),
       },
       title: "Verify your account",
+      pageIndex: "3/3",
       actionButtonLabel: "Next",
       actionButtonFunction: () => Navigator.of(context).push(
         PageRouteBuilder(
@@ -37,7 +38,7 @@ class VerifyScreen extends StatelessWidget {
           children: [
             Text(
               "Verify Your Account",
-              style: Theme.of(context).textTheme.headlineMedium!.merge(
+              style: Theme.of(context).textTheme.displaySmall!.merge(
                     TextStyle(
                         height: 1.8,
                         fontWeight: FontWeight.w900,
@@ -50,7 +51,7 @@ class VerifyScreen extends StatelessWidget {
               children: [
                 Text(
                   "Please enter the 6 digit code sent to: ",
-                  style: Theme.of(context).textTheme.bodySmall!.merge(
+                  style: Theme.of(context).textTheme.titleSmall!.merge(
                         TextStyle(
                         height: 1.8,
                             // fontWeight: FontWeight.w500,
@@ -109,7 +110,25 @@ class VerifyScreen extends StatelessWidget {
             },
             appContext: context,
           ),
-        )
+        ),
+        Container(
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Text(
+              "Didn't Receive Code?",
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            GestureDetector(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Resend Code",
+                  style: Theme.of(context).textTheme.bodyMedium!.merge(
+                      TextStyle(color: Theme.of(context).colorScheme.primary)),
+                ),
+              ),
+            )
+          ]),
+        ),
       ],
     );
   }

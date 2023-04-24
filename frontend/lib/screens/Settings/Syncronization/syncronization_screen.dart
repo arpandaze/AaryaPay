@@ -4,22 +4,22 @@ import 'package:flutter/material.dart';
 
 class SyncronizationScreen extends StatelessWidget {
   const SyncronizationScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    var textTheme = Theme.of(context).textTheme;
-    var colorScheme = Theme.of(context).colorScheme;
-    Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      backgroundColor: colorScheme.background,
-      body: body(context),
-    );
-  }
-
-  Widget body(BuildContext context) {
+  Widget body(BuildContext context, Size size) {
     return const SettingsWrapper(
       pageName: "Syncronization",
       children: LastSynchronized(),
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      color: colorScheme.background,
+      child: body(context, size),
+    );
+  }
+
+
 }

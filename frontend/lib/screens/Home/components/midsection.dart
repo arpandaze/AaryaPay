@@ -14,27 +14,15 @@ class Midsection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: size.width,
-      // height: size.height * 0.7,
-      child: Container(
-        clipBehavior: Clip.none,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background,
-        ),
-        child: Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Favourites(),
-                const LastSynchronized(),
-                RecentCard(size: size),
-              ],
-            ),
-          ),
-        ),
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Favourites(),
+          const LastSynchronized(),
+          RecentCard(size: size),
+        ],
       ),
     );
   }

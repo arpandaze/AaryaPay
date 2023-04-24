@@ -41,7 +41,7 @@ class CustomStatusButton extends StatelessWidget {
           widget,
           Text(
             label,
-            style: textTheme.bodySmall,
+            style: textTheme.bodyMedium,
           )
         ]),
       ),
