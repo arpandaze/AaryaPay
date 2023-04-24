@@ -1,4 +1,3 @@
-
 import 'package:aaryapay/screens/Send/components/transaction_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -56,7 +55,6 @@ class ReceiverConfirmation extends StatelessWidget {
             ),
           ],
         ),
-        
         Column(
           children: [
             Container(
@@ -80,7 +78,10 @@ class ReceiverConfirmation extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            const TransactionDetails(),
+            const TransactionDetails(
+                initiator: "@abhijeetpoudel",
+                amount: "Rs. 240",
+                date: "4/7/2023 5:45 pm"),
           ],
         )
       ],
