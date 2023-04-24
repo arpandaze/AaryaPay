@@ -1,6 +1,6 @@
-
 import 'package:aaryapay/components/CustomCircularAvatar.dart';
 import 'package:aaryapay/components/CustomStatusButton.dart';
+import 'package:aaryapay/screens/Send/send_money.dart';
 import 'package:flutter/material.dart';
 
 class Favourites extends StatelessWidget {
@@ -17,10 +17,10 @@ class Favourites extends StatelessWidget {
 
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       decoration: BoxDecoration(
-          border: Border(
-            // top: BorderSide(width: 16.0, color: Colors.lightBlue.shade600),
-            bottom: BorderSide(width: 2.0, color: colorScheme.onPrimary),
-          ),
+        border: Border(
+          // top: BorderSide(width: 16.0, color: Colors.lightBlue.shade600),
+          bottom: BorderSide(width: 2.0, color: colorScheme.onPrimary),
+        ),
       ),
       // height: size.height * 0.8,
       child: Column(
