@@ -399,6 +399,7 @@ func (TwoFaController) TwoFALoginConfirm(c *gin.Context) {
 			)
 
 			bkvc := core.BalanceKeyVerificationCertificate{
+				MessageType:      core.BKVCMessageType,
 				UserID:           queryUser.ID,
 				PublicKey:        [32]byte(pubKey),
 				AvailableBalance: float32(userBalance),

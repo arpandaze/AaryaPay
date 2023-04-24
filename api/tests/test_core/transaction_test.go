@@ -22,11 +22,11 @@ func TestTransaction(t *testing.T) {
 	copy(pub32[:], pub[:])
 
 	var BKVC = core.BalanceKeyVerificationCertificate{
+		MessageType:      core.BKVCMessageType,
 		UserID:           uuid.New(),
 		AvailableBalance: 100.0,
-
-		PublicKey: pub32,
-		TimeStamp: time.Now(),
+		PublicKey:        pub32,
+		TimeStamp:        time.Now(),
 	}
 
 	BKVC.Sign(c)
@@ -53,6 +53,7 @@ func TestTransactionRebuild(t *testing.T) {
 	copy(pub32[:], pub[:])
 
 	var BKVC = core.BalanceKeyVerificationCertificate{
+		MessageType:      core.BKVCMessageType,
 		UserID:           uuid.New(),
 		AvailableBalance: 100.0,
 
@@ -65,10 +66,11 @@ func TestTransactionRebuild(t *testing.T) {
 	assert.Equal(t, BKVC.Verify(c), true)
 
 	var transaction = core.Transaction{
-		Amount:    10.0,
-		To:        uuid.New(),
-		BKVC:      BKVC,
-		TimeStamp: time.Now(),
+		MessageType: core.TransactionMessageType,
+		Amount:      10.0,
+		To:          uuid.New(),
+		BKVC:        BKVC,
+		TimeStamp:   time.Now(),
 	}
 
 	transaction.Sign(c, priv)
@@ -87,4 +89,55 @@ func TestTransactionRebuild(t *testing.T) {
 	assert.Equal(t, transactionRebuilt.Verify(c), true)
 	assert.Equal(t, transactionRebuilt.BKVC.Verify(c), true)
 	return
+}
+
+func TestTVC(t *testing.T) {
+	_, c, _ := TestInit()
+
+	pub, priv, _ := ed25519.GenerateKey(nil)
+
+	var pub32 [32]byte
+	copy(pub32[:], pub[:])
+
+	var BKVC = core.BalanceKeyVerificationCertificate{
+		MessageType:      core.BKVCMessageType,
+		UserID:           uuid.New(),
+		AvailableBalance: 100.0,
+		PublicKey:        pub32,
+		TimeStamp:        time.Now(),
+	}
+	BKVC.Sign(c)
+
+	var transaction = core.Transaction{
+		MessageType: core.TransactionMessageType,
+		Amount:      10.0,
+		To:          uuid.New(),
+		BKVC:        BKVC,
+		TimeStamp:   time.Now(),
+	}
+
+	transaction.Sign(c, priv)
+
+	var tvc = core.TransactionVerificationCertificate{
+		MessageType:          core.TVCMessageType,
+		TransactionSignature: transaction.Signature,
+		TransactionID:        uuid.New(),
+		BKVC:                 BKVC,
+	}
+
+	tvc.Sign(c)
+	assert.Equal(t, tvc.Verify(c), true)
+	tvc.Verify(c)
+
+	base64TVC := base64.StdEncoding.EncodeToString(tvc.ToBytes(c))
+
+	base64TVCBytes, _ := base64.StdEncoding.DecodeString(base64TVC)
+
+	tvcRebuilt, err := core.TVCFromBytes(c, base64TVCBytes)
+
+	assert.Equal(t, err, nil)
+
+	assert.Equal(t, tvcRebuilt.Verify(c), true)
+
+	assert.Equal(t, tvcRebuilt.BKVC.Verify(c), true)
 }
