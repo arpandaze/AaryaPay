@@ -32,14 +32,62 @@ func userCreator(t *testing.T, c *gin.Context, user *TestUser) *TestUser {
 
 	var userID uuid.UUID
 
-	err = core.DB.QueryRow(`
-	INSERT INTO users (first_name, last_name, dob, email, password, is_verified)
-	VALUES ($1, $2, $3, $4, $5, $6)
-	RETURNING id
-  `, user.FirstName, user.LastName, user.DOB, user.Email, hashedPassword, user.Verified).Scan(&userID)
+	tx, err := core.DB.Begin()
+	if err != nil {
+		msg := "Failed to start transaction"
+		t.Fatal(err)
+		t.Fatal(msg)
+	}
+
+	query := `
+    INSERT INTO Users
+    (
+        first_name,
+        last_name,
+        dob,
+        password,
+        email,
+        is_verified
+    )
+    VALUES
+    (
+        $1,
+        $2,
+        $3,
+        $4,
+        $5,
+        $6
+    )
+    RETURNING id;
+`
+
+	err = tx.
+		QueryRow(query, user.FirstName, user.LastName, user.DOB, hashedPassword, user.Email, user.Verified).
+		Scan(&user.UserId)
 
 	if err != nil {
+		msg := "Failed to execute SQL statement"
+		t.Logf(msg)
+		t.Fatal(err)
+		tx.Rollback()
+	}
+
+	accountsCreateQuery := "INSERT INTO Accounts (id, balance) VALUES ($1, $2)"
+
+	_, err = tx.Exec(accountsCreateQuery, user.UserId, 0)
+
+	if err != nil {
+		msg := "Failed to execute account insert statement"
+		t.Logf(msg)
+		t.Fatal(err)
+		tx.Rollback()
+	}
+
+	// Commit the transaction if both statements succeeded
+	err = tx.Commit()
+	if err != nil {
 		t.Fatalf("failed to create test user: %v", err)
+		tx.Rollback()
 	}
 
 	user.UserId = userID
