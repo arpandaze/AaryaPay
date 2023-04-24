@@ -1,3 +1,4 @@
+import 'package:aaryapay/components/CustomDatePicker.dart';
 import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:aaryapay/screens/Register/components/register_wrapper.dart';
 import 'package:aaryapay/screens/Register/verify_screen.dart';
@@ -34,6 +35,7 @@ class AccountScreen extends StatelessWidget {
   Widget _midsection(BuildContext context, Size size) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,20 +71,7 @@ class AccountScreen extends StatelessWidget {
           // height: ,
           placeHolder: "Email",
         ),
-        CustomTextField(
-          width: size.width,
-          padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
-          prefixIcon: Container(
-            child: SvgPicture.asset(
-              "assets/icons/calendar.svg",
-              colorFilter: ColorFilter.mode(
-                  Theme.of(context).colorScheme.primary, BlendMode.srcIn),
-              width: 25,
-            ),
-          ),
-          // height: ,
-          placeHolder: "Date of Birth",
-        ),
+        DateField(),
         CustomTextField(
           width: size.width,
           isPassword: true,
