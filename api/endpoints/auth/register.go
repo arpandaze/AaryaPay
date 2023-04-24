@@ -90,71 +90,79 @@ func (RegisterController) Register(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured", "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
-    // id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    // photo_url VARCHAR(255),
-    // first_name VARCHAR(50) NOT NULL,
-    // middle_name VARCHAR(50),
-    // last_name VARCHAR(50) NOT NULL,
-    // dob DATE NOT NULL,
-    // password VARCHAR(255) NOT NULL,
-    // email VARCHAR(255) NOT NULL UNIQUE,
-    // is_verified BOOLEAN DEFAULT false NOT NULL,
-    // two_factor_auth VARCHAR(255),
-    // last_sync TIMESTAMP,
-    // created_at TIMESTAMP DEFAULT NOW()
 
+	tx, err := core.DB.Begin()
+	if err != nil {
+		msg := "Failed to start transaction"
+		l.Errorw(msg,
+			"error", err,
+		)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
+		return
+	}
 
 	query := `
-      INSERT INTO Users
-      (
+    INSERT INTO Users
+    (
         first_name,
         middle_name,
         last_name,
         dob,
         password,
         email
-      )
-      VALUES
-      (
+    )
+    VALUES
+    (
         $1,
         $2,
         $3,
         $4,
         $5,
         $6
-      )
-      RETURNING 
-      id,
-      first_name,
-      middle_name,
-      last_name,
-      email,
-      is_verified,
-      last_sync;
-  `
-
-	row := core.DB.QueryRow(query, user.FirstName, user.MiddleName, user.LastName, user.DOB, passwordHash, user.Email)
+    )
+    RETURNING
+        id,
+        first_name,
+        middle_name,
+        last_name,
+        email,
+        is_verified,
+        last_sync;
+`
 
 	returnedUser := core.CommonUser{}
 
-	err = row.Scan(&returnedUser.Id, &returnedUser.FirstName, &returnedUser.MiddleName, &returnedUser.LastName, &returnedUser.Email, &returnedUser.IsVerified, &returnedUser.LastSync)
+	err = tx.QueryRow(query, user.FirstName, user.MiddleName, user.LastName, user.DOB, passwordHash, user.Email).Scan(
+		&returnedUser.Id, &returnedUser.FirstName, &returnedUser.MiddleName, &returnedUser.LastName, &returnedUser.Email,
+		&returnedUser.IsVerified, &returnedUser.LastSync)
 
 	if err != nil {
 		msg := "Failed to execute SQL statement"
-
 		l.Errorw(msg,
 			"error", err,
 		)
-
+		tx.Rollback()
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 
 	accountsCreateQuery := "INSERT INTO Accounts (id, balance) VALUES ($1, $2)"
-	_, err = core.DB.Exec(accountsCreateQuery, returnedUser.Id, 0)
+
+	_, err = tx.Exec(accountsCreateQuery, returnedUser.Id, 0)
 
 	if err != nil {
 		l.Errorw("Failed to create account for user!",
+			"error", err,
+		)
+		tx.Rollback()
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
+		return
+	}
+
+	// Commit the transaction if both statements succeeded
+	err = tx.Commit()
+	if err != nil {
+		l.Errorw("Failed to commit transaction",
 			"error", err,
 		)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})

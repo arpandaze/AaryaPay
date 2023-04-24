@@ -102,7 +102,7 @@ func (LoginController) Login(c *gin.Context) {
 				return
 			}
 
-			if queryUser.TwoFactorAuth.Valid {
+			if queryUser.TwoFactorAuth.Valid && queryUser.TwoFactorAuth.String != "" {
 				temp_token := core.CreateTwoFATempToken(c, queryUser.ID, loginFormInput.RememberMe)
 
 				tempExpiry := core.Configs.TWO_FA_TIMEOUT * int(time.Second)
