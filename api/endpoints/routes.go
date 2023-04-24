@@ -45,9 +45,9 @@ func InitFavoritesRoute(routeGroup *gin.RouterGroup) {
 	retrieveFavorite := new(favorites.RetrieveFavoriteController)
 	removeFavorite := new(favorites.RemoveFavoriteController)
 
-	routeGroup.POST("/add", addFavorite.AddFavorite)
-	routeGroup.GET("/get", retrieveFavorite.RetrieveFavorites)
-	routeGroup.DELETE("/remove", removeFavorite.RemoveFavorite)
+	routeGroup.POST("/", addFavorite.AddFavorite)
+	routeGroup.GET("/", retrieveFavorite.RetrieveFavorites)
+	routeGroup.DELETE("/", removeFavorite.RemoveFavorite)
 }
 
 func InitTransactionRoutes(routeGroup *gin.RouterGroup) {
