@@ -71,6 +71,20 @@ func (RemoveFavoriteController) RemoveFavorite(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg})
 		return
 	}
+
+	core.DB.QueryRow("SELECT EXISTS (SELECT id FROM favorites WHERE favorite_owner = $1 AND favorite_account = $2)", user, favUUID).Scan(&exists)
+
+	if !exists {
+		msg := "The account is not added as your favorite"
+
+		l.Warnw(msg,
+			"id: ", favUUID,
+		)
+
+		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg})
+		return
+	}
+
 	query := `
 	DELETE FROM favorites
 	WHERE favorite_owner = $1 AND favorite_account = $2
