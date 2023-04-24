@@ -17,7 +17,7 @@ func (SubmitController) Submit(c *gin.Context) {
 	l := Logger(c).Sugar()
 
 	var transactionSubmitForm struct {
-		EncodedTransactions string `form:"transactions"`
+		EncodedTransaction string `form:"transaction"`
 	}
 
 	if err := c.Bind(&transactionSubmitForm); err != nil {
@@ -31,7 +31,7 @@ func (SubmitController) Submit(c *gin.Context) {
 		return
 	}
 
-	transactionsBytes, err := base64.RawStdEncoding.DecodeString(transactionSubmitForm.EncodedTransactions)
+	transactionsBytes, err := base64.RawStdEncoding.DecodeString(transactionSubmitForm.EncodedTransaction)
 
 	if err != nil {
 		msg := "Invalid transaction!"
@@ -63,7 +63,7 @@ func (SubmitController) Submit(c *gin.Context) {
 
 		l.Errorw(msg,
 			"error", err,
-			"transaction", transactionSubmitForm.EncodedTransactions,
+			"transaction", transactionSubmitForm.EncodedTransaction,
 		)
 
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
@@ -76,7 +76,7 @@ func (SubmitController) Submit(c *gin.Context) {
 		msg := "Invalid transaction!"
 
 		l.Errorw("Failed to verify transaction!",
-			"transaction", transactionSubmitForm.EncodedTransactions,
+			"transaction", transactionSubmitForm.EncodedTransaction,
 			"error", err)
 
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
@@ -87,7 +87,7 @@ func (SubmitController) Submit(c *gin.Context) {
 		msg := "Invalid transaction!"
 
 		l.Errorw("Failed to verify BKVC in transaction!",
-			"transaction", transactionSubmitForm.EncodedTransactions,
+			"transaction", transactionSubmitForm.EncodedTransaction,
 			"error", err)
 
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg, "context": TraceIDFromContext(c)})

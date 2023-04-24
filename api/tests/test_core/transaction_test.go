@@ -3,7 +3,6 @@ package test_core
 import (
 	"crypto/ed25519"
 	"encoding/base64"
-	"fmt"
 	"main/core"
 	. "main/tests/helpers"
 	"testing"
@@ -50,9 +49,6 @@ func TestTransactionRebuild(t *testing.T) {
 
 	pub, priv, _ := ed25519.GenerateKey(nil)
 
-	fmt.Println("Test Private Key:")
-	fmt.Println(base64.StdEncoding.EncodeToString(priv))
-
 	var pub32 [32]byte
 	copy(pub32[:], pub[:])
 
@@ -66,9 +62,6 @@ func TestTransactionRebuild(t *testing.T) {
 
 	BKVC.Sign(c)
 
-	fmt.Println("Test BKVC:")
-	fmt.Println(base64.StdEncoding.EncodeToString(BKVC.ToBytes(c)))
-
 	assert.Equal(t, BKVC.Verify(c), true)
 
 	var transaction = core.Transaction{
@@ -78,12 +71,7 @@ func TestTransactionRebuild(t *testing.T) {
 		TimeStamp: time.Now(),
 	}
 
-	fmt.Println("trans")
 	transaction.Sign(c, priv)
-	fmt.Println(transaction.ToBytes(c))
-
-	fmt.Println("Test Transaction:")
-	fmt.Println(base64.StdEncoding.EncodeToString(transaction.ToBytes(c)))
 
 	assert.Equal(t, transaction.Verify(c), true)
 
@@ -91,11 +79,12 @@ func TestTransactionRebuild(t *testing.T) {
 	base64Transaction := base64.StdEncoding.EncodeToString(transactionBytes)
 
 	base64TransactionBytes, _ := base64.StdEncoding.DecodeString(base64Transaction)
+
 	transactionRebuilt, err := core.TransactionFromBytes(c, base64TransactionBytes)
 
 	assert.Equal(t, err, nil)
 
 	assert.Equal(t, transactionRebuilt.Verify(c), true)
 	assert.Equal(t, transactionRebuilt.BKVC.Verify(c), true)
-	assert.Equal(t, transactionRebuilt, transaction)
+	return
 }

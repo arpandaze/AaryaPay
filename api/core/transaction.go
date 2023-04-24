@@ -3,7 +3,6 @@ package core
 import (
 	"crypto/ed25519"
 	"encoding/binary"
-	"fmt"
 	. "main/telemetry"
 	"math"
 	"time"
@@ -79,7 +78,6 @@ func (t *Transaction) Sign(c *gin.Context, privateKey ed25519.PrivateKey) {
 	copy(data[20:140], t.BKVC.ToBytes(c))
 	binary.BigEndian.PutUint32(data[140:144], uint32(t.TimeStamp.Unix()))
 
-  fmt.Println("data: ", data)
 	sig := ed25519.Sign(privateKey, data)
 
 	l.Infow("Transaction signed")
@@ -100,8 +98,6 @@ func (t *Transaction) Verify(c *gin.Context) bool {
 	binary.BigEndian.PutUint32(data[140:144], uint32(t.TimeStamp.Unix()))
 
 	l.Infow("Transaction verified")
-
-  fmt.Println("data: ", len( data ))
 
 	return ed25519.Verify(t.BKVC.PublicKey[:], data, t.Signature[:])
 }
