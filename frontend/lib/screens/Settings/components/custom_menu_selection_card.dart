@@ -1,6 +1,4 @@
-import 'package:aaryapay/components/CustomArrowedButton.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomMenuSelectionCard extends StatelessWidget {
   const CustomMenuSelectionCard(
@@ -23,12 +21,12 @@ class CustomMenuSelectionCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap ?? () => {},
       child: Container(
-        margin: EdgeInsets.only(top: 15),
-        padding: EdgeInsets.all(15),
+        margin: const EdgeInsets.only(top: 15),
+        padding: const EdgeInsets.all(15),
         width: size.width * 0.9,
         height: size.height * 0.07,
         decoration: BoxDecoration(
-            border: Border.all(color: colorScheme.surface),
+            border: Border.all(color: Color.fromARGB(50, 0, 0, 0)),
             borderRadius: BorderRadius.circular(10)),
         child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -41,7 +39,7 @@ class CustomMenuSelectionCard extends StatelessWidget {
                   children: [
                     icon,
                     Container(
-                        margin: EdgeInsets.only(left: 15),
+                        margin: const EdgeInsets.only(left: 15),
                         child: Text(
                           label,
                           style: textTheme.bodyLarge,

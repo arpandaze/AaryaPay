@@ -1,14 +1,5 @@
-import 'package:aaryapay/components/CustomActionButton.dart';
-import 'package:aaryapay/components/CustomArrowedButton.dart';
-import 'package:aaryapay/screens/Login/welcome_screen.dart';
-import 'package:aaryapay/screens/Settings/AccountInformation/account_information.dart';
 import 'package:aaryapay/screens/Settings/components/custom_menu_selection_card.dart';
-import 'package:aaryapay/screens/Settings/Favourites/favourites_screen.dart';
-import 'package:aaryapay/screens/Settings/Language/language_selection.dart';
-import 'package:aaryapay/screens/Settings/Password/password_screen.dart';
-import 'package:aaryapay/screens/Settings/Syncronization/syncronization_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class MenuItemModal {
   final Widget icon;
@@ -39,8 +30,6 @@ class CustomMenuSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var textTheme = Theme.of(context).textTheme;
-    var colorScheme = Theme.of(context).colorScheme;
     Size size = MediaQuery.of(context).size;
 
     return Container(
@@ -55,7 +44,7 @@ class CustomMenuSelection extends StatelessWidget {
                     children: [
                       Text(
                         item.title,
-                        style: textTheme.titleMedium,
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                       ...item.menuItems
                           .map((subItem) => CustomMenuSelectionCard(

@@ -1,7 +1,5 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:aaryapay/components/CustomArrowedButton.dart';
 import 'package:aaryapay/components/TransactionsCard.dart';
 
 class RecentCard extends StatelessWidget {
@@ -11,17 +9,17 @@ class RecentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 8),
       alignment: Alignment.centerLeft,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       
         Container(
-          margin: EdgeInsets.symmetric(vertical: 20),
+          margin: const EdgeInsets.symmetric(vertical: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: EdgeInsets.only(left: 15),
+                padding: const EdgeInsets.only(left: 15),
                 child: Text(
                   "Recent Transactions",
                   style: Theme.of(context).textTheme.titleMedium,
@@ -42,36 +40,43 @@ class RecentCard extends StatelessWidget {
           decoration:
               BoxDecoration(color: Theme.of(context).colorScheme.background),
           // margin: EdgeInsets.only(top: 10),
-          padding: EdgeInsets.only(left: 10, bottom: 5),
+          padding: const EdgeInsets.only(left: 10, bottom: 5),
           width: double.infinity,
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                child: Column(children: [
-                  RecentPaymentCard(),
-                  RecentPaymentCard(label: "Discord Nitro Win"),
-                  RecentPaymentCard(
-                    transactionAmt: "-  \$50.00",
-                    transactionColor: Theme.of(context).colorScheme.onSurface,
-                  ),
-                  RecentPaymentCard(
-                    transactionAmt: "-  \$50.00",
-                    transactionColor: Theme.of(context).colorScheme.onSurface,
-                  ),
-                  RecentPaymentCard(label: "eSewa Voucher Win"),
-                  RecentPaymentCard(),
-                  RecentPaymentCard(
-                    transactionAmt: "-  \$50.00",
-                    transactionColor: Theme.of(context).colorScheme.onSurface,
-                  ),
-                  RecentPaymentCard(),
-                  RecentPaymentCard(
-                    transactionAmt: "-  \$50.00",
-                    transactionColor: Theme.of(context).colorScheme.onSurface,
-                  ),
-                  RecentPaymentCard(),
-                ]),
+              RecentPaymentCard(
+                isDebit: true,
+                finalAmt: "18153.64",
+                label: "Google Payment",
+                transactionAmt: "50.00",
+                date: "January 1 2020",
+              ),
+              RecentPaymentCard(
+                label: "Amazon Payment Rebate asadasasdasdasdas",
+                finalAmt: "18153.64",
+                transactionAmt: "1111150.00",
+                date: "January 18 2020",
+              ),
+              RecentPaymentCard(
+                label: "Amazon Payment",
+                finalAmt: "18153.64",
+                transactionAmt: "50.00",
+                date: "January 18 2020",
+              ),
+              RecentPaymentCard(
+                isDebit: true,
+                label: "Amazon Payment",
+                finalAmt: "18153.64",
+                transactionAmt: "50.00",
+                date: "January 18 2020",
+              ),
+              RecentPaymentCard(
+                isDebit: true,
+                finalAmt: "18153.64",
+                label: "Apple Payment",
+                transactionAmt: "50.00",
+                date: "January 18 2020",
               ),
             ],
           ),

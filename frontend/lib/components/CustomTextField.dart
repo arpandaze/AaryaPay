@@ -18,6 +18,7 @@ class CustomTextField extends StatelessWidget {
   final String? label;
   final String? topText;
   final bool? enableTopText;
+  final TextStyle? placeHolderSize;
 
   const CustomTextField({
     Key? key,
@@ -36,6 +37,7 @@ class CustomTextField extends StatelessWidget {
     this.outlined = false,
     this.label,
     this.topText = "",
+    this.placeHolderSize,
     this.enableTopText = false,
   }) : super(key: key);
 
@@ -59,7 +61,7 @@ class CustomTextField extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .bodySmall!
-                      .merge(TextStyle(fontWeight: FontWeight.w700)),
+                      .merge(const TextStyle(fontWeight: FontWeight.w700)),
                 ),
               )),
           TextField(
@@ -72,15 +74,19 @@ class CustomTextField extends StatelessWidget {
                   icon: prefixIcon,
                   suffixIcon: isPassword
                       ? Container(
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(12),
                           child: SvgPicture.asset("assets/icons/invisible.svg",
-                              width: 10, height: 10),
+                            width: 10,
+                            colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.primary,
+                                BlendMode.srcIn),
+                          ),
                         )
                       : suffixIcon,
                   // errorText: error,
                   counter: counter,
                   contentPadding:
-                      EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   enabledBorder: !outlined!
                       ? UnderlineInputBorder(
                           borderRadius: BorderRadius.circular(5),
@@ -89,10 +95,16 @@ class CustomTextField extends StatelessWidget {
                               width: 1.0))
                       : OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.onPrimary,
+                          borderSide: const BorderSide(
+                              color: Color.fromARGB(50, 0, 0, 0),
                               width: 1.0)),
                   hintText: placeHolder,
+                  hintStyle: placeHolderSize ??
+                      Theme.of(context).textTheme.titleSmall!.merge(
+                            TextStyle(
+                                color:
+                                    Theme.of(context).colorScheme.onTertiary),
+                          ),
                   focusedBorder: !outlined!
                       ? UnderlineInputBorder(
                           borderRadius: BorderRadius.circular(5),

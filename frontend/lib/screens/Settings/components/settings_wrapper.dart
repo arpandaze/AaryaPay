@@ -20,29 +20,18 @@ class SettingsWrapper extends StatelessWidget {
     return SafeArea(
       top: true,
       bottom: true,
-      child: SizedBox(
+      child: Container(
         width: double.infinity,
         height: size.height,
-        child: Stack(
-          clipBehavior: Clip.none,
-          alignment: Alignment.topLeft,
-          children: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SettingsTopBar(
-                  label: pageName,
-                ),
-                Flexible(child: children),
-                const Positioned(
-                  bottom: 0,
-                  child: SettingsBottomBar(),
-                )
-              ],
+        child: Scaffold(
+          bottomNavigationBar: SettingsBottomBar(),
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(150),
+            child: SettingsTopBar(
+              label: pageName,
             ),
-        
-          ],
+          ),
+          body: children,
         ),
       ),
     );

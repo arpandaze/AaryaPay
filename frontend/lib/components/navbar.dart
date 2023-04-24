@@ -1,14 +1,10 @@
-import 'dart:developer';
 import 'package:aaryapay/screens/Home/home_screen.dart';
 import 'package:aaryapay/screens/Payments/payments.dart';
 import 'package:aaryapay/screens/QrScan/qrscan_screen.dart';
 import 'package:aaryapay/screens/Settings/settings.dart';
 import 'package:aaryapay/screens/TransactionHistory/transaction_history.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:line_icons/line_icons.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({
@@ -20,14 +16,13 @@ class NavBar extends StatelessWidget {
   final String pageName;
   @override
   Widget build(BuildContext context) {
-    var textTheme = Theme.of(context).textTheme;
     var colorScheme = Theme.of(context).colorScheme;
     return Container(
       clipBehavior: Clip.none,
       // padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
       // padding: const EdgeInsets.only(top: 6, left: 15, right: 15),
       // margin: const EdgeInsets.only(top: 20),
-      alignment: Alignment(-0.5, 0.5),
+      alignment: const Alignment(-0.5, 0.5),
 
       decoration: BoxDecoration(
         boxShadow: kElevationToShadow[4],
@@ -47,7 +42,7 @@ class NavBar extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Container(
+                  SizedBox(
                     // decoration: BoxDecoration(
                     //     border: Border.all(color: Colors.black54)),
                     width: size.width * 0.20,
@@ -57,7 +52,7 @@ class NavBar extends StatelessWidget {
                       onTap: () => Navigator.of(context).push(
                         PageRouteBuilder(
                           pageBuilder: (context, animation1, animation2) =>
-                              HomeScreen(),
+                              const HomeScreen(),
                           transitionDuration: Duration.zero,
                           reverseTransitionDuration: Duration.zero,
                         ),
@@ -70,6 +65,10 @@ class NavBar extends StatelessWidget {
                               pageName == "home"
                                   ? "assets/icons/home-fill.svg"
                                   : "assets/icons/home.svg",
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.primary,
+                                BlendMode.srcIn,
+                              ),
                               width: 25,
                               height: 25,
                             ),
@@ -95,7 +94,7 @@ class NavBar extends StatelessWidget {
                       onTap: () => Navigator.of(context).push(
                         PageRouteBuilder(
                           pageBuilder: (context, animation1, animation2) =>
-                              Payments(),
+                              const Payments(),
                           transitionDuration: Duration.zero,
                           reverseTransitionDuration: Duration.zero,
                         ),
@@ -108,6 +107,10 @@ class NavBar extends StatelessWidget {
                               pageName == "payments"
                                   ? "assets/icons/wallet-fill.svg"
                                   : "assets/icons/payments.svg",
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.primary,
+                                BlendMode.srcIn,
+                              ),
                               width: 25,
                               height: 25,
                             ),
@@ -134,7 +137,7 @@ class NavBar extends StatelessWidget {
                     onTap: () => Navigator.of(context).push(
                       PageRouteBuilder(
                         pageBuilder: (context, animation1, animation2) =>
-                            TransactionHistory(),
+                            const TransactionHistory(),
                         transitionDuration: Duration.zero,
                         reverseTransitionDuration: Duration.zero,
                       ),
@@ -151,6 +154,10 @@ class NavBar extends StatelessWidget {
                               pageName == "statements"
                                   ? "assets/icons/bill-fill.svg"
                                   : "assets/icons/statements.svg",
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.primary,
+                                BlendMode.srcIn,
+                              ),
                               width: 25,
                               height: 25,
                             ),
@@ -177,7 +184,7 @@ class NavBar extends StatelessWidget {
                       onTap: () => Navigator.of(context).push(
                         PageRouteBuilder(
                           pageBuilder: (context, animation1, animation2) =>
-                              Settings(),
+                              const Settings(),
                           transitionDuration: Duration.zero,
                           reverseTransitionDuration: Duration.zero,
                         ),
@@ -191,9 +198,12 @@ class NavBar extends StatelessWidget {
                               (pageName == "settings")
                                   ? "assets/icons/gear-fill.svg"
                                   : "assets/icons/settings.svg",
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.primary,
+                                BlendMode.srcIn,
+                              ),
                               width: 25,
                               height: 25,
-                              color: colorScheme.primary,
                             ),
                             Text(
                               "Settings",
@@ -216,18 +226,19 @@ class NavBar extends StatelessWidget {
           Container(
             // height: 100,
             // padding: EdgeInsets.symmetric(horizontal: 20),
-            child: GestureDetector(
-              onTap: () => Navigator.of(context).push(
-                PageRouteBuilder(
-                  pageBuilder: (context, animation1, animation2) => QrScanScreen(),
-                  transitionDuration: Duration.zero,
-                  reverseTransitionDuration: Duration.zero,
+            child: Positioned(
+              bottom: 30,
+              left: size.width / 2 - 30,
+              child: GestureDetector(
+                onTap: () => Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation1, animation2) =>
+                        const QrScanScreen(),
+                    transitionDuration: Duration.zero,
+                    reverseTransitionDuration: Duration.zero,
+                  ),
                 ),
-              ),
-              child: Positioned(
-                  bottom: 30,
-                  left: size.width / 2 - 30,
-                  child: Container(
+                child: Container(
                     width: 60,
                     height: 60,
                     alignment: Alignment.center,
@@ -243,7 +254,8 @@ class NavBar extends StatelessWidget {
                       height: 25,
                       color: colorScheme.background,
                     ),
-                  )),
+                ),
+              ),
             ),
           ),
         ],

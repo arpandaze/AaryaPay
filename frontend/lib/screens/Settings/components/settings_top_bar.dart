@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:aaryapay/screens/Settings/components/settings_wrapper.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:math' as math;
 
@@ -19,7 +17,7 @@ class SettingsTopBar extends StatelessWidget {
     var textTheme = Theme.of(context).textTheme;
     return Container(
       width: size.width,
-      padding: EdgeInsets.all(15),
+      padding: const EdgeInsets.all(15),
       height: size.height * 0.1,
       // decoration: BoxDecoration(
       //     // color: colorScheme.background,

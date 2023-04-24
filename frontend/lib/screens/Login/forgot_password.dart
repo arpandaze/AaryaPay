@@ -11,19 +11,19 @@ class ForgotPassword extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return LoginWrapper(
-      children: _midsection(context, size),
       backButton: true,
       actionButtonLabel: "SUBMIT",
       backButttonFunction: () => {Navigator.pop(context)},
       actionButtonFunction: () => {
         Navigator.of(context).push(
           PageRouteBuilder(
-            pageBuilder: (context, animation1, animation2) => ResetPassword(),
+            pageBuilder: (context, animation1, animation2) => const ResetPassword(),
             transitionDuration: Duration.zero,
             reverseTransitionDuration: Duration.zero,
           ),
         ),
       },
+      children: _midsection(context, size),
     );
   }
 
@@ -32,8 +32,7 @@ class ForgotPassword extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: 200,
+        SizedBox(
           child: Text(
             "Forgot Password?",
             style: Theme.of(context).textTheme.headlineMedium!.merge(
@@ -44,15 +43,13 @@ class ForgotPassword extends StatelessWidget {
           ),
         ),
         Text(
-          "Does anyone even read this text. Why are you reading this text. Just login already, thistext is worthless. ?",
-          style: Theme.of(context).textTheme.bodySmall!.merge(
-                TextStyle(
-                    // fontWeight: FontWeight.w500,
-                    color: Theme.of(context).colorScheme.primary),
+          "Don’t worry it happens! Please enter the email associated with your account.",
+          style: Theme.of(context).textTheme.titleMedium!.merge(
+                const TextStyle(height: 1.5),
               ),
         ),
         CustomTextField(
-          padding: EdgeInsets.only(top: 20),
+          padding: const EdgeInsets.only(top: 20),
           width: size.width,
           prefixIcon: Icon(
             FontAwesomeIcons.solidEnvelope,

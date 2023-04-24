@@ -3,18 +3,17 @@ package test_auth
 import (
 	"main/endpoints/auth"
 	"main/endpoints/tools"
-	"main/tests"
-	test "main/tests/commons"
+	. "main/tests/helpers"
 	"net/http"
 	"strings"
 	"testing"
 )
 
 func TestLogout(t *testing.T) {
-	r, c, w := tests.TestInit()
+	r, c, w := TestInit()
 
 	// Create a new test user
-	user := test.CreateLoggedInUser(t, c)
+	user := CreateLoggedInUser(t, c)
 
 	logoutController := auth.LogoutController{}
 
@@ -54,7 +53,7 @@ func TestLogout(t *testing.T) {
 	}
 
 	// Check that the user is no longer authenticated
-	r, c, w = tests.TestInit()
+	r, c, w = TestInit()
 
 	authCheckController := tools.AuthCheckController{}
 

@@ -9,9 +9,7 @@ def main(args):
     if args[1] == "dkstart":
         if system == "Darwin":
             os.system("mailhog > /dev/null 2>&1 &")
-            os.system(
-                "redis-server --requirepass redispass > /dev/null 2>&1 &"
-            )
+            os.system("redis-server --requirepass redispass > /dev/null 2>&1 &")
             os.system(
                 "migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapay\\?sslmode=disable up"
             )
@@ -57,7 +55,8 @@ def main(args):
             "migrate -source file://migrations -database=postgres://postadmin:postpass@localhost:5432/aaryapaytest\\?sslmode=disable up"
         )
         os.system("go clean -testcache")
-        os.system("go test ./tests/...")
+
+        os.system("go test ./... " + " ".join(args[2:]))
         exit()
 
     print("No args or invalid args provided!")

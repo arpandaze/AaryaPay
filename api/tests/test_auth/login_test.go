@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"main/endpoints/auth"
-	. "main/tests"
-	test "main/tests/commons"
+	. "main/tests/helpers"
+	test "main/tests/helpers"
 	"net/http"
 	"testing"
 

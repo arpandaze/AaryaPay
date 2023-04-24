@@ -185,7 +185,6 @@ class SendMoney extends StatelessWidget {
                                     Colors.white, BlendMode.srcIn)),
                             text: "erase",
                             color: Theme.of(context).colorScheme.outline,
-                            
                           ),
                           NumPadButton(text: '='),
                         ],
