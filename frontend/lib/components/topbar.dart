@@ -20,7 +20,6 @@ class TopBar extends StatelessWidget {
               bottomRight: Radius.circular(10))),
       width: size.width,
       padding: const EdgeInsets.symmetric(horizontal: 25),
-      height: size.height * 0.15,
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -48,16 +47,17 @@ class TopBar extends StatelessWidget {
                       child: Container(
                         child: SvgPicture.asset(
                           "assets/icons/rupee.svg",
-                          color: Theme.of(context).colorScheme.onPrimary,
-                          width: 15,
-                          height: 15,
+                          colorFilter:
+                              ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                          width: 22,
+                          height: 22,
                         ),
                       ),
                     ),
                     Container(
                       child: Text(
-                        "18,5333.45",
-                        style: Theme.of(context).textTheme.titleLarge!.merge(
+                        "18,533.45",
+                        style: Theme.of(context).textTheme.labelMedium!.merge(
                             TextStyle(
                                 color:
                                     Theme.of(context).colorScheme.onPrimary)),
@@ -91,7 +91,7 @@ class TopBar extends StatelessWidget {
                       ),
                     ),
                     // child: CircleAvatar(
-                    //   backgroundImage: AssetImage("assets/images/pfp.jpeg"),
+                    //   backgroundImage: AssetImage("assets/images/default-pfp.png"),
                     //   // radius: ,
                     // ),
                     child: Container(
@@ -100,19 +100,10 @@ class TopBar extends StatelessWidget {
                         decoration: const BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(20)),
                             image: DecorationImage(
-                                image: AssetImage("assets/images/pfp.jpeg")))),
-                  ),
-                ),
-                Positioned(
-                  bottom: 10,
-                  right: 10,
-                  child: Container(
-                    width: 12,
-                    height: 12,
-                    // alignment: Alignment(-0.1, -0.1),
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surfaceVariant,
-                        borderRadius: BorderRadius.circular(10)),
+                          image: AssetImage("assets/images/pfp.jpg"),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ],

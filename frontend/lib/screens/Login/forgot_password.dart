@@ -33,7 +33,6 @@ class ForgotPassword extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: 200,
           child: Text(
             "Forgot Password?",
             style: Theme.of(context).textTheme.headlineMedium!.merge(
@@ -44,11 +43,9 @@ class ForgotPassword extends StatelessWidget {
           ),
         ),
         Text(
-          "Does anyone even read this text. Why are you reading this text. Just login already, thistext is worthless. ?",
-          style: Theme.of(context).textTheme.bodySmall!.merge(
-                TextStyle(
-                    // fontWeight: FontWeight.w500,
-                    color: Theme.of(context).colorScheme.primary),
+          "Don’t worry it happens! Please enter the email associated with your account.",
+          style: Theme.of(context).textTheme.titleMedium!.merge(
+                const TextStyle(height: 1.5),
               ),
         ),
         CustomTextField(

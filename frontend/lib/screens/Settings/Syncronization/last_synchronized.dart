@@ -12,8 +12,6 @@ class LastSynchronized extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 15),
-      width: size.width,
-      // height: size.height * 0.14,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(

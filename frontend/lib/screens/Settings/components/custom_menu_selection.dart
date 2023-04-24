@@ -30,8 +30,6 @@ class CustomMenuSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var textTheme = Theme.of(context).textTheme;
-    var colorScheme = Theme.of(context).colorScheme;
     Size size = MediaQuery.of(context).size;
 
     return Container(
@@ -46,7 +44,7 @@ class CustomMenuSelection extends StatelessWidget {
                     children: [
                       Text(
                         item.title,
-                        style: textTheme.titleMedium,
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                       ...item.menuItems
                           .map((subItem) => CustomMenuSelectionCard(

@@ -45,31 +45,38 @@ class RecentCard extends StatelessWidget {
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                child: Column(children: [
-                  RecentPaymentCard(),
-                  RecentPaymentCard(label: "Discord Nitro Win"),
-                  RecentPaymentCard(
-                    transactionAmt: "-  \$50.00",
-                    transactionColor: Theme.of(context).colorScheme.onSurface,
-                  ),
-                  RecentPaymentCard(
-                    transactionAmt: "-  \$50.00",
-                    transactionColor: Theme.of(context).colorScheme.onSurface,
-                  ),
-                  RecentPaymentCard(label: "eSewa Voucher Win"),
-                  RecentPaymentCard(),
-                  RecentPaymentCard(
-                    transactionAmt: "-  \$50.00",
-                    transactionColor: Theme.of(context).colorScheme.onSurface,
-                  ),
-                  RecentPaymentCard(),
-                  RecentPaymentCard(
-                    transactionAmt: "-  \$50.00",
-                    transactionColor: Theme.of(context).colorScheme.onSurface,
-                  ),
-                  RecentPaymentCard(),
-                ]),
+              RecentPaymentCard(
+                isDebit: true,
+                finalAmt: "18153.64",
+                label: "Google Payment",
+                transactionAmt: "50.00",
+                date: "January 1 2020",
+              ),
+              RecentPaymentCard(
+                label: "Amazon Payment Rebate asadasasdasdasdas",
+                finalAmt: "18153.64",
+                transactionAmt: "1111150.00",
+                date: "January 18 2020",
+              ),
+              RecentPaymentCard(
+                label: "Amazon Payment",
+                finalAmt: "18153.64",
+                transactionAmt: "50.00",
+                date: "January 18 2020",
+              ),
+              RecentPaymentCard(
+                isDebit: true,
+                label: "Amazon Payment",
+                finalAmt: "18153.64",
+                transactionAmt: "50.00",
+                date: "January 18 2020",
+              ),
+              RecentPaymentCard(
+                isDebit: true,
+                finalAmt: "18153.64",
+                label: "Apple Payment",
+                transactionAmt: "50.00",
+                date: "January 18 2020",
               ),
             ],
           ),

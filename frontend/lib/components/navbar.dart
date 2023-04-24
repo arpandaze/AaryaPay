@@ -16,7 +16,6 @@ class NavBar extends StatelessWidget {
   final String pageName;
   @override
   Widget build(BuildContext context) {
-    var textTheme = Theme.of(context).textTheme;
     var colorScheme = Theme.of(context).colorScheme;
     return Container(
       clipBehavior: Clip.none,
@@ -66,6 +65,10 @@ class NavBar extends StatelessWidget {
                               pageName == "home"
                                   ? "assets/icons/home-fill.svg"
                                   : "assets/icons/home.svg",
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.primary,
+                                BlendMode.srcIn,
+                              ),
                               width: 25,
                               height: 25,
                             ),
@@ -104,6 +107,10 @@ class NavBar extends StatelessWidget {
                               pageName == "payments"
                                   ? "assets/icons/wallet-fill.svg"
                                   : "assets/icons/payments.svg",
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.primary,
+                                BlendMode.srcIn,
+                              ),
                               width: 25,
                               height: 25,
                             ),
@@ -147,6 +154,10 @@ class NavBar extends StatelessWidget {
                               pageName == "statements"
                                   ? "assets/icons/bill-fill.svg"
                                   : "assets/icons/statements.svg",
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.primary,
+                                BlendMode.srcIn,
+                              ),
                               width: 25,
                               height: 25,
                             ),
@@ -187,9 +198,12 @@ class NavBar extends StatelessWidget {
                               (pageName == "settings")
                                   ? "assets/icons/gear-fill.svg"
                                   : "assets/icons/settings.svg",
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.primary,
+                                BlendMode.srcIn,
+                              ),
                               width: 25,
                               height: 25,
-                              color: colorScheme.primary,
                             ),
                             Text(
                               "Settings",

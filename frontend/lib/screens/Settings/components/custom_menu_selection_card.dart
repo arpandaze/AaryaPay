@@ -26,7 +26,7 @@ class CustomMenuSelectionCard extends StatelessWidget {
         width: size.width * 0.9,
         height: size.height * 0.07,
         decoration: BoxDecoration(
-            border: Border.all(color: colorScheme.surface),
+            border: Border.all(color: Color.fromARGB(50, 0, 0, 0)),
             borderRadius: BorderRadius.circular(10)),
         child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
