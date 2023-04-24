@@ -15,8 +15,8 @@ func TestInit() (*gin.Engine, *gin.Context, *httptest.ResponseRecorder) {
 	tracerShutdown := telemetry.InitTracer()
 	defer tracerShutdown()
 
-  // core.DB.Exec("DELETE * FROM users")
-  // core.DB.Exec("DELETE * FROM users")
+	// core.DB.Exec("DELETE * FROM users")
+	// core.DB.Exec("DELETE * FROM users")
 
 	r := initTestRouter()
 	w := initTestRecorder()

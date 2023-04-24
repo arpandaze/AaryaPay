@@ -141,23 +141,28 @@ func (r Settings) PRIVATE_KEY() []byte {
 	return decodedKey
 }
 
-func (r Settings) PRIVATE_KEY_ONLY() []byte {
+func (r Settings) PRIVATE_KEY_ONLY() [32]byte {
 	decodedKey, err := base64.StdEncoding.DecodeString(r.SECRET_KEY)
 
 	if err != nil {
 		panic(err)
 	}
 
-	return decodedKey[:32]
+	var privateKey [32]byte
+	copy(privateKey[:], decodedKey[:32])
+
+	return privateKey
 }
 
-func (r Settings) PUBLIC_KEY() []byte {
+func (r Settings) PUBLIC_KEY() [32]byte {
 	decodedKey, err := base64.StdEncoding.DecodeString(r.SECRET_KEY)
 	if err != nil {
 		panic(err)
 	}
 
-	return decodedKey[32:]
+	var privateKey [32]byte
+	copy(privateKey[:], decodedKey[32:])
+	return privateKey
 }
 
 var Configs Settings
