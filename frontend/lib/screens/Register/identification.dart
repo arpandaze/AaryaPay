@@ -1,24 +1,19 @@
 import 'package:aaryapay/components/CustomActionButton.dart';
-import 'package:aaryapay/components/CustomDatePicker.dart';
 import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:aaryapay/screens/Register/bloc/register_bloc.dart';
 import 'package:aaryapay/screens/Register/components/CustomRegisterButton.dart';
-import 'package:aaryapay/screens/Register/components/register_wrapper.dart';
-import 'package:aaryapay/screens/Register/verify_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class AccountScreen extends StatelessWidget {
-  const AccountScreen({Key? key}) : super(key: key);
+class Identification extends StatelessWidget {
+  const Identification({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    // var dateTime = new Map<String, String>();
-    // dateTime["day"] = "";
-    // dateTime["month"] = "";
-    // dateTime["year"] = "";
-    DateTime dateTime = DateTime();
     Size size = MediaQuery.of(context).size;
     return SingleChildScrollView(
       child: Column(
@@ -37,11 +32,7 @@ class AccountScreen extends StatelessWidget {
                         visible: true,
                         child: GestureDetector(
                             behavior: HitTestBehavior.opaque,
-                            onTap: () => {
-                                  context
-                                      .read<RegisterBloc>()
-                                      .add(PreviousPage())
-                                },
+                            onTap: () => {Navigator.of(context).pop()},
                             child: const Icon(
                               FontAwesomeIcons.arrowLeftLong,
                               size: 20,
@@ -50,14 +41,14 @@ class AccountScreen extends StatelessWidget {
                   Container(
                     alignment: Alignment.center,
                     padding: const EdgeInsets.all(15),
-                    child: Text("Account and Security",
+                    child: Text("Identification",
                         style: Theme.of(context).textTheme.headlineSmall!),
                   ),
                   Container(
                     width: size.width * 0.1,
                     alignment: Alignment.center,
                     // padding: const EdgeInsets.all(15),
-                    child: Text("2/3",
+                    child: Text("1/3",
                         style: Theme.of(context).textTheme.titleSmall!),
                   ),
                 ],
@@ -75,10 +66,9 @@ class AccountScreen extends StatelessWidget {
           ),
           Container(
             height: size.height * 0.45,
-            padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+            padding: EdgeInsets.symmetric(horizontal: 18, vertical: 18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,46 +94,65 @@ class AccountScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                CustomTextField(
-                  width: size.width,
-                  padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
-                  prefixIcon: Icon(
-                    FontAwesomeIcons.solidEnvelope,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  onChanged: (value) => context.read<RegisterBloc>().add(
-                        EmailChanged(email: value),
+                Column(
+                  children: [
+                    CustomTextField(
+                      width: size.width,
+                      padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
+                      prefixIcon: Container(
+                        child: SvgPicture.asset(
+                          "assets/icons/profile.svg",
+                          width: 20,
+                          colorFilter: ColorFilter.mode(
+                              Theme.of(context).colorScheme.primary,
+                              BlendMode.srcIn),
+                        ),
                       ),
-                  placeHolder: "Email",
-                ),
-                DateField(
-                  dateTime: dateTime,
-                ),
-                CustomTextField(
-                  width: size.width,
-                  isPassword: true,
-                  padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
-                  prefixIcon: Icon(
-                    FontAwesomeIcons.lock,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  onChanged: (value) => context.read<RegisterBloc>().add(
-                        PasswordChanged(password: value),
+                      onChanged: (value) => context.read<RegisterBloc>().add(
+                            FirstNameChanged(firstName: value),
+                          ),
+                      placeHolder: "First Name",
+                    ),
+                    CustomTextField(
+                      width: size.width,
+                      padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
+                      prefixIcon: Container(
+                        child: SvgPicture.asset(
+                          "assets/icons/blank.svg",
+                          width: 20,
+                        ),
                       ),
-                  placeHolder: "Password",
-                ),
+                      onChanged: (value) => context.read<RegisterBloc>().add(
+                            MiddleNameChanged(middleName: value),
+                          ),
+                      placeHolder: "Middle Name",
+                    ),
+                    CustomTextField(
+                      width: size.width,
+                      padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
+                      prefixIcon: Container(
+                        child: SvgPicture.asset(
+                          "assets/icons/blank.svg",
+                          width: 20,
+                        ),
+                      ),
+                      onChanged: (value) => context.read<RegisterBloc>().add(
+                            LastNameChanged(lastName: value),
+                          ),
+                      placeHolder: "Last Name",
+                    ),
+                  ],
+                )
               ],
             ),
           ),
-          CustomRegisterButton(
-            width: size.width * 0.78,
-            borderRadius: 10,
-            label: "Next",
-            onClick: () => {
-              context.read<RegisterBloc>().add(NextPage()),
-              context.read<RegisterBloc>().add(DOBChanged(dob: dateTime)),
-              context.read<RegisterBloc>().add(FormSubmitted())
-            },
+          Container(
+            child: CustomRegisterButton(
+              width: size.width * 0.78,
+              borderRadius: 10,
+              label: "Next",
+              onClick: () => {context.read<RegisterBloc>().add(NextPage())},
+            ),
           ),
         ],
       ),

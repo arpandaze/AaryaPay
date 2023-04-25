@@ -1,6 +1,11 @@
+import 'package:aaryapay/components/CustomActionButton.dart';
+import 'package:aaryapay/screens/Register/bloc/register_bloc.dart';
 import 'package:aaryapay/screens/Register/completed_screen.dart';
+import 'package:aaryapay/screens/Register/components/CustomRegisterButton.dart';
 import 'package:aaryapay/screens/Register/components/register_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class VerifyScreen extends StatelessWidget {
@@ -9,127 +14,180 @@ class VerifyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return RegisterWrapper(
-      backButton: true,
-      backButttonFunction: () => {
-        Navigator.pop(context),
-      },
-      title: "Verify your account",
-      pageIndex: "3/3",
-      actionButtonLabel: "Next",
-      actionButtonFunction: () => Navigator.of(context).push(
-        PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => const CompletedScreen(),
-          transitionDuration: Duration.zero,
-          reverseTransitionDuration: Duration.zero,
-        ),
-      ),
-      children: _midsection(context, size),
-    );
-  }
-
-  Widget _midsection(BuildContext context, Size size) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              "Verify Your Account",
-              style: Theme.of(context).textTheme.displaySmall!.merge(
-                    TextStyle(
-                        height: 1.8,
-                        fontWeight: FontWeight.w900,
-                        color: Theme.of(context).colorScheme.primary),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(
+            height: size.height * 0.1,
+            child: Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: size.width * 0.1,
+                    // padding: const EdgeInsets.all(15),
+                    alignment: Alignment.center,
+                    child: Visibility(
+                        visible: true,
+                        child: GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () => {
+                                  context
+                                      .read<RegisterBloc>()
+                                      .add(PreviousPage())
+                                },
+                            child: const Icon(
+                              FontAwesome.arrow_left_long,
+                              size: 20,
+                            ))),
                   ),
+                  Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(15),
+                    child: Text("Verify Your Account",
+                        style: Theme.of(context).textTheme.headlineSmall!),
+                  ),
+                  Container(
+                    width: size.width * 0.1,
+                    alignment: Alignment.center,
+                    // padding: const EdgeInsets.all(15),
+                    child: Text("3/3",
+                        style: Theme.of(context).textTheme.titleSmall!),
+                  ),
+                ],
+              ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+          ),
+          Container(
+            height: size.height * 0.3,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.contain,
+                image: AssetImage("assets/images/logo.png"),
+              ),
+            ),
+          ),
+          Container(
+            height: size.height * 0.45,
+            padding: EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Please enter the 6 digit code sent to: ",
-                  style: Theme.of(context).textTheme.titleSmall!.merge(
-                        TextStyle(
-                        height: 1.8,
-                            // fontWeight: FontWeight.w500,
-                            color: Theme.of(context).colorScheme.primary),
-                      ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "Verify Your Account",
+                      style: Theme.of(context).textTheme.displaySmall!.merge(
+                            TextStyle(
+                                height: 1.8,
+                                fontWeight: FontWeight.w900,
+                                color: Theme.of(context).colorScheme.primary),
+                          ),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Please enter the 6 digit code sent to: ",
+                          style: Theme.of(context).textTheme.titleSmall!.merge(
+                                TextStyle(
+                                    height: 1.8,
+                                    // fontWeight: FontWeight.w500,
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
+                              ),
+                        ),
+                        Text(
+                          "aaryapay@aaryapay.com",
+                          style: Theme.of(context).textTheme.bodySmall!.merge(
+                                TextStyle(
+                                    height: 1.8,
+                                    fontWeight: FontWeight.w900,
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
+                              ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                Text(
-                  "aaryapay@aaryapay.com",
-                  style: Theme.of(context).textTheme.bodySmall!.merge(
-                        TextStyle(
-                        height: 1.8,
-                            fontWeight: FontWeight.w900,
-                            color: Theme.of(context).colorScheme.primary),
-                      ),
+                Container(
+                  margin: const EdgeInsets.only(top: 40),
+                  child: PinCodeTextField(
+                    length: 6,
+                    hapticFeedbackTypes: HapticFeedbackTypes.light,
+                    textStyle: TextStyle(
+                        color: Colors.black),
+                    // obscureText: true,
+                    animationType: AnimationType.fade,
+                    pinTheme: PinTheme(
+                      shape: PinCodeFieldShape.box,
+                      borderRadius: BorderRadius.circular(5),
+                      fieldHeight: 65,
+                      fieldWidth: 50,
+                      inactiveColor: Theme.of(context).colorScheme.primary,
+                      activeFillColor: Colors.white,
+                    ),
+                    // activeColor: Theme.of(context).colorScheme.secondary),
+                    animationDuration: const Duration(milliseconds: 300),
+                    onCompleted: (v) {
+                      print("Completed");
+                    },
+                    onChanged: (value) {
+                      // setState(() {
+                      //   currentText = value;
+                      // });
+                    },
+                    beforeTextPaste: (text) {
+                      print("Allowing to paste $text");
+                      //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
+                      //but you can show anything you want here, like your pop up saying wrong paste format or etc
+                      return true;
+                    },
+                    appContext: context,
+                  ),
+                ),
+                Container(
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Didn't Receive Code?",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        GestureDetector(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Resend Code",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .merge(TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary)),
+                            ),
+                          ),
+                        )
+                      ]),
                 ),
               ],
             ),
-          ],
-        ),
-        Container(
-          margin: const EdgeInsets.only(top: 40),
-          child: PinCodeTextField(
-            length: 6,
-            hapticFeedbackTypes: HapticFeedbackTypes.light,
-            textStyle: TextStyle(color: Theme.of(context).colorScheme.secondary),
-            // obscureText: true,
-            animationType: AnimationType.fade,
-            pinTheme: PinTheme(
-              shape: PinCodeFieldShape.box,
-              borderRadius: BorderRadius.circular(5),
-              fieldHeight: 65,
-              fieldWidth: 50,
-              inactiveColor: Theme.of(context).colorScheme.primary,
-              activeFillColor: Colors.white,
-            ),
-            // activeColor: Theme.of(context).colorScheme.secondary),
-            animationDuration: const Duration(milliseconds: 300),
-            // backgroundColor: Colors.blue.shade50,
-            // enableActiveFill: true,
-            // errorAnimationController: errorController.add(ErrorAnimationType.shake);,
-            // controller: textEditingController,
-            onCompleted: (v) {
-              print("Completed");
-            },
-            onChanged: (value) {
-              print(value);
-              // setState(() {
-              //   currentText = value;
-              // });
-            },
-            beforeTextPaste: (text) {
-              print("Allowing to paste $text");
-              //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-              //but you can show anything you want here, like your pop up saying wrong paste format or etc
-              return true;
-            },
-            appContext: context,
           ),
-        ),
-        Container(
-          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text(
-              "Didn't Receive Code?",
-              style: Theme.of(context).textTheme.bodyMedium,
+          Container(
+            child: CustomRegisterButton(
+              width: size.width * 0.78,
+              borderRadius: 10,
+              label: "Next",
+              onClick: () => {},
             ),
-            GestureDetector(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Resend Code",
-                  style: Theme.of(context).textTheme.bodyMedium!.merge(
-                      TextStyle(color: Theme.of(context).colorScheme.primary)),
-                ),
-              ),
-            )
-          ]),
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,9 +1,10 @@
-import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:aaryapay/screens/Register/account_and_security.dart';
-import 'package:aaryapay/screens/Register/components/register_wrapper.dart';
+import 'package:aaryapay/screens/Register/bloc/register_bloc.dart';
+import 'package:aaryapay/screens/Register/completed_screen.dart';
+import 'package:aaryapay/screens/Register/identification.dart';
+import 'package:aaryapay/screens/Register/verify_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -11,92 +12,61 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return RegisterWrapper(
-      backButton: true,
-      backButttonFunction: () => {
-        Navigator.pop(context),
-      },
-      title: "Identification",
-      pageIndex: "1/3",
-      actionButtonLabel: "Next",
-      actionButtonFunction: () => Navigator.of(context).push(
-        PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => const AccountScreen(),
-          transitionDuration: Duration.zero,
-          reverseTransitionDuration: Duration.zero,
-        ),
+    return BlocProvider<RegisterBloc>(
+      create: (context) => RegisterBloc(),
+      child: BlocBuilder<RegisterBloc, RegisterState>(
+        buildWhen: (previous, current) => previous != current,
+        builder: (context, state) {
+          return WillPopScope(
+            onWillPop: () => onBackClicked(state.page, context),
+            child: Scaffold(
+              backgroundColor: Theme.of(context).colorScheme.background,
+              body: SafeArea(
+                top: true,
+                bottom: true,
+                left: true,
+                right: true,
+                child: generatePage(state.page),
+              ),
+            ),
+          );
+        },
       ),
-      children: _midsection(context, size),
     );
   }
 
-  Widget _midsection(BuildContext context, Size size) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget generatePage(int page) {
+    return Stack(
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              "Sign Up",
-              style: Theme.of(context).textTheme.displaySmall!.merge(
-                    TextStyle(
-                        height: 1.8,
-                        fontWeight: FontWeight.w900,
-                        color: Theme.of(context).colorScheme.primary),
-                  ),
-            ),
-            Text(
-              "Fill the form to Sign Up for AaryaPay. Pay Anywhere, You Go",
-              style: Theme.of(context).textTheme.titleSmall!.merge(
-                    TextStyle(
-                        height: 2,
-                        // fontWeight: FontWeight.w900,
-                        color: Theme.of(context).colorScheme.primary),
-                  ),
-            ),
-          ],
+        Visibility(
+          child: Identification(),
+          visible: page == 1,
+          maintainState: true,
         ),
-        CustomTextField(
-          width: size.width,
-          padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
-          prefixIcon: Container(
-            child: SvgPicture.asset(
-              "assets/icons/profile.svg",
-              width: 20,
-              colorFilter: ColorFilter.mode(
-                  Theme.of(context).colorScheme.primary, BlendMode.srcIn),
-            ), 
-          ),
-          // height: ,
-          placeHolder: "First Name",
+        Visibility(
+          child: AccountScreen(),
+          visible: page == 2,
+          maintainState: true,
         ),
-        CustomTextField(
-          width: size.width,
-          padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
-          prefixIcon: Container(
-            child: SvgPicture.asset(
-              "assets/icons/blank.svg",
-              width: 20,
-            ), 
-          ),
-          // height: ,
-          placeHolder: "Middle Name",
+        Visibility(
+          child: VerifyScreen(),
+          visible: page == 3,
+          maintainState: true,
         ),
-        CustomTextField(
-          width: size.width,
-          padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
-          prefixIcon: Container(
-            child: SvgPicture.asset(
-              "assets/icons/blank.svg",
-              width: 20,
-            ), 
-          ),
-          // height: ,
-          placeHolder: "Last Name",
+        Visibility(
+          child: CompletedScreen(),
+          visible: page == 4,
+          maintainState: true,
         ),
       ],
     );
+  }
+
+  Future<bool> onBackClicked(int page, BuildContext context) async {
+    if (page <= 1 || page >= 4) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
