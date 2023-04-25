@@ -160,9 +160,9 @@ func (r Settings) PUBLIC_KEY() [32]byte {
 		panic(err)
 	}
 
-	var privateKey [32]byte
-	copy(privateKey[:], decodedKey[32:])
-	return privateKey
+	var publicKey [32]byte
+	copy(publicKey[:], decodedKey[32:])
+	return publicKey
 }
 
 var Configs Settings

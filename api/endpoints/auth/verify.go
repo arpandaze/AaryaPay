@@ -99,7 +99,7 @@ func (VerifyController) ResendVerificationEmail(c *gin.Context) {
 	queryUser := &core.CommonUser{}
 	row := core.DB.QueryRow("SELECT (first_name, middle_name, last_name, email, pubkey_updated_at) FROM Users WHERE id=$1", uid)
 
-	err = row.Scan(&queryUser.FirstName, &queryUser.MiddleName, &queryUser.LastName, &queryUser.Email, &queryUser.PubKeyUpdatedAt)
+	err = row.Scan(&queryUser.FirstName, &queryUser.MiddleName, &queryUser.LastName, &queryUser.Email, &queryUser.LastSync)
 
 	switch err {
 	case sql.ErrNoRows:
