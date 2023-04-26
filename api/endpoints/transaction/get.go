@@ -4,6 +4,7 @@ import (
 	. "main/core"
 	. "main/telemetry"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -14,9 +15,9 @@ type TransactionRow struct {
 	SenderID         uuid.UUID `db:"sender_id" json:"sender_id"`
 	ReceiverID       uuid.UUID `db:"receiver_id" json:"receiver_id"`
 	Amount           float32   `db:"amount" json:"amount"`
-	GenerationTime   int32     `db:"generation_time" json:"generation_time"`
-	ReceivedTime     int32     `db:"received_time" json:"received_time"`
-	VerificationTime int32     `db:"verification_time" json:"verification_time"`
+	GenerationTime   time.Time `db:"generation_time" json:"generation_time"`
+	ReceivedTime     time.Time `db:"received_time" json:"received_time"`
+	VerificationTime time.Time `db:"verification_time" json:"verification_time"`
 }
 
 type TransactionRetrieve struct{}
@@ -34,17 +35,17 @@ func (TransactionRetrieve) Retrieve(c *gin.Context) {
 		return
 	}
 
-	var transactionHistory, queryErr = DB.Query("SELECT * FROM Transactions WHERE sender_id = $1 OR receiver_id = $1", user.ID)
+	var transactionHistory, queryErr = DB.Query("SELECT * FROM Transactions WHERE sender_id = $1 OR receiver_id = $1", user)
 
 	if queryErr != nil {
 		l.Errorw("Failed to query transaction history!",
-			"error", err,
+			"error", queryErr,
 		)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
 		return
 	}
 
-	var transactions []TransactionRow
+	var transactions = []TransactionRow{}
 
 	for transactionHistory.Next() {
 		var transaction TransactionRow
@@ -55,7 +56,7 @@ func (TransactionRetrieve) Retrieve(c *gin.Context) {
 			l.Errorw("Failed to scan transaction!",
 				"error", err,
 			)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Failed to scan transaction!", "context": TraceIDFromContext(c)})
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
 			return
 		}
 
