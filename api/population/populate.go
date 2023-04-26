@@ -12,4 +12,5 @@ func main() {
 
 	data.PopulateUsers()
 	data.PopulateFavorites()
+  data.PopulateTransactions()
 }
