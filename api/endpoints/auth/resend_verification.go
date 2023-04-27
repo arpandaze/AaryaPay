@@ -2,12 +2,12 @@ package auth
 
 import (
 	"database/sql"
+	"fmt"
 	"main/core"
 	"main/telemetry"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 type ResendVerificationController struct{}
@@ -16,10 +16,8 @@ func (ResendVerificationController) ResendVerification(c *gin.Context) {
 	l := telemetry.Logger(c).Sugar()
 
 	var resendVerification struct {
-		id string `form:"id"`
+		ID string `form:"id"`
 	}
-
-	var userID uuid.UUID
 
 	if err := c.Bind(&resendVerification); err != nil {
 		msg := "Invalid Request Payload"
@@ -36,10 +34,10 @@ func (ResendVerificationController) ResendVerification(c *gin.Context) {
 	row := core.DB.QueryRow(`
 	SELECT id, first_name, middle_name, last_name, email, is_verified, last_sync
     FROM Users 
-    LEFT JOIN Keys keys ON users.id = keys.associated_user AND keys.active = true
-    LEFT JOIN Accounts a ON users.id = a.id
     WHERE id = $1;
-	`, userID)
+	`, resendVerification.ID)
+	fmt.Println("")
+	fmt.Println(resendVerification.ID)
 
 	err := row.Scan(&queryUser.Id, &queryUser.FirstName, &queryUser.MiddleName, &queryUser.LastName, &queryUser.Email, &queryUser.IsVerified, &queryUser.LastSync)
 
@@ -60,6 +58,7 @@ func (ResendVerificationController) ResendVerification(c *gin.Context) {
 			telemetry.Logger(c).Sugar().Errorw("Failed to send verification email",
 				"error", err,
 			)
+
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
 			return
 		}
