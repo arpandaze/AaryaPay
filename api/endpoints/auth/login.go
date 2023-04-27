@@ -96,7 +96,7 @@ func (LoginController) Login(c *gin.Context) {
 
 				msg := "Please verify the account first!"
 				l.Warnw(msg,
-					"email", queryUser.Email,
+					"id", queryUser.ID,
 				)
 				c.JSON(http.StatusUnauthorized, gin.H{"msg": msg, "user_id": queryUser.ID})
 				return
