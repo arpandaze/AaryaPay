@@ -4,6 +4,7 @@ import (
 	auth "main/endpoints/auth"
 	favorites "main/endpoints/favorites"
 	keys "main/endpoints/keys"
+	"main/endpoints/profile"
 	tools "main/endpoints/tools"
 	transaction "main/endpoints/transaction"
 
@@ -47,17 +48,22 @@ func InitFavoritesRoute(routeGroup *gin.RouterGroup) {
 	retrieveFavorite := new(favorites.RetrieveFavoriteController)
 	removeFavorite := new(favorites.RemoveFavoriteController)
 
-	routeGroup.POST("/", addFavorite.AddFavorite)
-	routeGroup.GET("/", retrieveFavorite.RetrieveFavorites)
-	routeGroup.DELETE("/", removeFavorite.RemoveFavorite)
+	routeGroup.POST("", addFavorite.AddFavorite)
+	routeGroup.GET("", retrieveFavorite.RetrieveFavorites)
+	routeGroup.DELETE("", removeFavorite.RemoveFavorite)
+}
+
+func InitProfileRoutes(routeGroup *gin.RouterGroup) {
+	retrieveProfileController := new(profile.GetProfileController)
+	routeGroup.GET("", retrieveProfileController.GetProfile)
 }
 
 func InitTransactionRoutes(routeGroup *gin.RouterGroup) {
 	retrieveController := new(transaction.TransactionRetrieve)
 	submitController := new(transaction.SubmitController)
 
-	routeGroup.GET("/", retrieveController.Retrieve)
-	routeGroup.POST("/", submitController.Submit)
+	routeGroup.GET("", retrieveController.Retrieve)
+	routeGroup.POST("", submitController.Submit)
 }
 
 func InitKeysRoutes(routeGroup *gin.RouterGroup) {
@@ -80,6 +86,7 @@ func RegisterRoutes(router *gin.Engine) *gin.Engine {
 	v1 := router.Group("v1")
 	{
 		InitAuthRoutes(v1.Group("auth"))
+		InitProfileRoutes(v1.Group("profile"))
 		InitFavoritesRoute(v1.Group("favorites"))
 		InitTransactionRoutes(v1.Group("transaction"))
 		InitKeysRoutes(v1.Group("keys"))
