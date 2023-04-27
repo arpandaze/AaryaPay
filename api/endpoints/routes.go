@@ -22,9 +22,11 @@ func InitAuthRoutes(routeGroup *gin.RouterGroup) {
 
 	two_fa := new(auth.TwoFaController)
 	refresh := new(auth.RefreshController)
+	resend_verification := new(auth.ResendVerificationController)
 
 	routeGroup.POST("/register", register.Register)
 	routeGroup.POST("/login", login.Login)
+	routeGroup.POST("/resend-verification", resend_verification.ResendVerification)
 
 	routeGroup.POST("/password-recovery", password_recovery.PasswordRecovery)
 	routeGroup.POST("/password-change", password_change.PasswordChange)
