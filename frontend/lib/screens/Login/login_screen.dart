@@ -1,5 +1,7 @@
+import 'package:aaryapay/components/AuthenticationStatusWrapper.dart';
 import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
+import 'package:aaryapay/repository/auth.dart';
 import 'package:aaryapay/screens/Home/home_screen.dart';
 import 'package:aaryapay/screens/Login/bloc/login_bloc.dart';
 import 'package:aaryapay/screens/Login/components/login_wrapper.dart';
@@ -14,45 +16,30 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return BlocProvider(
-      create: (context) => LoginBloc(),
-      child: BlocConsumer<LoginBloc, LoginState>(
-        listener: (context, state) {
-          print("Bloc Listener Here");
-
-          print(state.loginSucess);
-          if (state.loginSucess) {
-            print("Bloc Listener Here");
-            context.read<AuthenticationBloc>().add(LoggedIn());
-            Navigator.of(context).push(
-              PageRouteBuilder(
-                pageBuilder: (context, animation1, animation2) =>
-                    const HomeScreen(),
-                transitionDuration: Duration.zero,
-                reverseTransitionDuration: Duration.zero,
-              ),
-            );
-          }
-        },
-        builder: (context, state) {
-          return LoginWrapper(
-            backButton: true,
-            backButttonFunction: () => {
-              Navigator.pop(context),
+    return AuthenticationStateWrapper(
+      child: RepositoryProvider<AuthenticationRepository>(
+        create: (_) => AuthenticationRepository(),
+        child: BlocProvider(
+          create: (context) => LoginBloc(),
+          child: BlocConsumer<LoginBloc, LoginState>(
+            listener: (context, state) {
+              if (state.loginSucess) {
+                context.read<AuthenticationBloc>().add(LoggedIn());
+              }
             },
-            actionButtonFunction: () =>
-                context.read<LoginBloc>().add(FormSubmitted()),
-            // Navigator.of(context).push(
-            //   PageRouteBuilder(
-            //     pageBuilder: (context, animation1, animation2) =>
-            //         const HomeScreen(),
-            //     transitionDuration: Duration.zero,
-            //     reverseTransitionDuration: Duration.zero,
-            //   ),
-
-            children: _midsection(context, size),
-          );
-        },
+            builder: (context, state) {
+              return LoginWrapper(
+                backButton: true,
+                backButttonFunction: () => {
+                  Navigator.pop(context),
+                },
+                actionButtonFunction: () =>
+                    context.read<LoginBloc>().add(FormSubmitted()),
+                children: _midsection(context, size),
+              );
+            },
+          ),
+        ),
       ),
     );
   }
