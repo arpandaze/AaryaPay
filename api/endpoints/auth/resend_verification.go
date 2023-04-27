@@ -15,9 +15,13 @@ type ResendVerificationController struct{}
 func (ResendVerificationController) ResendVerification(c *gin.Context) {
 	l := telemetry.Logger(c).Sugar()
 
+	var resendVerification struct {
+		id string `form:"id"`
+	}
+
 	var userID uuid.UUID
 
-	if err := c.Bind(&userID); err != nil {
+	if err := c.Bind(&resendVerification); err != nil {
 		msg := "Invalid Request Payload"
 
 		l.Errorw(msg,
