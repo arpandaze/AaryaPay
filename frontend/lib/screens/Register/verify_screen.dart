@@ -2,7 +2,6 @@ import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/screens/Register/bloc/register_bloc.dart';
 import 'package:aaryapay/screens/Register/completed_screen.dart';
 import 'package:aaryapay/screens/Register/components/CustomRegisterButton.dart';
-import 'package:aaryapay/screens/Register/components/register_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -71,7 +70,7 @@ class VerifyScreen extends StatelessWidget {
             ),
           ),
           Container(
-            height: size.height * 0.45,
+            height: size.height * 0.48,
             padding: EdgeInsets.symmetric(vertical: 18, horizontal: 18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,7 +104,7 @@ class VerifyScreen extends StatelessWidget {
                         ),
                         Text(
                           "aaryapay@aaryapay.com",
-                          style: Theme.of(context).textTheme.bodySmall!.merge(
+                          style: Theme.of(context).textTheme.titleSmall!.merge(
                                 TextStyle(
                                     height: 1.8,
                                     fontWeight: FontWeight.w900,
@@ -186,6 +185,8 @@ class VerifyScreen extends StatelessWidget {
       builder: (context, state) {
         if (state.status != RegisterStatus.verifying) {
           return Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // errorText(state.status),
               CustomRegisterButton(

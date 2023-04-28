@@ -86,7 +86,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
           firstName: state.firstName!,
           lastName: state.lastName!,
           middleName: state.middleName ?? "",
-          dob: state.dob.toString(),
+          dob: (state.dob!.millisecondsSinceEpoch ~/ 1000).toString(), 
           email: state.email!,
           password: state.password!);
 
