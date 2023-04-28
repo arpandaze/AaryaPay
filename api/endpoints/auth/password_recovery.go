@@ -5,8 +5,10 @@ import (
 	"main/core"
 	"main/telemetry"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type PasswordRecoveryController struct{}
@@ -30,7 +32,7 @@ func (PasswordRecoveryController) PasswordRecovery(c *gin.Context) {
 
 	queryUser := &core.CommonUser{}
 	row := core.DB.QueryRow(`
-	SELECT id, first_name, middle_name, last_name, email, is_verified,pubkey_updated_at 
+	SELECT id, first_name, middle_name, last_name, email, is_verified, last_sync
 	FROM 
 		Users 
 	WHERE 
@@ -50,16 +52,9 @@ func (PasswordRecoveryController) PasswordRecovery(c *gin.Context) {
 		)
 
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
-    return
+		return
 
 	case nil:
-		if !queryUser.IsVerified {
-			msg := "Please verify the user first"
-			l.Errorw(msg,
-				"email", queryUser.Email)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
-			return
-		}
 
 		res, err := core.SendResetPasswordEmail(c, queryUser)
 
@@ -68,7 +63,7 @@ func (PasswordRecoveryController) PasswordRecovery(c *gin.Context) {
 			l.Infow(msg,
 				"email", queryUser.Email,
 			)
-			c.JSON(http.StatusAccepted, gin.H{"msg": msg})
+			c.JSON(http.StatusAccepted, gin.H{"msg": msg, "id": queryUser.Id})
 			return
 		} else {
 			msg := "Failed to send recovery email"
@@ -91,8 +86,9 @@ func (PasswordRecoveryController) PasswordRecovery(c *gin.Context) {
 func (PasswordRecoveryController) PasswordReset(c *gin.Context) {
 	l := telemetry.Logger(c).Sugar()
 	var resetPass struct {
-		token        string `form:"token"`
-		new_password string `form:"new_password"`
+		Id          string `form:"id"`
+		Token       string `form:"token"`
+		NewPassword string `form:"new_password" validate:"required,min=8,max=128"`
 	}
 	if err := c.Bind(&resetPass); err != nil {
 		msg := "Invalid Request Payload"
@@ -104,10 +100,35 @@ func (PasswordRecoveryController) PasswordReset(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
-
-	uid, err := VerifyPasswordResetToken(resetPass.token)
+	err := core.Validator.Struct(resetPass)
 
 	if err != nil {
+		core.HandleValidationError(c, err)
+		return
+	}
+
+	userID, parseErr := uuid.Parse(resetPass.Id)
+	if parseErr != nil {
+		telemetry.Logger(c).Sugar().Errorw("Failed to parse uuid!",
+			"error", parseErr,
+		)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "Invalid user id!", "context": telemetry.TraceIDFromContext(c)})
+		return
+	}
+	token, err := strconv.Atoi(resetPass.Token)
+
+	if err != nil {
+		msg := "Failed to parse Token"
+		l.Errorw(msg,
+			"error", err,
+		)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
+		return
+	}
+
+	test := core.VerifyResetToken(c, userID, token)
+
+	if !test {
 		msg := "invalid or expired token"
 		l.Warnw(msg,
 			"err", msg,
@@ -116,7 +137,7 @@ func (PasswordRecoveryController) PasswordReset(c *gin.Context) {
 		return
 	}
 
-	passwordHash, err := core.HashPassword(c, resetPass.new_password)
+	passwordHash, err := core.HashPassword(c, resetPass.NewPassword)
 	if err != nil {
 		msg := "Failed to hash password!"
 
@@ -128,7 +149,7 @@ func (PasswordRecoveryController) PasswordReset(c *gin.Context) {
 		return
 	}
 
-	_, err = core.DB.Exec("UPDATE Users SET password=$1 WHERE id=$2", passwordHash, uid)
+	_, err = core.DB.Exec("UPDATE Users SET password=$1 WHERE id=$2", passwordHash, resetPass.Id)
 
 	if err != nil {
 		msg := "Failed to execute SQL statement"
@@ -140,11 +161,7 @@ func (PasswordRecoveryController) PasswordReset(c *gin.Context) {
 	}
 	msg := "Password Reset Successfully"
 	l.Infow(msg,
-		"id", uid,
+		"id", userID,
 	)
 	c.JSON(http.StatusAccepted, gin.H{"msg": msg})
-}
-
-func VerifyPasswordResetToken(token string) (string, error) {
-	return "", nil
 }

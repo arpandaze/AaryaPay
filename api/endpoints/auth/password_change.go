@@ -15,16 +15,11 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 	l := telemetry.Logger(c).Sugar()
 
 	var passwordChange struct {
-		current_password string `form:"current_password"`
-		new_password     string `form:"new_password"`
+		Current_Password string `form:"current_password" validate:"required"`
+
+		New_Password string `form:"new_password" validate:"required,min=8,max=128"`
 	}
-	type loginUser struct {
-		Email           string `db:"email"`
-		Password        string `db:"password"`
-		IsVerified      bool   `db:"is_verified"`
-		PubKey          string `db:"pubkey"`
-		PubKeyUpdatedAt string `db:"pub_key_updated_at"`
-	}
+
 	if err := c.Bind(&passwordChange); err != nil {
 		msg := "Invalid Request Payload"
 
@@ -46,31 +41,29 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
-
-	queryUser := &loginUser{}
+	var queryPassword string
 	row := core.DB.QueryRow(`
-	SELECT email, password, is_verified, pubkey, pubkey_updated_at 
-	FROM 
-		Users 
+	SELECT password 
+	FROM Users 
 	WHERE id=$1
 	`, user,
 	)
 
-	err = row.Scan(&queryUser.Email, &queryUser.Password, &queryUser.IsVerified, &queryUser.PubKey, &queryUser.PubKeyUpdatedAt)
+	err = row.Scan(&queryPassword)
 
 	switch err {
 	case sql.ErrNoRows:
 		msg := "No account associated with the email was found"
 
 		l.Warnw(msg,
-			"email", queryUser.Email,
+			"id", user,
 		)
 
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 		return
 
 	case nil:
-		passwordTest, err := core.VerifyPassword(c, passwordChange.current_password, queryUser.Password)
+		passwordTest, err := core.VerifyPassword(c, passwordChange.Current_Password, queryPassword)
 		if err != nil {
 			msg := "Failed to verify password!"
 			l.Warnw(msg, "error", err)
@@ -80,20 +73,13 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 		if !passwordTest {
 			msg := "The password entered is incorrect"
 			l.Warnw(msg,
-				"email", queryUser.Email,
+				"id", user,
 			)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 			return
 		}
-		if !queryUser.IsVerified {
-			msg := "Please verify the account first!"
-			l.Warnw(msg,
-				"email", queryUser.Email,
-			)
-			c.JSON(http.StatusUnauthorized, gin.H{"msg": msg})
-			return
-		}
-		passwordHash, err := core.HashPassword(c, passwordChange.new_password)
+
+		passwordHash, err := core.HashPassword(c, passwordChange.New_Password)
 		if err != nil {
 			msg := "Failed to hash password!"
 
@@ -119,7 +105,6 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 		msg := "Password Changed Successfully"
 		l.Infow(msg,
 			"id", user,
-			"email", queryUser.Email,
 		)
 		c.JSON(http.StatusAccepted, gin.H{"msg": msg})
 		return

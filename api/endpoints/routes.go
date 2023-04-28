@@ -30,8 +30,10 @@ func InitAuthRoutes(routeGroup *gin.RouterGroup) {
 	routeGroup.POST("/resend-verification", resend_verification.ResendVerification)
 
 	routeGroup.POST("/password-recovery", passwordRecovery.PasswordRecovery)
+	routeGroup.POST("/password-recovery-reset", passwordRecovery.PasswordReset)
+
 	routeGroup.POST("/password-change", passwordChange.PasswordChange)
-	routeGroup.POST("/reset-password", passwordRecovery.PasswordReset)
+	// routeGroup.POST("/reset-password", password_recovery.PasswordReset)
 	routeGroup.POST("/verify", verify.VerifyUser)
 	// routeGroup.POST("/resend-verification-email", verify.ResendVerificationEmail)
 

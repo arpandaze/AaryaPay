@@ -42,29 +42,6 @@ func (RegisterController) Register(c *gin.Context) {
 		return
 	}
 
-	// Check if firstname and lastname are empty
-	if user.FirstName == "" || user.LastName == "" {
-		msg := "First Name and Last Name are required!"
-
-		l.Warnw(msg,
-			"first_name", user.FirstName,
-			"last_name", user.LastName)
-
-		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
-		return
-	}
-
-	// Ceck if DOB is empty
-	if user.DOB == (utils.UnixTimestamp{}) {
-		msg := "Date of birth is required!"
-
-		l.Warnw(msg,
-			"dob", user.DOB)
-
-		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
-		return
-	}
-
 	// Check if email is already used
 	var exists bool
 	core.DB.QueryRow("SELECT EXISTS (SELECT id FROM Users WHERE email=$1)", user.Email).Scan(&exists)
