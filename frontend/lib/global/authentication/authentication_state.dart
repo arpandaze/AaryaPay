@@ -28,14 +28,15 @@ class AuthenticationState extends Equatable {
 
   static Future<AuthenticationState> load() async {
     var storedUser = await storage.read(key: "user_id");
+    var token = await storage.read(key: "token");
 
     var status = AuthenticationStatus.none;
 
-    if (storedUser != null) {
+    if (storedUser != null && token != null) {
       status = AuthenticationStatus.loggedIn;
     }
 
-    return AuthenticationState(status: status, user: storedUser);
+    return AuthenticationState(token: token, status: status, user: storedUser);
   }
 
   @override

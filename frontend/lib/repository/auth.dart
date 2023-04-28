@@ -26,14 +26,14 @@ class AuthenticationRepository {
         "remember_me": "true",
       },
     );
-
+    print(response.statusCode);
     if (response.statusCode != 202) {
       throw Exception("Login Failed! Check Email or Password!");
     }
 
     var decodedResponse =
         jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
-
+    print("Response Body: ${response.body}");
     print(decodedResponse);
 
     if (decodedResponse["two_fa_required"] == true) {
@@ -44,10 +44,11 @@ class AuthenticationRepository {
       BalanceKeyVerificationCertificate bkvcObject =
           BalanceKeyVerificationCertificate.fromBytes(bkvc);
 
-      print(response.headers["set_cookie"]!);
+      print(response.headers["set-cookie"]);
+      print(response.headers["set-cookie"]!.substring(8, 44));
       storage.write(
         key: "token",
-        value: response.headers["set-cookie"]!.substring(8, 40),
+        value: response.headers["set-cookie"]!.substring(8, 44),
       );
 
       storage.write(key: "user_id", value: bkvcObject.userID.toString());

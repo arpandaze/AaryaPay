@@ -1,7 +1,13 @@
+import 'package:aaryapay/constants.dart';
+import 'package:aaryapay/global/authentication/authentication_bloc.dart';
+import 'package:aaryapay/screens/Home/home_screen.dart';
 import 'package:aaryapay/screens/Register/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:aaryapay/components/CustomActionButton.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:aaryapay/screens/Login/bloc/login_bloc.dart';
 
 class LoginWrapper extends StatelessWidget {
   const LoginWrapper(
@@ -21,16 +27,39 @@ class LoginWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      body: SafeArea(
-        top: true,
-        bottom: true,
-        left: true,
-        right: true,
-        child: body(size, context),
-      ),
-    );
+    context.read<AuthenticationBloc>().add(LoggedIn());
+    if (context.read<AuthenticationBloc>().state.status ==
+        AuthenticationStatus.loggedIn) {
+      Navigator.of(context).pushAndRemoveUntil(
+        PageRouteBuilder(
+          pageBuilder: (context, animation1, animation2) => const HomeScreen(),
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+        ),
+        (Route<dynamic> route) => false,
+      );
+      return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        body: const SafeArea(
+          top: true,
+          bottom: true,
+          left: true,
+          right: true,
+          child: SizedBox(),
+        ),
+      );
+    } else {
+      return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        body: SafeArea(
+          top: true,
+          bottom: true,
+          left: true,
+          right: true,
+          child: body(size, context),
+        ),
+      );
+    }
   }
 
   Widget body(Size size, BuildContext context) {
