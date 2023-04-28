@@ -119,7 +119,7 @@ class SendMoney extends StatelessWidget {
                           children: [
                             const CustomCircularAvatar(
                                 size: 30,
-                                imageSrc: AssetImage("assets/images/pfp.jpeg")),
+                                imageSrc: AssetImage("assets/images/pfp.jpg")),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

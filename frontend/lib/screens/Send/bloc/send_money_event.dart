@@ -13,6 +13,14 @@ class SendMoneyDigitEvent extends SendMoneyEvent {
   List<Object> get props => [digit];
 }
 
+class StateChanged extends SendMoneyEvent {
+  final DisplayState status;
+  StateChanged(this.status);
+
+  @override
+  List<Object> get props => [status];
+}
+
 
 class SendMoneyAddEvent extends SendMoneyEvent {}
 

@@ -1,17 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:core';
+
+Map<int, String> months = {
+  1: "January",
+  2: "February",
+  3: "March",
+  4: "April",
+  5: "May",
+  6: "June",
+  7: "July",
+  8: "August",
+  9: "September",
+  10: "October",
+  11: "November",
+  12: "December",
+};
 
 class DateField extends StatefulWidget {
-  const DateField({super.key});
+  final Function(DateTime)? dateTime;
+  const DateField({this.dateTime, super.key});
 
   @override
   _DateFieldState createState() => _DateFieldState();
 }
 
 class _DateFieldState extends State<DateField> {
-  int? _selectedDay = null;
-  String? _selectedMonth = null;
-  int? _selectedYear = null;
+  DateTime _selectedDate = DateTime.now();
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
 
   List<DropdownMenuItem<int>> _getDayItems() {
     List<DropdownMenuItem<int>> items = [];
@@ -25,25 +45,10 @@ class _DateFieldState extends State<DateField> {
   }
 
   List<DropdownMenuItem<String>> _getMonthItems() {
-    Map<int, String> months = {
-      1: "January",
-      2: "February",
-      3: "March",
-      4: "April",
-      5: "May",
-      6: "June",
-      7: "July",
-      8: "August",
-      9: "September",
-      10: "October",
-      11: "November",
-      12: "December",
-    };
-    // print(months[1]);
     List<DropdownMenuItem<String>> items = [];
     for (int key in months.keys) {
       items.add(DropdownMenuItem(
-        value: months[key].toString(),
+        value: months[key],
         child: Text("${months[key]}"),
       ));
       // print(key);
@@ -53,7 +58,7 @@ class _DateFieldState extends State<DateField> {
 
   List<DropdownMenuItem<int>> _getYearItems() {
     List<DropdownMenuItem<int>> items = [];
-    for (int i = 2022; i >= 1900; i--) {
+    for (int i = DateTime.now().year; i >= 1900; i--) {
       items.add(DropdownMenuItem(
         value: i,
         child: Text(i.toString()),
@@ -69,8 +74,12 @@ class _DateFieldState extends State<DateField> {
       children: [
         SvgPicture.asset(
           "assets/icons/calendar.svg",
-          height: 30,
-          width: 30,
+          height: 25,
+          width: 25,
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).colorScheme.primary,
+            BlendMode.srcIn,
+          ),
         ),
         Expanded(
           child: Row(
@@ -96,13 +105,14 @@ class _DateFieldState extends State<DateField> {
                   ),
                 ),
                 items: _getDayItems(),
-                value: _selectedDay,
+                value: _selectedDate.day,
                 onChanged: (value) {
                   setState(() {
-                    _selectedDay = value!;
+                    _selectedDate = DateTime(
+                        _selectedDate.year, _selectedDate.month, value!);
                   });
+                  widget.dateTime!(_selectedDate);
                 },
-          
                 alignment: Alignment.center,
               ),
               DropdownButton<String>(
@@ -115,7 +125,7 @@ class _DateFieldState extends State<DateField> {
                       ),
                 ),
                 // isExpanded: true,
-                value: _selectedMonth,
+                value: months[_selectedDate.month],
                 alignment: Alignment.center,
                 underline: Container(
                   // width: 1000,
@@ -130,8 +140,13 @@ class _DateFieldState extends State<DateField> {
                 items: _getMonthItems(),
                 onChanged: (value) {
                   setState(() {
-                    _selectedMonth = value!;
+                    _selectedDate = DateTime(
+                        _selectedDate.year,
+                        months.keys
+                            .firstWhere((element) => months[element] == value!),
+                        _selectedDate.day);
                   });
+                  widget.dateTime!(_selectedDate);
                 },
               ),
               DropdownButton<int>(
@@ -144,7 +159,7 @@ class _DateFieldState extends State<DateField> {
                       ),
                 ),
                 // isExpanded: true,
-                value: _selectedYear,
+                value: _selectedDate.year,
                 alignment: Alignment.center,
                 underline: Container(
                   // width: 1000,
@@ -159,8 +174,11 @@ class _DateFieldState extends State<DateField> {
                 items: _getYearItems(),
                 onChanged: (value) {
                   setState(() {
-                    _selectedYear = value!;
+                    _selectedDate = DateTime(
+                        value!, _selectedDate.month, _selectedDate.day);
+                    // widget.dateTime!["year"] = value.toString();
                   });
+                  widget.dateTime!(_selectedDate);
                 },
               ),
             ],

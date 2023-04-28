@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
 part 'send_money_event.dart';
@@ -21,13 +21,20 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
 
   void _onSendMoneyDigit(
       SendMoneyDigitEvent event, Emitter<SendMoneyState> emit) async {
+    if (state.status == DisplayState.equalsPressed) {
+      emit(state.copyWith(
+          amount: 0.0, displayAmount: "0.0", status: DisplayState.idle));
+    }
     final digit = event.digit;
     final newAmount = state.amount * 10 + digit;
     if (state.displayAmount == "0.0") {
       emit(state.copyWith(amount: newAmount, displayAmount: "$digit"));
     } else {
       String toDisplay = "${state.displayAmount}$digit";
-      emit(state.copyWith(amount: newAmount, displayAmount: toDisplay));
+      emit(state.copyWith(
+          amount: newAmount,
+          displayAmount: toDisplay,
+          status: DisplayState.idle));
     }
   }
 
@@ -35,8 +42,9 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
       SendMoneyAddEvent event, Emitter<SendMoneyState> emit) async {
     _operand = state.amount;
     _operator = _getOperator(event);
-    final newOutput = "${state.amount.toInt()}$_operator";
-    emit(state.copyWith(amount: 0.0, displayAmount: newOutput));
+    final newOutput = "${_operand.toInt()}$_operator";
+    emit(state.copyWith(
+        amount: 0.0, displayAmount: newOutput, status: DisplayState.idle));
   }
 
   void _onSendMoneySubtract(
@@ -44,7 +52,8 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
     _operand = state.amount;
     _operator = _getOperator(event);
     final newOutput = "${state.amount.toInt()}$_operator";
-    emit(state.copyWith(amount: 0.0, displayAmount: newOutput));
+    emit(state.copyWith(
+        amount: 0.0, displayAmount: newOutput, status: DisplayState.idle));
   }
 
   void _onSendMoneyMultiply(
@@ -52,7 +61,8 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
     _operand = state.amount;
     _operator = _getOperator(event);
     final newOutput = "${state.amount.toInt()}$_operator";
-    emit(state.copyWith(amount: 0.0, displayAmount: newOutput));
+    emit(state.copyWith(
+        amount: 0.0, displayAmount: newOutput, status: DisplayState.idle));
   }
 
   void _onSendMoneyEquals(
@@ -61,12 +71,16 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
     _operand = 0.0;
     _operator = "";
     final newInput = "$newAmount";
-    emit(state.copyWith(amount: newAmount, displayAmount: newInput));
+    emit(state.copyWith(
+        amount: newAmount,
+        displayAmount: newInput,
+        status: DisplayState.equalsPressed));
   }
 
   void _onSendMoneyClear(
       SendMoneyClearEvent event, Emitter<SendMoneyState> emit) async {
-    emit(state.copyWith(amount: 0.0, displayAmount: "0.0"));
+    emit(state.copyWith(
+        amount: 0.0, displayAmount: "0.0", status: DisplayState.idle));
   }
 
   void _onSendMoneyErase(
@@ -80,8 +94,16 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
       emit(state.copyWith(amount: _operand, displayAmount: newDisplayAmount));
     } else {
       final newAmount = (state.amount / 10).floor();
+      if (newAmount == 0) {
+        emit(state.copyWith(
+            amount: newAmount.toDouble(),
+            displayAmount: "0.0",
+            status: DisplayState.idle));
+      }
       emit(state.copyWith(
-          amount: newAmount.toDouble(), displayAmount: "$newAmount"));
+          amount: newAmount.toDouble(),
+          displayAmount: "${newAmount.toDouble()}",
+          status: DisplayState.idle));
     }
   }
 
