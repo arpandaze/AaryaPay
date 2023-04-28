@@ -3,6 +3,7 @@ package auth
 import (
 	"main/core"
 	"main/telemetry"
+	"main/utils"
 
 	"net/http"
 
@@ -15,12 +16,12 @@ func (RegisterController) Register(c *gin.Context) {
 	l := telemetry.Logger(c).Sugar()
 
 	var user struct {
-		FirstName  string `form:"first_name" validate:"required"`
-		MiddleName string `form:"middle_name"`
-		LastName   string `form:"last_name" validate:"required"`
-		DOB        string `form:"dob" validate:"required"`
-		Email      string `form:"email" validate:"required,email"`
-		Password   string `form:"password" validate:"required,min=8,max=128"`
+		FirstName  string              `form:"first_name" validate:"required"`
+		MiddleName string              `form:"middle_name"`
+		LastName   string              `form:"last_name" validate:"required"`
+		DOB        utils.UnixTimestamp `form:"dob" validate:"required"`
+		Email      string              `form:"email" validate:"required,email"`
+		Password   string              `form:"password" validate:"required,min=8,max=128"`
 	}
 
 	if err := c.Bind(&user); err != nil {
@@ -54,7 +55,7 @@ func (RegisterController) Register(c *gin.Context) {
 	}
 
 	// Ceck if DOB is empty
-	if user.DOB == "" {
+	if user.DOB == (utils.UnixTimestamp{}) {
 		msg := "Date of birth is required!"
 
 		l.Warnw(msg,
@@ -132,7 +133,7 @@ func (RegisterController) Register(c *gin.Context) {
 
 	returnedUser := core.CommonUser{}
 
-	err = tx.QueryRow(query, user.FirstName, user.MiddleName, user.LastName, user.DOB, passwordHash, user.Email).Scan(
+	err = tx.QueryRow(query, user.FirstName, user.MiddleName, user.LastName, user.DOB.Time(), passwordHash, user.Email).Scan(
 		&returnedUser.Id, &returnedUser.FirstName, &returnedUser.MiddleName, &returnedUser.LastName, &returnedUser.Email,
 		&returnedUser.IsVerified, &returnedUser.LastSync)
 

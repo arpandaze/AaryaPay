@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"main/core"
 	. "main/telemetry"
+	"main/utils"
 	"net/http"
 	"time"
 
@@ -24,17 +25,17 @@ func (LoginController) Login(c *gin.Context) {
 	}
 
 	type loginUser struct {
-		ID              uuid.UUID      `db:"id"`
-		FirstName       string         `db:"first_name"`
-		MiddleName      sql.NullString `db:"middle_name"`
-		LastName        string         `db:"last_name"`
-		DOB             string         `db:"dob"`
-		Email           string         `db:"email"`
-		Password        string         `db:"password"`
-		IsVerified      bool           `db:"is_verified"`
-		TwoFactorAuth   sql.NullString `db:"two_factor_auth"`
-		KeyPair         sql.NullString `db:"pubkey"`
-		PubKeyUpdatedAt sql.NullTime   `db:"pubkey_updated_at"`
+		ID              uuid.UUID            `db:"id" json:"id"`
+		FirstName       string               `db:"first_name" json:"first_name"`
+		MiddleName      *string              `db:"middle_name" json:"middle_name,omitempty"`
+		LastName        string               `db:"last_name" json:"last_name"`
+		DOB             *utils.UnixTimestamp `db:"dob" json:"dob"`
+		Email           string               `db:"email" json:"email"`
+		Password        string               `db:"password" json:"-"`
+		IsVerified      bool                 `db:"is_verified" json:"is_verified"`
+		TwoFactorAuth   sql.NullString       `db:"two_factor_auth" json:"-"`
+		KeyPair         sql.NullString       `db:"pubkey" json:"-"`
+		PubKeyUpdatedAt *utils.UnixTimestamp `db:"pubkey_updated_at" json:"-"`
 	}
 
 	if err := c.Bind(&loginFormInput); err != nil {
@@ -187,7 +188,7 @@ func (LoginController) Login(c *gin.Context) {
 
 			base64EncodedBKVC := base64.StdEncoding.EncodeToString(bkvc.ToBytes(c))
 
-			c.JSON(http.StatusAccepted, gin.H{"msg": msg, "bkvc": base64EncodedBKVC, "private_key": base64.StdEncoding.EncodeToString(privKey)})
+			c.JSON(http.StatusAccepted, gin.H{"msg": msg, "bkvc": base64EncodedBKVC, "private_key": base64.StdEncoding.EncodeToString(privKey), "user": queryUser})
 			return
 		}
 
