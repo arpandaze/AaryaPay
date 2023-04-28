@@ -16,7 +16,7 @@ Future<void> testBKVC() async {
   );
 
   final testBKVCBytes = base64Decode(
-    "UfE7C9UHRTCEanXu6S6UakLIAACh6ApULfYJv0mi1hs1FtXS0+ELUPNFc9wIVvX2RD8sKWREB4o/FRmulobhFmb2SuqTzhMnnqGcpEWDw36ZGnxwmSv36JbVyCGk68iz16tvPGQ+g3gBhSsGIJtiEdTMcJNoU/MJ",
+    "Ai6WGyf1J0z0vB1YBGzxk98AAAAANzr5BEKFxEvx16S4cu+TY7aUOgn9Bvhw+E0vYE7z419kS9tdRNIqeCxAjRBxLl4bWda1kRS2MfEQ0z/IHBsGsDgCR1tmV3swsIoVqGShFPL6GQQLleCgapF2cg86QPywl6uJBw==",
   );
 
   final testBKVC = BalanceKeyVerificationCertificate.fromBytes(testBKVCBytes);
@@ -29,17 +29,14 @@ Future<void> testTransaction() async {
     "fzAng9P5nxQCaxh4+sExTCdRI2++KmwBRKohfBJ8RuuD5sb/gfzu1BrFiJeGJudEOwAp1ZVekbVwWrLmRlzu1g==",
   );
 
-  final testKeyPair = keyPairFromBase64(
-    "WVALpaXliHBZ+FT9+60jxODq3IhwMv7vNEzBc8jjsEqh6ApULfYJv0mi1hs1FtXS0+ELUPNFc9wIVvX2RD8sKQ==",
-  );
-
   final testTransactionBytes = base64Decode(
-    "QSAAAL9DPVgyw04Gn9WR+95OzIZR8TsL1QdFMIRqde7pLpRqQsgAAKHoClQt9gm/SaLWGzUW1dLT4QtQ80Vz3AhW9fZEPywpZEQHij8VGa6WhuEWZvZK6pPOEyeeoZykRYPDfpkafHCZK/foltXIIaTryLPXq288ZD6DeAGFKwYgm2IR1Mxwk2hT8wlkRAeKcMTexbO/Hus5rQTcEl1a6UBZcE5lHdxyjoDC8rXqHhJl8UXMSbwNp3qc3j56W63k7V/gmeBiey8YnNMqg4UfDw==",
+    "AUEgAAC56GZcvRhIrourUf7WeckVAmZkttpjqks2ie162wh5ZUZCyAAAglxKzHN0/BaXkZ6nCHJlpCAGfOa7WzPXpsMg/5JZXY1kS+w3PCHmbHmY6rzbHS0QDQJ+1Rci5o+7hfnZugDm7ilgDKXimrcA8sfm/MF/9wFIE/fD0w/oJPomYla+c5SpTBnjA2RL7DcAS8PqTcWzmNrAoexZ8Zkxa1p28GhQqNP1D4JpouoNYgYL1uVwhJkj4Dc/d1KQpJy9N0iLXF7RQL0GoNh4N4QI",
   );
 
   final testTransaction = Transaction.fromBytes(testTransactionBytes);
 
-  assert(await testTransaction.verify(await testKeyPair.extractPublicKey()));
   assert(await testTransaction.bkvc
       .verify(await serverKeyPair.extractPublicKey()));
+
+  assert(await testTransaction.verify());
 }
