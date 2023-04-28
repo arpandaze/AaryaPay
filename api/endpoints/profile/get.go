@@ -28,8 +28,8 @@ func (GetProfileController) GetProfile(c *gin.Context) {
 		PhotoUrl   string    `json:"photo_url",omitempty db:"photo_url"`
 		MiddleName string    `json:"middle_name,omitempty" db:"middle_name"`
 		LastName   string    `json:"last_name,omitempty" db:"last_name"`
-		Dob        time.Time `json:"dob,omitempty" db:"dob"`
-		Email      string    `json:"email,omitempty" db:"email"`
+		LastName   string        `json:"last_name,omitempty" db:"last_name"`
+		DOB        UnixTimestamp `json:"dob,omitempty" db:"dob"`
 	}
 
 	var profileData = core.DB.QueryRow("SELECT first_name, middle_name, last_name, dob, email FROM Users WHERE id = $1", user)

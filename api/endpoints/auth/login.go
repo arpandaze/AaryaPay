@@ -28,13 +28,13 @@ func (LoginController) Login(c *gin.Context) {
 		FirstName       string         `db:"first_name"`
 		MiddleName      sql.NullString `db:"middle_name"`
 		LastName        string         `db:"last_name"`
-		DOB             string         `db:"dob"`
+		DOB             *utils.UnixTimestamp `db:"dob" json:"dob"`
 		Email           string         `db:"email"`
 		Password        string         `db:"password"`
 		IsVerified      bool           `db:"is_verified"`
 		TwoFactorAuth   sql.NullString `db:"two_factor_auth"`
 		KeyPair         sql.NullString `db:"pubkey"`
-		PubKeyUpdatedAt sql.NullTime   `db:"pubkey_updated_at"`
+		PubKeyUpdatedAt *utils.UnixTimestamp `db:"pubkey_updated_at" json:"-"`
 	}
 
 	if err := c.Bind(&loginFormInput); err != nil {

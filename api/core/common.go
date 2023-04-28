@@ -13,5 +13,5 @@ type CommonUser struct {
 	LastName   string        `db:"last_name"`
 	Email      string        `db:"email"`
 	IsVerified bool          `db:"is_verified"`
-	LastSync   sql.NullInt32 `db:"pubkey_updated_at"`
+	LastSync   utils.UnixTimestamp `db:"pubkey_updated_at"`
 }

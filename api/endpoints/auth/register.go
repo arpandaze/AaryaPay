@@ -19,7 +19,7 @@ func (RegisterController) Register(c *gin.Context) {
 		FirstName  string    `form:"first_name" validate:"required"`
 		MiddleName string    `form:"middle_name"`
 		LastName   string    `form:"last_name" validate:"required"`
-		DOB        time.Time `form:"dob" validate:"required,datetime"`
+		DOB        utils.UnixTimestamp `form:"dob" validate:"required"`
 		Email      string    `form:"email" validate:"required,email"`
 		Password   string    `form:"password" validate:"required,min=8,max=128"`
 	}
@@ -55,7 +55,7 @@ func (RegisterController) Register(c *gin.Context) {
 	}
 
 	// Ceck if DOB is empty
-	if user.DOB == (time.Time{}) {
+	if user.DOB == (utils.UnixTimestamp{}) {
 		msg := "Date of birth is required!"
 
 		l.Warnw(msg,
