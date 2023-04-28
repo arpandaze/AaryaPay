@@ -70,7 +70,7 @@ class PageChanged extends RegisterEvent {
 }
 
 class VerifyChanged extends RegisterEvent {
-  final int token;
+  final String token;
   VerifyChanged({required this.token});
 
   @override
@@ -82,3 +82,5 @@ class NextPage extends RegisterEvent {}
 class PreviousPage extends RegisterEvent {}
 
 class FormSubmitted extends RegisterEvent {}
+
+class VerifyClicked extends RegisterEvent {}

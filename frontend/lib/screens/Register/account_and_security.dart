@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/components/CustomDatePicker.dart';
 import 'package:aaryapay/components/CustomTextField.dart';
@@ -18,7 +20,6 @@ class AccountScreen extends StatelessWidget {
     // dateTime["day"] = "";
     // dateTime["month"] = "";
     // dateTime["year"] = "";
-    DateTime dateTime = DateTime();
     Size size = MediaQuery.of(context).size;
     return SingleChildScrollView(
       child: Column(
@@ -117,7 +118,9 @@ class AccountScreen extends StatelessWidget {
                   placeHolder: "Email",
                 ),
                 DateField(
-                  dateTime: dateTime,
+                  dateTime: (DateTime date) {
+                    context.read<RegisterBloc>().add(DOBChanged(dob: date));
+                  },
                 ),
                 CustomTextField(
                   width: size.width,
@@ -135,18 +138,56 @@ class AccountScreen extends StatelessWidget {
               ],
             ),
           ),
-          CustomRegisterButton(
-            width: size.width * 0.78,
-            borderRadius: 10,
-            label: "Next",
-            onClick: () => {
-              context.read<RegisterBloc>().add(NextPage()),
-              context.read<RegisterBloc>().add(DOBChanged(dob: dateTime)),
-              context.read<RegisterBloc>().add(FormSubmitted())
-            },
-          ),
+          button(context, size),
         ],
       ),
     );
+  }
+
+  Widget button(BuildContext context, Size size) {
+    return BlocBuilder<RegisterBloc, RegisterState>(
+      builder: (context, state) {
+        if (state.status != RegisterStatus.submitting) {
+          return Column(
+            children: [
+              errorText(state.status),
+              CustomRegisterButton(
+                width: size.width * 0.78,
+                borderRadius: 10,
+                label: "Next",
+                onClick: () => {
+                 
+                  context.read<RegisterBloc>().add(FormSubmitted())
+                },
+              ),
+            ],
+          );
+        } else {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              errorText(state.status),
+              Container(
+                alignment: Alignment.bottomCenter,
+                margin: EdgeInsets.fromLTRB(
+                    0, 0, size.width * 0.1, size.height * 0.05),
+                child: const CircularProgressIndicator(),
+              )
+            ],
+          );
+        }
+      },
+    );
+  }
+
+  Widget errorText(RegisterStatus state) {
+    switch (state) {
+      case RegisterStatus.errorUnknown:
+        return const Text("Something went wrong! Check you inputs!");
+      case RegisterStatus.errorEmailUsed:
+        return const Text("Email is already in use!");
+      default:
+        return const SizedBox.shrink();
+    }
   }
 }

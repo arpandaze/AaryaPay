@@ -20,40 +20,7 @@ class CompletedScreen extends StatelessWidget {
         children: [
           SizedBox(
             height: size.height * 0.1,
-            child: Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: size.width * 0.1,
-                    // padding: const EdgeInsets.all(15),
-                    alignment: Alignment.center,
-                    child: Visibility(
-                        visible: true,
-                        child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () => {context.read<RegisterBloc>().add(PreviousPage())},
-                            child: const Icon(
-                              FontAwesomeIcons.arrowLeftLong,
-                              size: 20,
-                            ))),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.all(15),
-                    child: Text("Completed",
-                        style: Theme.of(context).textTheme.headlineSmall!),
-                  ),
-                  Container(
-                    width: size.width * 0.1,
-                    alignment: Alignment.center,
-                    // padding: const EdgeInsets.all(15),
-                    child: Text("",
-                        style: Theme.of(context).textTheme.titleSmall!),
-                  ),
-                ],
-              ),
-            ),
+            child: Container(),
           ),
           Container(
             height: size.height * 0.3,
@@ -66,7 +33,7 @@ class CompletedScreen extends StatelessWidget {
           ),
           Container(
             height: size.height * 0.45,
-            padding: EdgeInsets.symmetric(vertical:18,horizontal:18),
+            padding: EdgeInsets.symmetric(vertical: 18, horizontal: 18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -102,7 +69,14 @@ class CompletedScreen extends StatelessWidget {
               width: size.width * 0.78,
               borderRadius: 10,
               label: "Next",
-              onClick: () => {},
+              onClick: () => Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const LoginScreen(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              ),
             ),
           ),
         ],

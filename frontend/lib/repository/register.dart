@@ -28,7 +28,7 @@ class RegisterRepository {
       },
     );
 
-    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
-    return decodedResponse;
+    // var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    return {"response": response};
   }
 }

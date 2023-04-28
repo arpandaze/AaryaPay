@@ -5,8 +5,11 @@ enum RegisterStatus {
   submitting,
   success,
   errorUnknown,
-  errorPassword,
+  completeToken,
   errorEmailUsed,
+  verifySuccess,
+  wrongToken,
+  verifying,
 }
 
 class RegisterState extends Equatable {
@@ -18,7 +21,8 @@ class RegisterState extends Equatable {
   final String? password;
   final int page;
   final RegisterStatus status;
-  final int? token;
+  final String? token;
+  final String? uuid;
 
   const RegisterState({
     this.page = 1,
@@ -30,6 +34,7 @@ class RegisterState extends Equatable {
     this.password,
     this.status = RegisterStatus.idle,
     this.token,
+    this.uuid,
   });
 
   RegisterState copyWith({
@@ -41,7 +46,8 @@ class RegisterState extends Equatable {
     String? email,
     String? password,
     RegisterStatus? status,
-    int? token,
+    String? token,
+    String? uuid,
   }) {
     return RegisterState(
       page: page ?? this.page,
@@ -53,6 +59,7 @@ class RegisterState extends Equatable {
       password: password ?? this.password,
       status: status ?? this.status,
       token: token ?? this.token,
+      uuid: uuid ?? this.uuid,
     );
   }
 
@@ -67,5 +74,6 @@ class RegisterState extends Equatable {
         password,
         status,
         token,
+        uuid,
       ];
 }

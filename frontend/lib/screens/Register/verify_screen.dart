@@ -34,7 +34,10 @@ class VerifyScreen extends StatelessWidget {
                             onTap: () => {
                                   context
                                       .read<RegisterBloc>()
-                                      .add(PreviousPage())
+                                      .add(PreviousPage()),
+                                  context
+                                      .read<RegisterBloc>()
+                                      .add(VerifyChanged(token: ""))
                                 },
                             child: const Icon(
                               FontAwesome.arrow_left_long,
@@ -119,8 +122,7 @@ class VerifyScreen extends StatelessWidget {
                   child: PinCodeTextField(
                     length: 6,
                     hapticFeedbackTypes: HapticFeedbackTypes.light,
-                    textStyle: TextStyle(
-                        color: Colors.black),
+                    textStyle: TextStyle(color: Colors.black),
                     // obscureText: true,
                     animationType: AnimationType.fade,
                     pinTheme: PinTheme(
@@ -133,18 +135,13 @@ class VerifyScreen extends StatelessWidget {
                     ),
                     // activeColor: Theme.of(context).colorScheme.secondary),
                     animationDuration: const Duration(milliseconds: 300),
-                    onCompleted: (v) {
-                      print("Completed");
-                    },
+                    
                     onChanged: (value) {
-                      // setState(() {
-                      //   currentText = value;
-                      // });
+                      context
+                          .read<RegisterBloc>()
+                          .add(VerifyChanged(token: value));
                     },
                     beforeTextPaste: (text) {
-                      print("Allowing to paste $text");
-                      //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                      //but you can show anything you want here, like your pop up saying wrong paste format or etc
                       return true;
                     },
                     appContext: context,
@@ -178,16 +175,50 @@ class VerifyScreen extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            child: CustomRegisterButton(
-              width: size.width * 0.78,
-              borderRadius: 10,
-              label: "Next",
-              onClick: () => {},
-            ),
-          ),
+          button(context, size),
         ],
       ),
     );
+  }
+
+  Widget button(BuildContext context, Size size) {
+    return BlocBuilder<RegisterBloc, RegisterState>(
+      builder: (context, state) {
+        if (state.status != RegisterStatus.verifying) {
+          return Column(
+            children: [
+              // errorText(state.status),
+              CustomRegisterButton(
+                width: size.width * 0.78,
+                borderRadius: 10,
+                label: "Next",
+                onClick: () =>
+                    {context.read<RegisterBloc>().add(VerifyClicked())},
+              ),
+            ],
+          );
+        } else {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              errorText(state.status),
+              Container(
+                alignment: Alignment.bottomCenter,
+                child: const CircularProgressIndicator(),
+              )
+            ],
+          );
+        }
+      },
+    );
+  }
+
+  Widget errorText(RegisterStatus state) {
+    switch (state) {
+      case RegisterStatus.wrongToken:
+        return const Text("Invalid or expired token!");
+      default:
+        return const SizedBox.shrink();
+    }
   }
 }

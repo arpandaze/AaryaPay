@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:core';
 
 Map<int, String> months = {
   1: "January",
@@ -17,49 +18,53 @@ Map<int, String> months = {
 };
 
 class DateField extends StatefulWidget {
-  DateField({
-    this.dateTime,
-    this.onChangeVal,
-    super.key,
-  });
-  DateTime? dateTime;
-  final Function? onChangeVal;
+  final Function(DateTime)? dateTime;
+  const DateField({this.dateTime, super.key});
 
   @override
   _DateFieldState createState() => _DateFieldState();
 }
 
 class _DateFieldState extends State<DateField> {
-  int _selectedDay = 1;
-  String _selectedMonth = "January";
-  int _selectedYear = DateTime.now().year;
+  DateTime _selectedDate = DateTime.now();
 
-  // DateTime _selectedDateTime =
-  //     DateTime(DateTime.now().year, DateTime.january, 1);
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
 
-  List<int> _getDayItems() {
-    return List.generate(31, (index) => index + 1);
+  List<DropdownMenuItem<int>> _getDayItems() {
+    List<DropdownMenuItem<int>> items = [];
+    for (int i = 1; i <= 31; i++) {
+      items.add(DropdownMenuItem(
+        value: i,
+        child: Text(i.toString()),
+      ));
+    }
+    return items;
   }
 
-  List<String> _getMonthItems() {
-    return [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
+  List<DropdownMenuItem<String>> _getMonthItems() {
+    List<DropdownMenuItem<String>> items = [];
+    for (int key in months.keys) {
+      items.add(DropdownMenuItem(
+        value: months[key],
+        child: Text("${months[key]}"),
+      ));
+      // print(key);
+    }
+    return items;
   }
 
-  List<int> _getYearItems() {
-    return List.generate(100, (index) => DateTime.now().year - 99 + index);
+  List<DropdownMenuItem<int>> _getYearItems() {
+    List<DropdownMenuItem<int>> items = [];
+    for (int i = DateTime.now().year; i >= 1900; i--) {
+      items.add(DropdownMenuItem(
+        value: i,
+        child: Text(i.toString()),
+      ));
+    }
+    return items;
   }
 
   @override
@@ -90,6 +95,7 @@ class _DateFieldState extends State<DateField> {
                       ),
                 ),
                 underline: Container(
+                  // width: 1000,
                   height: 10,
                   decoration: const BoxDecoration(
                     border: Border(
@@ -98,21 +104,14 @@ class _DateFieldState extends State<DateField> {
                     ),
                   ),
                 ),
-                items: _getDayItems().map((int value) {
-                  return DropdownMenuItem<int>(
-                    value: value,
-                    child: Text(value.toString()),
-                  );
-                }).toList(),
-                value: _selectedDay,
+                items: _getDayItems(),
+                value: _selectedDate.day,
                 onChanged: (value) {
                   setState(() {
-                    _selectedDay = value!;
-                    widget.dateTime = DateTime(
-                        _selectedYear,
-                        _getMonthItems().indexOf(_selectedMonth) + 1,
-                        _selectedDay);
+                    _selectedDate = DateTime(
+                        _selectedDate.year, _selectedDate.month, value!);
                   });
+                  widget.dateTime!(_selectedDate);
                 },
                 alignment: Alignment.center,
               ),
@@ -125,8 +124,11 @@ class _DateFieldState extends State<DateField> {
                             color: Theme.of(context).colorScheme.onTertiary),
                       ),
                 ),
+                // isExpanded: true,
+                value: months[_selectedDate.month],
                 alignment: Alignment.center,
                 underline: Container(
+                  // width: 1000,
                   height: 10,
                   decoration: const BoxDecoration(
                     border: Border(
@@ -135,21 +137,16 @@ class _DateFieldState extends State<DateField> {
                     ),
                   ),
                 ),
-                items: _getMonthItems().map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                value: _selectedMonth,
+                items: _getMonthItems(),
                 onChanged: (value) {
                   setState(() {
-                    _selectedMonth = value!;
-                    widget.dateTime = DateTime(
-                        _selectedYear,
-                        _getMonthItems().indexOf(_selectedMonth) + 1,
-                        _selectedDay);
+                    _selectedDate = DateTime(
+                        _selectedDate.year,
+                        months.keys
+                            .firstWhere((element) => months[element] == value!),
+                        _selectedDate.day);
                   });
+                  widget.dateTime!(_selectedDate);
                 },
               ),
               DropdownButton<int>(
@@ -162,6 +159,7 @@ class _DateFieldState extends State<DateField> {
                       ),
                 ),
                 // isExpanded: true,
+                value: _selectedDate.year,
                 alignment: Alignment.center,
                 underline: Container(
                   // width: 1000,
@@ -173,21 +171,14 @@ class _DateFieldState extends State<DateField> {
                     ),
                   ),
                 ),
-                items: _getYearItems().map((int value) {
-                  return DropdownMenuItem<int>(
-                    value: value,
-                    child: Text(value.toString()),
-                  );
-                }).toList(),
-                value: _selectedYear,
+                items: _getYearItems(),
                 onChanged: (value) {
                   setState(() {
-                    _selectedYear = value!;
-                    widget.dateTime = DateTime(
-                        _selectedYear,
-                        _getMonthItems().indexOf(_selectedMonth) + 1,
-                        _selectedDay);
+                    _selectedDate = DateTime(
+                        value!, _selectedDate.month, _selectedDate.day);
+                    // widget.dateTime!["year"] = value.toString();
                   });
+                  widget.dateTime!(_selectedDate);
                 },
               ),
             ],
