@@ -4,7 +4,7 @@ import (
 	auth "main/endpoints/auth"
 	favorites "main/endpoints/favorites"
 	keys "main/endpoints/keys"
-	"main/endpoints/profile"
+	profile "main/endpoints/profile"
 	tools "main/endpoints/tools"
 	transaction "main/endpoints/transaction"
 
@@ -55,7 +55,11 @@ func InitFavoritesRoute(routeGroup *gin.RouterGroup) {
 
 func InitProfileRoutes(routeGroup *gin.RouterGroup) {
 	retrieveProfileController := new(profile.GetProfileController)
+	updateProfileController := new(profile.UpdateProfileController)
+
 	routeGroup.GET("", retrieveProfileController.GetProfile)
+	routeGroup.PATCH("", updateProfileController.UpdateProfile)
+	routeGroup.PATCH("/photo", updateProfileController.UpdateProfilePhoto)
 }
 
 func InitTransactionRoutes(routeGroup *gin.RouterGroup) {
