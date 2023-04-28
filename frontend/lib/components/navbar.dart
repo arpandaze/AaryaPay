@@ -253,7 +253,8 @@ class NavBar extends StatelessWidget {
                       width: 25,
                       height: 25,
                       color: colorScheme.background,
-                    ),
+               
+                  ),
                 ),
               ),
             ),

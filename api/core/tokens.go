@@ -238,6 +238,48 @@ func VerifyVerificationToken(c *gin.Context, userID uuid.UUID, token int) bool {
 	return true
 }
 
+func VerifyResetToken(c *gin.Context, userID uuid.UUID, token int) bool {
+	_, span := Tracer.Start(c.Request.Context(), "GetUserFromResetToken()")
+	defer span.End()
+
+	key := fmt.Sprint("reset_", userID.String())
+
+	status := Redis.Get(c, key)
+
+	if err := status.Err(); err != nil {
+		Logger(c).Sugar().Errorw("Failed to get reset token from key!",
+			"error", err,
+		)
+
+		return false
+	}
+
+	tokenRedis, err := strconv.Atoi(status.Val())
+
+	if err != nil {
+		Logger(c).Sugar().Errorw("Failed to parse redis returned value into int",
+			"error", err,
+		)
+		panic(err)
+	}
+
+	if token != tokenRedis {
+		Logger(c).Sugar().Errorw("Reset token didn't match!",
+			"user_id", userID.String())
+		return false
+	}
+
+	delStatus := Redis.Del(c, key)
+
+	if err := delStatus.Err(); err != nil {
+		Logger(c).Sugar().Errorw("Failed to remote reset token from Redis!",
+			"error", err,
+		)
+	}
+
+	return true
+}
+
 func CreateTwoFATempToken(c *gin.Context, userID uuid.UUID, rememberMe bool) uuid.UUID {
 
 	_, span := Tracer.Start(c.Request.Context(), "GetUserFromVerificationToken()")

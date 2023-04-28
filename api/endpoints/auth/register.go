@@ -3,6 +3,7 @@ package auth
 import (
 	"main/core"
 	"main/telemetry"
+	"main/utils"
 
 	"net/http"
 
@@ -15,12 +16,12 @@ func (RegisterController) Register(c *gin.Context) {
 	l := telemetry.Logger(c).Sugar()
 
 	var user struct {
-		FirstName  string `form:"first_name" validate:"required"`
-		MiddleName string `form:"middle_name"`
-		LastName   string `form:"last_name" validate:"required"`
-		DOB        string `form:"dob" validate:"required"`
-		Email      string `form:"email" validate:"required,email"`
-		Password   string `form:"password" validate:"required,min=8,max=128"`
+		FirstName  string              `form:"first_name" validate:"required"`
+		MiddleName string              `form:"middle_name"`
+		LastName   string              `form:"last_name" validate:"required"`
+		DOB        utils.UnixTimestamp `form:"dob" validate:"required"`
+		Email      string              `form:"email" validate:"required,email"`
+		Password   string              `form:"password" validate:"required,min=8,max=128"`
 	}
 
 	if err := c.Bind(&user); err != nil {
@@ -38,29 +39,6 @@ func (RegisterController) Register(c *gin.Context) {
 
 	if err != nil {
 		core.HandleValidationError(c, err)
-		return
-	}
-
-	// Check if firstname and lastname are empty
-	if user.FirstName == "" || user.LastName == "" {
-		msg := "First Name and Last Name are required!"
-
-		l.Warnw(msg,
-			"first_name", user.FirstName,
-			"last_name", user.LastName)
-
-		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
-		return
-	}
-
-	// Ceck if DOB is empty
-	if user.DOB == "" {
-		msg := "Date of birth is required!"
-
-		l.Warnw(msg,
-			"dob", user.DOB)
-
-		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 
@@ -91,57 +69,78 @@ func (RegisterController) Register(c *gin.Context) {
 		return
 	}
 
+	tx, err := core.DB.Begin()
+	if err != nil {
+		msg := "Failed to start transaction"
+		l.Errorw(msg,
+			"error", err,
+		)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
+		return
+	}
+
 	query := `
-      INSERT INTO Users
-      (
+    INSERT INTO Users
+    (
         first_name,
         middle_name,
         last_name,
         dob,
         password,
         email
-      )
-      VALUES
-      (
+    )
+    VALUES
+    (
         $1,
         $2,
         $3,
         $4,
         $5,
         $6
-      )
-      RETURNING 
-      id,
-      first_name,
-      middle_name,
-      last_name,
-      email,
-      is_verified,
-      last_sync;
-  `
-
-	row := core.DB.QueryRow(query, user.FirstName, user.MiddleName, user.LastName, user.DOB, passwordHash, user.Email)
+    )
+    RETURNING
+        id,
+        first_name,
+        middle_name,
+        last_name,
+        email,
+        is_verified,
+        last_sync;
+`
 
 	returnedUser := core.CommonUser{}
 
-	err = row.Scan(&returnedUser.Id, &returnedUser.FirstName, &returnedUser.MiddleName, &returnedUser.LastName, &returnedUser.Email, &returnedUser.IsVerified, &returnedUser.LastSync)
+	err = tx.QueryRow(query, user.FirstName, user.MiddleName, user.LastName, user.DOB.Time(), passwordHash, user.Email).Scan(
+		&returnedUser.Id, &returnedUser.FirstName, &returnedUser.MiddleName, &returnedUser.LastName, &returnedUser.Email,
+		&returnedUser.IsVerified, &returnedUser.LastSync)
 
 	if err != nil {
 		msg := "Failed to execute SQL statement"
-
 		l.Errorw(msg,
 			"error", err,
 		)
-
+		tx.Rollback()
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 
 	accountsCreateQuery := "INSERT INTO Accounts (id, balance) VALUES ($1, $2)"
-	_, err = core.DB.Exec(accountsCreateQuery, returnedUser.Id, 0)
+
+	_, err = tx.Exec(accountsCreateQuery, returnedUser.Id, 0)
 
 	if err != nil {
 		l.Errorw("Failed to create account for user!",
+			"error", err,
+		)
+		tx.Rollback()
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
+		return
+	}
+
+	// Commit the transaction if both statements succeeded
+	err = tx.Commit()
+	if err != nil {
+		l.Errorw("Failed to commit transaction",
 			"error", err,
 		)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})

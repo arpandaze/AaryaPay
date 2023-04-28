@@ -59,6 +59,10 @@ def main(args):
         os.system("go test ./... " + " ".join(args[2:]))
         exit()
 
+    elif args[1] == "populate":
+        os.system("go run population/populate.go")
+        exit()
+
     print("No args or invalid args provided!")
     print("Available args: dkstart, start, mig, cm")
 

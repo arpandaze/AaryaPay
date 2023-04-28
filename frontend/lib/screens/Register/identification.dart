@@ -1,24 +1,19 @@
-import 'dart:math';
-
 import 'package:aaryapay/components/CustomActionButton.dart';
-import 'package:aaryapay/components/CustomDatePicker.dart';
 import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:aaryapay/screens/Register/bloc/register_bloc.dart';
 import 'package:aaryapay/screens/Register/components/CustomRegisterButton.dart';
-import 'package:aaryapay/screens/Register/verify_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class AccountScreen extends StatelessWidget {
-  const AccountScreen({Key? key}) : super(key: key);
+class Identification extends StatelessWidget {
+  const Identification({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    // var dateTime = new Map<String, String>();
-    // dateTime["day"] = "";
-    // dateTime["month"] = "";
-    // dateTime["year"] = "";
     Size size = MediaQuery.of(context).size;
     return SingleChildScrollView(
       child: Column(
@@ -37,11 +32,7 @@ class AccountScreen extends StatelessWidget {
                         visible: true,
                         child: GestureDetector(
                             behavior: HitTestBehavior.opaque,
-                            onTap: () => {
-                                  context
-                                      .read<RegisterBloc>()
-                                      .add(PreviousPage())
-                                },
+                            onTap: () => {Navigator.of(context).pop()},
                             child: const Icon(
                               FontAwesomeIcons.arrowLeftLong,
                               size: 20,
@@ -50,14 +41,14 @@ class AccountScreen extends StatelessWidget {
                   Container(
                     alignment: Alignment.center,
                     padding: const EdgeInsets.all(15),
-                    child: Text("Account and Security",
+                    child: Text("Identification",
                         style: Theme.of(context).textTheme.headlineSmall!),
                   ),
                   Container(
                     width: size.width * 0.1,
                     alignment: Alignment.center,
                     // padding: const EdgeInsets.all(15),
-                    child: Text("2/3",
+                    child: Text("1/3",
                         style: Theme.of(context).textTheme.titleSmall!),
                   ),
                 ],
@@ -75,7 +66,7 @@ class AccountScreen extends StatelessWidget {
           ),
           Container(
             height: size.height * 0.48,
-            padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,87 +98,67 @@ class AccountScreen extends StatelessWidget {
                 CustomTextField(
                   width: size.width,
                   padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
-                  prefixIcon: Icon(
-                    FontAwesomeIcons.solidEnvelope,
-                    color: Theme.of(context).colorScheme.primary,
+                  prefixIcon: Container(
+                    child: SvgPicture.asset(
+                      "assets/icons/profile.svg",
+                      width: 20,
+                      colorFilter: ColorFilter.mode(
+                          Theme.of(context).colorScheme.primary,
+                          BlendMode.srcIn),
+                    ),
                   ),
                   onChanged: (value) => context.read<RegisterBloc>().add(
-                        EmailChanged(email: value),
+                        FirstNameChanged(firstName: value),
                       ),
-                  placeHolder: "Email",
-                ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
-                  child: DateField(
-                    dateTime: (DateTime date) {
-                      context.read<RegisterBloc>().add(DOBChanged(dob: date));
-                    },
-                  ),
+                  placeHolder: "First Name",
                 ),
                 CustomTextField(
                   width: size.width,
-                  isPassword: true,
                   padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
-                  prefixIcon: Icon(
-                    FontAwesomeIcons.lock,
-                    color: Theme.of(context).colorScheme.primary,
+                  prefixIcon: Container(
+                    child: SvgPicture.asset(
+                      "assets/icons/profile.svg",
+                      width: 20,
+                      colorFilter: ColorFilter.mode(
+                          Theme.of(context).colorScheme.primary,
+                          BlendMode.srcIn),
+                    ),
                   ),
                   onChanged: (value) => context.read<RegisterBloc>().add(
-                        PasswordChanged(password: value),
+                        MiddleNameChanged(middleName: value),
                       ),
-                  placeHolder: "Password",
+                  placeHolder: "Middle Name",
                 ),
+                CustomTextField(
+                  width: size.width,
+                  padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
+                  prefixIcon: Container(
+                    child: SvgPicture.asset(
+                      "assets/icons/profile.svg",
+                      width: 20,
+                      colorFilter: ColorFilter.mode(
+                          Theme.of(context).colorScheme.primary,
+                          BlendMode.srcIn),
+                    ),
+                  ),
+                  onChanged: (value) => context.read<RegisterBloc>().add(
+                        LastNameChanged(lastName: value),
+                      ),
+                  placeHolder: "Last Name",
+                )
               ],
             ),
           ),
-          button(context, size),
+          Container(
+            child: CustomRegisterButton(
+              width: size.width * 0.78,
+              borderRadius: 10,
+              label: "Next",
+              onClick: () => {context.read<RegisterBloc>().add(NextPage())},
+            ),
+          ),
         ],
       ),
     );
-  }
-
-  Widget button(BuildContext context, Size size) {
-    return BlocBuilder<RegisterBloc, RegisterState>(
-      builder: (context, state) {
-        if (state.status != RegisterStatus.submitting) {
-          return Column(
-            children: [
-              errorText(state.status),
-              CustomRegisterButton(
-                width: size.width * 0.78,
-                borderRadius: 10,
-                label: "Next",
-                onClick: () =>
-                    {context.read<RegisterBloc>().add(FormSubmitted())},
-              ),
-            ],
-          );
-        } else {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              errorText(state.status),
-              Container(
-                alignment: Alignment.bottomCenter,
-                margin: EdgeInsets.fromLTRB(
-                    0, 0, size.width * 0.1, size.height * 0.05),
-                child: const CircularProgressIndicator(),
-              )
-            ],
-          );
-        }
-      },
-    );
-  }
-
-  Widget errorText(RegisterStatus state) {
-    switch (state) {
-      case RegisterStatus.errorUnknown:
-        return const Text("Something went wrong! Check you inputs!");
-      case RegisterStatus.errorEmailUsed:
-        return const Text("Email is already in use!");
-      default:
-        return const SizedBox.shrink();
-    }
   }
 }

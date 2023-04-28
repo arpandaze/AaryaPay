@@ -32,7 +32,7 @@ class WelcomeScreen extends StatelessWidget {
           width: size.width * 0.8,
           child: Text(
             "Pay Anywhere, You Go.",
-            style: Theme.of(context).textTheme.displaySmall!.merge(TextStyle(
+            style: Theme.of(context).textTheme.displayMedium!.merge(TextStyle(
                 height: 1.8,
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.primary)),
@@ -52,10 +52,7 @@ class WelcomeScreen extends StatelessWidget {
         Container(
           child: Text(
             "Does anyone even read this text. No. Why are you reading this text. Just login already, this text is worthless.",
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium!
-                .merge(
+            style: Theme.of(context).textTheme.titleMedium!.merge(
                   const TextStyle(height: 1.5),
                 ),
             textAlign: TextAlign.center,

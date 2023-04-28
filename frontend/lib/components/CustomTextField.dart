@@ -65,7 +65,7 @@ class CustomTextField extends StatelessWidget {
                 ),
               )),
           TextField(
-              style: Theme.of(context).textTheme.bodySmall,
+              style: Theme.of(context).textTheme.bodyLarge,
               controller: messageController,
               obscureText: isPassword,
               onChanged: onChanged,

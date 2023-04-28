@@ -21,7 +21,7 @@ func TestRegister(t *testing.T) {
 	values.Set("first_name", "John")
 	values.Set("middle_name", "M.")
 	values.Set("last_name", "Doe")
-	values.Set("dob", "1990-01-01")
+	values.Set("dob", "996624000")
 	values.Set("email", "john.doe@example.com")
 	values.Set("password", "password")
 

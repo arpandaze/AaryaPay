@@ -1,6 +1,6 @@
-
 import 'package:aaryapay/components/CustomCircularAvatar.dart';
 import 'package:aaryapay/components/CustomStatusButton.dart';
+import 'package:aaryapay/screens/Send/send_money.dart';
 import 'package:flutter/material.dart';
 
 class Favourites extends StatelessWidget {
@@ -17,10 +17,10 @@ class Favourites extends StatelessWidget {
 
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       decoration: BoxDecoration(
-          border: Border(
-            // top: BorderSide(width: 16.0, color: Colors.lightBlue.shade600),
-            bottom: BorderSide(width: 2.0, color: colorScheme.onPrimary),
-          ),
+        border: Border(
+          // top: BorderSide(width: 16.0, color: Colors.lightBlue.shade600),
+          bottom: BorderSide(width: 2.0, color: colorScheme.onPrimary),
+        ),
       ),
       // height: size.height * 0.8,
       child: Column(
@@ -47,165 +47,177 @@ class Favourites extends StatelessWidget {
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 60,
-                    height: 60,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        shape: BoxShape.circle),
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          fit: BoxFit.contain,
-                          image: AssetImage("assets/images/pfp.jpg"),
+            child: GestureDetector(
+              onTap: () => {
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation1, animation2) =>
+                        const SendMoney(),
+                    transitionDuration: Duration.zero,
+                    reverseTransitionDuration: Duration.zero,
+                  ),
+                ),
+              },
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 60,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          shape: BoxShape.circle),
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            fit: BoxFit.contain,
+                            image: AssetImage("assets/images/pfp.jpg"),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Container(
-                    width: 60,
-                    height: 60,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        shape: BoxShape.circle),
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          fit: BoxFit.contain,
-                          image: AssetImage("assets/images/pfp.jpg"),
+                    Container(
+                      width: 60,
+                      height: 60,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          shape: BoxShape.circle),
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            fit: BoxFit.contain,
+                            image: AssetImage("assets/images/pfp.jpg"),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Container(
-                    width: 60,
-                    height: 60,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        shape: BoxShape.circle),
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          fit: BoxFit.contain,
-                          image: AssetImage("assets/images/pfp.jpg"),
+                    Container(
+                      width: 60,
+                      height: 60,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          shape: BoxShape.circle),
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            fit: BoxFit.contain,
+                            image: AssetImage("assets/images/pfp.jpg"),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Container(
-                    width: 60,
-                    height: 60,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        shape: BoxShape.circle),
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          fit: BoxFit.contain,
-                          image: AssetImage("assets/images/pfp.jpg"),
+                    Container(
+                      width: 60,
+                      height: 60,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          shape: BoxShape.circle),
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            fit: BoxFit.contain,
+                            image: AssetImage("assets/images/pfp.jpg"),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Container(
-                    width: 60,
-                    height: 60,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        shape: BoxShape.circle),
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          fit: BoxFit.contain,
-                          image: AssetImage("assets/images/pfp.jpg"),
+                    Container(
+                      width: 60,
+                      height: 60,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          shape: BoxShape.circle),
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            fit: BoxFit.contain,
+                            image: AssetImage("assets/images/pfp.jpg"),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Container(
-                    width: 60,
-                    height: 60,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        shape: BoxShape.circle),
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          fit: BoxFit.contain,
-                          image: AssetImage("assets/images/pfp.jpg"),
+                    Container(
+                      width: 60,
+                      height: 60,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          shape: BoxShape.circle),
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            fit: BoxFit.contain,
+                            image: AssetImage("assets/images/pfp.jpg"),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Container(
-                    width: 60,
-                    height: 60,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        shape: BoxShape.circle),
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          fit: BoxFit.contain,
-                          image: AssetImage("assets/images/pfp.jpg"),
+                    Container(
+                      width: 60,
+                      height: 60,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          shape: BoxShape.circle),
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            fit: BoxFit.contain,
+                            image: AssetImage("assets/images/pfp.jpg"),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Container(
-                    width: 60,
-                    height: 60,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        shape: BoxShape.circle),
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          fit: BoxFit.contain,
-                          image: AssetImage("assets/images/pfp.jpg"),
+                    Container(
+                      width: 60,
+                      height: 60,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          shape: BoxShape.circle),
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            fit: BoxFit.contain,
+                            image: AssetImage("assets/images/pfp.jpg"),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
