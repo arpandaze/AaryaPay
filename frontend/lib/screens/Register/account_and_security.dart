@@ -5,7 +5,6 @@ import 'package:aaryapay/components/CustomDatePicker.dart';
 import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:aaryapay/screens/Register/bloc/register_bloc.dart';
 import 'package:aaryapay/screens/Register/components/CustomRegisterButton.dart';
-import 'package:aaryapay/screens/Register/components/register_wrapper.dart';
 import 'package:aaryapay/screens/Register/verify_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -75,11 +74,11 @@ class AccountScreen extends StatelessWidget {
             ),
           ),
           Container(
-            height: size.height * 0.45,
+            height: size.height * 0.48,
             padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,7 +86,7 @@ class AccountScreen extends StatelessWidget {
                   children: [
                     Text(
                       "Sign Up",
-                      style: Theme.of(context).textTheme.displaySmall!.merge(
+                      style: Theme.of(context).textTheme.displayMedium!.merge(
                             TextStyle(
                                 height: 1.8,
                                 fontWeight: FontWeight.w900,
@@ -117,10 +116,13 @@ class AccountScreen extends StatelessWidget {
                       ),
                   placeHolder: "Email",
                 ),
-                DateField(
-                  dateTime: (DateTime date) {
-                    context.read<RegisterBloc>().add(DOBChanged(dob: date));
-                  },
+                Container(
+                  padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
+                  child: DateField(
+                    dateTime: (DateTime date) {
+                      context.read<RegisterBloc>().add(DOBChanged(dob: date));
+                    },
+                  ),
                 ),
                 CustomTextField(
                   width: size.width,
@@ -155,10 +157,8 @@ class AccountScreen extends StatelessWidget {
                 width: size.width * 0.78,
                 borderRadius: 10,
                 label: "Next",
-                onClick: () => {
-                 
-                  context.read<RegisterBloc>().add(FormSubmitted())
-                },
+                onClick: () =>
+                    {context.read<RegisterBloc>().add(FormSubmitted())},
               ),
             ],
           );

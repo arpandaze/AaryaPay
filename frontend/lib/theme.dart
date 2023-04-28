@@ -39,7 +39,7 @@ class AppTheme with ChangeNotifier {
             letterSpacing: -1.5,
             color: const Color(0xFF000000)),
         displayMedium: GoogleFonts.mulish(
-            fontSize: 40,
+          fontSize: 32,
           height: 1.0,
           fontWeight: FontWeight.w500,
           letterSpacing: -0.5,

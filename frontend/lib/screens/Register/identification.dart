@@ -65,9 +65,10 @@ class Identification extends StatelessWidget {
             ),
           ),
           Container(
-            height: size.height * 0.45,
-            padding: EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+            height: size.height * 0.48,
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Column(
@@ -76,7 +77,7 @@ class Identification extends StatelessWidget {
                   children: [
                     Text(
                       "Sign Up",
-                      style: Theme.of(context).textTheme.displaySmall!.merge(
+                      style: Theme.of(context).textTheme.displayMedium!.merge(
                             TextStyle(
                                 height: 1.8,
                                 fontWeight: FontWeight.w900,
@@ -94,54 +95,56 @@ class Identification extends StatelessWidget {
                     ),
                   ],
                 ),
-                Column(
-                  children: [
-                    CustomTextField(
-                      width: size.width,
-                      padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
-                      prefixIcon: Container(
-                        child: SvgPicture.asset(
-                          "assets/icons/profile.svg",
-                          width: 20,
-                          colorFilter: ColorFilter.mode(
-                              Theme.of(context).colorScheme.primary,
-                              BlendMode.srcIn),
-                        ),
-                      ),
-                      onChanged: (value) => context.read<RegisterBloc>().add(
-                            FirstNameChanged(firstName: value),
-                          ),
-                      placeHolder: "First Name",
+                CustomTextField(
+                  width: size.width,
+                  padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
+                  prefixIcon: Container(
+                    child: SvgPicture.asset(
+                      "assets/icons/profile.svg",
+                      width: 20,
+                      colorFilter: ColorFilter.mode(
+                          Theme.of(context).colorScheme.primary,
+                          BlendMode.srcIn),
                     ),
-                    CustomTextField(
-                      width: size.width,
-                      padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
-                      prefixIcon: Container(
-                        child: SvgPicture.asset(
-                          "assets/icons/blank.svg",
-                          width: 20,
-                        ),
+                  ),
+                  onChanged: (value) => context.read<RegisterBloc>().add(
+                        FirstNameChanged(firstName: value),
                       ),
-                      onChanged: (value) => context.read<RegisterBloc>().add(
-                            MiddleNameChanged(middleName: value),
-                          ),
-                      placeHolder: "Middle Name",
+                  placeHolder: "First Name",
+                ),
+                CustomTextField(
+                  width: size.width,
+                  padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
+                  prefixIcon: Container(
+                    child: SvgPicture.asset(
+                      "assets/icons/profile.svg",
+                      width: 20,
+                      colorFilter: ColorFilter.mode(
+                          Theme.of(context).colorScheme.primary,
+                          BlendMode.srcIn),
                     ),
-                    CustomTextField(
-                      width: size.width,
-                      padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
-                      prefixIcon: Container(
-                        child: SvgPicture.asset(
-                          "assets/icons/blank.svg",
-                          width: 20,
-                        ),
+                  ),
+                  onChanged: (value) => context.read<RegisterBloc>().add(
+                        MiddleNameChanged(middleName: value),
                       ),
-                      onChanged: (value) => context.read<RegisterBloc>().add(
-                            LastNameChanged(lastName: value),
-                          ),
-                      placeHolder: "Last Name",
+                  placeHolder: "Middle Name",
+                ),
+                CustomTextField(
+                  width: size.width,
+                  padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
+                  prefixIcon: Container(
+                    child: SvgPicture.asset(
+                      "assets/icons/profile.svg",
+                      width: 20,
+                      colorFilter: ColorFilter.mode(
+                          Theme.of(context).colorScheme.primary,
+                          BlendMode.srcIn),
                     ),
-                  ],
+                  ),
+                  onChanged: (value) => context.read<RegisterBloc>().add(
+                        LastNameChanged(lastName: value),
+                      ),
+                  placeHolder: "Last Name",
                 )
               ],
             ),

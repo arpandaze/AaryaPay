@@ -3,7 +3,6 @@ import 'package:aaryapay/screens/Home/home_screen.dart';
 import 'package:aaryapay/screens/Login/login_screen.dart';
 import 'package:aaryapay/screens/Login/welcome_screen.dart';
 import 'package:aaryapay/screens/Register/bloc/register_bloc.dart';
-import 'package:aaryapay/screens/Register/components/register_wrapper.dart';
 import 'package:aaryapay/screens/Send/offline_send.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,9 +31,10 @@ class CompletedScreen extends StatelessWidget {
             ),
           ),
           Container(
-            height: size.height * 0.45,
+            height: size.height * 0.48,
             padding: EdgeInsets.symmetric(vertical: 18, horizontal: 18),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Column(
@@ -43,18 +43,18 @@ class CompletedScreen extends StatelessWidget {
                   children: [
                     Text(
                       "You Are, All Set",
-                      style: Theme.of(context).textTheme.displaySmall!.merge(
+                      style: Theme.of(context).textTheme.displayMedium!.merge(
                             TextStyle(
                                 color: Theme.of(context).colorScheme.primary),
                           ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(40.0),
+                      padding: const EdgeInsets.symmetric(vertical: 40),
                       child: Text(
                         "Does anyone even read this text. No. Why are you reading this text. Just login already, this text is worthless.",
                         style: Theme.of(context)
                             .textTheme
-                            .titleSmall!
+                            .titleMedium!
                             .merge(const TextStyle(height: 2.0)),
                         textAlign: TextAlign.center,
                       ),
@@ -68,7 +68,7 @@ class CompletedScreen extends StatelessWidget {
             child: CustomActionButton(
               width: size.width * 0.78,
               borderRadius: 10,
-              label: "Next",
+              label: "Done",
               onClick: () => Navigator.of(context).push(
                 PageRouteBuilder(
                   pageBuilder: (context, animation1, animation2) =>
