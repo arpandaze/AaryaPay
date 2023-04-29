@@ -1,3 +1,4 @@
+import 'package:aaryapay/components/AuthenticationStatusWrapper.dart';
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
 import 'package:aaryapay/screens/Home/home_screen.dart';
@@ -27,39 +28,18 @@ class LoginWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    context.read<AuthenticationBloc>().add(LoggedIn());
-    if (context.read<AuthenticationBloc>().state.status ==
-        AuthenticationStatus.loggedIn) {
-      Navigator.of(context).pushAndRemoveUntil(
-        PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => const HomeScreen(),
-          transitionDuration: Duration.zero,
-          reverseTransitionDuration: Duration.zero,
-        ),
-        (Route<dynamic> route) => false,
-      );
-      return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        body: const SafeArea(
-          top: true,
-          bottom: true,
-          left: true,
-          right: true,
-          child: SizedBox(),
-        ),
-      );
-    } else {
-      return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        body: SafeArea(
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: AuthenticationStateWrapper(
+        child: SafeArea(
           top: true,
           bottom: true,
           left: true,
           right: true,
           child: body(size, context),
         ),
-      );
-    }
+      ),
+    );
   }
 
   Widget body(Size size, BuildContext context) {

@@ -8,3 +8,5 @@ abstract class AuthenticationEvent extends Equatable {
 class LoggedIn extends AuthenticationEvent {}
 
 class LoggedOut extends AuthenticationEvent {}
+
+class LoadAuthStatus extends AuthenticationEvent {}

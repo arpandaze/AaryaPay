@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/repository/auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,9 +16,18 @@ class AuthenticationBloc
   AuthenticationBloc() : super(const AuthenticationState()) {
     on<LoggedIn>(_onLoggedIn);
     on<LoggedOut>(_onLoggedOut);
+    on<LoadAuthStatus>(_onLoadAuthStatus);
+    add(LoadAuthStatus());
   }
 
   void _onLoggedIn(LoggedIn event, Emitter<AuthenticationState> emit) async {
+    // print("On Logged in Event Triggered!");
+    emit(await AuthenticationState.load());
+  }
+
+  void _onLoadAuthStatus(
+      LoadAuthStatus event, Emitter<AuthenticationState> emit) async {
+    // print("On Authentication State Event Triggered!");
     emit(await AuthenticationState.load());
   }
 

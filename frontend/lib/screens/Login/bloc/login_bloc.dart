@@ -34,15 +34,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       final loginResponse =
           await authRepo.login(email: state.email, password: state.password);
 
-      print(loginResponse["two_fa_required"]);
-
       if (loginResponse["two_fa_required"] == true) {
         emit(state.copyWith(twoFARequired: true));
       } else {
         emit(state.copyWith(loginSucess: true));
       }
     } catch (e) {
-      print(e);
       emit(state.copyWith(errorText: "Email or Password incorrect!"));
     }
     //send login request and cchange parameters that way

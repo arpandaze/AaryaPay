@@ -12,7 +12,6 @@ class AuthenticationRepository {
   Future<Map<String, dynamic>> login(
       {required String email, required String password}) async {
     final url = Uri.parse('$backendBase/auth/login');
-    print(url);
 
     var response = await http.post(
       url,
@@ -26,15 +25,12 @@ class AuthenticationRepository {
         "remember_me": "true",
       },
     );
-    print(response.statusCode);
     if (response.statusCode != 202) {
       throw Exception("Login Failed! Check Email or Password!");
     }
 
     var decodedResponse =
         jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
-    print("Response Body: ${response.body}");
-    print(decodedResponse);
 
     if (decodedResponse["two_fa_required"] == true) {
       return {"two_fa_required": true};
@@ -44,17 +40,17 @@ class AuthenticationRepository {
       BalanceKeyVerificationCertificate bkvcObject =
           BalanceKeyVerificationCertificate.fromBytes(bkvc);
 
-      print(response.headers["set-cookie"]);
-      print(response.headers["set-cookie"]!.substring(8, 44));
       storage.write(
         key: "token",
         value: response.headers["set-cookie"]!.substring(8, 44),
       );
 
+      storage.write(key: "user", value: jsonEncode(decodedResponse["user"]));
       storage.write(key: "user_id", value: bkvcObject.userID.toString());
       storage.write(
           key: "available_balance",
           value: bkvcObject.availableBalance.toString());
+
       storage.write(key: "public_key", value: bkvcObject.publicKey.toString());
       storage.write(key: "timestamp", value: bkvcObject.timeStamp.toString());
       storage.write(key: "signature", value: bkvcObject.signature.toString());
@@ -62,7 +58,6 @@ class AuthenticationRepository {
           key: "private_key",
           value: base64Decode(decodedResponse["private_key"]).toString());
 
-      print(await storage.readAll());
       return {"response": decodedResponse, "two_fa_required": false};
     }
   }

@@ -3,7 +3,7 @@ part of 'authentication_bloc.dart';
 class AuthenticationState extends Equatable {
   final bool loaded;
   final String? token;
-  final String? user;
+  final Map<String, dynamic>? user;
   final AuthenticationStatus status;
 
   static const storage = FlutterSecureStorage();
@@ -17,7 +17,7 @@ class AuthenticationState extends Equatable {
 
   AuthenticationState copyWith({
     String? token,
-    String? user,
+    Map<String, dynamic>? user,
     AuthenticationStatus? status,
   }) {
     return AuthenticationState(
@@ -27,16 +27,20 @@ class AuthenticationState extends Equatable {
   }
 
   static Future<AuthenticationState> load() async {
-    var storedUser = await storage.read(key: "user_id");
+    var storedUser = await storage.read(key: "user");
     var token = await storage.read(key: "token");
 
     var status = AuthenticationStatus.none;
-
     if (storedUser != null && token != null) {
-      status = AuthenticationStatus.loggedIn;
-    }
+      // print("User Loaded Properly!");
+      var userObject = jsonDecode(storedUser);
 
-    return AuthenticationState(token: token, status: status, user: storedUser);
+      status = AuthenticationStatus.loggedIn;
+
+      return AuthenticationState(
+          loaded: true, token: token, status: status, user: userObject);
+    }
+    return const AuthenticationState(loaded: true);
   }
 
   @override

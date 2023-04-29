@@ -6,13 +6,16 @@ import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
 
 class AuthenticationStateWrapper extends StatelessWidget {
-  final Widget? child;
-  const AuthenticationStateWrapper({Key? key, this.child}) : super(key: key);
+  final Widget child;
+  const AuthenticationStateWrapper({Key? key, required this.child})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthenticationBloc, AuthenticationState>(
+    return BlocConsumer<AuthenticationBloc, AuthenticationState>(
+      listenWhen: (previous, current) => true,
       listener: ((context, state) {
+        // print("Authentication Bloc Listener Triggered ${state.status}");
         if (state.status == AuthenticationStatus.loggedIn) {
           Timer(
             const Duration(microseconds: 0),
@@ -30,7 +33,9 @@ class AuthenticationStateWrapper extends StatelessWidget {
           );
         }
       }),
-      child: child,
+      builder: (context, state) {
+        return child;
+      },
     );
   }
 }

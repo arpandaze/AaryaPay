@@ -16,29 +16,28 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return AuthenticationStateWrapper(
-      child: RepositoryProvider<AuthenticationRepository>(
-        create: (_) => AuthenticationRepository(),
-        child: BlocProvider(
-          create: (context) => LoginBloc(),
-          child: BlocConsumer<LoginBloc, LoginState>(
-            listener: (context, state) {
-              if (state.loginSucess) {
-                context.read<AuthenticationBloc>().add(LoggedIn());
-              }
-            },
-            builder: (context, state) {
-              return LoginWrapper(
-                backButton: true,
-                backButttonFunction: () => {
-                  Navigator.pop(context),
-                },
-                actionButtonFunction: () =>
-                    context.read<LoginBloc>().add(FormSubmitted()),
-                children: _midsection(context, size),
-              );
-            },
-          ),
+
+    return RepositoryProvider<AuthenticationRepository>(
+      create: (_) => AuthenticationRepository(),
+      child: BlocProvider(
+        create: (context) => LoginBloc(),
+        child: BlocConsumer<LoginBloc, LoginState>(
+          listener: (context, state) {
+            if (state.loginSucess) {
+              context.read<AuthenticationBloc>().add(LoggedIn());
+            }
+          },
+          builder: (context, state) {
+            return LoginWrapper(
+              backButton: true,
+              backButttonFunction: () => {
+                Navigator.pop(context),
+              },
+              actionButtonFunction: () =>
+                  context.read<LoginBloc>().add(FormSubmitted()),
+              children: _midsection(context, size),
+            );
+          },
         ),
       ),
     );
