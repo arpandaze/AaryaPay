@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:uuid/uuid.dart';
+import 'package:libaaryapay/constants.dart';
 
 class BalanceKeyVerificationCertificate {
   int messageType;
@@ -9,24 +10,29 @@ class BalanceKeyVerificationCertificate {
   double availableBalance;
   Uint8List publicKey;
   DateTime timeStamp;
-  List<int> signature;
+  List<int> signature = List<int>.filled(64, 0, growable: false);
 
   BalanceKeyVerificationCertificate(
     this.messageType,
     this.userID,
     this.availableBalance,
     this.publicKey,
-    this.timeStamp,
-    this.signature,
-  );
+    this.timeStamp, {
+    List<int>? signature,
+  }) {
+    if (signature != null) {
+      this.signature = signature;
+    }
+  }
 
   Future<SimplePublicKey> getPublicKey() async {
     return SimplePublicKey(publicKey, type: KeyPairType.ed25519);
   }
 
   Future<void> sign(SimpleKeyPair keyPair) async {
-    final data = Uint8List(56);
+    final data = Uint8List(57);
 
+    data[0] = BKVC_MESSAGE_TYPE;
     data.setRange(1, 17, userID.toBytes());
     data.buffer.asByteData().setFloat32(17, availableBalance);
     data.setRange(21, 53, publicKey);
@@ -36,7 +42,6 @@ class BalanceKeyVerificationCertificate {
         .setUint32(53, timeStamp.toUtc().millisecondsSinceEpoch ~/ 1000);
 
     var signatureObj = await Ed25519().sign(data, keyPair: keyPair);
-
     signature = signatureObj.bytes;
   }
 
@@ -59,6 +64,7 @@ class BalanceKeyVerificationCertificate {
   Future<bool> verify(SimplePublicKey serverPublicKey) async {
     final data = Uint8List(57);
 
+    data[0] = BKVC_MESSAGE_TYPE;
     data.setRange(1, 17, userID.toBytes());
     data.buffer.asByteData().setFloat32(17, availableBalance);
     data.setRange(21, 53, publicKey);
@@ -72,7 +78,7 @@ class BalanceKeyVerificationCertificate {
   }
 
   static BalanceKeyVerificationCertificate fromBytes(Uint8List data) {
-    final messageType = data[0];
+    final messageType = BKVC_MESSAGE_TYPE;
     final userID = UuidValue.fromByteList(data.sublist(1, 17));
     final availableBalance = ByteData.view(data.buffer).getFloat32(17);
     final publicKey = data.sublist(21, 53);
@@ -90,7 +96,7 @@ class BalanceKeyVerificationCertificate {
       availableBalance,
       publicKey,
       timeStamp,
-      signature,
+      signature: signature,
     );
   }
 }

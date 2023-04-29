@@ -10,17 +10,21 @@ class Transaction {
   double amount;
   UuidValue to;
   BalanceKeyVerificationCertificate bkvc;
-  List<int> signature;
   DateTime timeStamp;
+  List<int> signature = List<int>.filled(64, 0, growable: false);
 
   Transaction(
     this.messageType,
     this.amount,
     this.to,
     this.bkvc,
-    this.signature,
-    this.timeStamp,
-  );
+    this.timeStamp, {
+    List<int>? signature,
+  }) {
+    if (signature != null) {
+      this.signature = signature;
+    }
+  }
 
   Uint8List toBytes() {
     final buffer = Uint8List(210);
@@ -58,8 +62,8 @@ class Transaction {
       amount,
       to,
       bkvc,
-      signature,
       timeStamp,
+      signature: signature,
     );
   }
 
