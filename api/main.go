@@ -1,13 +1,21 @@
 package main
 
 import (
+	"fmt"
 	"main/core"
-
 	"main/telemetry"
+	"os"
 )
 
 func main() {
-	core.LoadConfig("dev")
+	mode, ok := os.LookupEnv("MODE")
+
+	if !ok {
+		fmt.Println("MODE is not set! Defaulting to `dev`!")
+		mode = "dev"
+	}
+
+	core.LoadConfig(mode)
 
 	tracerShutdown := telemetry.InitTracer()
 	defer tracerShutdown()

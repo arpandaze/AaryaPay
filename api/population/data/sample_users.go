@@ -178,7 +178,7 @@ var SAMPLE_USERS = []SampleUser{
 
 func PopulateUsers() {
 	for idx := range SAMPLE_USERS {
-    user := &SAMPLE_USERS[idx]
+		user := &SAMPLE_USERS[idx]
 
 		tx, err := core.DB.Begin()
 		if err != nil {
