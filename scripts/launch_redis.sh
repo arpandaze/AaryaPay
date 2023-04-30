@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 
-set -x
-set -eo pipefail
-
 REDIS_PASSWORD="${REDIS_PASSWORD:=redispass}"
-CONTAINER_NAME="redis-aaryapay-dev"
+CONTAINER_NAME="redis-aaryapay"
 
 if [ "$(podman ps -q -f name=$CONTAINER_NAME)" ]; then
     echo "Redis already running!"

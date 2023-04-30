@@ -16,10 +16,15 @@ def main(args):
         else:
             os.system("./scripts/redis.sh")
             os.system("./scripts/postgres.sh")
+            os.system("./scripts/mailpit.sh")
         exit()
 
     elif args[1] == "start":
         os.system("air")
+        exit()
+
+    elif args[1] == "remake":
+        os.system("yes | python manage.py cm && python manage.py populate")
         exit()
 
     elif args[1] == "mig":

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-set -x
-set -eo pipefail
-
 DB_USER="${POSTGRES_USER:=postadmin}"
 DB_PASSWORD="${POSTGRES_PASSWORD:=postpass}"
-CONTAINER_NAME="postgres-aaryapay-dev"
+CONTAINER_NAME="postgres-aaryapay"
 DB_NAME="${POSTGRES_DB:=aaryapay}"
 DB_PORT="${POSTGRES_PORT:=5432}"
+DATA_DIR="./postgresql/data/pgdata"
+
+mkdir -p $DATA_DIR
 
 if [ "$(podman ps -q -f name=$CONTAINER_NAME)" ]; then
     echo "Postgres already running!"
@@ -23,6 +23,7 @@ else
       -e POSTGRES_USER=${DB_USER} \
       -e POSTGRES_PASSWORD=${DB_PASSWORD} \
       -e POSTGRES_DB=${DB_NAME} \
+      -v $DATA_DIR:/var/lib/postgresql/data \
       -p "${DB_PORT}":5432 \
       -d docker.io/library/postgres:13-alpine \
       postgres -N 1000
