@@ -2,12 +2,12 @@ package auth
 
 import (
 	"database/sql"
-	"fmt"
 	"main/core"
 	"main/telemetry"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type ResendVerificationController struct{}
@@ -30,14 +30,22 @@ func (ResendVerificationController) ResendVerification(c *gin.Context) {
 		return
 	}
 
+	userID, parseErr := uuid.Parse(resendVerification.ID)
+
+	if parseErr != nil {
+		telemetry.Logger(c).Sugar().Errorw("Failed to parse uuid!",
+			"error", parseErr,
+		)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "Invalid user id!", "context": telemetry.TraceIDFromContext(c)})
+    return
+	}
+
 	queryUser := core.CommonUser{}
 	row := core.DB.QueryRow(`
 	SELECT id, first_name, middle_name, last_name, email, is_verified, last_sync
     FROM Users 
     WHERE id = $1;
-	`, resendVerification.ID)
-	fmt.Println("")
-	fmt.Println(resendVerification.ID)
+	`, userID)
 
 	err := row.Scan(&queryUser.Id, &queryUser.FirstName, &queryUser.MiddleName, &queryUser.LastName, &queryUser.Email, &queryUser.IsVerified, &queryUser.LastSync)
 
