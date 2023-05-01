@@ -55,7 +55,7 @@ class RecentCard extends StatelessWidget {
               RecentPaymentCard(
                 label: "Amazon Payment Rebate asadasasdasdasdas",
                 finalAmt: "18153.64",
-                transactionAmt: "1111150.00",
+                transactionAmt: "11150.00",
                 date: "January 18 2020",
               ),
               RecentPaymentCard(

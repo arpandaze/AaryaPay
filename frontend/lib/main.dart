@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         routes: routes,
-        title: 'Flutter Demo',
+        title: 'AaryaPay',
         initialRoute: '/welcome',
         theme: AppTheme.lightTheme,
       ),

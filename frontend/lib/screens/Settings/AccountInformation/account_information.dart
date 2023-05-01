@@ -19,20 +19,20 @@ class AccountInformation extends StatelessWidget {
             Column(
               children: [
                 Container(
-                  width: 100,
-                  height: 100,
+                  width: 120,
+                  height: 120,
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     image: DecorationImage(
                       image:
-                                AssetImage("assets/images/pfp.jpg"),
+                                AssetImage("assets/images/default-pfp.png"),
                     ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: CustomStatusButton(
-                      width: 120,
+                      width: 150,
                       borderRadius: 5,
                       widget: SvgPicture.asset(
                         "assets/icons/upload.svg",

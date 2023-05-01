@@ -152,7 +152,7 @@ class NavBar extends StatelessWidget {
                           children: [
                             SvgPicture.asset(
                               pageName == "statements"
-                                  ? "assets/icons/bill-fill.svg"
+                                  ? "assets/icons/statements-fill.svg"
                                   : "assets/icons/statements.svg",
                               colorFilter: ColorFilter.mode(
                                 Theme.of(context).colorScheme.primary,

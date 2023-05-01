@@ -25,7 +25,7 @@ class FavouritesCard extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       width: size.width,
       decoration: BoxDecoration(
-          border: Border.all(color: Color.fromARGB(40, 0, 0, 0)),
+          border: Border.all(color: const Color.fromARGB(40, 0, 0, 0)),
           borderRadius: BorderRadius.circular(10)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

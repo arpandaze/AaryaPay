@@ -69,7 +69,7 @@ class RecentPaymentCard extends StatelessWidget {
               child: Text(
                 isDebit ? "-$transactionAmt" : "+$transactionAmt",
                 textAlign: TextAlign.right,
-                style: Theme.of(context).textTheme.labelSmall!.merge(TextStyle(
+                style: Theme.of(context).textTheme.labelMedium!.merge(TextStyle(
                     color: isDebit
                         ? Theme.of(context).colorScheme.onSurface
                         : Theme.of(context).colorScheme.surfaceVariant)),

@@ -26,7 +26,7 @@ class CustomStatusButton extends StatelessWidget {
       // onTap: print("lol"),
       child: Container(
         padding: const EdgeInsets.all(5),
-        width: width ?? size.width * 0.19,
+        width: width ?? size.width * 0.20,
         height: height ?? size.height * 0.04,
         decoration: BoxDecoration(
             border: Border.all(color: Colors.black26),
@@ -41,7 +41,7 @@ class CustomStatusButton extends StatelessWidget {
           widget,
           Text(
             label,
-            style: textTheme.bodyMedium,
+            style: textTheme.titleSmall,
           )
         ]),
       ),

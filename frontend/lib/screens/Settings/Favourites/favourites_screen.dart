@@ -29,38 +29,27 @@ class FavouritesScreen extends StatelessWidget {
   Widget body(BuildContext context) {
     List<FavouritesModal> itemList = [
       FavouritesModal(const AssetImage("assets/images/default-pfp.png"),
-          "Mukesh",
-          "@iownindia", "10th Dec,2020"),
+          "Mukesh", "@iownindia", "10th Dec,2020"),
       FavouritesModal(const AssetImage("assets/images/default-pfp.png"),
-          "Mukesh",
-          "@iownindia", "10 Dec,2020"),
+          "Mukesh", "@iownindia", "10 Dec,2020"),
       FavouritesModal(const AssetImage("assets/images/default-pfp.png"),
-          "Mukesh",
-          "@iownindia", "10th Dec,2020"),
+          "Mukesh", "@iownindia", "10th Dec,2020"),
       FavouritesModal(const AssetImage("assets/images/default-pfp.png"),
-          "Mukesh",
-          "@iownindia", "10th Dec,2020"),
+          "Mukesh", "@iownindia", "10th Dec,2020"),
       FavouritesModal(const AssetImage("assets/images/default-pfp.png"),
-          "Mukesh",
-          "@iownindia", "10th Dec,2020"),
+          "Mukesh", "@iownindia", "10th Dec,2020"),
       FavouritesModal(const AssetImage("assets/images/default-pfp.png"),
-          "Mukesh",
-          "@iownindia", "10th Dec,2020"),
+          "Mukesh", "@iownindia", "10th Dec,2020"),
       FavouritesModal(const AssetImage("assets/images/default-pfp.png"),
-          "Mukesh",
-          "@iownindia", "10th Dec,2020"),
+          "Mukesh", "@iownindia", "10th Dec,2020"),
       FavouritesModal(const AssetImage("assets/images/default-pfp.png"),
-          "Mukesh",
-          "@iownindia", "10th Dec,2020"),
+          "Mukesh", "@iownindia", "10th Dec,2020"),
       FavouritesModal(const AssetImage("assets/images/default-pfp.png"),
-          "Mukesh",
-          "@iownindia", "10th Dec,2020"),
+          "Mukesh", "@iownindia", "10th Dec,2020"),
       FavouritesModal(const AssetImage("assets/images/default-pfp.png"),
-          "Mukesh",
-          "@iownindia", "10th Dec,2020"),
+          "Mukesh", "@iownindia", "10th Dec,2020"),
       FavouritesModal(const AssetImage("assets/images/default-pfp.png"),
-          "Mukesh",
-          "@iownindia", "10th Dec,2020"),
+          "Mukesh", "@iownindia", "10th Dec,2020"),
     ];
     var textTheme = Theme.of(context).textTheme;
     Size size = MediaQuery.of(context).size;
@@ -81,22 +70,14 @@ class FavouritesScreen extends StatelessWidget {
                       style: textTheme.titleMedium,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10.0),
                     child: CustomTextField(
                       outlined: true,
-                      suffixIcon: Container(
-                        padding: const EdgeInsets.all(15),
-                        child: SvgPicture.asset(
-                          "assets/icons/bill-fill.svg",
-                          width: 1,
-                          height: 1,
-                        ),
-                      ),
+                      placeHolder: "Enter example@example.com",
                     ),
                   ),
                   Center(
-                    
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       child: CustomActionButton(
