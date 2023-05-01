@@ -1,6 +1,5 @@
 import 'package:aaryapay/screens/Send/components/green_box.dart';
 import 'package:aaryapay/screens/Send/components/trans_details.dart';
-import 'package:aaryapay/screens/Send/components/transaction_details.dart';
 import 'package:aaryapay/screens/Send/receiver_scan_confirmation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
