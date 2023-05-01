@@ -53,71 +53,75 @@ class CustomTextField extends StatelessWidget {
         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Visibility(
-              visible: enableTopText!,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5.0),
-                child: Text(
-                  topText!,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall!
-                      .merge(const TextStyle(fontWeight: FontWeight.w700)),
-                ),
-              )),
+            visible: enableTopText!,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5.0),
+              child: Text(
+                topText!,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall!
+                    .merge(const TextStyle(fontWeight: FontWeight.w700)),
+              ),
+            ),
+          ),
           TextField(
-              style: Theme.of(context).textTheme.bodyLarge,
-              controller: messageController,
-              obscureText: isPassword,
-              onChanged: onChanged,
-              decoration: InputDecoration(
-                  // labelText: label ?? " ",
-                  icon: prefixIcon,
-                  suffixIcon: isPassword
-                      ? Container(
-                          padding: const EdgeInsets.all(12),
-                          child: SvgPicture.asset("assets/icons/invisible.svg",
-                            width: 10,
-                            colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.primary,
-                                BlendMode.srcIn),
-                          ),
-                        )
-                      : suffixIcon,
-                  // errorText: error,
-                  counter: counter,
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  enabledBorder: !outlined!
-                      ? UnderlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.primary,
-                              width: 1.0))
-                      : OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: const BorderSide(
-                              color: Color.fromARGB(50, 0, 0, 0),
-                              width: 1.0)),
-                  hintText: placeHolder,
-                  hintStyle: placeHolderSize ??
-                      Theme.of(context).textTheme.titleSmall!.merge(
-                            TextStyle(
-                                color:
-                                    Theme.of(context).colorScheme.onTertiary),
-                          ),
-                  focusedBorder: !outlined!
-                      ? UnderlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.primary,
-                            width: 2.0,
-                          ),
-                        )
-                      : OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.primary,
-                              width: 2.0)))),
+            style: Theme.of(context).textTheme.bodyLarge,
+            controller: messageController,
+            obscureText: isPassword,
+            onChanged: onChanged,
+            decoration: InputDecoration(
+              // labelText: label ?? " ",
+              icon: prefixIcon,
+              suffixIcon: isPassword
+                  ? Container(
+                      padding: const EdgeInsets.all(12),
+                      child: SvgPicture.asset(
+                        "assets/icons/invisible.svg",
+                        width: 10,
+                        colorFilter: ColorFilter.mode(
+                            Theme.of(context).colorScheme.primary,
+                            BlendMode.srcIn),
+                      ),
+                    )
+                  : suffixIcon,
+              // errorText: error,
+              counter: counter,
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              enabledBorder: !outlined!
+                  ? UnderlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.primary,
+                          width: 1.0))
+                  : OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: const BorderSide(
+                          color: Color.fromARGB(50, 0, 0, 0), width: 1.0),
+                    ),
+              hintText: placeHolder,
+              hintStyle: placeHolderSize ??
+                  Theme.of(context).textTheme.titleSmall!.merge(
+                        TextStyle(
+                            color: Theme.of(context).colorScheme.onTertiary),
+                      ),
+              focusedBorder: !outlined!
+                  ? UnderlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.primary,
+                        width: 2.0,
+                      ),
+                    )
+                  : OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.primary,
+                          width: 2.0),
+                    ),
+            ),
+          ),
         ],
       ),
     );
