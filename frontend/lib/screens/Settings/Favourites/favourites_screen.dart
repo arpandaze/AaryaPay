@@ -32,7 +32,7 @@ class FavouritesScreen extends StatelessWidget {
       create: (context) => FavouritesBloc(
         favouritesRepository: FavouritesRepository(
             token: context.read<AuthenticationBloc>().state.token),
-      )..add(FavouritesLoadEvent()),
+      ),
       child: Container(
         color: colorScheme.background,
         child: body(context),
@@ -41,13 +41,10 @@ class FavouritesScreen extends StatelessWidget {
   }
 
   Widget body(BuildContext context) {
-    List<FavouritesModal> itemList = [
-      FavouritesModal(
-          name: "Mukesh", userTag: "@iownindia", dateAdded: "10th Dec,2020"),
-    ];
     var textTheme = Theme.of(context).textTheme;
     Size size = MediaQuery.of(context).size;
     return BlocBuilder<FavouritesBloc, FavouritesState>(
+      buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
         return SettingsWrapper(
             pageName: " Favourites",
@@ -65,11 +62,14 @@ class FavouritesScreen extends StatelessWidget {
                         style: textTheme.titleMedium,
                       ),
                     ),
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.symmetric(vertical: 10.0),
                       child: CustomTextField(
                         outlined: true,
                         placeHolder: "Enter example@example.com",
+                        onChanged: (value) => context
+                            .read<FavouritesBloc>()
+                            .add(FavouritesFieldChanged(email: value)),
                       ),
                     ),
                     Center(
@@ -92,15 +92,19 @@ class FavouritesScreen extends StatelessWidget {
                         style: textTheme.titleMedium,
                       ),
                     ),
-                  if (state.isLoaded) ...state.favouritesList!
-                        .map((item) => FavouritesCard(
-                              imageSrc: AssetImage("assets/images/pfp.jpg"),
-                              name: item['first_name'],
-                              userTag: item['email'],
-                              dateAdded: DateTime.parse(item['date_added']).toString().substring(0,10),
-                            )).toList() else Container(),
-                    
-                    
+                    if (state.isLoaded!)
+                      ...state.favouritesList!
+                          .map((item) => FavouritesCard(
+                                imageSrc: AssetImage("assets/images/pfp.jpg"),
+                                name: item['first_name'],
+                                userTag: item['email'],
+                                dateAdded: DateTime.parse(item['date_added'])
+                                    .toString()
+                                    .substring(0, 10),
+                              ))
+                          .toList().reversed
+                    else
+                      Text("${state.isLoaded}"),
                   ],
                 ),
               ),

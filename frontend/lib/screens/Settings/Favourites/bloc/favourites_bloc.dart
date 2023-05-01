@@ -26,17 +26,27 @@ class FavouritesBloc extends Bloc<FavouritesEvent, FavouritesState> {
       : super(const FavouritesState()) {
     on<AddButtonClicked>(_onAddButtonClicked);
     on<FavouritesLoadEvent>(_onFavouritesLoad);
+    on<FavouritesFieldChanged>(_onFavouritesFieldChanged);
+    add(FavouritesLoadEvent());
+  }
+
+  void _onFavouritesFieldChanged(
+      FavouritesFieldChanged event, Emitter<FavouritesState> emit) async {
+    emit(state.copyWith(email: event.email));
   }
 
   void _onAddButtonClicked(
-      AddButtonClicked event, Emitter<FavouritesState> emit) async {}
+      AddButtonClicked event, Emitter<FavouritesState> emit) async {
+    final response =
+        await favouritesRepository.postFavorites(email: state.email!);
+    if (response["status"] == 201) {
+      add(FavouritesLoadEvent());
+    }
+  }
 
   void _onFavouritesLoad(
       FavouritesLoadEvent event, Emitter<FavouritesState> emit) async {
     final response = await favouritesRepository.getFavourites();
-
-    print(response['data']);
     emit(state.copyWith(favouritesList: response['data'], isLoaded: true));
-    print("STATE");
   }
 }

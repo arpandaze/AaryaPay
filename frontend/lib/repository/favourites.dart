@@ -31,4 +31,30 @@ class FavouritesRepository {
       throw Exception("No Session Found!!");
     }
   }
+
+  Future<Map<String, dynamic>> postFavorites({required String email}) async {
+    if (token != null) {
+      final headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cookie": "session=$token",
+      };
+      final body = {
+        "email": email,
+      };
+      final url = Uri.parse('$backendBase/favorites');
+      var response = await httpclient.post(url,
+          headers: headers, encoding: Encoding.getByName('utf-8'), body: body);
+      if (response.statusCode != 201) {
+        throw Exception("Post failed! Error adding to favorites list.");
+      }
+      if (response.body.isNotEmpty) {
+        var decodedResponse = jsonDecode(response.body);
+        return {"response":decodedResponse, "status": response.statusCode};
+      } else {
+        throw Exception("Empty");
+      }
+    } else {
+      throw Exception("No Session Found!!");
+    }
+  }
 }
