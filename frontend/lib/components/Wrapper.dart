@@ -17,6 +17,7 @@ class Wrapper extends StatelessWidget {
         width: double.infinity,
         height: size.height,
         child: Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.background,
           bottomNavigationBar: NavBar(
             pageName: pageName,
             size: size,

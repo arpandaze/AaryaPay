@@ -25,7 +25,7 @@ class NavBar extends StatelessWidget {
       alignment: const Alignment(-0.5, 0.5),
 
       decoration: BoxDecoration(
-        boxShadow: kElevationToShadow[4],
+        boxShadow: kElevationToShadow[3],
         color: Theme.of(context).colorScheme.background,
       ),
       // border: Border.all(color: Colors.black)),
