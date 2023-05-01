@@ -1,8 +1,10 @@
 package favorites
 
 import (
+	"database/sql"
+	"fmt"
 	"main/core"
-	"main/telemetry"
+	. "main/telemetry"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,12 +14,12 @@ import (
 type RemoveFavoriteController struct{}
 
 func (RemoveFavoriteController) RemoveFavorite(c *gin.Context) {
-	l := telemetry.Logger(c).Sugar()
-	var favInput struct {
-		FavoriteAccount string `form:"favorite_account"`
+	l := Logger(c).Sugar()
+	var favRemoveInput struct {
+		Email string `form:"email"`
 	}
 
-	if err := c.Bind(&favInput); err != nil {
+	if err := c.Bind(&favRemoveInput); err != nil {
 		msg := "Invalid Request Payload"
 
 		l.Errorw(msg,
@@ -26,15 +28,6 @@ func (RemoveFavoriteController) RemoveFavorite(c *gin.Context) {
 
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg})
 		return
-	}
-
-	favUUID, err := uuid.Parse(favInput.FavoriteAccount)
-
-	if err != nil {
-		telemetry.Logger(c).Sugar().Errorw("Error while parsing cookie",
-			"error", err,
-		)
-		panic(err)
 	}
 
 	user, err := core.GetActiveUser(c)
@@ -48,44 +41,70 @@ func (RemoveFavoriteController) RemoveFavorite(c *gin.Context) {
 		return
 	}
 
-	if favUUID == uuid.Nil {
-		msg := "Account to Favorite is required!"
+	fmt.Println("")
+	fmt.Println(favRemoveInput.Email)
+	fmt.Println("")
+	if favRemoveInput.Email == "" {
+		msg := "Account to remove favorite is required!"
 
 		l.Warnw(msg,
-			"favorite_account", favUUID)
+			"id", user,
+			"favorite_account", favRemoveInput.Email)
 
 		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg})
 		return
 	}
 
-	var exists bool
-	core.DB.QueryRow("SELECT EXISTS (SELECT id FROM Users WHERE id=$1)", favUUID).Scan(&exists)
+	var userID string
+	err = core.DB.QueryRow("SELECT id FROM Users WHERE email = $1", favRemoveInput.Email).Scan(&userID)
 
-	if !exists {
-		msg := "The account to add as favorite does not exist"
+	if err == sql.ErrNoRows {
+		msg := "No account associated with the email was found"
 
 		l.Warnw(msg,
-			"id: ", favUUID,
+			"id", user,
+			"email", favRemoveInput.Email,
 		)
 
-		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
 		return
-	}
-
-	core.DB.QueryRow("SELECT EXISTS (SELECT id FROM favorites WHERE favorite_owner = $1 AND favorite_account = $2)", user, favUUID).Scan(&exists)
-
-	if !exists {
-		msg := "The account is not added as your favorite"
-
-		l.Warnw(msg,
-			"id: ", favUUID,
+	} else if err != nil {
+		msg := "Failed to execute SQL statement"
+		l.Errorw(msg,
+			"error", err,
 		)
-
-		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
 		return
 	}
 
+	favUUID, err := uuid.Parse(userID)
+
+	if err != nil {
+		l.Errorw("Error while parsing UUID",
+			"error", err,
+		)
+		return
+	}
+
+	var favoriteExists bool
 	query := `
+		SELECT EXISTS(SELECT 1 FROM Favorites WHERE favorite_owner = $1 AND favorite_account = $2) AS favorite_exists
+	`
+	core.DB.QueryRow(query, user, favUUID).Scan(&favoriteExists)
+
+	if !favoriteExists {
+		msg := "The account is not added as favorite!"
+
+		l.Warnw(msg,
+			"favorite_owner ", user,
+			"favorite_account", favUUID,
+		)
+
+		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg})
+		return
+	}
+
+	query = `
 	DELETE FROM favorites
 	WHERE favorite_owner = $1 AND favorite_account = $2
 	`
@@ -98,7 +117,7 @@ func (RemoveFavoriteController) RemoveFavorite(c *gin.Context) {
 			"error", err,
 		)
 
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
 		return
 	}
 
@@ -108,6 +127,5 @@ func (RemoveFavoriteController) RemoveFavorite(c *gin.Context) {
 		"favorite_owner", user,
 		"favorite_account", favUUID,
 	)
-	c.JSON(http.StatusCreated, gin.H{"msg": msg, "user_id": user})
-
+	c.JSON(http.StatusAccepted, gin.H{"msg": msg, "user_id": user})
 }
