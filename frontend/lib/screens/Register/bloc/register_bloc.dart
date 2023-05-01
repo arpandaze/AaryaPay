@@ -86,7 +86,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
           firstName: state.firstName!,
           lastName: state.lastName!,
           middleName: state.middleName ?? "",
-          dob: (state.dob!.millisecondsSinceEpoch ~/ 1000).toString(), 
+          dob: (state.dob!.millisecondsSinceEpoch ~/ 1000).toString(),
           email: state.email!,
           password: state.password!);
 
@@ -127,16 +127,19 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         "token": state.token!,
       },
     );
-    if (response.statusCode == 401) {
-      emit(state.copyWith(status: RegisterStatus.wrongToken));
-      print(response.body);
-      return;
+    if (response.statusCode != 202) {
+      if (response.statusCode == 401) {
+        print("wrong");
+        emit(state.copyWith(status: RegisterStatus.wrongToken));
+        return;
+      }
+      if (response.statusCode == 500) {
+        emit(state.copyWith(status: RegisterStatus.errorUnknown));
+        return;
+      }
     }
-
     emit(state.copyWith(
         status: RegisterStatus.verifySuccess, page: state.page + 1));
-
-    emit(state.copyWith(status: RegisterStatus.wrongToken, token: ""));
   }
 
   void _onVerifyChanged(VerifyChanged event, Emitter<RegisterState> emit) {
