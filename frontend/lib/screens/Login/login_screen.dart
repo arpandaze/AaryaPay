@@ -1,11 +1,11 @@
-import 'package:aaryapay/components/AuthenticationStatusWrapper.dart';
 import 'package:aaryapay/components/CustomTextField.dart';
+import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
 import 'package:aaryapay/repository/auth.dart';
-import 'package:aaryapay/screens/Home/home_screen.dart';
 import 'package:aaryapay/screens/Login/bloc/login_bloc.dart';
 import 'package:aaryapay/screens/Login/components/login_wrapper.dart';
 import 'package:aaryapay/screens/Login/forgot_password.dart';
+import 'package:aaryapay/screens/Login/login_verify_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,6 +23,16 @@ class LoginScreen extends StatelessWidget {
         create: (context) => LoginBloc(),
         child: BlocConsumer<LoginBloc, LoginState>(
           listener: (context, state) {
+            if (state.verificationStatus == VerificationStatus.unverified) {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const LoginVerifyScreen(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
+                ),
+              );
+            }
             if (state.loginSucess) {
               context.read<AuthenticationBloc>().add(LoggedIn());
             }
