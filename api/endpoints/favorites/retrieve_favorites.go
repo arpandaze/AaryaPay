@@ -62,12 +62,12 @@ func (RetrieveFavoriteController) RetrieveFavorites(c *gin.Context) {
 	defer rows.Close()
 
 	type favoriteRetrieve struct {
-		Id         uuid.UUID `db:"id"`
-		FirstName  string    `db:"first_name"`
-		MiddleName string    `db:"middle_name"`
-		LastName   string    `db:"last_name"`
-		Email      string    `db:"email"`
-		Date_Added string    `db:"date_added"`
+		Id         uuid.UUID `db:"id" json:"id"`
+		FirstName  string    `db:"first_name" json:"first_name"`
+		MiddleName string    `db:"middle_name" json:"middle_name,omitempty"`
+		LastName   string    `db:"last_name" json:"last_name"`
+		Email      string    `db:"email" json:"email"`
+		Date_Added string    `db:"date_added" json:"date_added"`
 	}
 
 	var favList []favoriteRetrieve
