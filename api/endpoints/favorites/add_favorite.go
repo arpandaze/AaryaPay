@@ -1,8 +1,10 @@
 package favorites
 
 import (
+	"database/sql"
 	"main/core"
 	"main/telemetry"
+	. "main/telemetry"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,9 +14,9 @@ import (
 type AddFavoriteController struct{}
 
 func (AddFavoriteController) AddFavorite(c *gin.Context) {
-	l := telemetry.Logger(c).Sugar()
+	l := Logger(c).Sugar()
 	var favInput struct {
-		FavoriteAccount string `form:"favorite_account"`
+		Email string `form:"email"`
 	}
 
 	if err := c.Bind(&favInput); err != nil {
@@ -28,15 +30,6 @@ func (AddFavoriteController) AddFavorite(c *gin.Context) {
 		return
 	}
 
-	favUUID, err := uuid.Parse(favInput.FavoriteAccount)
-
-	if err != nil {
-		telemetry.Logger(c).Sugar().Errorw("Error while parsing cookie",
-			"error", err,
-		)
-		panic(err)
-	}
-
 	user, err := core.GetActiveUser(c)
 
 	if err != nil {
@@ -48,34 +41,53 @@ func (AddFavoriteController) AddFavorite(c *gin.Context) {
 		return
 	}
 
-	if favUUID == uuid.Nil {
+	if favInput.Email == "" {
 		msg := "Account to Favorite is required!"
 
 		l.Warnw(msg,
-			"favorite_account", favUUID)
+			"id", user,
+			"favorite_account", favInput.Email)
 
 		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg})
 		return
 	}
 
-	var userExists, favoriteExists bool
-	query := `
-		SELECT EXISTS(SELECT 1 FROM Users WHERE id = $1) AS user_exists,
-    	EXISTS(SELECT 1 FROM Favorites WHERE favorite_owner = $2 AND favorite_account = $3) AS favorite_exists
-	`
+	var userID string
+	err = core.DB.QueryRow("SELECT id FROM Users WHERE email = $1", favInput.Email).Scan(&userID)
 
-	core.DB.QueryRow(query, favUUID, user, favUUID).Scan(&userExists, &favoriteExists)
-
-	if !userExists {
-		msg := "The account to add as favorite does not exist!"
+	if err == sql.ErrNoRows {
+		msg := "No account associated with the email was found"
 
 		l.Warnw(msg,
-			"id: ", favUUID,
+			"id", user,
+			"email", favInput.Email,
 		)
 
-		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
+		return
+	} else if err != nil {
+		msg := "Failed to execute SQL statement"
+		l.Errorw(msg,
+			"error", err,
+		)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
 		return
 	}
+
+	favUUID, err := uuid.Parse(userID)
+
+	if err != nil {
+		l.Errorw("Error while parsing UUID",
+			"error", err,
+		)
+		return
+	}
+
+	var favoriteExists bool
+	query := `
+		SELECT EXISTS(SELECT 1 FROM Favorites WHERE favorite_owner = $1 AND favorite_account = $2) AS favorite_exists
+	`
+	core.DB.QueryRow(query, user, favUUID).Scan(&favoriteExists)
 
 	if favoriteExists {
 		msg := "The account has already been added as favorite!"
@@ -105,7 +117,7 @@ func (AddFavoriteController) AddFavorite(c *gin.Context) {
   `
 
 	var r_date_added string
-	row := core.DB.QueryRow(query, user, favUUID.String())
+	row := core.DB.QueryRow(query, user, favUUID)
 
 	err = row.Scan(&r_date_added)
 
@@ -127,5 +139,4 @@ func (AddFavoriteController) AddFavorite(c *gin.Context) {
 		"favorite_account", favUUID,
 	)
 	c.JSON(http.StatusCreated, gin.H{"msg": msg, "user_id": user})
-
 }
