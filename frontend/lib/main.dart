@@ -1,4 +1,5 @@
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
+import 'package:aaryapay/screens/Register/bloc/register_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:aaryapay/routes.dart';
 import 'package:aaryapay/theme.dart';
@@ -17,7 +18,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthenticationBloc>(
-            create: (context) => AuthenticationBloc()),
+          create: (context) => AuthenticationBloc(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

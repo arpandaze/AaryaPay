@@ -12,6 +12,7 @@ class AuthenticationRepository {
   Future<Map<String, dynamic>> login(
       {required String email, required String password}) async {
     final url = Uri.parse('$backendBase/auth/login');
+    print("Upwards Here I am");
 
     var response = await http.post(
       url,
@@ -26,6 +27,11 @@ class AuthenticationRepository {
       },
     );
     if (response.statusCode != 202) {
+      if (response.statusCode == 401) {
+        var decodedResponse =
+            jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+        return {"response": decodedResponse, "verification": false};
+      }
       throw Exception("Login Failed! Check Email or Password!");
     }
 
@@ -58,7 +64,11 @@ class AuthenticationRepository {
           key: "private_key",
           value: base64Decode(decodedResponse["private_key"]).toString());
 
-      return {"response": decodedResponse, "two_fa_required": false};
+      return {
+        "response": decodedResponse,
+        "two_fa_required": false,
+        "verification": true,
+      };
     }
   }
 

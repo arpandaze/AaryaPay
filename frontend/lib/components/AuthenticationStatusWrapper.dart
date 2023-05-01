@@ -13,9 +13,7 @@ class AuthenticationStateWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthenticationBloc, AuthenticationState>(
-      listenWhen: (previous, current) => true,
       listener: ((context, state) {
-        // print("Authentication Bloc Listener Triggered ${state.status}");
         if (state.status == AuthenticationStatus.loggedIn) {
           Timer(
             const Duration(microseconds: 0),

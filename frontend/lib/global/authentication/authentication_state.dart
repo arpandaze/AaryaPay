@@ -32,7 +32,6 @@ class AuthenticationState extends Equatable {
 
     var status = AuthenticationStatus.none;
     if (storedUser != null && token != null) {
-      // print("User Loaded Properly!");
       var userObject = jsonDecode(storedUser);
 
       status = AuthenticationStatus.loggedIn;
@@ -44,5 +43,5 @@ class AuthenticationState extends Equatable {
   }
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [loaded, status];
 }

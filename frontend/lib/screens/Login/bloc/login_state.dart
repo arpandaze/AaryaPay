@@ -3,14 +3,14 @@ part of 'login_bloc.dart';
 class LoginState extends Equatable {
   final String email;
   final String password;
-
   final String? errorText;
-
+  final VerificationStatus verificationStatus;
   final bool loginSucess;
   final bool? twoFARequired;
   final String? temporaryToken;
 
   const LoginState({
+    this.verificationStatus = VerificationStatus.unknown,
     this.email = "",
     this.password = "",
     this.errorText = "",
@@ -26,6 +26,7 @@ class LoginState extends Equatable {
   }
 
   LoginState copyWith({
+    VerificationStatus? verificationStatus,
     String? email,
     String? password,
     String? errorText,
@@ -34,6 +35,7 @@ class LoginState extends Equatable {
     String? temporaryToken,
   }) {
     return LoginState(
+      verificationStatus: verificationStatus ?? this.verificationStatus,
       email: email ?? this.email,
       password: password ?? this.password,
       errorText: errorText ?? this.errorText,
@@ -44,6 +46,13 @@ class LoginState extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [email, password, errorText, loginSucess, twoFARequired];
+  List<Object?> get props => [
+        verificationStatus,
+        email,
+        password,
+        errorText,
+        loginSucess,
+        twoFARequired,
+        temporaryToken,
+      ];
 }

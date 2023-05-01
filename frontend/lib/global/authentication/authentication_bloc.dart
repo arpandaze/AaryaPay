@@ -22,7 +22,8 @@ class AuthenticationBloc
 
   void _onLoggedIn(LoggedIn event, Emitter<AuthenticationState> emit) async {
     // print("On Logged in Event Triggered!");
-    emit(await AuthenticationState.load());
+    var nauthState = await AuthenticationState.load();
+    emit(nauthState);
   }
 
   void _onLoadAuthStatus(

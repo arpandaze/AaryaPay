@@ -34,7 +34,7 @@ class LoginScreen extends StatelessWidget {
                 Navigator.pop(context),
               },
               actionButtonFunction: () =>
-                  context.read<LoginBloc>().add(FormSubmitted()),
+                  context.read<LoginBloc>().add(LoginFormSubmitted()),
               children: _midsection(context, size),
             );
           },
@@ -58,7 +58,7 @@ class LoginScreen extends StatelessWidget {
         ),
         CustomTextField(
           onChanged: (value) =>
-              context.read<LoginBloc>().add(EmailChanged(value)),
+              context.read<LoginBloc>().add(LoginEmailChanged(value)),
           padding: const EdgeInsets.only(top: 20),
           width: size.width,
           prefixIcon: Icon(
@@ -70,7 +70,7 @@ class LoginScreen extends StatelessWidget {
         ),
         CustomTextField(
             onChanged: (value) =>
-                context.read<LoginBloc>().add(PasswordChanged(value)),
+                context.read<LoginBloc>().add(LoginPasswordChanged(value)),
             prefixIcon: Icon(
               FontAwesomeIcons.lock,
               color: Theme.of(context).colorScheme.primary,
