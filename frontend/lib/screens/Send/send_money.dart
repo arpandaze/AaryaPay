@@ -3,6 +3,7 @@ import 'package:aaryapay/components/CustomCircularAvatar.dart';
 import 'package:aaryapay/screens/Send/bloc/send_money_bloc.dart';
 import 'package:aaryapay/screens/Send/components/balance_box.dart';
 import 'package:aaryapay/screens/Send/components/numpad_button.dart';
+import 'package:aaryapay/screens/Send/payment_complete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -193,6 +194,14 @@ class SendMoney extends StatelessWidget {
                         label: "Send",
                         width: size.width,
                         borderRadius: 10,
+                        onClick: () => Navigator.of(context).push(
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation1, animation2) =>
+                                const PaymentComplete(),
+                            transitionDuration: Duration.zero,
+                            reverseTransitionDuration: Duration.zero,
+                          ),
+                        ),
                       )
                     ]),
               ),
