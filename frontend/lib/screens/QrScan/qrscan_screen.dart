@@ -36,7 +36,10 @@ class QrScanScreen extends StatelessWidget {
             Container(
               child: QRView(
                 key: context.read<QrScannerBloc>().qrKey,
-                onQRViewCreated: context.read<QrScannerBloc>().onQRViewCreated,
+                onQRViewCreated: (QRViewController controller) =>
+                    controller.scannedDataStream.listen((event) {
+                  context.read<QrScannerBloc>().add(QrCodeScanned(event.code!));
+                }),
                 overlay: QrScannerOverlayShape(
                     borderColor: Colors.white,
                     borderRadius: 34,
@@ -46,6 +49,7 @@ class QrScanScreen extends StatelessWidget {
                         : 300.0),
               ),
             ),
+            Text(state.code ?? ""),
             Column(
               children: <Widget>[
                 Row(

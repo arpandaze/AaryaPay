@@ -18,13 +18,6 @@ class QrScannerBloc extends Bloc<QrScannerEvent, QrScannerState> {
     emit(state.copyWith(code: event.code));
   }
 
-  void onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((event) {
-      add(QrCodeScanned(event.code!));
-    });
-  }
-
   @override
   Future<void> close() {
     controller!.dispose();
