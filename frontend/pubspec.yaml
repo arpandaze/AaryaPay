@@ -30,7 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  libaaryapay:
+    path: ../libaaryapay
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -42,12 +43,15 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   icons_plus: ^4.0.0
   line_icons: ^2.0.1
+  flutter_bloc: ^8.1.2
+  email_validator: ^2.1.17
   qr_code_scanner: ^1.0.1
   mobile_scanner: ^3.2.0
   equatable: ^2.0.5
-  flutter_bloc: ^8.1.2
   qr_flutter: ^4.0.0
+  flutter_secure_storage: ^8.0.0
   http: ^0.13.5
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

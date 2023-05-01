@@ -20,11 +20,11 @@ class SettingsWrapper extends StatelessWidget {
     return SafeArea(
       top: true,
       bottom: true,
-      child: Container(
-        width: double.infinity,
+      child: SizedBox(
+        width: size.width,
         height: size.height,
         child: Scaffold(
-          bottomNavigationBar: SettingsBottomBar(),
+          bottomNavigationBar: const SettingsBottomBar(),
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(150),
             child: SettingsTopBar(

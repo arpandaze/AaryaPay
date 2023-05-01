@@ -43,7 +43,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                   ),
                 ),
             icon: SvgPicture.asset(
-              "assets/icons/profile-line.svg",
+              "assets/icons/lock.svg",
               width: 20,
               height: 20,
             ),
@@ -61,7 +61,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
             ),
           ),
           icon: SvgPicture.asset(
-            "assets/icons/profile-line.svg",
+            "assets/icons/2fa.svg",
             width: 20,
             height: 20,
           ),

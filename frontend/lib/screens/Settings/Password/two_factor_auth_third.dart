@@ -13,6 +13,7 @@ class TwoFactorAuthThird extends StatelessWidget {
     return SettingsWrapper(
         pageName: "Successful",
         children: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -22,12 +23,16 @@ class TwoFactorAuthThird extends StatelessWidget {
                   // padding: EdgeInsets.symmetric(vertical: 30),
                   // decoration: BoxDecoration(
                   //     border: Border.all(color: Colors.cyanAccent)),
-                  child: const CircleAvatar(
-                    backgroundImage:
-                        AssetImage("assets/images/default-pfp.png"),
-                    minRadius: 90,
-                    maxRadius: 120,
-                  )),
+                child: Container(
+                  height: size.height * 0.3,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.contain,
+                      image: AssetImage("assets/images/logo.png"),
+                    ),
+                  ),
+                ),
+              ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -59,10 +64,7 @@ class TwoFactorAuthThird extends StatelessWidget {
                 style: textTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
-              Text(
-                "You are ready for secure tranfers to come along",
-                style: textTheme.titleSmall,
-              ),
+             
               Center(
                 child: CustomActionButton(
                   label: "Done",

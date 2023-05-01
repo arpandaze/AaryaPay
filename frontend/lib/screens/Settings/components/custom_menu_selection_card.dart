@@ -42,8 +42,9 @@ class CustomMenuSelectionCard extends StatelessWidget {
                         margin: const EdgeInsets.only(left: 15),
                         child: Text(
                           label,
-                          style: textTheme.bodyLarge,
-                        ))
+                        style: textTheme.titleSmall,
+                      ),
+                    )
                   ],
                 ),
               ),

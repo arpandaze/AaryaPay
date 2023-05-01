@@ -27,7 +27,9 @@ class DateField extends StatefulWidget {
 
 class _DateFieldState extends State<DateField> {
   DateTime _selectedDate = DateTime.now();
-
+  bool firstDay = true;
+  bool firstMonth = true;
+  bool firstYear = true;
   // @override
   // void initState() {
   //   super.initState();
@@ -105,8 +107,9 @@ class _DateFieldState extends State<DateField> {
                   ),
                 ),
                 items: _getDayItems(),
-                value: _selectedDate.day,
+                value: firstDay ? null : _selectedDate.day,
                 onChanged: (value) {
+                  firstDay = false;
                   setState(() {
                     _selectedDate = DateTime(
                         _selectedDate.year, _selectedDate.month, value!);
@@ -125,7 +128,7 @@ class _DateFieldState extends State<DateField> {
                       ),
                 ),
                 // isExpanded: true,
-                value: months[_selectedDate.month],
+                value: firstMonth ? null : months[_selectedDate.month],
                 alignment: Alignment.center,
                 underline: Container(
                   // width: 1000,
@@ -139,6 +142,7 @@ class _DateFieldState extends State<DateField> {
                 ),
                 items: _getMonthItems(),
                 onChanged: (value) {
+                  firstMonth = false;
                   setState(() {
                     _selectedDate = DateTime(
                         _selectedDate.year,
@@ -159,7 +163,7 @@ class _DateFieldState extends State<DateField> {
                       ),
                 ),
                 // isExpanded: true,
-                value: _selectedDate.year,
+                value: firstYear ? null : _selectedDate.year,
                 alignment: Alignment.center,
                 underline: Container(
                   // width: 1000,
@@ -173,6 +177,7 @@ class _DateFieldState extends State<DateField> {
                 ),
                 items: _getYearItems(),
                 onChanged: (value) {
+                  firstYear = false;
                   setState(() {
                     _selectedDate = DateTime(
                         value!, _selectedDate.month, _selectedDate.day);

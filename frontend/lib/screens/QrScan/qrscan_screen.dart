@@ -46,6 +46,7 @@ class QrScanScreen extends StatelessWidget {
                         : 300.0),
               ),
             ),
+            Text(state.code ?? ""),
             Column(
               children: <Widget>[
                 Row(

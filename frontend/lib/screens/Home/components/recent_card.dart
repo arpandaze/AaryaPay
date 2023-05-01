@@ -25,25 +25,13 @@ class RecentCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
-              // Container(
-              //     margin: EdgeInsets.only(right: 10),
-              //     child: Text(
-              //       "See All",
-              //       style: Theme.of(context).textTheme.bodyMedium!.merge(
-              //           TextStyle(
-              //               color: Theme.of(context).colorScheme.primary)),
-              //     )),
             ],
           ),
         ),
         Container(
-          decoration:
-              BoxDecoration(color: Theme.of(context).colorScheme.background),
-          // margin: EdgeInsets.only(top: 10),
           padding: const EdgeInsets.only(left: 10, bottom: 5),
           width: double.infinity,
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               RecentPaymentCard(
                 isDebit: true,
@@ -55,7 +43,7 @@ class RecentCard extends StatelessWidget {
               RecentPaymentCard(
                 label: "Amazon Payment Rebate asadasasdasdasdas",
                 finalAmt: "18153.64",
-                transactionAmt: "1111150.00",
+                transactionAmt: "11150.00",
                 date: "January 18 2020",
               ),
               RecentPaymentCard(

@@ -43,24 +43,28 @@ class LastSynchronized extends StatelessWidget {
                   CustomStatusButton(
                       widget: SvgPicture.asset(
                         "assets/icons/sync.svg",
-                        height: 11,
-                        width: 11,
+                        height: 14,
+                        width: 14,
                       ),
                       label: "Sync"),
                   Container(
-                      width: size.width * 0.18,
-                      margin: const EdgeInsets.only(top: 10),
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          color: colorScheme.secondary,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Text(
-                        "Pending",
-                        textAlign: TextAlign.center,
-                        style: textTheme.bodySmall!.merge(
-                          TextStyle(color: colorScheme.background),
+                    width: size.width * 0.20,
+                    margin: const EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    decoration: BoxDecoration(
+                      color: colorScheme.secondary,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      "Pending",
+                      textAlign: TextAlign.center,
+                      style: textTheme.bodyMedium!.merge(
+                        TextStyle(
+                          color: colorScheme.background,
                         ),
-                      )),
+                      ),
+                    ),
+                  ),
                 ],
               )
             ]),

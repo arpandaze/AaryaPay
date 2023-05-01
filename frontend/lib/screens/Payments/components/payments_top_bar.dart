@@ -26,7 +26,7 @@ class PaymentsTopBar extends StatelessWidget {
               children: [
                 Text(
                   "Pending",
-                  style: textTheme.bodySmall,
+                  style: textTheme.bodyMedium,
                 ),
                 Text(
                   "${items_length ?? 3}",
@@ -38,7 +38,7 @@ class PaymentsTopBar extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("Total Pending Amount", style: textTheme.bodySmall),
+                Text("Total Pending Amount", style: textTheme.bodyMedium),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.end,

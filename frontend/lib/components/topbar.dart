@@ -29,40 +29,49 @@ class TopBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Container(
-                      child: Text(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
                     "Balance",
-                    style: Theme.of(context).textTheme.bodyLarge!.merge(
+                  style: Theme.of(context).textTheme.labelMedium!.merge(
                         TextStyle(
-                            color: Theme.of(context).colorScheme.onPrimary)),
-                  )),
+                            color: Theme.of(context).colorScheme.onPrimary),
+                      ),
+                ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Container(
-                        child: SvgPicture.asset(
-                          "assets/icons/rupee.svg",
-                          colorFilter:
-                              ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                          width: 22,
-                          height: 22,
-                        ),
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: SvgPicture.asset(
+                      "assets/icons/rupee.svg",
+                      colorFilter:
+                          const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                      width: 25,
+                      height: 25,
                       ),
                     ),
                     Container(
+                    width: size.width * 0.45,
                       child: Text(
-                        "18,533.45",
-                        style: Theme.of(context).textTheme.labelMedium!.merge(
+                      "233,124.45",
+                      style: Theme.of(context).textTheme.labelLarge!.merge(
                             TextStyle(
                                 color:
                                     Theme.of(context).colorScheme.onPrimary)),
                       ),
                     ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: SvgPicture.asset(
+                      "assets/icons/invisible.svg",
+                      colorFilter:
+                          const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                      width: 22,
+                      height: 22,
+                    ),
+                  ),
                     // Container(
                     //   margin: EdgeInsets.only(left: 10),
                     //   child: ImageIcon(
@@ -108,7 +117,8 @@ class TopBar extends StatelessWidget {
                 ),
               ],
             ),
-          ]),
+        ],
+      ),
     );
   }
 }

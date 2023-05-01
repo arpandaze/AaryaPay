@@ -25,7 +25,7 @@ class NavBar extends StatelessWidget {
       alignment: const Alignment(-0.5, 0.5),
 
       decoration: BoxDecoration(
-        boxShadow: kElevationToShadow[4],
+        boxShadow: kElevationToShadow[3],
         color: Theme.of(context).colorScheme.background,
       ),
       // border: Border.all(color: Colors.black)),
@@ -152,7 +152,7 @@ class NavBar extends StatelessWidget {
                           children: [
                             SvgPicture.asset(
                               pageName == "statements"
-                                  ? "assets/icons/bill-fill.svg"
+                                  ? "assets/icons/statements-fill.svg"
                                   : "assets/icons/statements.svg",
                               colorFilter: ColorFilter.mode(
                                 Theme.of(context).colorScheme.primary,

@@ -1,1 +1,13 @@
-const backendBase = "http://192.168.1.65:8080/v1";
+const backendBase = "http://192.168.1.70:8080/v1";
+
+enum AuthenticationStatus {
+  loggedIn,
+  loggedOut,
+  none,
+}
+
+enum VerificationStatus {
+  unknown,
+  verified,
+  unverified,
+}

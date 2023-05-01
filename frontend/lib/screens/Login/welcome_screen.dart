@@ -1,6 +1,8 @@
+import 'package:aaryapay/global/authentication/authentication_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:aaryapay/screens/Login/login_screen.dart';
 import 'package:aaryapay/screens/Login/components/login_wrapper.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -8,6 +10,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     return LoginWrapper(
       children: _midSection(context, size),
       actionButtonFunction: () => {
@@ -52,10 +55,7 @@ class WelcomeScreen extends StatelessWidget {
         Container(
           child: Text(
             "Does anyone even read this text. No. Why are you reading this text. Just login already, this text is worthless.",
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium!
-                .merge(
+            style: Theme.of(context).textTheme.titleMedium!.merge(
                   const TextStyle(height: 1.5),
                 ),
             textAlign: TextAlign.center,
