@@ -8,13 +8,16 @@ class CustomActionButton extends StatelessWidget {
       this.width,
       this.height,
       this.borderRadius,
-      this.actionLogo})
+      this.actionLogo,
+      this.margin,
+  })
       : super(key: key);
   final String? label;
   final Function()? onClick;
   final double? width;
   final double? height;
   final double? borderRadius;
+  final double? margin;
   final Widget? actionLogo;
   @override
   Widget build(BuildContext context) {
@@ -24,7 +27,6 @@ class CustomActionButton extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       child: Container(
         width: width ?? size.width * 0.6,
-        margin: const EdgeInsets.symmetric(horizontal: 30),
         alignment: Alignment.center,
         height: height ?? 50,
         decoration: BoxDecoration(

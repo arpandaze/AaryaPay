@@ -1,4 +1,4 @@
-import 'package:aaryapay/screens/Send/components/transaction_details.dart';
+import 'package:aaryapay/screens/Send/components/trans_details_outlined.dart';
 import 'package:aaryapay/screens/Send/receiver_scan_confirmation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -91,7 +91,7 @@ class OfflineSend extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            const TransactionDetails(
+            const TransactionDetailsOutlineBox(
                 initiator: "@abhijeetpoudel",
                 amount: "Rs. 240",
                 date: "4/7/2023 5:45 pm"),

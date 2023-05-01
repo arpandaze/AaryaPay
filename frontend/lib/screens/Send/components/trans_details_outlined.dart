@@ -1,11 +1,11 @@
 
 import 'package:flutter/material.dart';
 
-class TransactionDetails extends StatelessWidget {
+class TransactionDetailsOutlineBox extends StatelessWidget {
   final String? initiator;
   final String? amount;
   final String? date;
-  const TransactionDetails({
+  const TransactionDetailsOutlineBox({
     super.key,
     this.initiator,
     this.amount,
@@ -15,16 +15,18 @@ class TransactionDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 200,
       margin: const EdgeInsets.fromLTRB(25,25,25,35),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
           border: Border.all(color: Theme.of(context).colorScheme.outline),
           borderRadius: BorderRadius.circular(8)),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.only(bottom: 35),
+            padding: const EdgeInsets.only(bottom: 10),
             child: Text(
               "Transaction Details",
               style: Theme.of(context).textTheme.titleLarge!.merge(
@@ -32,26 +34,22 @@ class TransactionDetails extends StatelessWidget {
                   ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Initiator",
-                  style: Theme.of(context).textTheme.titleSmall!.merge(
-                        TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.w900),
-                      ),
-                ),
-                Text(initiator ?? "",
-                    style: Theme.of(context).textTheme.titleSmall!),
-              ],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Initiator",
+                style: Theme.of(context).textTheme.titleSmall!.merge(
+                      TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w900),
+                    ),
+              ),
+              Text(initiator ?? "",
+                  style: Theme.of(context).textTheme.titleSmall!),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 15),
+          Container(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -67,8 +65,7 @@ class TransactionDetails extends StatelessWidget {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20),
+          Container(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
