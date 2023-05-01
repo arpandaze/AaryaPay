@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	core.LoadConfig("dev")
+	core.LoadConfigWithMode("dev")
 	core.ConnectDatabase()
 	core.ConnectRedis()
 
