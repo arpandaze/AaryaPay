@@ -40,7 +40,7 @@ class Midsection extends StatelessWidget {
         sender: "321371",
         reciever: "213621",
         startDate: "1682899200",
-        endDate: "1683072000",
+        endDate: "1683027008",
       ),
       Payment(
         title: "Payment for momo",

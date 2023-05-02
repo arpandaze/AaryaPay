@@ -2,6 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
+class TimeRemaining {
+  int timeRemainingMilliSeconds = 0;
+  int day = 0;
+  int hour = 0;
+  int minute = 0;
+  int second = 0;
+
+  TimeRemaining(this.timeRemainingMilliSeconds);
+
+  String display() {
+    if (timeRemainingMilliSeconds < 0) {
+      return "The payment has expired";
+    }
+
+    second = (timeRemainingMilliSeconds / 1000).floor() % 60;
+    minute = (timeRemainingMilliSeconds / (1000 * 60)).floor() % 60;
+    hour = (timeRemainingMilliSeconds / (1000 * 60 * 60)).floor() % 24;
+    day = (timeRemainingMilliSeconds / (1000 * 60 * 60 * 24)).floor();
+
+    if (day == 0) {
+      if (hour == 0) {
+        if (minute == 0) {
+          if (second > 5) {
+            return "Expires in $second second(s)";
+          }
+          return "The payment is expiring soon";
+        }
+        return "Expires in $minute minute(s)";
+      }
+      return "Expires in $hour hour(s)";
+    }
+    return "Expires in $day day(s)";
+  }
+}
+
 class PaymentsMidSectionCard extends StatelessWidget {
   const PaymentsMidSectionCard(
       {Key? key,
@@ -26,26 +61,28 @@ class PaymentsMidSectionCard extends StatelessWidget {
     var textTheme = Theme.of(context).textTheme;
     var colorScheme = Theme.of(context).colorScheme;
 
-    var finalStartDate = DateFormat.yMMMEd().format(
-        DateTime.fromMillisecondsSinceEpoch(int.parse(startDate) * 1000));
-    var finalStartTime = DateFormat.jms().format(
-        DateTime.fromMillisecondsSinceEpoch(int.parse(startDate) * 1000));
+    var startDateObj = DateTime.fromMillisecondsSinceEpoch(
+        int.parse(startDate) * 1000,
+        isUtc: true);
+    var endDateObj = DateTime.fromMillisecondsSinceEpoch(
+        int.parse(endDate) * 1000,
+        isUtc: true);
+    var todayDateObj = DateTime.now().toUtc();
+    // var todayDate = todayDateObj.millisecondsSinceEpoch.toInt() ~/ 1000;
 
-    var finalEndDate = DateFormat.yMMMEd()
-        .format(DateTime.fromMillisecondsSinceEpoch(int.parse(endDate) * 1000));
-    var finalEndTime = DateFormat.jms().format(
-        DateTime.fromMillisecondsSinceEpoch(int.parse(startDate) * 1000));
+    var totalDays = endDateObj.difference(startDateObj).inDays;
+    var timeRemaining = endDateObj.difference(todayDateObj);
+    var d1 = TimeRemaining(timeRemaining.inMilliseconds);
 
-    var todayDate = DateTime.now().millisecondsSinceEpoch.toInt() ~/ 1000;
-    var totalDays = int.parse(endDate) - int.parse(startDate);
-    var totalFinalDate =
-        DateTime.fromMillisecondsSinceEpoch((totalDays.toInt() * 1000)).day;
-
-    var differenceInDate = int.parse(endDate) - todayDate;
-    var finalDifferenceDate = int.parse(endDate) > todayDate
-        ? DateTime.fromMillisecondsSinceEpoch((differenceInDate.toInt() * 1000))
-            .day
-        : -1;
+    //only for formatting
+    var startDateFormattedString =
+        DateFormat.yMMMEd().format(startDateObj.toLocal());
+    var startTimeFormattedString =
+        DateFormat.jms().format(startDateObj.toLocal());
+    var endDateFormattedString =
+        DateFormat.yMMMEd().format(endDateObj.toLocal());
+    var endTimeFormattedString = DateFormat.jms().format(endDateObj.toLocal());
+    var expiryString = d1.display();
 
     return Container(
       padding: const EdgeInsets.all(15),
@@ -128,7 +165,7 @@ class PaymentsMidSectionCard extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              " $finalStartDate ",
+                              " $startDateFormattedString ",
                               style: textTheme.bodyMedium,
                             ),
                           ],
@@ -150,7 +187,7 @@ class PaymentsMidSectionCard extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              " $finalStartTime ",
+                              " $startTimeFormattedString ",
                               style: textTheme.bodyMedium,
                             ),
                           ],
@@ -177,7 +214,7 @@ class PaymentsMidSectionCard extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              " $finalEndDate ",
+                              " $endDateFormattedString ",
                               style: textTheme.bodyMedium,
                             ),
                           ],
@@ -199,7 +236,7 @@ class PaymentsMidSectionCard extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              " $finalEndTime ",
+                              " $endTimeFormattedString ",
                               style: textTheme.bodyMedium,
                             ),
                           ],
@@ -231,16 +268,14 @@ class PaymentsMidSectionCard extends StatelessWidget {
                               ),
                             ),
                             Container(
-                              width: finalDifferenceDate != -1
+                              width: timeRemaining.inMilliseconds > 0
                                   ? constraints.maxWidth *
-                                      (totalFinalDate - finalDifferenceDate) /
-                                      totalFinalDate
+                                      (totalDays - timeRemaining.inDays) /
+                                      totalDays
                                   : constraints.maxWidth,
                               height: 10,
                               decoration: BoxDecoration(
-                                color: finalDifferenceDate > 1
-                                    ? Theme.of(context).colorScheme.primary
-                                    : Theme.of(context).colorScheme.primary,
+                                color: Theme.of(context).colorScheme.primary,
                                 borderRadius: const BorderRadius.all(
                                   Radius.circular(10),
                                 ),
@@ -259,22 +294,20 @@ class PaymentsMidSectionCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  finalDifferenceDate != -1
-                      ? "Safe expiry in $finalDifferenceDate day(s)"
-                      : "The payment has expired",
+                  expiryString,
                   style: textTheme.bodyMedium,
                 ),
                 Container(
                   width: size.width * 0.20,
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   decoration: BoxDecoration(
-                    color: finalDifferenceDate > 1
+                    color: timeRemaining.inMilliseconds > 0
                         ? colorScheme.secondary
                         : colorScheme.onSurface,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    finalDifferenceDate != -1 ? "Pending" : "Expired",
+                    timeRemaining.inMilliseconds > 0 ? "Pending" : "Expired",
                     textAlign: TextAlign.center,
                     style: textTheme.bodyMedium!.merge(
                       TextStyle(
