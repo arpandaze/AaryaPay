@@ -59,11 +59,9 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
       var response = await passwordRepository.changePassword(body: body);
 
       if (response['status'] != 202) {
-      print(response["response"]);
         emit(state.copyWith(status: PasswordChangeStatus.error));
         return;
       }
-      print("success");
       emit(state.copyWith(status: PasswordChangeStatus.success));
     } else {
       emit(state.copyWith(status: PasswordChangeStatus.empty));

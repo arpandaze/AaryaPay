@@ -34,58 +34,50 @@ class ChangePassword extends StatelessWidget {
       builder: (context, state) {
         return SettingsWrapper(
           pageName: "Change Password",
-          children: Center(
-            child: Column(
-              children: [
-                SizedBox(
-                  width: size.width * 0.9,
-                  // height: size.height,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: CustomTextField(
-                            outlined: true,
-                            placeHolder: "Current Password",
-                            isPassword: true,
-                            onChanged: (value) => context
-                                .read<PasswordBloc>()
-                                .add(CurrentChanged(currentPassword: value)),
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                              "Passwords must have 8 characters and include an alphabet, a number, and a special character"),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: CustomTextField(
-                            isPassword: true,
-                            outlined: true,
-                            placeHolder: "New Password",
-                            onChanged: (value) => context
-                                .read<PasswordBloc>()
-                                .add(NewChanged(newPassword: value)),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: CustomTextField(
-                            isPassword: true,
-                            outlined: true,
-                            placeHolder: "Confirm New Password",
-                            onChanged: (value) => context
-                                .read<PasswordBloc>()
-                                .add(ConfirmChanged(confirmPassword: value)),
-                          ),
-                        ),
-                        button(context, size),
-                      ]),
+          children: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomTextField(
+                  outlined: true,
+                  placeHolder: "Current Password",
+                  isPassword: true,
+                  onChanged: (value) => context
+                      .read<PasswordBloc>()
+                      .add(CurrentChanged(currentPassword: value)),
                 ),
-              ],
-            ),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                    "Passwords must have 8 characters and include an alphabet, a number, and a special character"),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomTextField(
+                  isPassword: true,
+                  outlined: true,
+                  placeHolder: "New Password",
+                  onChanged: (value) => context
+                      .read<PasswordBloc>()
+                      .add(NewChanged(newPassword: value)),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomTextField(
+                  isPassword: true,
+                  outlined: true,
+                  placeHolder: "Confirm New Password",
+                  onChanged: (value) => context
+                      .read<PasswordBloc>()
+                      .add(ConfirmChanged(confirmPassword: value)),
+                ),
+              ),
+              button(context, size),
+            ]),
           ),
         );
       },
@@ -96,38 +88,34 @@ class ChangePassword extends StatelessWidget {
     return BlocBuilder<PasswordBloc, PasswordState>(
       builder: (context, state) {
         if (state.status != PasswordChangeStatus.submitting) {
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CustomActionButton(
-                  label: "Save",
-                  width: size.width * 0.5,
-                  height: 50,
-                  borderRadius: 10,
-                  onClick: () {
-                    context.read<PasswordBloc>().add(SubmitEvent());
-                    final snackBar = SnackBar(content: errorText(state.status), backgroundColor: Colors.green);
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    if (state.status == PasswordChangeStatus.success) {
-                      Navigator.of(context).pop();
-                    }
-                  },
-                ),
-              ),
-            ],
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CustomActionButton(
+              label: "Save",
+              width: size.width * 0.6,
+              height: 50,
+              borderRadius: 10,
+              onClick: () {
+                context.read<PasswordBloc>().add(SubmitEvent());
+                final snackBar = SnackBar(
+                  content: errorText(state.status),
+                  backgroundColor: state.status == 4
+                      ? Theme.of(context).colorScheme.surfaceVariant
+                      : Theme.of(context).colorScheme.onSurface,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                if (state.status == PasswordChangeStatus.success) {
+                  Navigator.of(context).pop();
+                }
+              },
+            ),
           );
         } else {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Container(
-                alignment: Alignment.bottomCenter,
-                margin: EdgeInsets.fromLTRB(
-                    0, 0, size.width * 0.1, size.height * 0.05),
-                child: const CircularProgressIndicator(),
-              )
-            ],
+          return Container(
+            alignment: Alignment.bottomCenter,
+            margin:
+                EdgeInsets.fromLTRB(0, 0, size.width * 0.1, size.height * 0.05),
+            child: const CircularProgressIndicator(),
           );
         }
       },
