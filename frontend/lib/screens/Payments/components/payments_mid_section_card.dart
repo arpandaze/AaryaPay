@@ -24,22 +24,33 @@ class PaymentsMidSectionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var textTheme = Theme.of(context).textTheme;
+    var colorScheme = Theme.of(context).colorScheme;
+
     var finalStartDate = DateFormat.yMMMEd().format(
         DateTime.fromMillisecondsSinceEpoch(int.parse(startDate) * 1000));
+    var finalStartTime = DateFormat.jms().format(
+        DateTime.fromMillisecondsSinceEpoch(int.parse(startDate) * 1000));
+
     var finalEndDate = DateFormat.yMMMEd()
         .format(DateTime.fromMillisecondsSinceEpoch(int.parse(endDate) * 1000));
-    var todayDate = DateTime.now().millisecondsSinceEpoch.toString();
-    var differenceInDate = int.parse(endDate) - int.parse(todayDate) / 1000;
-    var finalDifferenceDate =
-        DateTime.fromMillisecondsSinceEpoch((differenceInDate.toInt() * 1000))
-            .day;
+    var finalEndTime = DateFormat.jms().format(
+        DateTime.fromMillisecondsSinceEpoch(int.parse(startDate) * 1000));
 
-    var colorScheme = Theme.of(context).colorScheme;
+    var todayDate = DateTime.now().millisecondsSinceEpoch.toInt() ~/ 1000;
+    var totalDays = int.parse(endDate) - int.parse(startDate);
+    var totalFinalDate =
+        DateTime.fromMillisecondsSinceEpoch((totalDays.toInt() * 1000)).day;
+
+    var differenceInDate = int.parse(endDate) - todayDate;
+    var finalDifferenceDate = int.parse(endDate) > todayDate
+        ? DateTime.fromMillisecondsSinceEpoch((differenceInDate.toInt() * 1000))
+            .day
+        : -1;
+
     return Container(
       padding: const EdgeInsets.all(15),
       margin: const EdgeInsets.only(bottom: 10),
       width: size.width * 0.9,
-      height: size.height * 0.28,
       decoration: BoxDecoration(
           border: Border.all(
             color: const Color.fromARGB(50, 0, 0, 0),
@@ -61,7 +72,7 @@ class PaymentsMidSectionCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
+                SizedBox(
                   width: size.width * 0.40,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -72,12 +83,10 @@ class PaymentsMidSectionCard extends StatelessWidget {
                         textAlign: TextAlign.left,
                         style: textTheme.titleSmall,
                       ),
-                      Container(
-                        child: Text(
-                          amount,
-                          textAlign: TextAlign.right,
-                          style: textTheme.headlineMedium,
-                        ),
+                      Text(
+                        amount,
+                        textAlign: TextAlign.right,
+                        style: textTheme.headlineMedium,
                       ),
                     ],
                   ),
@@ -88,9 +97,9 @@ class PaymentsMidSectionCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Sender : ${sender}", style: textTheme.bodyMedium),
+                Text("Sender : $sender", style: textTheme.bodyMedium),
                 Text(
-                  "Reciever  : ${reciever}",
+                  "Reciever  : $reciever",
                   style: textTheme.bodyMedium,
                 ),
               ],
@@ -100,48 +109,110 @@ class PaymentsMidSectionCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SvgPicture.asset(
-                        "assets/icons/calendar.svg",
-                        width: 16,
-                        height: 16,
-                        colorFilter: ColorFilter.mode(
-                          Theme.of(context).colorScheme.primary,
-                          BlendMode.srcIn,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              "assets/icons/calendar.svg",
+                              width: 16,
+                              height: 16,
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.primary,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                            Text(
+                              " $finalStartDate ",
+                              style: textTheme.bodyMedium,
+                            ),
+                          ],
                         ),
                       ),
-                      Text(
-                        " Start: $finalStartDate $finalDifferenceDate",
-                        style: textTheme.bodyMedium,
-                      )
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              "assets/icons/clock.svg",
+                              width: 18,
+                              height: 18,
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.primary,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                            Text(
+                              " $finalStartTime ",
+                              style: textTheme.bodyMedium,
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SvgPicture.asset(
-                        "assets/icons/bullseye.svg",
-                        width: 16,
-                        height: 16,
-                        colorFilter: ColorFilter.mode(
-                            Theme.of(context).colorScheme.primary,
-                            BlendMode.srcIn),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              "assets/icons/calendar.svg",
+                              width: 18,
+                              height: 18,
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.primary,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                            Text(
+                              " $finalEndDate ",
+                              style: textTheme.bodyMedium,
+                            ),
+                          ],
+                        ),
                       ),
-                      Text(
-                        " End: $finalEndDate",
-                        style: textTheme.bodyMedium,
-                      )
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              "assets/icons/clock.svg",
+                              width: 18,
+                              height: 18,
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.primary,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                            Text(
+                              " $finalEndTime ",
+                              style: textTheme.bodyMedium,
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
+
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
+              padding: const EdgeInsets.symmetric(vertical: 15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -152,7 +223,7 @@ class PaymentsMidSectionCard extends StatelessWidget {
                         return Stack(
                           children: [
                             Container(
-                              height: 8,
+                              height: 10,
                               decoration: BoxDecoration(
                                 color: Theme.of(context).colorScheme.surface,
                                 borderRadius:
@@ -160,10 +231,12 @@ class PaymentsMidSectionCard extends StatelessWidget {
                               ),
                             ),
                             Container(
-                              width: constraints.maxWidth *
-                                  (3 - finalDifferenceDate) /
-                                  3,
-                              height: 8,
+                              width: finalDifferenceDate != -1
+                                  ? constraints.maxWidth *
+                                      (totalFinalDate - finalDifferenceDate) /
+                                      totalFinalDate
+                                  : constraints.maxWidth,
+                              height: 10,
                               decoration: BoxDecoration(
                                 color: finalDifferenceDate > 1
                                     ? Theme.of(context).colorScheme.primary
@@ -186,7 +259,9 @@ class PaymentsMidSectionCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Safe expiry in $finalDifferenceDate day(s)",
+                  finalDifferenceDate != -1
+                      ? "Safe expiry in $finalDifferenceDate day(s)"
+                      : "The payment has expired",
                   style: textTheme.bodyMedium,
                 ),
                 Container(
@@ -199,7 +274,7 @@ class PaymentsMidSectionCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    "Pending",
+                    finalDifferenceDate != -1 ? "Pending" : "Expired",
                     textAlign: TextAlign.center,
                     style: textTheme.bodyMedium!.merge(
                       TextStyle(
