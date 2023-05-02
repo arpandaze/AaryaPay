@@ -8,6 +8,7 @@ import 'package:aaryapay/screens/Settings/components/settings_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class FavouritesModal {
   final AssetImage? imageSrc;
@@ -52,7 +53,7 @@ class FavouritesScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Padding(
@@ -63,7 +64,7 @@ class FavouritesScreen extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: CustomTextField(
                         outlined: true,
                         placeHolder: "Enter example@example.com",
@@ -73,16 +74,13 @@ class FavouritesScreen extends StatelessWidget {
                       ),
                     ),
                     Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: CustomActionButton(
-                          width: size.width * 0.70,
-                          borderRadius: 10,
-                          label: "Add",
-                          onClick: () => context
-                              .read<FavouritesBloc>()
-                              .add(AddButtonClicked()),
-                        ),
+                      child: CustomActionButton(
+                        width: size.width * 0.70,
+                        borderRadius: 10,
+                        label: "Add",
+                        onClick: () => context
+                            .read<FavouritesBloc>()
+                            .add(AddButtonClicked()),
                       ),
                     ),
                     Padding(
@@ -95,17 +93,23 @@ class FavouritesScreen extends StatelessWidget {
                     if (state.isLoaded)
                       ...state.favouritesList!
                           .map((item) => FavouritesCard(
-                                imageSrc: AssetImage("assets/images/pfp.jpg"),
+                              imageSrc:
+                                  const AssetImage("assets/images/pfp.jpg"),
                                 name: item['first_name'],
                                 userTag: item['email'],
-                                dateAdded: DateTime.parse(item['date_added'])
-                                    .toString()
-                                    .substring(0, 10),
-                                onRemove: ()=> context.read<FavouritesBloc>().add(RemoveEvent(email: item['email'])),
-                              ))
+                              dateAdded: DateFormat.yMMMd().format(
+                                DateTime.parse(
+                                  item["date_added"],
+                                ),
+                              ),
+                              onRemove: () => context
+                                  .read<FavouritesBloc>()
+                                  .add(RemoveEvent(email: item['email'])),
+                            ),
+                          )
                           .toList()
                     else
-                      Container(child: Text("No favorites"),),
+                      const Text("No favorites"),
                   ],
                 ),
               ),

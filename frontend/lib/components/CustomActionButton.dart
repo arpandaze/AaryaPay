@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 
 class CustomActionButton extends StatelessWidget {
-  const CustomActionButton(
-      {Key? key,
-      this.label,
-      this.onClick,
-      this.width,
-      this.height,
-      this.borderRadius,
-      this.actionLogo,
-      this.margin,
-  })
-      : super(key: key);
+  const CustomActionButton({
+    Key? key,
+    this.label,
+    this.textTheme,
+    this.onClick,
+    this.width,
+    this.height,
+    this.borderRadius,
+    this.actionLogo,
+    this.color,
+    this.margin,
+  }) : super(key: key);
   final String? label;
   final Function()? onClick;
   final double? width;
@@ -19,6 +20,9 @@ class CustomActionButton extends StatelessWidget {
   final double? borderRadius;
   final double? margin;
   final Widget? actionLogo;
+  final TextStyle? textTheme;
+  final Color? color;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -30,7 +34,7 @@ class CustomActionButton extends StatelessWidget {
         alignment: Alignment.center,
         height: height ?? 50,
         decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary,
+            color: color ?? Theme.of(context).colorScheme.primary,
             borderRadius:
                 BorderRadius.all(Radius.circular(borderRadius ?? 50))),
         child: Row(
@@ -39,8 +43,9 @@ class CustomActionButton extends StatelessWidget {
             actionLogo ?? Container(),
             Text(
               label ?? "LOGIN",
-              style: Theme.of(context).textTheme.titleLarge!.merge(
-                  TextStyle(color: Theme.of(context).colorScheme.background)),
+              style: textTheme ??
+                  Theme.of(context).textTheme.titleLarge!.merge(TextStyle(
+                      color: Theme.of(context).colorScheme.background)),
             ),
           ],
         ),

@@ -1,4 +1,6 @@
+import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/components/CustomCircularAvatar.dart';
+import 'package:aaryapay/components/CustomFavoritesAvatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -31,97 +33,92 @@ class FavouritesCard extends StatelessWidget {
       decoration: BoxDecoration(
           border: Border.all(color: const Color.fromARGB(40, 0, 0, 0)),
           borderRadius: BorderRadius.circular(10)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: LayoutBuilder(
+        builder: (ctx, constraints) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
+              const CustomFavoritesAvatar(
                 width: 60,
-                height: 60,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    shape: BoxShape.circle),
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      fit: BoxFit.contain,
-                      image: AssetImage("assets/images/pfp.jpg"),
-                    ),
-                  ),
-                ),
+                imagesUrl: "assets/images/default-pfp.png",
               ),
-              Container(
-                width: size.width * 0.3,
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+              Container( 
+                width: constraints.maxWidth * 0.55,
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 5),
-                      child:
-                          Text(name ?? "Mukesh", style: textTheme.titleMedium),
+                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      child: Text(name ?? "", style: textTheme.titleMedium),
                     ),
                     Text(
-                      userTag ?? "@iownindia",
+                      userTag ?? "",
                       style: textTheme.bodyMedium,
                     )
                   ],
                 ),
               ),
-            ],
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Container(
-                  width: size.width * 0.22,
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      color: colorScheme.secondary,
-                      borderRadius: BorderRadius.circular(15)),
-                  child: Text(
-                    "Pending",
-                    textAlign: TextAlign.center,
-                    style: textTheme.bodyMedium!.merge(
-                      TextStyle(color: colorScheme.background),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    "Added on: ",
+                    textAlign: TextAlign.right,
+                    style: textTheme.bodyMedium,
+                  ),
+                  Text(
+                    dateAdded ?? "10th Dec 2020",
+                    style: textTheme.bodyMedium,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: GestureDetector(
+                      onTap: onRemove,
+                      child: CustomActionButton(
+                        width: size.width * 0.18,
+                        color: Theme.of(context).colorScheme.onSurface,
+                        height: 30,
+                        textTheme: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .merge(
+                              TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.background),
+                            ),
+                        actionLogo: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: SvgPicture.asset(
+                            "assets/icons/trash.svg",
+                            width: 14,
+                            height: 14,
+                            colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.background,
+                                BlendMode.srcIn),
+                          ),
+                        ),
+                        borderRadius: 5,
+                        label: "Delete",
+                      ),
+
+                      // child: SvgPicture.asset(
+                      //   "assets/icons/close.svg",
+                      //   width: 12,
+                      //   height: 12,
+                      //   colorFilter: ColorFilter.mode(
+                      //       Theme.of(context).colorScheme.onSurface,
+                      //       BlendMode.srcIn),
+                      // ),
                     ),
-                  )),
-              GestureDetector(
-                  onTap: onRemove,
-                  child: SvgPicture.asset(
-                    "assets/icons/close.svg",
-                    width: 10,
-                    height: 10,
-                  )),
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      "Added on: ",
-                      style: textTheme.bodyMedium,
-                    ),
-                    Text(
-                      dateAdded ?? "10th Dec 2020",
-                      style: textTheme.bodyMedium,
-                    )
-                  ],
-                ),
+                  ),
+                ],
               )
             ],
-          )
-        ],
+          );
+        },
       ),
     );
   }
