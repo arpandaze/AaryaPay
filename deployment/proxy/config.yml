@@ -1,0 +1,51 @@
+http:
+  routers:
+    nginx:
+      entryPoints:
+        - web
+      rule: "Host(`localhost`) && (PathPrefix(`/static`) || PathPrefix(`/profile`))"
+      service: nginx
+    backend:
+      entryPoints:
+        - web
+      rule: "Host(`localhost`) && PathPrefix(`/api`)"
+      service: backend
+    mailpit:
+      entryPoints:
+        - web
+      rule: "Host(`localhost`) && Path(`/mail`)"
+      service: mailpit
+  services:
+    nginx:
+      loadBalancer:
+        servers:
+          - url: http://localhost:32145
+    backend:
+      loadBalancer:
+        servers:
+          - url: http://localhost:32234
+    mailpit:
+      loadBalancer:
+        servers:
+          - url: http://localhost:32147
+tcp:
+  routers:
+    postgres:
+      entryPoints:
+        - postgres
+      rule: "HostSNI(`*`)"
+      service: postgres
+    redis:
+      entryPoints:
+        - redis
+      rule: "HostSNI(`*`)"
+      service: redis
+  services:
+    postgres:
+      loadBalancer:
+        servers:
+          - address: "localhost:32221"
+    redis:
+      loadBalancer:
+        servers:
+          - address: "localhost:34232"

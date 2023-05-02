@@ -1,0 +1,16 @@
+api:
+  dashboard: true
+  insecure: true
+
+entryPoints:
+  web:
+    address: ":80"
+  postgres:
+    address: ":5432"
+  redis:
+    address: ":6379"
+
+providers:
+  file:
+    directory: "/etc/traefik"
+    watch: true

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 DB_USER="${POSTGRES_USER:=postadmin}"
-DB_PASSWORD="${POSTGRES_PASSWORD:=postpass}"
+DB_PASSWORD="${POSTGRES_PASSWORD:=11227f9c054247bdb73af64b6a779c0d}"
 CONTAINER_NAME="postgres-aaryapay"
 DB_NAME="${POSTGRES_DB:=aaryapay}"
-DB_PORT="${POSTGRES_PORT:=5432}"
+DB_PORT="${POSTGRES_PORT:=32221}"
 DATA_DIR="./postgresql/data/pgdata"
 
 mkdir -p $DATA_DIR

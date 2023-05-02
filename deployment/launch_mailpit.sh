@@ -18,6 +18,6 @@ echo "Creating new mailpit container!"
 podman run -d \
   --name=$CONTAINER_NAME \
   --restart unless-stopped \
-  -p 8025:8025 \
+  -p 32147:8025 \
   -p 1025:1025 \
   docker.io/axllent/mailpit

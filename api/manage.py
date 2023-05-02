@@ -16,6 +16,7 @@ def main(args):
         else:
             os.system("./scripts/redis.sh")
             os.system("./scripts/postgres.sh")
+            os.system("./scripts/fileserver.sh")
             os.system("./scripts/mailpit.sh")
         exit()
 
