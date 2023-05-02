@@ -41,6 +41,7 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
+
 	var queryPassword string
 	row := core.DB.QueryRow(`
 	SELECT password 
@@ -51,69 +52,83 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 
 	err = row.Scan(&queryPassword)
 
-	switch err {
-	case sql.ErrNoRows:
-		msg := "No account associated with the email was found"
+	if err == sql.ErrNoRows {
+		msg := "No associated account was found"
 
 		l.Warnw(msg,
 			"id", user,
 		)
 
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 		return
-
-	case nil:
-		passwordTest, err := core.VerifyPassword(c, passwordChange.Current_Password, queryPassword)
-		if err != nil {
-			msg := "Failed to verify password!"
-			l.Warnw(msg, "error", err)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
-			return
-		}
-		if !passwordTest {
-			msg := "The password entered is incorrect"
-			l.Warnw(msg,
-				"id", user,
-			)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
-			return
-		}
-
-		passwordHash, err := core.HashPassword(c, passwordChange.New_Password)
-		if err != nil {
-			msg := "Failed to hash password!"
-
-			l.Errorw(msg,
-				"error", err,
-			)
-
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured", "context": telemetry.TraceIDFromContext(c)})
-			return
-		}
-
-		_, err = core.DB.Exec("UPDATE Users SET password=$1 WHERE id=$2", passwordHash, user)
-
-		if err != nil {
-			msg := "Failed to execute SQL statement"
-			l.Errorw(msg,
-				"error", err,
-			)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
-			return
-		}
-
-		msg := "Password Changed Successfully"
-		l.Infow(msg,
-			"id", user,
-		)
-		c.JSON(http.StatusAccepted, gin.H{"msg": msg})
-		return
-
-	default:
+	}
+	if err != nil {
 		l.Errorw("Failed to execute SQL statement",
 			"error", err,
 		)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
+
+	passwordTest, err := core.VerifyPassword(c, passwordChange.Current_Password, queryPassword)
+	if err != nil {
+		msg := "Failed to verify password!"
+		l.Warnw(msg, "error", err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+		return
+	}
+	if !passwordTest {
+		msg := "The password entered is incorrect"
+		l.Warnw(msg,
+			"id", user,
+		)
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+		return
+	}
+
+	passwordHash, err := core.HashPassword(c, passwordChange.New_Password)
+	if err != nil {
+		msg := "Failed to hash password!"
+
+		l.Errorw(msg,
+			"error", err,
+		)
+
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured", "context": telemetry.TraceIDFromContext(c)})
+		return
+	}
+
+	passwordTest, err = core.VerifyPassword(c, passwordChange.New_Password, queryPassword)
+	if err != nil {
+		msg := "Failed to verify password!"
+		l.Warnw(msg, "error", err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+		return
+	}
+
+	if passwordTest {
+		msg := "The new password can not be the same as the old password"
+		l.Warnw(msg,
+			"id", user,
+		)
+		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
+		return
+	}
+
+	_, err = core.DB.Exec("UPDATE Users SET password=$1 WHERE id=$2", passwordHash, user)
+
+	if err != nil {
+		msg := "Failed to execute SQL statement"
+		l.Errorw(msg,
+			"error", err,
+		)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
+		return
+	}
+
+	msg := "Password Changed Successfully"
+	l.Infow(msg,
+		"id", user,
+	)
+	c.JSON(http.StatusAccepted, gin.H{"msg": msg})
 }

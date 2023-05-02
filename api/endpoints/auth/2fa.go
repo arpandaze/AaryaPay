@@ -426,3 +426,39 @@ func (TwoFaController) TwoFALoginConfirm(c *gin.Context) {
 	}
 
 }
+
+func (TwoFaController) TwoFADisable(c *gin.Context) {
+
+	l := telemetry.Logger(c).Sugar()
+
+	user, err := core.GetActiveUser(c)
+
+	if err != nil {
+		l.Errorw("Failed to extract user!",
+			"error", err,
+		)
+		msg := "Invalid or expired session!"
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
+	}
+	query := `
+		UPDATE users
+		SET two_factor_auth = $1
+		WHERE id = $2
+	`
+
+	_, err = core.DB.Exec(query, "", user)
+
+	if err != nil {
+		msg := "Failed to execute SQL statement"
+
+		l.Errorw(msg,
+			"error", err,
+		)
+
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
+		return
+	}
+
+	msg:= "TwoFA disabled successfully"
+	c.JSON(http.StatusAccepted, gin.H{"msg": msg})
+}
