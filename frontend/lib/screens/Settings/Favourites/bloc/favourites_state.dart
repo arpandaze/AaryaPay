@@ -3,7 +3,7 @@ part of 'favourites_bloc.dart';
 class FavouritesState extends Equatable {
   final String? email;
   final List<dynamic>? favouritesList;
-  final bool? isLoaded;
+  final bool isLoaded;
   const FavouritesState({
     this.favouritesList,
     this.email,

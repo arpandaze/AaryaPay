@@ -92,7 +92,7 @@ class FavouritesScreen extends StatelessWidget {
                         style: textTheme.titleMedium,
                       ),
                     ),
-                    if (state.isLoaded!)
+                    if (state.isLoaded)
                       ...state.favouritesList!
                           .map((item) => FavouritesCard(
                                 imageSrc: AssetImage("assets/images/pfp.jpg"),
@@ -101,10 +101,11 @@ class FavouritesScreen extends StatelessWidget {
                                 dateAdded: DateTime.parse(item['date_added'])
                                     .toString()
                                     .substring(0, 10),
+                                onRemove: ()=> context.read<FavouritesBloc>().add(RemoveEvent(email: item['email'])),
                               ))
-                          .toList().reversed
+                          .toList()
                     else
-                      Text("${state.isLoaded}"),
+                      Container(child: Text("No favorites"),),
                   ],
                 ),
               ),

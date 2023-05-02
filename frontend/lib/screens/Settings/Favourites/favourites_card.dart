@@ -1,5 +1,7 @@
 import 'package:aaryapay/components/CustomCircularAvatar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 class FavouritesCard extends StatelessWidget {
   const FavouritesCard({
@@ -8,8 +10,10 @@ class FavouritesCard extends StatelessWidget {
     this.name,
     this.userTag,
     this.dateAdded,
+    this.onRemove,
   }) : super(key: key);
 
+  final void Function()? onRemove;
   final AssetImage? imageSrc;
   final String? name;
   final String? userTag;
@@ -90,6 +94,13 @@ class FavouritesCard extends StatelessWidget {
                     style: textTheme.bodyMedium!.merge(
                       TextStyle(color: colorScheme.background),
                     ),
+                  )),
+              GestureDetector(
+                  onTap: onRemove,
+                  child: SvgPicture.asset(
+                    "assets/icons/close.svg",
+                    width: 10,
+                    height: 10,
                   )),
               Padding(
                 padding: EdgeInsets.only(top: 20),
