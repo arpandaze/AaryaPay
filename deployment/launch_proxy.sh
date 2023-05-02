@@ -21,6 +21,6 @@ podman run -d \
   -v $CONFIG_PATH:/etc/traefik \
   -v acme.json:/acme.json \
   --name $CONTAINER_NAME \
-  traefik:v2.5 \
+  docker.io/library/traefik:v2.5 \
   --log.level=INFO \
   --configfile=/etc/traefik/traefik.yml

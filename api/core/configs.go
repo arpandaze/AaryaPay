@@ -154,6 +154,10 @@ func (r Settings) PRIVATE_KEY_ONLY() [32]byte {
 	return privateKey
 }
 
+func (r Settings) PORT_STUB() string {
+	return fmt.Sprintf(":%d", r.BACKEND_PORT)
+}
+
 func (r Settings) PUBLIC_KEY() [32]byte {
 	decodedKey, err := base64.StdEncoding.DecodeString(r.SECRET_KEY)
 	if err != nil {

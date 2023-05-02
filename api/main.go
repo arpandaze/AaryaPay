@@ -13,5 +13,5 @@ func main() {
 
 	r := Init()
 
-	r.Run()
+	r.Run(core.Configs.PORT_STUB())
 }
