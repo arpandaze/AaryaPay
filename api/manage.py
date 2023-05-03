@@ -69,6 +69,15 @@ def main(args):
         os.system("go run population/populate.go")
         exit()
 
+    elif args[1] == "dremake":
+        os.system(
+            "migrate -source file://migrations -database=postgres://postadmin:11227f9c054247bdb73af64b6a779c0d@arpandaze.tech:5432/aaryapay\\?sslmode=disable down"
+        )
+        os.system(
+            "migrate -source file://migrations -database=postgres://postadmin:11227f9c054247bdb73af64b6a779c0d@arpandaze.tech:5432/aaryapay\\?sslmode=disable up"
+        )
+        exit()
+
     print("No args or invalid args provided!")
     print("Available args: dkstart, start, mig, cm")
 

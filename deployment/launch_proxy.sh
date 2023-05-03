@@ -19,8 +19,9 @@ echo "Creating new proxy container!"
 podman run -d \
   --network host \
   -v $CONFIG_PATH:/etc/traefik \
-  -v acme.json:/acme.json \
+  -v acme:/acme \
   --name $CONTAINER_NAME \
   docker.io/library/traefik:v2.5 \
   --log.level=INFO \
   --configfile=/etc/traefik/traefik.yml
+  # -it --entrypoint /bin/sh \

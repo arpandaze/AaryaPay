@@ -1,19 +1,45 @@
 http:
   routers:
+    traefikapi:
+      rule: Host(`traefik.arpandaze.tech`) && PathPrefix(`/api`)
+      service: api@internal
+      tls:
+        certResolver: "tlsresolver"
+        domains:
+          - main: "traefik.arpandaze.tech"
+    traefikdashboard:
+      rule: Host(`traefik.arpandaze.tech`) && PathPrefix(`/`)
+      service: dashboard@internal
+      tls:
+        certResolver: "tlsresolver"
+        domains:
+          - main: "traefik.arpandaze.tech"
     nginx:
       entryPoints:
-        - web
-      rule: "Host(`localhost`) && (PathPrefix(`/static`) || PathPrefix(`/profile`))"
+        - websecure
+      rule: "Host(`arpandaze.tech`) && PathPrefix(`/profile`,`/static`)"
+      tls:
+        certResolver: "tlsresolver"
+        domains:
+          - main: "arpandaze.tech"
       service: nginx
     backend:
       entryPoints:
-        - web
-      rule: "Host(`localhost`) && PathPrefix(`/api`)"
+        - websecure
+      rule: "Host(`arpandaze.tech`)"
+      tls:
+        certResolver: "tlsresolver"
+        domains:
+          - main: "arpandaze.tech"
       service: backend
     mailpit:
       entryPoints:
-        - web
-      rule: "Host(`localhost`) && Path(`/mail`)"
+        - websecure
+      rule: "Host(`mail.arpandaze.tech`)"
+      tls:
+        certResolver: "tlsresolver"
+        domains:
+          - main: "mail.arpandaze.tech"
       service: mailpit
   services:
     nginx:

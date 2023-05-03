@@ -131,7 +131,7 @@ func SendResetPasswordEmail(c *gin.Context, user *CommonUser) (bool, error) {
 		Name      string
 		Link      string
 	}{
-		Frontbase: Configs.FRONTEND_HOST,
+		Frontbase: Configs.FRONTEND_URL_BASE(),
 		Name:      user.FirstName,
 		Link:      token,
 	}

@@ -24,5 +24,5 @@ podman run \
   --name $CONTAINER_NAME \
   -e CONFIG=$CONFIG_PATH \
   -v $(pwd)/etc/staging.yaml:/etc/staging.yaml \
-  -p 31244:8080 \
+  --network=host \
   -d $CI_REGISTRY_IMAGE/aaryapay-backend:latest
