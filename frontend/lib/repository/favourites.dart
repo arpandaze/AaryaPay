@@ -49,12 +49,34 @@ class FavouritesRepository {
       }
       if (response.body.isNotEmpty) {
         var decodedResponse = jsonDecode(response.body);
-        return {"response":decodedResponse, "status": response.statusCode};
+        return {"response": decodedResponse, "status": response.statusCode};
       } else {
         throw Exception("Empty");
       }
     } else {
       throw Exception("No Session Found!!");
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteFavorites({required String email}) async {
+    if (token != null) {
+      final headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cookie": "session=$token",
+      };
+      final url = Uri.parse('$backendBase/favorites?email=$email');
+      var response = await httpclient.delete(url, headers: headers);
+      if (response.statusCode != 202) {
+        throw Exception("Remove failed! Error removing favorites.");
+      }
+      if (response.body.isNotEmpty) {
+        var decodedResponse = jsonDecode(response.body);
+        return {"response": decodedResponse, "status": response.statusCode};
+      } else {
+        throw Exception("Empty");
+      }
+    } else {
+      throw Exception("No Session Found!");
     }
   }
 }
