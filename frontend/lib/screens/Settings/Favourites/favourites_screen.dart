@@ -92,15 +92,17 @@ class FavouritesScreen extends StatelessWidget {
                     ),
                     if (state.isLoaded)
                       ...state.favouritesList!
-                          .map((item) => FavouritesCard(
+                          .map(
+                            (item) => FavouritesCard(
                               imageSrc:
                                   const AssetImage("assets/images/pfp.jpg"),
-                                name: item['first_name'],
-                                userTag: item['email'],
-                              dateAdded: DateFormat.yMMMd().format(
-                                DateTime.parse(
-                                  item["date_added"],
-                                ),
+                              name: item['first_name'],
+                              userTag: item['email'],
+                              dateAdded: DateFormat.yMMMMd().format(
+                                DateTime.fromMillisecondsSinceEpoch(
+                                        item['date_added'] * 1000,
+                                        isUtc: true)
+                                    .toLocal(),
                               ),
                               onRemove: () => context
                                   .read<FavouritesBloc>()
@@ -108,6 +110,7 @@ class FavouritesScreen extends StatelessWidget {
                             ),
                           )
                           .toList()
+                          .reversed
                     else
                       const Text("No favorites"),
                   ],

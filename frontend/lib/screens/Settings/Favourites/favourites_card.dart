@@ -78,8 +78,8 @@ class FavouritesCard extends StatelessWidget {
                     child: GestureDetector(
                       onTap: onRemove,
                       child: CustomActionButton(
-                        width: size.width * 0.18,
-                        color: Theme.of(context).colorScheme.primary,
+                        width: size.width * 0.08,
+                        color: Theme.of(context).colorScheme.onSurface,
                         height: 35,
                         textTheme: Theme.of(context)
                             .textTheme
@@ -100,7 +100,6 @@ class FavouritesCard extends StatelessWidget {
                                 BlendMode.srcIn),
                           ),
                         ),
-                        label: "Delete",
                         borderRadius: 5,
                       ),
 
