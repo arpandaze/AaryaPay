@@ -3,21 +3,21 @@ package transaction
 import (
 	. "main/core"
 	. "main/telemetry"
+	"main/utils"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
 type TransactionRow struct {
-	ID               uuid.UUID `db:"id" json:"id"`
-	SenderID         uuid.UUID `db:"sender_id" json:"sender_id"`
-	ReceiverID       uuid.UUID `db:"receiver_id" json:"receiver_id"`
-	Amount           float32   `db:"amount" json:"amount"`
-	GenerationTime   time.Time `db:"generation_time" json:"generation_time"`
-	ReceivedTime     time.Time `db:"received_time" json:"received_time"`
-	VerificationTime time.Time `db:"verification_time" json:"verification_time"`
+	ID               uuid.UUID            `db:"id" json:"id"`
+	SenderID         uuid.UUID            `db:"sender_id" json:"sender_id"`
+	ReceiverID       uuid.UUID            `db:"receiver_id" json:"receiver_id"`
+	Amount           float32              `db:"amount" json:"amount"`
+	GenerationTime   *utils.UnixTimestamp `db:"generation_time" json:"generation_time"`
+	ReceivedTime     *utils.UnixTimestamp `db:"received_time" json:"received_time"`
+	VerificationTime *utils.UnixTimestamp `db:"verification_time" json:"verification_time"`
 }
 
 type TransactionRetrieve struct{}
