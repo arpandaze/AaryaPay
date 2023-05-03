@@ -138,5 +138,5 @@ func (AddFavoriteController) AddFavorite(c *gin.Context) {
 		"favorite_owner", user,
 		"favorite_account", favUUID,
 	)
-	c.JSON(http.StatusCreated, gin.H{"msg": msg, "user_id": user})
+	c.JSON(http.StatusCreated, gin.H{"msg": msg})
 }

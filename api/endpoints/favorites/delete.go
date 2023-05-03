@@ -127,5 +127,5 @@ func (RemoveFavoriteController) RemoveFavorite(c *gin.Context) {
 		"favorite_owner", user,
 		"favorite_account", favUUID,
 	)
-	c.JSON(http.StatusAccepted, gin.H{"msg": msg, "user_id": user})
+	c.JSON(http.StatusAccepted, gin.H{"msg": msg})
 }
