@@ -38,13 +38,13 @@ func (RetrieveFavoriteController) RetrieveFavorites(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg})
 		return
 	}
-
-	query := `
-		SELECT u.id, u.first_name, u.middle_name, u.last_name, u.email, f.date_added
-		FROM Users u
-		JOIN Favorites f ON u.id = f.favorite_account
-		JOIN Users f_owner ON f_owner.id = f.favorite_owner
-		WHERE f_owner.id = $1
+	
+	query := `SELECT u.id, u.first_name, u.middle_name, u.last_name, u.email, f.date_added
+	FROM Users u
+	JOIN Favorites f ON u.id = f.favorite_account
+	JOIN Users f_owner ON f_owner.id = f.favorite_owner
+	WHERE f_owner.id = $1
+	ORDER BY f.date_added ASC
 	`
 
 	rows, err := core.DB.Query(query, user)
