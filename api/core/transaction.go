@@ -180,6 +180,7 @@ func (b *BalanceKeyVerificationCertificate) Sign(c *gin.Context) {
 	l := Logger(c).Sugar()
 
 	data := make([]byte, 57)
+	data[0] = BKVCMessageType
 	copy(data[1:17], b.UserID[:])
 	binary.BigEndian.PutUint32(data[17:21], math.Float32bits(b.AvailableBalance))
 	copy(data[21:53], b.PublicKey[:])
@@ -198,6 +199,7 @@ func (b *BalanceKeyVerificationCertificate) Verify(c *gin.Context) bool {
 	l := Logger(c).Sugar()
 
 	data := make([]byte, 57)
+	data[0] = BKVCMessageType
 	copy(data[1:17], b.UserID[:])
 	binary.BigEndian.PutUint32(data[17:21], math.Float32bits(b.AvailableBalance))
 	copy(data[21:53], b.PublicKey[:])

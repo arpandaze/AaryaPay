@@ -154,6 +154,10 @@ func (r Settings) PRIVATE_KEY_ONLY() [32]byte {
 	return privateKey
 }
 
+func (r Settings) PORT_STUB() string {
+	return fmt.Sprintf(":%d", r.BACKEND_PORT)
+}
+
 func (r Settings) PUBLIC_KEY() [32]byte {
 	decodedKey, err := base64.StdEncoding.DecodeString(r.SECRET_KEY)
 	if err != nil {
@@ -167,7 +171,7 @@ func (r Settings) PUBLIC_KEY() [32]byte {
 
 var Configs Settings
 
-func LoadConfig(mode string) {
+func LoadConfigWithMode(mode string) {
 	_, b, _, _ := runtime.Caller(0)
 	d := path.Join(path.Dir(b))
 	rootDir := filepath.Dir(d)
@@ -179,5 +183,33 @@ func LoadConfig(mode string) {
 
 	if err := yaml.Unmarshal(f, &Configs); err != nil {
 		log.Fatal(err)
+	}
+}
+
+func LoadConfigWithFile(path string) {
+	f, err := os.ReadFile(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err := yaml.Unmarshal(f, &Configs); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func LoadConfig() {
+	mode, modeOk := os.LookupEnv("MODE")
+	configPath, configOk := os.LookupEnv("CONFIG")
+
+	if !modeOk && !configOk {
+		mode = "dev"
+	}
+
+	if configOk {
+		fmt.Println("Loading config from file: ", configPath)
+		LoadConfigWithFile(configPath)
+	} else {
+		fmt.Println("Loading config with mode: ", mode)
+		LoadConfigWithMode(mode)
 	}
 }

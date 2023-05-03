@@ -7,8 +7,8 @@ SimpleKeyPair keyPairFromBase64(String privateKeyBase64) {
 
   final type = KeyPairType.ed25519;
   final publicKeyBytes = keyPairBytes.sublist(32);
-  final privKeyBytes = keyPairBytes.sublist(0, 32);
 
+  final privKeyBytes = keyPairBytes.sublist(0, 32);
   final publicKey = SimplePublicKey(publicKeyBytes, type: type);
 
   return SimpleKeyPairData(privKeyBytes, publicKey: publicKey, type: type);

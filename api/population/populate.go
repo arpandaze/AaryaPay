@@ -5,12 +5,15 @@ import (
 	"main/population/data"
 )
 
-func main() {
-	core.LoadConfig("dev")
-	core.ConnectDatabase()
-	core.ConnectRedis()
-
+func Populate() {
 	data.PopulateUsers()
 	data.PopulateFavorites()
-  data.PopulateTransactions()
+	data.PopulateTransactions()
+}
+
+func main() {
+	core.LoadConfig()
+	core.ConnectDatabase()
+
+	Populate()
 }

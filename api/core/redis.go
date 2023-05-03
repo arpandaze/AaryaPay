@@ -22,7 +22,12 @@ func ConnectRedis() {
 
 	err := Redis.Ping(ctx).Err()
 	if err != nil {
-		telemetry.Logger(nil).Fatal("Failed to connect to Redis!")
+		telemetry.Logger(nil).Sugar().Panicw("Failed to connect to Redis!",
+			"error", err,
+			"uri", fmt.Sprint(Configs.REDIS_SERVER, ":", Configs.REDIS_PORT),
+			"username", Configs.REDIS_USER,
+			"password", Configs.REDIS_PASSWORD,
+		)
 		panic(err)
 	}
 }
