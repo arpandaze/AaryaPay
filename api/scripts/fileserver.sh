@@ -17,7 +17,7 @@ if [ "$(podman ps -aq -f name=$CONTAINER_NAME)" ]; then
 fi
 
 if [ -z "$CI_REGISTRY_IMAGE" ]; then
-    CI_REGISTRY_IMAGE="registry.gitlab.com/teamaarya/aaryapaytest"
+    CI_REGISTRY_IMAGE="registry.gitlab.com/teamaarya/aaryapay"
 fi
 
 echo "Creating new file server container!"

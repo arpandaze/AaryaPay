@@ -1,5 +1,5 @@
 if [ -z "$CI_REGISTRY_IMAGE" ]; then
-    CI_REGISTRY_IMAGE="registry.gitlab.com/teamaarya/aaryapaytest"
+    CI_REGISTRY_IMAGE="registry.gitlab.com/teamaarya/aaryapay"
 fi
 
 podman pull $CI_REGISTRY_IMAGE/aaryapay-backend:latest

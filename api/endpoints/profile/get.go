@@ -28,8 +28,8 @@ func (GetProfileController) GetProfile(c *gin.Context) {
 	var profileDataReturn struct {
 		Id         uuid.UUID     `json:"id,omitempty" db:"id"`
 		FirstName  string        `json:"first_name,omitempty" db:"first_name" `
-		PhotoUrl   string        `json:"photo_url,omitempty" db:"photo_url"`
-		MiddleName string        `json:"middle_name,omitempty" db:"middle_name"`
+		PhotoUrl   *string       `json:"photo_url,omitempty" db:"photo_url"`
+		MiddleName *string       `json:"middle_name,omitempty" db:"middle_name"`
 		LastName   string        `json:"last_name,omitempty" db:"last_name"`
 		DOB        UnixTimestamp `json:"dob,omitempty" db:"dob"`
 		Email      string        `json:"email,omitempty" db:"email"`
