@@ -2,6 +2,7 @@ import 'package:aaryapay/components/TransactionsCard.dart';
 import 'package:aaryapay/screens/TransactionHistory/bloc/transcation_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class MidSection extends StatelessWidget {
   const MidSection({
@@ -39,7 +40,12 @@ class MidSection extends StatelessWidget {
                     ...state.transactionHistory!
                         .map((item) => RecentPaymentCard(
                             label: "Google Payment",
-                            date: item['generation_time'],
+                            date: DateFormat.yMMMMd().format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                      item['generation_time'] * 1000,
+                                      isUtc: true)
+                                  .toLocal(),
+                            ),
                             transactionAmt: item["amount"].toString(),
                             finalAmt: "1200"))
                         .toList()
