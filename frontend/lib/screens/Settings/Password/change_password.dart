@@ -1,6 +1,7 @@
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:aaryapay/components/SnackBarService.dart';
+import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
 import 'package:aaryapay/repository/change_password.dart';
 import 'package:aaryapay/screens/Settings/Password/bloc/password_bloc.dart';
@@ -33,14 +34,17 @@ class ChangePassword extends StatelessWidget {
       TextTheme textTheme, Size size) {
     return BlocConsumer<PasswordBloc, PasswordState>(
       listener: (context, state) => {
-        if (state.status != PasswordChangeStatus.idle)
+        if (state.msgType == MessageType.error ||
+            state.msgType == MessageType.warning ||
+            state.msgType == MessageType.success)
           {
             SnackBarService.stopSnackBar(),
             SnackBarService.showSnackBar(
-                content: state.errorText, msgType: state.msgType)
+              content: state.errorText,
+              msgType: state.msgType,
+            )
           },
-        if (state.status == PasswordChangeStatus.success)
-          {Navigator.of(context).pop()}
+        if (state.msgType == MessageType.success) {Navigator.of(context).pop()}
       },
       buildWhen: ((previous, current) => previous != current),
       builder: (context, state) {
@@ -100,28 +104,22 @@ class ChangePassword extends StatelessWidget {
     return BlocBuilder<PasswordBloc, PasswordState>(
       buildWhen: ((previous, current) => previous != current),
       builder: (context, state) {
-        if (state.status != PasswordChangeStatus.submitting) {
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CustomActionButton(
-                  label: "Save",
-                  width: size.width * 0.6,
-                  height: 50,
-                  borderRadius: 10,
-                  onClick: () {
-                    context.read<PasswordBloc>().add(SubmitEvent());
-                  },
-                ),
-              ),
-            ],
+        if (!state.submitStatus) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CustomActionButton(
+              label: "Save",
+              width: size.width * 0.6,
+              height: 50,
+              borderRadius: 10,
+              onClick: () {
+                context.read<PasswordBloc>().add(SubmitEvent());
+              },
+            ),
           );
         } else {
           return Container(
-            alignment: Alignment.bottomCenter,
-            margin:
-                EdgeInsets.fromLTRB(0, 0, size.width * 0.1, size.height * 0.05),
+            margin: const EdgeInsets.all(15),
             child: const CircularProgressIndicator(),
           );
         }

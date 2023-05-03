@@ -84,7 +84,7 @@ class FavouritesScreen extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      padding: const EdgeInsets.fromLTRB(0, 30, 0, 10),
                       child: Text(
                         "Current Favourites",
                         style: textTheme.titleMedium,

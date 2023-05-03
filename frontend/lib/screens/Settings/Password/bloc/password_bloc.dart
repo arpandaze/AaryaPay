@@ -25,35 +25,48 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
       CurrentChanged event, Emitter<PasswordState> emit) async {
     emit(state.copyWith(
         currentPassword: event.currentPassword,
-        status: PasswordChangeStatus.idle));
+        msgType: MessageType.idle,
+      ),
+    );
   }
 
   void _onNewChanged(NewChanged event, Emitter<PasswordState> emit) async {
     emit(state.copyWith(
-      newPassword: event.newPassword, status: PasswordChangeStatus.idle
-    ));
+        newPassword: event.newPassword,
+        msgType: MessageType.idle,
+      ),
+    );
   }
 
   void _onConfirmChanged(
       ConfirmChanged event, Emitter<PasswordState> emit) async {
     emit(state.copyWith(
-      confirmPassword: event.confirmPassword, status: PasswordChangeStatus.idle
-    ));
+        confirmPassword: event.confirmPassword,
+        msgType: MessageType.idle,
+      ),
+    );
   }
 
   void _onPasswordChangeStatusEvent(
       PasswordChangeStatusEvent event, Emitter<PasswordState> emit) {
-    emit(state.copyWith(status: event.status));
+    emit(
+      state.copyWith(submitStatus: event.submitStatus),
+    );
   }
 
   void _onSubmit(SubmitEvent event, Emitter<PasswordState> emit) async {
-    emit(state.copyWith(status: PasswordChangeStatus.submitting));
+    emit(state.copyWith(submitStatus: true));
 
     if (state.currentPassword != "" &&
         state.newPassword != "" &&
         state.confirmPassword != "") {
       if (state.newPassword != state.confirmPassword) {
-        emit(state.copyWith(status: PasswordChangeStatus.mismatch));
+        emit(
+          state.copyWith(
+              submitStatus: false,
+              errorText: "The passwords do not match",
+              msgType: MessageType.error),
+        );
         return;
       }
       var body = {
@@ -65,30 +78,32 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
       if (response['status'] != 202) {
         if (response['status'] == 409) {
           emit(state.copyWith(
-              status: PasswordChangeStatus.sameError,
+              submitStatus: false,
               errorText:
-                  "The new password cannot be the same as the old password"));
+                  "The new password cannot be the same as the old password",
+              msgType: MessageType.error));
         }
         if (response['status'] == 401) {
           emit(state.copyWith(
-              status: PasswordChangeStatus.errorPassword,
-              errorText: "The password is incorrect"));
+              submitStatus: false,
+              errorText: "The password is incorrect",
+              msgType: MessageType.error));
         }
-        emit(state.copyWith(
-            status: PasswordChangeStatus.error, errorText: "Unknown Error"));
-        return;
       }
       if (response['status'] == 202) {
         emit(state.copyWith(
-            status: PasswordChangeStatus.success,
+            submitStatus: false,
             errorText: "Password Changed Successfully",
             msgType: MessageType.success));
         return;
       }
     } else {
       emit(state.copyWith(
-          status: PasswordChangeStatus.idle,
-          errorText: "Fields cannot be empty"));
+          submitStatus: false,
+          errorText: "Fields cannot be empty",
+          msgType: MessageType.error,
+        ),
+      );
     }
   }
 }

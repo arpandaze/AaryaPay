@@ -1,22 +1,22 @@
 part of 'password_bloc.dart';
 
-enum PasswordChangeStatus {
-  idle,
-  submitting,
-  mismatch,
-  success,
-  errorPassword,
-  error,
-  empty,
-  sameError,
-}
+// enum PasswordChangeStatus {
+//   idle,
+//   submitting,
+//   mismatch,
+//   success,
+//   errorPassword,
+//   error,
+//   empty,
+//   sameError,
+// }
 
 class PasswordState extends Equatable {
   final String? currentPassword;
   final String? newPassword;
   final String? confirmPassword;
   final String? errorText;
-  final PasswordChangeStatus status;
+  final bool submitStatus;
   final MessageType msgType;
 
   const PasswordState({
@@ -24,8 +24,8 @@ class PasswordState extends Equatable {
     this.newPassword = "",
     this.confirmPassword = "",
     this.errorText = "",
-    this.status = PasswordChangeStatus.idle,
-    this.msgType = MessageType.error,
+    this.submitStatus = false,
+    this.msgType = MessageType.idle,
   });
 
   PasswordState copyWith({
@@ -33,14 +33,14 @@ class PasswordState extends Equatable {
     String? newPassword,
     String? confirmPassword,
     String? errorText,
-    PasswordChangeStatus? status,
+    bool? submitStatus,
     MessageType? msgType,
   }) {
     return PasswordState(
       currentPassword: currentPassword ?? this.currentPassword,
       newPassword: newPassword ?? this.newPassword,
       confirmPassword: confirmPassword ?? this.confirmPassword,
-      status: status ?? this.status,
+      submitStatus: submitStatus ?? this.submitStatus,
       errorText: errorText ?? this.errorText,
       msgType: msgType ?? this.msgType,
     );
@@ -51,7 +51,7 @@ class PasswordState extends Equatable {
         currentPassword,
         newPassword,
         confirmPassword,
-        status,
+        submitStatus,
         errorText,
         msgType,
       ];

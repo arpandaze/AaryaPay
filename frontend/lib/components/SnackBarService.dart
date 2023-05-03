@@ -11,6 +11,7 @@ class SnackBarService {
       {required String? content, MessageType msgType = MessageType.error}) {
     scaffoldKey.currentState?.showSnackBar(
       SnackBar(
+        duration: const Duration(seconds: 2),
         closeIconColor: Colors.white,
         showCloseIcon: true,
         content: Text(content ?? "",
@@ -22,7 +23,7 @@ class SnackBarService {
                 height: 1.5)),
         backgroundColor: msgType == MessageType.success
             ? const Color.fromARGB(255, 29, 153, 84)
-            : msgType == MessageType.idle
+            : msgType == MessageType.neutral
                 ? const Color.fromARGB(255, 160, 160, 160)
                 : msgType == MessageType.warning
                     ? const Color(0xffFFAB2D)

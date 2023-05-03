@@ -41,12 +41,15 @@ class CustomActionButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             actionLogo ?? Container(),
+            label != ""
+                ?
             Text(
-              label ?? "LOGIN",
+                    label ?? "",
               style: textTheme ??
                   Theme.of(context).textTheme.titleLarge!.merge(TextStyle(
                       color: Theme.of(context).colorScheme.background)),
-            ),
+                  )
+                : Text(""),
           ],
         ),
       ),

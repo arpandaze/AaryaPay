@@ -44,11 +44,11 @@ class ConfirmChanged extends PasswordEvent {
 }
 
 class PasswordChangeStatusEvent extends PasswordEvent {
-  final PasswordChangeStatus status;
-  PasswordChangeStatusEvent({required this.status});
+  final bool submitStatus;
+  const PasswordChangeStatusEvent({required this.submitStatus});
 
   @override
-  List<Object> get props => [status];
+  List<Object> get props => [submitStatus];
 }
 
 class PopContextEvent extends PasswordEvent {}

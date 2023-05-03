@@ -79,8 +79,8 @@ class FavouritesCard extends StatelessWidget {
                       onTap: onRemove,
                       child: CustomActionButton(
                         width: size.width * 0.18,
-                        color: Theme.of(context).colorScheme.onSurface,
-                        height: 30,
+                        color: Theme.of(context).colorScheme.primary,
+                        height: 35,
                         textTheme: Theme.of(context)
                             .textTheme
                             .bodyMedium!
@@ -93,15 +93,15 @@ class FavouritesCard extends StatelessWidget {
                           padding: const EdgeInsets.all(5.0),
                           child: SvgPicture.asset(
                             "assets/icons/trash.svg",
-                            width: 14,
-                            height: 14,
+                            width: 15,
+                            height: 15,
                             colorFilter: ColorFilter.mode(
                                 Theme.of(context).colorScheme.background,
                                 BlendMode.srcIn),
                           ),
                         ),
-                        borderRadius: 5,
                         label: "Delete",
+                        borderRadius: 5,
                       ),
 
                       // child: SvgPicture.asset(
