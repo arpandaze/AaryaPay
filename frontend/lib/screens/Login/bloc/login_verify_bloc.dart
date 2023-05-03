@@ -27,13 +27,9 @@ class LoginVerifyBloc extends Bloc<LoginVerifyEvent, LoginVerifyState> {
 
   void _onVerifyFormSubmitted(
       VerifyFormSubmitted event, Emitter<LoginVerifyState> emit) async {
-    print("Verify Tapped");
-    // emit(state.copyWith(status: RegisterStatus.verifying));
     if (state.status == LoginVerifyStatus.none) {
-      // return emit(state.copyWith(errorText: "Invalid Username!"));
       return;
     }
-    print("Verify Status Good");
 
     final url = Uri.parse('$backendBase/auth/verify');
 
@@ -53,24 +49,25 @@ class LoginVerifyBloc extends Bloc<LoginVerifyEvent, LoginVerifyState> {
     emit(state.copywith(status: LoginVerifyStatus.submitted));
 
     if (response.statusCode == 202) {
-      emit(state.copywith(status: LoginVerifyStatus.verified));
+      emit(state.copywith(
+          status: LoginVerifyStatus.verified,
+          errorText: "Verified Successfully"));
       return;
+    } else if (response.statusCode == 500) {
+      emit(state.copywith(
+          status: LoginVerifyStatus.errorUnknown,
+          errorText: "Internal server error"));
     }
 
-    emit(state.copywith(status: LoginVerifyStatus.none));
-
-    // emit(state.copyWith(
-    //     status: RegisterStatus.verifySuccess, page: state.page + 1));
-
-    // emit(state.copyWith(status: RegisterStatus.wrongToken, token: ""));;
+    emit(state.copywith(
+        status: LoginVerifyStatus.error,
+        errorText: "Error! Wrong verification token"));
   }
 
   void _onResendVerificationEmail(
       ResendVerificationEmail event, Emitter<LoginVerifyState> emit) async {
-    print("Resend");
     final url = Uri.parse('$backendBase/auth/resend-verification');
     final userID = await storage.read(key: "user_id");
-    print(userID);
 
     var response = await http.post(
       url,
@@ -82,8 +79,5 @@ class LoginVerifyBloc extends Bloc<LoginVerifyEvent, LoginVerifyState> {
         "id": userID,
       },
     );
-
-    print(response.body);
-    print(response.statusCode);
   }
 }

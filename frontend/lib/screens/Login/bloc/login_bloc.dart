@@ -29,8 +29,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   void _onLoginFormSubmitted(
       LoginFormSubmitted event, Emitter<LoginState> emit) async {
-    print("Form Submitted");
-
     if (!state.isEmailValid) {
       return emit(state.copyWith(errorText: "Invalid Username!"));
     }
@@ -39,20 +37,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
 
     try {
-      print("Login Wait");
-
       final loginResponse =
           await authRepo.login(email: state.email, password: state.password);
 
-      print(loginResponse);
       if (loginResponse["verification"] == false) {
-        print("UNVerified");
         emit(state.copyWith(verificationStatus: VerificationStatus.unverified));
       } else if (loginResponse["two_fa_required"] == true) {
         emit(state.copyWith(twoFARequired: true));
       } else {
-        print("Login Success");
-
         emit(state.copyWith(
             loginSucess: true,
             verificationStatus: VerificationStatus.verified));

@@ -1,3 +1,5 @@
+import 'package:aaryapay/components/SnackBarService.dart';
+import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/screens/Login/bloc/login_verify_bloc.dart';
 import 'package:aaryapay/screens/Login/login_screen.dart';
 import 'package:aaryapay/screens/Register/completed_screen.dart';
@@ -16,8 +18,21 @@ class LoginVerifyScreen extends StatelessWidget {
       create: (context) => LoginVerifyBloc(),
       child: BlocConsumer<LoginVerifyBloc, LoginVerifyState>(
         listener: (context, state) => {
+          // if (state.status != LoginVerifyStatus.completed)
+          //   {
+          //
+          //     SnackBarService.showSnackBar(
+          //         content: "Please enter the verification token")
+          //   },
+          if (state.status == LoginVerifyStatus.error)
+            {
+              SnackBarService.stopSnackBar(),
+              SnackBarService.showSnackBar(content: state.errorText, msgType: MessageType.error)
+            },
           if (state.status == LoginVerifyStatus.verified)
             {
+              SnackBarService.stopSnackBar(),
+              SnackBarService.showSnackBar(content: state.errorText, msgType: MessageType.success),
               Navigator.of(context).pushAndRemoveUntil(
                 PageRouteBuilder(
                   pageBuilder: (context, animation1, animation2) =>
@@ -98,24 +113,14 @@ class LoginVerifyScreen extends StatelessWidget {
             ),
             // activeColor: Theme.of(context).colorScheme.secondary),
             animationDuration: const Duration(milliseconds: 300),
-            // backgroundColor: Colors.blue.shade50,
-            // enableActiveFill: true,
-            // errorAnimationController: errorController.add(ErrorAnimationType.shake);,
-            // controller: textEditingController,
             onCompleted: (value) {
               context
                   .read<LoginVerifyBloc>()
                   .add(VerifyTokenChanged(value, true));
             },
-            onChanged: (value) {
-              // setState(() {
-              //   currentText = value;
-              // });
-            },
+            onChanged: (value) {},
             beforeTextPaste: (text) {
               print("Allowing to paste $text");
-              //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-              //but you can show anything you want here, like your pop up saying wrong paste format or etc
               return true;
             },
             appContext: context,

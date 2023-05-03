@@ -39,6 +39,7 @@ class LoginScreen extends StatelessWidget {
           },
           builder: (context, state) {
             return LoginWrapper(
+              actionButtonLabel: "LOGIN",
               backButton: true,
               backButttonFunction: () => {
                 Navigator.pop(context),

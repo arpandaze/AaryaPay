@@ -1,4 +1,4 @@
-const backendBase = "http://192.168.1.72:8080/v1";
+const backendBase = "http://192.168.1.71:8080/v1";
 
 enum AuthenticationStatus {
   loggedIn,
