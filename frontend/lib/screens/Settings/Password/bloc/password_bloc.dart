@@ -1,4 +1,7 @@
+import 'package:aaryapay/components/SnackBarService.dart';
+import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/repository/change_password.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -7,8 +10,9 @@ part 'password_state.dart';
 
 class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
   final PasswordRepository passwordRepository;
+  BuildContext context;
 
-  PasswordBloc({required this.passwordRepository})
+  PasswordBloc({required this.context, required this.passwordRepository})
       : super(const PasswordState()) {
     on<CurrentChanged>(_onCurrentChanged);
     on<NewChanged>(_onNewChanged);
@@ -20,20 +24,20 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
   void _onCurrentChanged(
       CurrentChanged event, Emitter<PasswordState> emit) async {
     emit(state.copyWith(
-      currentPassword: event.currentPassword,
-    ));
+        currentPassword: event.currentPassword,
+        status: PasswordChangeStatus.idle));
   }
 
   void _onNewChanged(NewChanged event, Emitter<PasswordState> emit) async {
     emit(state.copyWith(
-      newPassword: event.newPassword,
+      newPassword: event.newPassword, status: PasswordChangeStatus.idle
     ));
   }
 
   void _onConfirmChanged(
       ConfirmChanged event, Emitter<PasswordState> emit) async {
     emit(state.copyWith(
-      confirmPassword: event.confirmPassword,
+      confirmPassword: event.confirmPassword, status: PasswordChangeStatus.idle
     ));
   }
 
@@ -45,10 +49,11 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
   void _onSubmit(SubmitEvent event, Emitter<PasswordState> emit) async {
     emit(state.copyWith(status: PasswordChangeStatus.submitting));
 
-    if (state.currentPassword != "" && state.newPassword != "") {
+    if (state.currentPassword != "" &&
+        state.newPassword != "" &&
+        state.confirmPassword != "") {
       if (state.newPassword != state.confirmPassword) {
         emit(state.copyWith(status: PasswordChangeStatus.mismatch));
-        print("mismatch");
         return;
       }
       var body = {
@@ -57,14 +62,33 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
       };
 
       var response = await passwordRepository.changePassword(body: body);
-
       if (response['status'] != 202) {
-        emit(state.copyWith(status: PasswordChangeStatus.error));
+        if (response['status'] == 409) {
+          emit(state.copyWith(
+              status: PasswordChangeStatus.sameError,
+              errorText:
+                  "The new password cannot be the same as the old password"));
+        }
+        if (response['status'] == 401) {
+          emit(state.copyWith(
+              status: PasswordChangeStatus.errorPassword,
+              errorText: "The password is incorrect"));
+        }
+        emit(state.copyWith(
+            status: PasswordChangeStatus.error, errorText: "Unknown Error"));
         return;
       }
-      emit(state.copyWith(status: PasswordChangeStatus.success));
+      if (response['status'] == 202) {
+        emit(state.copyWith(
+            status: PasswordChangeStatus.success,
+            errorText: "Password Changed Successfully",
+            msgType: MessageType.success));
+        return;
+      }
     } else {
-      emit(state.copyWith(status: PasswordChangeStatus.empty));
+      emit(state.copyWith(
+          status: PasswordChangeStatus.idle,
+          errorText: "Fields cannot be empty"));
     }
   }
 }

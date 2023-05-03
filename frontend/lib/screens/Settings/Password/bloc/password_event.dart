@@ -51,4 +51,6 @@ class PasswordChangeStatusEvent extends PasswordEvent {
   List<Object> get props => [status];
 }
 
+class PopContextEvent extends PasswordEvent {}
+
 class SubmitEvent extends PasswordEvent {}

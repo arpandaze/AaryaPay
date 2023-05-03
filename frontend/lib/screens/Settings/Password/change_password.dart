@@ -1,5 +1,6 @@
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/components/CustomTextField.dart';
+import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
 import 'package:aaryapay/repository/change_password.dart';
 import 'package:aaryapay/screens/Settings/Password/bloc/password_bloc.dart';
@@ -18,6 +19,7 @@ class ChangePassword extends StatelessWidget {
 
     return BlocProvider(
       create: (context) => PasswordBloc(
+          context: context,
           passwordRepository: PasswordRepository(
               token: context.read<AuthenticationBloc>().state.token)),
       child: Scaffold(
@@ -29,7 +31,17 @@ class ChangePassword extends StatelessWidget {
 
   Widget body(BuildContext context, ColorScheme colorScheme,
       TextTheme textTheme, Size size) {
-    return BlocBuilder<PasswordBloc, PasswordState>(
+    return BlocConsumer<PasswordBloc, PasswordState>(
+      listener: (context, state) => {
+        if (state.status != PasswordChangeStatus.idle)
+          {
+            SnackBarService.stopSnackBar(),
+            SnackBarService.showSnackBar(
+                content: state.errorText, msgType: state.msgType)
+          },
+        if (state.status == PasswordChangeStatus.success)
+          {Navigator.of(context).pop()}
+      },
       buildWhen: ((previous, current) => previous != current),
       builder: (context, state) {
         return SettingsWrapper(
@@ -86,29 +98,24 @@ class ChangePassword extends StatelessWidget {
 
   Widget button(BuildContext context, Size size) {
     return BlocBuilder<PasswordBloc, PasswordState>(
+      buildWhen: ((previous, current) => previous != current),
       builder: (context, state) {
         if (state.status != PasswordChangeStatus.submitting) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CustomActionButton(
-              label: "Save",
-              width: size.width * 0.6,
-              height: 50,
-              borderRadius: 10,
-              onClick: () {
-                context.read<PasswordBloc>().add(SubmitEvent());
-                final snackBar = SnackBar(
-                  content: errorText(state.status),
-                  backgroundColor: state.status == 4
-                      ? Theme.of(context).colorScheme.surfaceVariant
-                      : Theme.of(context).colorScheme.onSurface,
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                if (state.status == PasswordChangeStatus.success) {
-                  Navigator.of(context).pop();
-                }
-              },
-            ),
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomActionButton(
+                  label: "Save",
+                  width: size.width * 0.6,
+                  height: 50,
+                  borderRadius: 10,
+                  onClick: () {
+                    context.read<PasswordBloc>().add(SubmitEvent());
+                  },
+                ),
+              ),
+            ],
           );
         } else {
           return Container(
@@ -120,20 +127,5 @@ class ChangePassword extends StatelessWidget {
         }
       },
     );
-  }
-
-  Widget errorText(PasswordChangeStatus state) {
-    switch (state) {
-      case PasswordChangeStatus.empty:
-        return const Text("Fields cannot be empty");
-      case PasswordChangeStatus.mismatch:
-        return const Text("Passwords mismatch");
-      case PasswordChangeStatus.success:
-        return const Text("Password changed successfully");
-      case PasswordChangeStatus.error:
-        return const Text("Error Changing Password");
-      default:
-        return const Text("Something went wrong! Check your inputs");
-    }
   }
 }

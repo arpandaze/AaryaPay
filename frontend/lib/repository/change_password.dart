@@ -22,9 +22,6 @@ class PasswordRepository {
       );
 
       var decodedResponse = jsonDecode(response.body);
-      if (response.statusCode != 202) {
-        return {"response": decodedResponse, "status": response.statusCode};
-      }
 
       if (response.body.isNotEmpty) {
         return {"response": decodedResponse, "status": response.statusCode};
