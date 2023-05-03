@@ -16,3 +16,11 @@ class FavouritesFieldChanged extends FavouritesEvent {
 class FavouritesLoadEvent extends FavouritesEvent {}
 
 class AddButtonClicked extends FavouritesEvent {}
+
+class RemoveEvent extends FavouritesEvent {
+  final String? email;
+  RemoveEvent({this.email});
+
+  @override
+  List<Object?> get props => [email];
+}

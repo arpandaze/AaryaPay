@@ -27,6 +27,7 @@ class FavouritesBloc extends Bloc<FavouritesEvent, FavouritesState> {
     on<AddButtonClicked>(_onAddButtonClicked);
     on<FavouritesLoadEvent>(_onFavouritesLoad);
     on<FavouritesFieldChanged>(_onFavouritesFieldChanged);
+    on<RemoveEvent>(_onRemoveEvent);
     add(FavouritesLoadEvent());
   }
 
@@ -41,12 +42,30 @@ class FavouritesBloc extends Bloc<FavouritesEvent, FavouritesState> {
         await favouritesRepository.postFavorites(email: state.email!);
     if (response["status"] == 201) {
       add(FavouritesLoadEvent());
+    } else {
+      throw Exception("Couldn't add");
+    }
+  }
+
+  void _onRemoveEvent(RemoveEvent event, Emitter<FavouritesState> emit) async {
+    final response =
+        await favouritesRepository.deleteFavorites(email: event.email!);
+
+    if (response["status"] == 202) {
+      add(FavouritesLoadEvent());
+    } else {
+      throw Exception("Couldn't add");
     }
   }
 
   void _onFavouritesLoad(
       FavouritesLoadEvent event, Emitter<FavouritesState> emit) async {
     final response = await favouritesRepository.getFavourites();
-    emit(state.copyWith(favouritesList: response['data'], isLoaded: true));
+    emit(state.copyWith(favouritesList: response['data']));
+    if(response["data"] != null){
+      emit(state.copyWith(isLoaded: true));
+    } else{
+      emit(state.copyWith(isLoaded: false));
+    }
   }
 }

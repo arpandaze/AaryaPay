@@ -1,5 +1,5 @@
+import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
-import 'package:aaryapay/screens/Register/bloc/register_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:aaryapay/routes.dart';
 import 'package:aaryapay/theme.dart';
@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+        scaffoldMessengerKey: SnackBarService.scaffoldKey,
         debugShowCheckedModeBanner: false,
         routes: routes,
         title: 'AaryaPay',

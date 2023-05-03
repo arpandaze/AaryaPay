@@ -11,3 +11,13 @@ enum VerificationStatus {
   verified,
   unverified,
 }
+
+enum MessageType {
+  idle,
+  neutral,
+  warning,
+  error,
+  success,
+}
+
+
