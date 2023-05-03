@@ -3,6 +3,7 @@ package favorites
 import (
 	"main/core"
 	"main/telemetry"
+	"main/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -62,12 +63,12 @@ func (RetrieveFavoriteController) RetrieveFavorites(c *gin.Context) {
 	defer rows.Close()
 
 	type favoriteRetrieve struct {
-		Id         uuid.UUID `db:"id" json:"id"`
-		FirstName  string    `db:"first_name" json:"first_name"`
-		MiddleName string    `db:"middle_name" json:"middle_name,omitempty"`
-		LastName   string    `db:"last_name" json:"last_name"`
-		Email      string    `db:"email" json:"email"`
-		Date_Added string    `db:"date_added" json:"date_added"`
+		Id         uuid.UUID            `db:"id" json:"id"`
+		FirstName  string               `db:"first_name" json:"first_name"`
+		MiddleName string               `db:"middle_name" json:"middle_name,omitempty"`
+		LastName   string               `db:"last_name" json:"last_name"`
+		Email      string               `db:"email" json:"email"`
+		Date_Added *utils.UnixTimestamp `db:"date_added" json:"date_added"`
 	}
 
 	var favList []favoriteRetrieve
@@ -105,5 +106,4 @@ func (RetrieveFavoriteController) RetrieveFavorites(c *gin.Context) {
 		"user", user,
 	)
 	c.JSON(http.StatusAccepted, gin.H{"msg": msg, "data": favList})
-
 }

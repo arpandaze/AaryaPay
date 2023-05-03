@@ -30,6 +30,11 @@ class AuthenticationRepository {
       if (response.statusCode == 401) {
         var decodedResponse =
             jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+
+        storage.write(
+          key: "user_id",
+          value: jsonEncode(decodedResponse["user_id"]),
+        );
         return {"response": decodedResponse, "verification": false};
       }
       throw Exception("Login Failed! Check Email or Password!");

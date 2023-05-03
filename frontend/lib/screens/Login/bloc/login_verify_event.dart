@@ -5,4 +5,16 @@ abstract class LoginVerifyEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class UnverifiedLogin extends LoginVerifyEvent {}
+class VerifyTokenChanged extends LoginVerifyEvent {
+  final String verifyToken;
+  final bool completed;
+
+  VerifyTokenChanged(this.verifyToken, this.completed);
+
+  @override
+  List<Object?> get props => [verifyToken, completed];
+}
+
+class VerifyFormSubmitted extends LoginVerifyEvent {}
+
+class ResendVerificationEmail extends LoginVerifyEvent {}

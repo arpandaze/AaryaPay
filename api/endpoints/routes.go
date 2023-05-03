@@ -42,6 +42,7 @@ func InitAuthRoutes(routeGroup *gin.RouterGroup) {
 	routeGroup.GET("/twofa/enable/request", twoFA.TwoFAEnableRequest)
 	routeGroup.POST("/twofa/enable/confirm", twoFA.TwoFAEnableConfirm)
 	routeGroup.POST("/twofa/login/confirm", twoFA.TwoFALoginConfirm)
+	routeGroup.POST("/twofa/disable", twoFA.TwoFADisable)
 	routeGroup.GET("/refresh", refresh.Status)
 }
 
