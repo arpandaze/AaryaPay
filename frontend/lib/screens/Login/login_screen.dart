@@ -6,6 +6,8 @@ import 'package:aaryapay/screens/Login/bloc/login_bloc.dart';
 import 'package:aaryapay/screens/Login/components/login_wrapper.dart';
 import 'package:aaryapay/screens/Login/forgot_password.dart';
 import 'package:aaryapay/screens/Login/login_verify_screen.dart';
+import 'package:aaryapay/screens/Login/welcome_screen.dart';
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,6 +32,23 @@ class LoginScreen extends StatelessWidget {
                       const LoginVerifyScreen(),
                   transitionDuration: Duration.zero,
                   reverseTransitionDuration: Duration.zero,
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    const begin = Offset(0.0, 1.0);
+                    const end = Offset.zero;
+                    const curve = Curves.ease;
+
+                    final tween = Tween(begin: begin, end: end);
+                    final curvedAnimation = CurvedAnimation(
+                      parent: animation,
+                      curve: curve,
+                    );
+
+                    return SlideTransition(
+                      position: tween.animate(curvedAnimation),
+                      child: child,
+                    );
+                  },
                 ),
               );
             }
@@ -40,6 +59,7 @@ class LoginScreen extends StatelessWidget {
           builder: (context, state) {
             return LoginWrapper(
               backButton: true,
+              actionButtonLabel: "Login",
               backButttonFunction: () => {
                 Navigator.pop(context),
               },

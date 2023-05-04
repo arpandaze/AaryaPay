@@ -1,4 +1,5 @@
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:aaryapay/screens/Login/login_screen.dart';
 import 'package:aaryapay/screens/Login/components/login_wrapper.dart';
@@ -12,14 +13,29 @@ class WelcomeScreen extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return LoginWrapper(
+      actionButtonLabel: "Login",
       children: _midSection(context, size),
       actionButtonFunction: () => {
         Navigator.of(context).push(
           PageRouteBuilder(
             pageBuilder: (context, animation1, animation2) =>
                 const LoginScreen(),
-            transitionDuration: Duration.zero,
-            reverseTransitionDuration: Duration.zero,
+            transitionDuration: Duration(milliseconds: 700),
+            reverseTransitionDuration: Duration(milliseconds: 700),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              animation = CurvedAnimation(
+                parent: animation,
+                curve: Curves.decelerate,
+              );
+              return SharedAxisTransition(
+                fillColor: Theme.of(context).cardColor,
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                transitionType: SharedAxisTransitionType.horizontal,
+                child: child,
+              );
+            },
           ),
         ),
       },
