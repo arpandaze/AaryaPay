@@ -14,7 +14,7 @@ class Favourites extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Container(
       width: size.width,
-      height: size.height * 0.18,
+      height: size.height * 0.19,
       margin: const EdgeInsets.symmetric(horizontal: 15),
       padding: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
@@ -51,7 +51,7 @@ class Favourites extends StatelessWidget {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Padding(
-              padding: const EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.only(top: 20, bottom: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
