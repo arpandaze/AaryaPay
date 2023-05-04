@@ -3,6 +3,7 @@ package data
 import (
 	"log"
 	"main/core"
+	"math/rand"
 	"time"
 
 	"github.com/google/uuid"
@@ -228,7 +229,10 @@ func PopulateUsers() {
 
 		accountsCreateQuery := "INSERT INTO Accounts (id, balance) VALUES ($1, $2)"
 
-		_, err = tx.Exec(accountsCreateQuery, user.id, 0)
+		rand.Seed(time.Now().UnixNano())
+		randBalance := rand.Intn(5000) + 5000
+
+		_, err = tx.Exec(accountsCreateQuery, user.id, randBalance)
 
 		if err != nil {
 			msg := "Failed to execute account insert statement"
