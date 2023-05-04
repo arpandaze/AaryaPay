@@ -69,7 +69,6 @@ class LoginScreen extends StatelessWidget {
         CustomTextField(
           onChanged: (value) =>
               context.read<LoginBloc>().add(LoginEmailChanged(value)),
-          padding: const EdgeInsets.only(top: 20),
           width: size.width,
           prefixIcon: Icon(
             FontAwesomeIcons.solidEnvelope,
@@ -85,24 +84,20 @@ class LoginScreen extends StatelessWidget {
               FontAwesomeIcons.lock,
               color: Theme.of(context).colorScheme.primary,
             ),
-            width: size.width,
-
-            // height: 1,
-            // error: "Incorrect Password",
-            isPassword: true,
-            padding: const EdgeInsets.only(top: 20),
+          width: size.width,
+          isPassword: true,
             placeHolder: "Password",
             counter: GestureDetector(
               behavior: HitTestBehavior.deferToChild,
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 15),
-                child: (Text(
+              child: Text(
                   "Forgot Password?",
                   style: Theme.of(context).textTheme.titleSmall!.merge(
                       TextStyle(
                           fontWeight: FontWeight.w900,
                           color: Theme.of(context).colorScheme.primary)),
-                )),
+              ),
               ),
               onTap: () => {
                 Navigator.of(context).push(
@@ -114,7 +109,8 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
               },
-            )),
+          ),
+        ),
       ],
     );
   }

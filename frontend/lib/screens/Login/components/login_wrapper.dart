@@ -93,7 +93,7 @@ class LoginWrapper extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             child: children,
           ),
-          Container(
+          SizedBox(
             height: size.height * 0.15,
             child: Column(
               children: [
