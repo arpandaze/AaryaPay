@@ -94,9 +94,19 @@ func (SubmitController) Submit(c *gin.Context) {
 		return
 	}
 
+	tx, err := core.DB.Begin()
+	if err != nil {
+		msg := "Failed to start transaction"
+		l.Errorw(msg,
+			"error", err,
+		)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
+		return
+	}
+
 	var transactionId uuid.UUID
 	var verificationTime time.Time
-	err = core.DB.QueryRow("INSERT INTO Transactions (sender_id, receiver_id, amount, generation_time) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, verification_time",
+	err = tx.QueryRow("INSERT INTO Transactions (sender_id, receiver_id, amount, generation_time) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, verification_time",
 		transaction.BKVC.UserID, transaction.To, transaction.Amount, transaction.TimeStamp, time.Now(),
 	).Scan(&transactionId, &verificationTime)
 
@@ -105,15 +115,45 @@ func (SubmitController) Submit(c *gin.Context) {
 			"error", err,
 		)
 
+		tx.Rollback()
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
 		return
+	}
+
+	_, err = tx.Exec("UPDATE Accounts SET balance = balance - $1 WHERE id = $2", transaction.Amount, transaction.BKVC.UserID)
+
+	if err != nil {
+		l.Errorw("Failed to update sender balance!",
+			"error", err,
+		)
+		tx.Rollback()
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
+	}
+
+	_, err = tx.Exec("UPDATE Accounts SET balance = balance + $1 WHERE id = $2", transaction.Amount, transaction.To)
+
+	if err != nil {
+		l.Errorw("Failed to update receiver balance!",
+			"error", err,
+		)
+		tx.Rollback()
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
+	}
+
+	err = tx.Commit()
+
+	if err != nil {
+		l.Errorw("Failed to commit transaction!",
+			"error", err,
+		)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
 	}
 
 	var SenderAvailableBalance float32
 	var SenderPublicKey string
 	var SenderUpdatedTime time.Time
 
-	err = core.DB.QueryRow(`
+	err = tx.QueryRow(`
       SELECT a.balance, k.value, NOW()
       FROM Users u
       JOIN Accounts a ON u.id = a.id
