@@ -334,7 +334,7 @@ func (TwoFaController) TwoFALoginConfirm(c *gin.Context) {
 			}
 
 			// Check for last key refresh time
-			_, lastRefreshedAt, err := core.GetUserKey(c, queryUser.ID)
+			_, lastRefreshedAt, err := core.GetUserKeyPair(c, queryUser.ID)
 
 			if err != nil {
 				l.Errorw("Failed to get existing user key",
@@ -354,7 +354,7 @@ func (TwoFaController) TwoFALoginConfirm(c *gin.Context) {
 				return
 			}
 
-			pubKey, privKey, lastRefreshedAt, err := core.GenerateKeyPair(c, queryUser.ID)
+			keyPair, lastRefreshedAt, err := core.GenerateKeyPair(c, queryUser.ID)
 
 			if err != nil {
 				l.Errorw("Failed to generate key pair",
@@ -402,7 +402,7 @@ func (TwoFaController) TwoFALoginConfirm(c *gin.Context) {
 			bkvc := core.BalanceKeyVerificationCertificate{
 				MessageType:      core.BKVCMessageType,
 				UserID:           queryUser.ID,
-				PublicKey:        [32]byte(pubKey),
+				PublicKey:        [32]byte(keyPair.PublicKey()),
 				AvailableBalance: float32(userBalance),
 				TimeStamp:        time.Now(),
 			}
@@ -411,7 +411,7 @@ func (TwoFaController) TwoFALoginConfirm(c *gin.Context) {
 
 			base64EncodedBKVC := base64.StdEncoding.EncodeToString(bkvc.ToBytes(c))
 
-			c.JSON(http.StatusAccepted, gin.H{"msg": msg, "bkvc": base64EncodedBKVC, "private_key": base64.StdEncoding.EncodeToString(privKey), "user": queryUser})
+			c.JSON(http.StatusAccepted, gin.H{"msg": msg, "bkvc": base64EncodedBKVC, "private_key": base64.StdEncoding.EncodeToString(keyPair.PrivateKey()), "user": queryUser})
 			return
 		}
 	default:

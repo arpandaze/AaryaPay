@@ -128,7 +128,7 @@ func (LoginController) Login(c *gin.Context) {
 	}
 
 	// Check for last key refresh time
-	_, lastRefreshedAt, err := core.GetUserKey(c, queryUser.ID)
+	keyPair, lastRefreshedAt, err := core.GetUserKeyPair(c, queryUser.ID)
 
 	if err != nil {
 		Logger(c).Sugar().Errorw("Failed to get existing user key",
@@ -186,7 +186,7 @@ func (LoginController) Login(c *gin.Context) {
 	bkvc := core.BalanceKeyVerificationCertificate{
 		MessageType:      core.BKVCMessageType,
 		UserID:           queryUser.ID,
-		PublicKey:        [32]byte(pubKey),
+		PublicKey:        [32]byte(keyPair.PublicKey()),
 		AvailableBalance: float32(userBalance),
 		TimeStamp:        time.Now(),
 	}
