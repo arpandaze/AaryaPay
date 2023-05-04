@@ -106,7 +106,7 @@ func (LoginController) Login(c *gin.Context) {
 		l.Warnw(msg,
 			"id", queryUser.ID,
 		)
-		c.JSON(http.StatusUnauthorized, gin.H{"msg": msg, "user_id": queryUser.ID})
+		c.JSON(http.StatusForbidden, gin.H{"msg": msg, "user_id": queryUser.ID})
 		return
 	}
 
@@ -122,7 +122,7 @@ func (LoginController) Login(c *gin.Context) {
 
 		c.SetCookie("temp_session", temp_token.String(), tempExpiry, "/", core.Configs.FRONTEND_HOST, secure, true)
 
-		c.JSON(http.StatusAccepted, gin.H{"msg": "TwoFA required!", "two_fa_required": true})
+		c.JSON(http.StatusOK, gin.H{"msg": "TwoFA required!", "two_fa_required": true})
 
 		return
 	}
