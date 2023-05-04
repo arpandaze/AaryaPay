@@ -8,7 +8,10 @@ class SnackBarService {
   static final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 
   static void showSnackBar(
-      {required String? content, MessageType msgType = MessageType.error}) {
+      {
+    required String? content,
+    MessageType msgType = MessageType.error,
+  }) {
     scaffoldKey.currentState?.showSnackBar(
       SnackBar(
         duration: const Duration(seconds: 2),
