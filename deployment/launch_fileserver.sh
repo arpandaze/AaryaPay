@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 CONTAINER_NAME="file-server-aaryapay"
 
 if [ "$(podman ps -q -f name=$CONTAINER_NAME)" ]; then
