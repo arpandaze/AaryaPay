@@ -26,55 +26,87 @@ class AuthenticationRepository {
         "remember_me": "true",
       },
     );
-    if (response.statusCode != 202) {
-      if (response.statusCode == 401) {
-        var decodedResponse =
-            jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
 
+    // 401 : Email Wrong , Password Wrong, 202 : Accepted, 200 : Password Accept and Verified, Two FA Required, 403 : Unverified
+    if (response.statusCode != 202) {
+      var decodedResponse =
+          jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+
+      if (response.statusCode == 200) {
+        storage.write(
+          key: "two_FA",
+          value: "true",
+        );
+
+        return {
+          "response": decodedResponse,
+          "mismatch": false,
+          "verification": true,
+          "two_fa_required": true,
+        };
+      }
+
+      if (response.statusCode == 401) {
         storage.write(
           key: "user_id",
           value: jsonEncode(decodedResponse["user_id"]),
         );
-        return {"response": decodedResponse, "verification": false};
+
+        return {
+          "response": decodedResponse,
+          "mismatch": true,
+          "verification": null,
+          "two_fa_requir": null,
+        };
       }
-      throw Exception("Login Failed! Check Email or Password!");
+
+      if (response.statusCode == 403) {
+        storage.write(
+          key: "user_id",
+          value: jsonEncode(decodedResponse["user_id"]),
+        );
+        return {
+          "response": decodedResponse,
+          "mismatch": false,
+          "verification": false,
+          "two_fa_required": null,
+        };
+      }
+      throw Exception("Login Failed!");
     }
 
     var decodedResponse =
         jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
 
-    if (decodedResponse["two_fa_required"] == true) {
-      return {"two_fa_required": true};
-    } else {
-      var bkvc = base64Decode(decodedResponse["bkvc"]);
+    var bkvc = base64Decode(decodedResponse["bkvc"]);
 
-      BalanceKeyVerificationCertificate bkvcObject =
-          BalanceKeyVerificationCertificate.fromBytes(bkvc);
+    BalanceKeyVerificationCertificate bkvcObject =
+        BalanceKeyVerificationCertificate.fromBytes(bkvc);
 
-      storage.write(
-        key: "token",
-        value: response.headers["set-cookie"]!.substring(8, 44),
-      );
+    storage.write(
+      key: "token",
+      value: response.headers["set-cookie"]!.substring(8, 44),
+    );
 
-      storage.write(key: "user", value: jsonEncode(decodedResponse["user"]));
-      storage.write(key: "user_id", value: bkvcObject.userID.toString());
-      storage.write(
-          key: "available_balance",
-          value: bkvcObject.availableBalance.toString());
+    storage.write(key: "user", value: jsonEncode(decodedResponse["user"]));
+    storage.write(key: "user_id", value: bkvcObject.userID.toString());
+    storage.write(
+        key: "available_balance",
+        value: bkvcObject.availableBalance.toString());
 
-      storage.write(key: "public_key", value: bkvcObject.publicKey.toString());
-      storage.write(key: "timestamp", value: bkvcObject.timeStamp.toString());
-      storage.write(key: "signature", value: bkvcObject.signature.toString());
-      storage.write(
-          key: "private_key",
-          value: base64Decode(decodedResponse["private_key"]).toString());
+    storage.write(key: "public_key", value: bkvcObject.publicKey.toString());
+    storage.write(key: "timestamp", value: bkvcObject.timeStamp.toString());
+    storage.write(key: "signature", value: bkvcObject.signature.toString());
+    storage.write(
+        key: "private_key",
+        value: base64Decode(decodedResponse["private_key"]).toString());
 
-      return {
-        "response": decodedResponse,
-        "two_fa_required": false,
-        "verification": true,
-      };
-    }
+    return {
+      "response": decodedResponse,
+      "two_fa_required": false,
+      "verification": true,
+      "mismatch": false,
+    };
   }
 
   Future<Object> logout() async {

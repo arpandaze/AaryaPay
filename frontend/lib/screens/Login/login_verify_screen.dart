@@ -1,3 +1,5 @@
+import 'package:aaryapay/components/SnackBarService.dart';
+import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/screens/Login/bloc/login_verify_bloc.dart';
 import 'package:aaryapay/screens/Login/login_screen.dart';
 import 'package:aaryapay/screens/Register/completed_screen.dart';
@@ -18,6 +20,11 @@ class LoginVerifyScreen extends StatelessWidget {
         listener: (context, state) => {
           if (state.status == LoginVerifyStatus.verified)
             {
+              SnackBarService.stopSnackBar(),
+              SnackBarService.showSnackBar(
+                content: "Verified Successfully",
+                msgType: MessageType.success,
+              ),
               Navigator.of(context).pushAndRemoveUntil(
                 PageRouteBuilder(
                   pageBuilder: (context, animation1, animation2) =>
