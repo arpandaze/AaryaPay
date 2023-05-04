@@ -1,3 +1,5 @@
+set -e
+
 ./launch_postgres.sh
 ./launch_redis.sh
 ./launch_mailpit.sh

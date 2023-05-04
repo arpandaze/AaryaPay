@@ -102,7 +102,12 @@ configs-sync:
     - ssh-add <(echo "$SSH_PRIVATE_KEY" | base64 -d)
     - cd deployment
     - ./sync-to-server.sh
-    - ssh -o StrictHostKeyChecking=no ubuntu@$SSH_DEPLOY_HOST "cd /home/ubuntu/aaryapay && ./stop.sh && CI_REGISTRY_IMAGE=$CI_REGISTRY_IMAGE ./start.sh"
+    - ssh -o StrictHostKeyChecking=no ubuntu@$SSH_DEPLOY_HOST "
+      echo $CI_BUILD_TOKEN | podman login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY &&
+      cd /home/ubuntu/aaryapay &&
+      ./stop.sh &&
+      CI_REGISTRY_IMAGE=$CI_REGISTRY_IMAGE ./start.sh
+      "
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
@@ -117,7 +122,11 @@ ssh-deploy:
     - apk add --no-cache openssh-client
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH_PRIVATE_KEY" | base64 -d)
-    - ssh -o StrictHostKeyChecking=no ubuntu@$SSH_DEPLOY_HOST "cd /home/ubuntu/aaryapay && CI_REGISTRY_IMAGE=$CI_REGISTRY_IMAGE ./update.sh"
+    - ssh -o StrictHostKeyChecking=no ubuntu@$SSH_DEPLOY_HOST "
+      echo $CI_BUILD_TOKEN | podman login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY &&
+      cd /home/ubuntu/aaryapay &&
+      CI_REGISTRY_IMAGE=$CI_REGISTRY_IMAGE ./update.sh
+      "
   only:
     refs:
       - tags
