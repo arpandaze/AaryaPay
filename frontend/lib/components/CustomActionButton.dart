@@ -40,8 +40,10 @@ class CustomActionButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            actionLogo ?? Container(),
-            label != ""
+            Container(
+                padding: EdgeInsets.only(right: label != null ? 5.0 : 0.0),
+                child: actionLogo ?? Container()),
+            label != null
                 ?
             Text(
                     label ?? "",
@@ -49,7 +51,7 @@ class CustomActionButton extends StatelessWidget {
                   Theme.of(context).textTheme.titleLarge!.merge(TextStyle(
                       color: Theme.of(context).colorScheme.background)),
                   )
-                : Text(""),
+                : const Text(""),
           ],
         ),
       ),

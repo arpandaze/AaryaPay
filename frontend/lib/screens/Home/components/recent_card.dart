@@ -59,13 +59,6 @@ class RecentCard extends StatelessWidget {
                 transactionAmt: "50.00",
                 date: "January 18 2020",
               ),
-              RecentPaymentCard(
-                isDebit: true,
-                finalAmt: "18153.64",
-                label: "Apple Payment",
-                transactionAmt: "50.00",
-                date: "January 18 2020",
-              ),
             ],
           ),
         ),
