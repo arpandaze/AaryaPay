@@ -128,7 +128,7 @@ func (LoginController) Login(c *gin.Context) {
 	}
 
 	// Check for last key refresh time
-	_, lastRefreshedAt, err := core.GetUserKey(c, queryUser.ID)
+	keyPair, lastRefreshedAt, err := core.GetUserKeyPair(c, queryUser.ID)
 
 	if err != nil {
 		Logger(c).Sugar().Errorw("Failed to get existing user key",
@@ -138,24 +138,27 @@ func (LoginController) Login(c *gin.Context) {
 		return
 	}
 
-	duration := time.Since(lastRefreshedAt)
-
-	if duration.Hours() < float64(core.Configs.KEY_VALIDITY_TIME_HOURS) {
-		msg := "Please logout from previous device or wait for the key to expire!"
-		l.Errorw(msg)
-
-		c.AbortWithStatusJSON(http.StatusTooEarly, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
-		return
-	}
-
-	pubKey, privKey, lastRefreshedAt, err := core.GenerateKeyPair(c, queryUser.ID)
-
-	if err != nil {
-		Logger(c).Sugar().Errorw("Failed to generate key pair",
+	if keyPair.IsEmpty {
+		Logger(c).Sugar().Errorw("First time login for user",
 			"error", err,
 		)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
-		return
+	}
+
+	duration := time.Since(lastRefreshedAt)
+
+	sendOnlyPub := true
+	if duration.Hours() > float64(core.Configs.KEY_VALIDITY_TIME_HOURS) || keyPair.IsEmpty {
+		keyPair, lastRefreshedAt, err = core.GenerateKeyPair(c, queryUser.ID)
+
+		if err != nil {
+			Logger(c).Sugar().Errorw("Failed to generate key pair",
+				"error", err,
+			)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
+			return
+		}
+
+		sendOnlyPub = false
 	}
 
 	secure := true
@@ -174,7 +177,7 @@ func (LoginController) Login(c *gin.Context) {
 
 	c.SetCookie("session", sessionToken.String(), expiry, "/", core.Configs.FRONTEND_HOST, secure, true)
 
-	msg := "User Logged in Successfully"
+	msg := "User logged in successfully!"
 	l.Infow(msg,
 		"id", queryUser.ID,
 		"email", queryUser.Email,
@@ -186,7 +189,7 @@ func (LoginController) Login(c *gin.Context) {
 	bkvc := core.BalanceKeyVerificationCertificate{
 		MessageType:      core.BKVCMessageType,
 		UserID:           queryUser.ID,
-		PublicKey:        [32]byte(pubKey),
+		PublicKey:        [32]byte(keyPair.PublicKey()),
 		AvailableBalance: float32(userBalance),
 		TimeStamp:        time.Now(),
 	}
@@ -208,5 +211,9 @@ func (LoginController) Login(c *gin.Context) {
 
 	returnUser := &loginUserReturn{ID: queryUser.ID, FirstName: queryUser.FirstName, MiddleName: queryUser.MiddleName, LastName: queryUser.LastName, DOB: queryUser.DOB, Email: queryUser.Email, IsVerified: queryUser.IsVerified, IsTwoFA: queryUser.TwoFactorAuth.Valid && queryUser.TwoFactorAuth.String != ""}
 
-	c.JSON(http.StatusAccepted, gin.H{"msg": msg, "bkvc": base64EncodedBKVC, "private_key": base64.StdEncoding.EncodeToString(privKey), "user": returnUser})
+	if sendOnlyPub {
+		c.JSON(http.StatusAccepted, gin.H{"msg": msg, "primary": false, "bkvc": base64EncodedBKVC, "public_key": base64.StdEncoding.EncodeToString(keyPair.PublicKey()), "user": returnUser})
+	} else {
+		c.JSON(http.StatusAccepted, gin.H{"msg": msg, "primary": true, "bkvc": base64EncodedBKVC, "private_key": base64.StdEncoding.EncodeToString(keyPair.PrivateKey()), "user": returnUser})
+	}
 }
