@@ -11,28 +11,25 @@ class CustomArrowedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-      child: GestureDetector(
-        onTap: onPressed,
-        child: Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: 10,
-            ),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onPrimary,
-              borderRadius: BorderRadius.circular(50),
-              // border: Border.all(
-              //   color: colorType,
-              // ),
-            ),
-            child: SvgPicture.asset(
-              "assets/icons/arrow.svg",
-              width: 20,
-              height: 20,
-            )),
-      ),
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+          padding: const EdgeInsets.symmetric(
+            vertical: 10,
+            horizontal: 10,
+          ),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.onPrimary,
+            borderRadius: BorderRadius.circular(50),
+            // border: Border.all(
+            //   color: colorType,
+            // ),
+          ),
+          child: SvgPicture.asset(
+            "assets/icons/arrow.svg",
+            width: 20,
+            height: 20,
+          )),
     );
   }
 }
