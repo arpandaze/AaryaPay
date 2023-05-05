@@ -12,11 +12,12 @@ class FavouritesModal {
   final String? userTag;
   final String? dateAdded;
 
-  FavouritesModal(
-      {this.imageSrc = const AssetImage("assets/images/default-pfp.png"),
-      this.name,
-      this.userTag,
-      this.dateAdded});
+  FavouritesModal({
+    this.imageSrc = const AssetImage("assets/images/default-pfp.png"),
+    this.name,
+    this.userTag,
+    this.dateAdded,
+  });
 }
 
 class FavouritesBloc extends Bloc<FavouritesEvent, FavouritesState> {
@@ -62,9 +63,9 @@ class FavouritesBloc extends Bloc<FavouritesEvent, FavouritesState> {
       FavouritesLoadEvent event, Emitter<FavouritesState> emit) async {
     final response = await favouritesRepository.getFavourites();
     emit(state.copyWith(favouritesList: response['data']));
-    if(response["data"] != null){
+    if (response["data"] != null) {
       emit(state.copyWith(isLoaded: true));
-    } else{
+    } else {
       emit(state.copyWith(isLoaded: false));
     }
   }

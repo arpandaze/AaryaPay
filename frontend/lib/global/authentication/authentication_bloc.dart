@@ -17,6 +17,7 @@ class AuthenticationBloc
     on<LoggedIn>(_onLoggedIn);
     on<LoggedOut>(_onLoggedOut);
     on<LoadAuthStatus>(_onLoadAuthStatus);
+    on<TwoFA>(_onTwoFA);
     add(LoadAuthStatus());
   }
 
@@ -33,6 +34,19 @@ class AuthenticationBloc
   }
 
   void _onLoggedOut(LoggedOut event, Emitter<AuthenticationState> emit) async {
-    await authRepo.logout();
+    var response = await authRepo.logout() as Map<String, dynamic>;
+
+    if (response["logoutSuccess"]) {
+      print("here");
+    } else {
+      print("Not Here");
+    }
+    emit(state.copyWith(status: AuthenticationStatus.loggedOut));
+    emit(state.copyWith(status: AuthenticationStatus.none));
+  }
+
+  void _onTwoFA(TwoFA event, Emitter<AuthenticationState> emit) async {
+    emit(state.copyWith(status: AuthenticationStatus.twoFA));
+    emit(state.copyWith(status: AuthenticationStatus.none));
   }
 }
