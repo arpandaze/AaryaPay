@@ -6,19 +6,6 @@ import 'package:equatable/equatable.dart';
 part 'favourites_event.dart';
 part 'favourites_state.dart';
 
-class FavouritesModal {
-  final AssetImage? imageSrc;
-  final String? name;
-  final String? userTag;
-  final String? dateAdded;
-
-  FavouritesModal(
-      {this.imageSrc = const AssetImage("assets/images/default-pfp.png"),
-      this.name,
-      this.userTag,
-      this.dateAdded});
-}
-
 class FavouritesBloc extends Bloc<FavouritesEvent, FavouritesState> {
   final FavouritesRepository favouritesRepository;
 
@@ -43,7 +30,7 @@ class FavouritesBloc extends Bloc<FavouritesEvent, FavouritesState> {
     if (response["status"] == 201) {
       add(FavouritesLoadEvent());
     } else {
-      throw Exception("Couldn't add");
+      throw Exception("Couldn't add to favorites");
     }
   }
 
@@ -62,9 +49,9 @@ class FavouritesBloc extends Bloc<FavouritesEvent, FavouritesState> {
       FavouritesLoadEvent event, Emitter<FavouritesState> emit) async {
     final response = await favouritesRepository.getFavourites();
     emit(state.copyWith(favouritesList: response['data']));
-    if(response["data"] != null){
+    if (response["data"] != null) {
       emit(state.copyWith(isLoaded: true));
-    } else{
+    } else {
       emit(state.copyWith(isLoaded: false));
     }
   }
