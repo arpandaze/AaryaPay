@@ -1,4 +1,5 @@
 import 'package:aaryapay/components/CustomTextField.dart';
+import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
 import 'package:aaryapay/repository/auth.dart';
@@ -22,8 +23,14 @@ class LoginScreen extends StatelessWidget {
       child: BlocProvider(
         create: (context) => LoginBloc(),
         child: BlocConsumer<LoginBloc, LoginState>(
+          listenWhen: (previous, current) =>
+              previous.verificationStatus != current.verificationStatus,
           listener: (context, state) {
             if (state.verificationStatus == VerificationStatus.unverified) {
+              SnackBarService.stopSnackBar();
+              SnackBarService.showSnackBar(
+                content: state.errorText,
+              );
               Navigator.of(context).push(
                 PageRouteBuilder(
                   pageBuilder: (context, animation1, animation2) =>
@@ -31,6 +38,12 @@ class LoginScreen extends StatelessWidget {
                   transitionDuration: Duration.zero,
                   reverseTransitionDuration: Duration.zero,
                 ),
+              );
+            }
+            if (state.verificationStatus == VerificationStatus.error) {
+              SnackBarService.stopSnackBar();
+              SnackBarService.showSnackBar(
+                content: state.errorText,
               );
             }
             if (state.loginSucess) {

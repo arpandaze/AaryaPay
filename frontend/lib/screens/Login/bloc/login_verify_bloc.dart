@@ -27,13 +27,11 @@ class LoginVerifyBloc extends Bloc<LoginVerifyEvent, LoginVerifyState> {
 
   void _onVerifyFormSubmitted(
       VerifyFormSubmitted event, Emitter<LoginVerifyState> emit) async {
-    print("Verify Tapped");
     // emit(state.copyWith(status: RegisterStatus.verifying));
     if (state.status == LoginVerifyStatus.none) {
       // return emit(state.copyWith(errorText: "Invalid Username!"));
       return;
     }
-    print("Verify Status Good");
 
     final url = Uri.parse('$backendBase/auth/verify');
 
