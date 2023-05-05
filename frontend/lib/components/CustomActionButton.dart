@@ -31,7 +31,6 @@ class CustomActionButton extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       child: Container(
         width: width ?? size.width * 0.6,
-        alignment: Alignment.center,
         height: height ?? 50,
         decoration: BoxDecoration(
             color: color ?? Theme.of(context).colorScheme.primary,
@@ -42,7 +41,8 @@ class CustomActionButton extends StatelessWidget {
           children: [
             Container(
                 padding: EdgeInsets.only(right: label != null ? 5.0 : 0.0),
-                child: actionLogo ?? Container()),
+              child: actionLogo ?? Container(),
+            ),
             label != null
                 ?
             Text(
