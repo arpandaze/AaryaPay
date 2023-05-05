@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"log"
+	"main/telemetry"
 	"os"
 	"path"
 	"path/filepath"
@@ -66,6 +67,12 @@ type Settings struct {
 	FIRST_SUPERUSER_PASSWORD string `yaml:"FIRST_SUPERUSER_PASSWORD"`
 	USERS_OPEN_REGISTRATION  bool   `yaml:"USERS_OPEN_REGISTRATION"`
 
+	LOKI_HOST string `yaml:"LOKI_HOST"`
+	LOKI_PORT int    `yaml:"LOKI_PORT"`
+
+	TEMPO_HOST string `yaml:"TEMPO_HOST"`
+	TEMPO_PORT int    `yaml:"TEMPO_PORT"`
+
 	ARGON_MEMORY      uint32 `yaml:"ARGON_MEMORY"`
 	ARGON_TIME        uint32 `yaml:"ARGON_TIME"`
 	ARGON_ITERATIONS  uint32 `yaml:"ARGON_ITERATIONS"`
@@ -127,6 +134,14 @@ func (r Settings) EMAILS_FROM_NAME() string {
 	return r.PROJECT_NAME
 }
 
+func (r Settings) LOKI_ADDRESS() string {
+	return fmt.Sprintf("http://%s:%d", r.LOKI_HOST, r.LOKI_PORT)
+}
+
+func (r Settings) TEMPO_ADDRESS() string {
+	return fmt.Sprintf("%s:%d", r.TEMPO_HOST, r.TEMPO_PORT)
+}
+
 func (r Settings) EMAILS_ENABLED() bool {
 	return len(r.SMTP_HOST) != 0 && r.SMTP_PORT != 0 && len(r.EMAILS_FROM_EMAIL) != 0
 }
@@ -184,6 +199,12 @@ func LoadConfigWithMode(mode string) {
 	if err := yaml.Unmarshal(f, &Configs); err != nil {
 		log.Fatal(err)
 	}
+
+	if mode == "test" || mode == "ci-test" || mode == "dev" {
+		telemetry.InitTestGinzap()
+	} else {
+		telemetry.InitGinzap(Configs.LOKI_ADDRESS(), Configs.SERVER_NAME)
+	}
 }
 
 func LoadConfigWithFile(path string) {
@@ -211,5 +232,11 @@ func LoadConfig() {
 	} else {
 		fmt.Println("Loading config with mode: ", mode)
 		LoadConfigWithMode(mode)
+	}
+
+	if mode == "test" || mode == "ci-test" || mode == "dev" {
+		telemetry.InitTestGinzap()
+	} else {
+		telemetry.InitGinzap(Configs.LOKI_ADDRESS(), Configs.SERVER_NAME)
 	}
 }

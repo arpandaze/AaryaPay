@@ -4,3 +4,6 @@ podman stop mailpit-aaryapay && podman rm mailpit-aaryapay
 podman stop file-server-aaryapay && podman rm file-server-aaryapay
 podman stop backend-aaryapay && podman rm backend-aaryapay
 podman stop proxy-aaryapay && podman rm proxy-aaryapay
+podman stop tempo-aaryapay && podman rm tempo-aaryapay
+podman stop loki-aaryapay && podman rm loki-aaryapay
+podman stop grafana-aaryapay && podman rm grafana-aaryapay
