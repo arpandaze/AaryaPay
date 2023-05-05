@@ -1,5 +1,4 @@
 import 'package:aaryapay/constants.dart';
-import 'package:aaryapay/global/authentication/authentication_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:email_validator/email_validator.dart';

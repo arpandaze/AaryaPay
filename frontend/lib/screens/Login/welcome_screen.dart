@@ -12,7 +12,8 @@ class WelcomeScreen extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return LoginWrapper(
-      actionButtonLabel: "Login",
+      children: _midSection(context, size),
+      actionButtonLabel: "LOGIN",
       actionButtonFunction: () => {
         Navigator.of(context).push(
           PageRouteBuilder(
@@ -23,7 +24,6 @@ class WelcomeScreen extends StatelessWidget {
           ),
         ),
       },
-      children: _midSection(context, size),
     );
   }
 

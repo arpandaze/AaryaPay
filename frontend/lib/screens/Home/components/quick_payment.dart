@@ -1,5 +1,4 @@
 import 'package:aaryapay/components/CustomActionButton.dart';
-import 'package:aaryapay/components/CustomStatusButton.dart';
 import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,22 +13,21 @@ class QuickPayment extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 15),
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.fromLTRB(8, 0, 8, 20),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(color: colorScheme.onPrimary),
         ),
       ),
       width: size.width,
-      height: size.height * 0.18,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Send Money",
-            style: textTheme.titleMedium,
-          ),
+          // Text(
+          //   "Send Money",
+          //   style: textTheme.titleMedium,
+          // ),
           Padding(
             padding: const EdgeInsets.only(top: 20, bottom: 10),
             child: Row(

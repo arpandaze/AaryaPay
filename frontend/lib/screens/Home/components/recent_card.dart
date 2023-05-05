@@ -1,18 +1,16 @@
-
 import 'package:flutter/material.dart';
 import 'package:aaryapay/components/TransactionsCard.dart';
 
 class RecentCard extends StatelessWidget {
-  const RecentCard({Key? key, required this.size}) : super(key: key);
-  final Size size;
+  const RecentCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
       alignment: Alignment.centerLeft,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      
         Container(
           margin: const EdgeInsets.symmetric(vertical: 20),
           child: Row(
@@ -59,11 +57,16 @@ class RecentCard extends StatelessWidget {
                 transactionAmt: "50.00",
                 date: "January 18 2020",
               ),
+              RecentPaymentCard(
+                isDebit: true,
+                label: "Amazon Payment",
+                finalAmt: "18153.64",
+                transactionAmt: "50.00",
+                date: "January 18 2020",
+              ),
             ],
           ),
         ),
-        
-
       ]),
     );
   }

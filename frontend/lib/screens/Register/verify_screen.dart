@@ -129,6 +129,7 @@ class VerifyScreen extends StatelessWidget {
                     Container(
                       margin: const EdgeInsets.only(top: 40),
                       child: PinCodeTextField(
+                        keyboardType: TextInputType.number,
                         length: 6,
                         hapticFeedbackTypes: HapticFeedbackTypes.light,
                         textStyle: TextStyle(color: Colors.black),
@@ -145,11 +146,13 @@ class VerifyScreen extends StatelessWidget {
                         // activeColor: Theme.of(context).colorScheme.secondary),
                         animationDuration: const Duration(milliseconds: 300),
 
-                        onChanged: (value) {
+                        onCompleted: (value) {
                           context
                               .read<RegisterBloc>()
                               .add(VerifyChanged(token: value));
                         },
+
+                        onChanged: (value) {},
                         beforeTextPaste: (text) {
                           return true;
                         },
@@ -195,16 +198,15 @@ class VerifyScreen extends StatelessWidget {
   Widget button(BuildContext context, Size size) {
     return BlocBuilder<RegisterBloc, RegisterState>(
       builder: (context, state) {
-        if (state.status != RegisterStatus.verifying) {
+        if (!state.status) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              errorText(state.status),
               CustomRegisterButton(
                 width: size.width * 0.78,
                 borderRadius: 10,
-                label: "Next",
+                label: "Verify",
                 onClick: () =>
                     {context.read<RegisterBloc>().add(VerifyClicked())},
               ),
@@ -214,7 +216,6 @@ class VerifyScreen extends StatelessWidget {
           return Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              errorText(state.status),
               Container(
                 alignment: Alignment.bottomCenter,
                 child: const CircularProgressIndicator(),
@@ -224,14 +225,5 @@ class VerifyScreen extends StatelessWidget {
         }
       },
     );
-  }
-
-  Widget errorText(RegisterStatus state) {
-    switch (state) {
-      case RegisterStatus.wrongToken:
-        return const Text("Invalid or expired token!");
-      default:
-        return const SizedBox.shrink();
-    }
   }
 }

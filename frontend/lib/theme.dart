@@ -18,7 +18,7 @@ class AppTheme with ChangeNotifier {
         brightness: Brightness.light,
         primary: Color(0xff274233),
         tertiary: Color.fromARGB(255, 6, 44, 133),
-        onPrimary: Color.fromARGB(255, 210, 210, 210),
+        onPrimary: Color.fromARGB(255, 240, 240, 240),
         secondary: Color(0xffFFAB2D),
         onSecondary: Color(0xff1A1B24),
         error: Color(0xFFFFCE37),
@@ -27,7 +27,7 @@ class AppTheme with ChangeNotifier {
         onBackground: Color(0xFF2A292F),
         surface: Color.fromARGB(255, 160, 160, 160),
         onSurface: Color.fromARGB(255, 206, 52, 52),
-        outline: Color(0xffC0C0C0),
+        outline: Color.fromARGB(255, 160, 160, 160),
         surfaceVariant: Color.fromARGB(255, 29, 153, 84),
         onTertiary: Color.fromARGB(255, 137, 139, 137),
       ),
@@ -102,8 +102,7 @@ class AppTheme with ChangeNotifier {
             fontWeight: FontWeight.w500,
             letterSpacing: 1.0,
             height: 1.0,
-              color: const Color(0xff5484F5)),
-       
+        ),
         labelMedium: GoogleFonts.questrial(
           fontSize: 18,
             fontWeight: FontWeight.w500,

@@ -20,9 +20,11 @@ class RegisterState extends Equatable {
   final String? email;
   final String? password;
   final int page;
-  final RegisterStatus status;
+  final bool status;
+  final MessageType msgType;
   final String? token;
   final String? uuid;
+  final String? errorText;
 
   const RegisterState({
     this.page = 1,
@@ -32,8 +34,10 @@ class RegisterState extends Equatable {
     this.dob,
     this.email,
     this.password,
-    this.status = RegisterStatus.idle,
+    this.status = false,
+    this.msgType = MessageType.idle,
     this.token,
+    this.errorText,
     this.uuid,
   });
 
@@ -45,8 +49,10 @@ class RegisterState extends Equatable {
     DateTime? dob,
     String? email,
     String? password,
-    RegisterStatus? status,
+    bool? status,
+    MessageType? msgType,
     String? token,
+    String? errorText,
     String? uuid,
   }) {
     return RegisterState(
@@ -58,8 +64,10 @@ class RegisterState extends Equatable {
       email: email ?? this.email,
       password: password ?? this.password,
       status: status ?? this.status,
+      msgType: msgType ?? this.msgType,
       token: token ?? this.token,
       uuid: uuid ?? this.uuid,
+      errorText: errorText ?? this.errorText,
     );
   }
 
@@ -75,5 +83,7 @@ class RegisterState extends Equatable {
         status,
         token,
         uuid,
+        msgType,
+        errorText,
       ];
 }

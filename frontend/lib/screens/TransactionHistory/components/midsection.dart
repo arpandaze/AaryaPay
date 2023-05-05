@@ -1,5 +1,6 @@
 import 'package:aaryapay/components/TransactionsCard.dart';
 import 'package:aaryapay/screens/TransactionHistory/bloc/transcation_bloc.dart';
+import 'package:aaryapay/screens/TransactionHistory/components/tranasaction_detailScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -38,16 +39,29 @@ class MidSection extends StatelessWidget {
                   ),
                   if (state.loaded)
                     ...state.transactionHistory!
-                        .map((item) => RecentPaymentCard(
-                            label: "Google Payment",
-                            date: DateFormat.yMMMMd().format(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                      item['generation_time'] * 1000,
-                                      isUtc: true)
-                                  .toLocal(),
-                            ),
-                            transactionAmt: item["amount"].toString(),
-                            finalAmt: "1200"))
+                        .map((item) => GestureDetector(
+                              onTap: () => {
+                                Navigator.of(context).push(
+                                  PageRouteBuilder(
+                                    pageBuilder:
+                                        (context, animation1, animation2) =>
+                                            const TransactionDetailsScreen(),
+                                    transitionDuration: Duration.zero,
+                                    reverseTransitionDuration: Duration.zero,
+                                  ),
+                                ),
+                              },
+                              child: RecentPaymentCard(
+                                  label: "Google Payment",
+                                  date: DateFormat.yMMMMd().format(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                            item['generation_time'] * 1000,
+                                            isUtc: true)
+                                        .toLocal(),
+                                  ),
+                                  transactionAmt: item["amount"].toString(),
+                                  finalAmt: "1200"),
+                            ))
                         .toList()
                         .reversed
                   else

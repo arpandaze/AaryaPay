@@ -6,7 +6,9 @@ import 'package:aaryapay/theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -27,6 +29,7 @@ class MyApp extends StatelessWidget {
         routes: routes,
         title: 'AaryaPay',
         initialRoute: '/welcome',
+        color: Theme.of(context).colorScheme.background,
         theme: AppTheme.lightTheme,
       ),
     );
