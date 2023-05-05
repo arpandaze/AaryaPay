@@ -149,10 +149,9 @@ class AccountScreen extends StatelessWidget {
   Widget button(BuildContext context, Size size) {
     return BlocBuilder<RegisterBloc, RegisterState>(
       builder: (context, state) {
-        if (state.status != RegisterStatus.submitting) {
+        if (!state.status) {
           return Column(
             children: [
-              errorText(state.status),
               CustomRegisterButton(
                 width: size.width * 0.78,
                 borderRadius: 10,
@@ -166,7 +165,6 @@ class AccountScreen extends StatelessWidget {
           return Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              errorText(state.status),
               Container(
                 alignment: Alignment.bottomCenter,
                 margin: EdgeInsets.fromLTRB(
@@ -180,14 +178,4 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
-  Widget errorText(RegisterStatus state) {
-    switch (state) {
-      case RegisterStatus.errorUnknown:
-        return const Text("Something went wrong! Check you inputs!");
-      case RegisterStatus.errorEmailUsed:
-        return const Text("Email is already in use!");
-      default:
-        return const SizedBox.shrink();
-    }
-  }
 }
