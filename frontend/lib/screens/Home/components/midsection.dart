@@ -21,11 +21,11 @@ class Midsection extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Favourites(),
-            const QuickPayment(),
-            const LastSynchronized(),
-            RecentCard(size: size),
+          children: const [
+            LastSynchronized(),
+            Favourites(),
+            QuickPayment(),
+            RecentCard(),
           ],
         ),
       ),

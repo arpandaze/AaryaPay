@@ -27,7 +27,7 @@ class AppTheme with ChangeNotifier {
         onBackground: Color(0xFF2A292F),
         surface: Color.fromARGB(255, 160, 160, 160),
         onSurface: Color.fromARGB(255, 206, 52, 52),
-        outline: Color(0xffC0C0C0),
+        outline: Color.fromARGB(255, 160, 160, 160),
         surfaceVariant: Color.fromARGB(255, 29, 153, 84),
         onTertiary: Color.fromARGB(255, 137, 139, 137),
       ),
