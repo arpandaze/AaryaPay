@@ -35,14 +35,10 @@ class AuthenticationBloc
 
   void _onLoggedOut(LoggedOut event, Emitter<AuthenticationState> emit) async {
     var response = await authRepo.logout() as Map<String, dynamic>;
+    print(state.status);
 
-    if (response["logoutSuccess"]) {
-      print("here");
-    } else {
-      print("Not Here");
-    }
-    emit(state.copyWith(status: AuthenticationStatus.loggedOut));
-    emit(state.copyWith(status: AuthenticationStatus.none));
+    emit(await AuthenticationState.load());
+    print(state.status);
   }
 
   void _onTwoFA(TwoFA event, Emitter<AuthenticationState> emit) async {

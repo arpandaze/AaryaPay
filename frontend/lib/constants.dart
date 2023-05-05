@@ -3,7 +3,7 @@ const backendBase = "https://arpandaze.tech/v1";
 enum AuthenticationStatus {
   unknown,
   loggedIn,
-  loggedOut,
+  logOut,
   none,
   twoFA,
 }

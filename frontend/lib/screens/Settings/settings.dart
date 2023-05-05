@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/components/CustomArrowedButton.dart';
 import 'package:aaryapay/components/Wrapper.dart';
+import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
 import 'package:aaryapay/screens/Login/welcome_screen.dart';
 import 'package:aaryapay/screens/Settings/AccountInformation/account_information.dart';
@@ -122,7 +125,27 @@ class Settings extends StatelessWidget {
       ]),
     ];
 
-    return BlocBuilder<AuthenticationBloc, AuthenticationState>(
+    return BlocConsumer<AuthenticationBloc, AuthenticationState>(
+      listener: (context, state) => {
+        print("Auth Status: ${state.status}"),
+        if (state.status == AuthenticationStatus.logOut)
+          {
+            Timer(
+              const Duration(microseconds: 0),
+              () {
+                Navigator.of(context).pushAndRemoveUntil(
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation1, animation2) =>
+                        const WelcomeScreen(),
+                    transitionDuration: Duration.zero,
+                    reverseTransitionDuration: Duration.zero,
+                  ),
+                  (Route<dynamic> route) => false,
+                );
+              },
+            ),
+          },
+      },
       builder: (context, state) {
         return Wrapper(
           pageName: "settings",

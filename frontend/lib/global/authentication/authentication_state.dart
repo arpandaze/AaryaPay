@@ -39,7 +39,8 @@ class AuthenticationState extends Equatable {
       return AuthenticationState(
           loaded: true, token: token, status: status, user: userObject);
     }
-    return const AuthenticationState(loaded: true);
+    return const AuthenticationState(
+        loaded: true, status: AuthenticationStatus.logOut);
   }
 
   @override

@@ -15,25 +15,7 @@ class AuthenticationStateWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthenticationBloc, AuthenticationState>(
-      listenWhen: (previous, current) => previous != current,
       listener: ((context, state) {
-        print("Auth Status ${state.status}");
-        if (state.status == AuthenticationStatus.loggedOut) {
-          Timer(
-            const Duration(microseconds: 0),
-            () {
-              Navigator.of(context).push(
-                PageRouteBuilder(
-                  pageBuilder: (context, animation1, animation2) =>
-                      const WelcomeScreen(),
-                  transitionDuration: Duration.zero,
-                  reverseTransitionDuration: Duration.zero,
-                ),
-              );
-            },
-          );
-        }
-
         if (state.status == AuthenticationStatus.twoFA) {
           Timer(
             const Duration(microseconds: 0),
