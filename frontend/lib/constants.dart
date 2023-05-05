@@ -1,9 +1,11 @@
 const backendBase = "https://arpandaze.tech/v1";
 
 enum AuthenticationStatus {
+  unknown,
   loggedIn,
-  loggedOut,
+  logOut,
   none,
+  twoFA,
 }
 
 enum VerificationStatus {
@@ -13,6 +15,14 @@ enum VerificationStatus {
   unverified,
   twofa,
   error,
+}
+
+enum FAStatus {
+  initiated,
+  onprocess,
+  success,
+  faliure,
+  unknown,
 }
 
 enum MessageType {

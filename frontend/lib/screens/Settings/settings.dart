@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/components/CustomArrowedButton.dart';
 import 'package:aaryapay/components/Wrapper.dart';
+import 'package:aaryapay/constants.dart';
+import 'package:aaryapay/global/authentication/authentication_bloc.dart';
 import 'package:aaryapay/screens/Login/welcome_screen.dart';
 import 'package:aaryapay/screens/Settings/AccountInformation/account_information.dart';
 import 'package:aaryapay/screens/Settings/components/custom_menu_selection.dart';
@@ -9,8 +13,8 @@ import 'package:aaryapay/screens/Settings/Language/language_selection.dart';
 import 'package:aaryapay/screens/Settings/Password/password_screen.dart';
 import 'package:aaryapay/screens/Settings/Syncronization/syncronization_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-
 
 class Settings extends StatelessWidget {
   const Settings({Key? key}) : super(key: key);
@@ -121,34 +125,53 @@ class Settings extends StatelessWidget {
       ]),
     ];
 
-    return Wrapper(
-      pageName: "settings",
-      children: SizedBox(
-        width: size.width,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              CustomMenuSelection(
-                itemList: itemList,
-              ),
-              CustomActionButton(
-                label: "Logout",
-                borderRadius: 10,
-                width: size.width * 0.5,
-                height: 45,
-                onClick: () => Navigator.of(context).push(
+    return BlocConsumer<AuthenticationBloc, AuthenticationState>(
+      listener: (context, state) => {
+        print("Auth Status: ${state.status}"),
+        if (state.status == AuthenticationStatus.logOut)
+          {
+            Timer(
+              const Duration(microseconds: 0),
+              () {
+                Navigator.of(context).pushAndRemoveUntil(
                   PageRouteBuilder(
                     pageBuilder: (context, animation1, animation2) =>
                         const WelcomeScreen(),
                     transitionDuration: Duration.zero,
                     reverseTransitionDuration: Duration.zero,
                   ),
-                ),
-              )
-            ],
+                  (Route<dynamic> route) => false,
+                );
+              },
+            ),
+          },
+      },
+      builder: (context, state) {
+        return Wrapper(
+          pageName: "settings",
+          children: SizedBox(
+            width: size.width,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  CustomMenuSelection(
+                    itemList: itemList,
+                  ),
+                  CustomActionButton(
+                    label: "Logout",
+                    borderRadius: 10,
+                    width: size.width * 0.5,
+                    height: 45,
+                    onClick: () => {
+                      context.read<AuthenticationBloc>().add(LoggedOut()),
+                    },
+                  )
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

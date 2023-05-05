@@ -60,7 +60,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           errorText: "Unverified User",
         ));
       } else if (loginResponse["verification"] == true) {
-        if (loginResponse["two_fa"] == true) {
+        print(loginResponse);
+        if (loginResponse["two_fa_required"] == true) {
           emit(state.copyWith(verificationStatus: VerificationStatus.twofa));
         } else {
           emit(state.copyWith(
@@ -69,6 +70,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         }
       }
     } catch (e) {
+      print(e);
       emit(state.copyWith(
         errorText: "Email or Password incorrect!",
         verificationStatus: VerificationStatus.error,

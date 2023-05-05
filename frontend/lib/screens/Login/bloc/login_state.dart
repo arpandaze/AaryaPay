@@ -6,7 +6,7 @@ class LoginState extends Equatable {
   final String? errorText;
   final VerificationStatus verificationStatus;
   final bool loginSucess;
-  final bool? twoFARequired;
+  final bool twoFARequired;
   final String? temporaryToken;
 
   const LoginState({
@@ -15,7 +15,7 @@ class LoginState extends Equatable {
     this.password = "",
     this.errorText = "",
     this.loginSucess = false,
-    this.twoFARequired,
+    this.twoFARequired = true,
     this.temporaryToken,
   });
 
@@ -27,20 +27,20 @@ class LoginState extends Equatable {
 
   LoginState copyWith({
     VerificationStatus? verificationStatus,
+    bool? twoFARequired,
     String? email,
     String? password,
     String? errorText,
     bool? loginSucess,
-    bool? twoFARequired,
     String? temporaryToken,
   }) {
     return LoginState(
       verificationStatus: verificationStatus ?? this.verificationStatus,
+      twoFARequired: twoFARequired ?? this.twoFARequired,
       email: email ?? this.email,
       password: password ?? this.password,
       errorText: errorText ?? this.errorText,
       loginSucess: loginSucess ?? this.loginSucess,
-      twoFARequired: twoFARequired ?? this.twoFARequired,
       temporaryToken: temporaryToken ?? this.temporaryToken,
     );
   }
@@ -52,7 +52,6 @@ class LoginState extends Equatable {
         password,
         errorText,
         loginSucess,
-        twoFARequired,
         temporaryToken,
       ];
 }

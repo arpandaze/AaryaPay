@@ -37,6 +37,10 @@ class AuthenticationRepository {
           key: "two_FA",
           value: "true",
         );
+        storage.write(
+          key: "temp_token",
+          value: response.headers["set-cookie"]!.substring(13, 49),
+        );
 
         return {
           "response": decodedResponse,
@@ -97,9 +101,9 @@ class AuthenticationRepository {
     storage.write(key: "public_key", value: bkvcObject.publicKey.toString());
     storage.write(key: "timestamp", value: bkvcObject.timeStamp.toString());
     storage.write(key: "signature", value: bkvcObject.signature.toString());
-    storage.write(
-        key: "private_key",
-        value: base64Decode(decodedResponse["private_key"]).toString());
+    // storage.write(
+    //     key: "private_key",
+    //     value: base64Decode(decodedResponse["private_key"]).toString());
 
     return {
       "response": decodedResponse,
@@ -110,7 +114,23 @@ class AuthenticationRepository {
   }
 
   Future<Object> logout() async {
-    await storage.deleteAll();
-    return "Logged out successfully!";
+    final url = Uri.parse('$backendBase/auth/logout');
+    final token = await storage.read(key: "token");
+    print(token);
+    final headers = {
+      "Cookie": "temp_session=; session=$token",
+      "Content-Type": "application/json; charset=utf-8"
+    };
+
+    var response = await http.post(url, headers: headers);
+
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      await storage.deleteAll();
+      return {"logoutSuccess": true, "msg": "Logged out successfully!"};
+    }
+    return {"logoutSuccess": false, "msg": "Could not Log Out!"};
   }
 }

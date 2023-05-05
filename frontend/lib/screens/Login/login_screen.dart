@@ -40,6 +40,11 @@ class LoginScreen extends StatelessWidget {
                 ),
               );
             }
+            print(state.verificationStatus);
+            if (state.verificationStatus == VerificationStatus.twofa) {
+              context.read<AuthenticationBloc>().add(TwoFA());
+            }
+
             if (state.verificationStatus == VerificationStatus.error) {
               SnackBarService.stopSnackBar();
               SnackBarService.showSnackBar(
@@ -92,37 +97,36 @@ class LoginScreen extends StatelessWidget {
           placeHolder: "E-mail Address",
         ),
         CustomTextField(
-            onChanged: (value) =>
-                context.read<LoginBloc>().add(LoginPasswordChanged(value)),
-            prefixIcon: Icon(
-              FontAwesomeIcons.lock,
-              color: Theme.of(context).colorScheme.primary,
-            ),
+          onChanged: (value) =>
+              context.read<LoginBloc>().add(LoginPasswordChanged(value)),
+          prefixIcon: Icon(
+            FontAwesomeIcons.lock,
+            color: Theme.of(context).colorScheme.primary,
+          ),
           width: size.width,
           isPassword: true,
-            placeHolder: "Password",
-            counter: GestureDetector(
-              behavior: HitTestBehavior.deferToChild,
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 15),
+          placeHolder: "Password",
+          counter: GestureDetector(
+            behavior: HitTestBehavior.deferToChild,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 15),
               child: Text(
-                  "Forgot Password?",
-                  style: Theme.of(context).textTheme.titleSmall!.merge(
-                      TextStyle(
-                          fontWeight: FontWeight.w900,
-                          color: Theme.of(context).colorScheme.primary)),
+                "Forgot Password?",
+                style: Theme.of(context).textTheme.titleSmall!.merge(TextStyle(
+                    fontWeight: FontWeight.w900,
+                    color: Theme.of(context).colorScheme.primary)),
               ),
-              ),
-              onTap: () => {
-                Navigator.of(context).push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation1, animation2) =>
-                        const ForgotPassword(),
-                    transitionDuration: Duration.zero,
-                    reverseTransitionDuration: Duration.zero,
-                  ),
+            ),
+            onTap: () => {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) =>
+                      const ForgotPassword(),
+                  transitionDuration: Duration.zero,
+                  reverseTransitionDuration: Duration.zero,
                 ),
-              },
+              ),
+            },
           ),
         ),
       ],
