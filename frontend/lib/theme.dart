@@ -18,7 +18,7 @@ class AppTheme with ChangeNotifier {
         brightness: Brightness.light,
         primary: Color(0xff274233),
         tertiary: Color.fromARGB(255, 6, 44, 133),
-        onPrimary: Color.fromARGB(255, 210, 210, 210),
+        onPrimary: Color.fromARGB(255, 240, 240, 240),
         secondary: Color(0xffFFAB2D),
         onSecondary: Color(0xff1A1B24),
         error: Color(0xFFFFCE37),

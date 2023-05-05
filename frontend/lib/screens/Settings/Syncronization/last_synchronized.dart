@@ -31,7 +31,9 @@ class LastSynchronized extends StatelessWidget {
                     child: Text(
                       "12/04/2023   5:45 pm",
                       style: textTheme.titleSmall!
-                          .merge(TextStyle(color: colorScheme.surface)),
+                          .merge(
+                        TextStyle(color: colorScheme.outline),
+                      ),
                     ),
                   )
                 ],
