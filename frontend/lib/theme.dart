@@ -102,8 +102,7 @@ class AppTheme with ChangeNotifier {
             fontWeight: FontWeight.w500,
             letterSpacing: 1.0,
             height: 1.0,
-              color: const Color(0xff5484F5)),
-       
+        ),
         labelMedium: GoogleFonts.questrial(
           fontSize: 18,
             fontWeight: FontWeight.w500,

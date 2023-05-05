@@ -94,7 +94,6 @@ class LoginWrapper extends StatelessWidget {
             child: children,
           ),
           SizedBox(
-            height: size.height * 0.15,
             child: Column(
               children: [
                 CustomActionButton(

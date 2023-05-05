@@ -56,9 +56,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   void initState() {
+    super.initState();
     showPassword = widget.isPassword;
   }
 
+  @override
   Widget build(BuildContext context) {
     return widget.height != null
         ? Container(
@@ -97,7 +99,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                         ? GestureDetector(
                             onTap: () => togglePassword(),
                             child: SvgPicture.asset(
-                              "assets/icons/invisible.svg",
+                              "assets/icons/${showPassword ? 'show' : 'invisible'}.svg",
                               colorFilter: ColorFilter.mode(
                                   Theme.of(context).colorScheme.primary,
                                   BlendMode.srcIn),
@@ -179,7 +181,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                         ? GestureDetector(
                             onTap: () => togglePassword(),
                             child: SvgPicture.asset(
-                              "assets/icons/invisible.svg",
+                              "assets/icons/${showPassword ? 'show' : 'invisible'}.svg",
                               colorFilter: ColorFilter.mode(
                                   Theme.of(context).colorScheme.primary,
                                   BlendMode.srcIn),
