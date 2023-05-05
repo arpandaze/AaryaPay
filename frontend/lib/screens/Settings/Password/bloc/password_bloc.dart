@@ -82,12 +82,14 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
               errorText:
                   "The new password cannot be the same as the old password",
               msgType: MessageType.error));
+          return;
         }
         if (response['status'] == 401) {
           emit(state.copyWith(
               submitStatus: false,
               errorText: "The password is incorrect",
               msgType: MessageType.error));
+          return;
         }
       }
       if (response['status'] == 202) {

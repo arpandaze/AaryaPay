@@ -13,6 +13,7 @@ class WelcomeScreen extends StatelessWidget {
 
     return LoginWrapper(
       children: _midSection(context, size),
+      actionButtonLabel: "LOGIN",
       actionButtonFunction: () => {
         Navigator.of(context).push(
           PageRouteBuilder(

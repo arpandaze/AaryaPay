@@ -1,3 +1,5 @@
+import 'package:aaryapay/components/SnackBarService.dart';
+import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/screens/Register/account_and_security.dart';
 import 'package:aaryapay/screens/Register/bloc/register_bloc.dart';
 import 'package:aaryapay/screens/Register/completed_screen.dart';
@@ -14,7 +16,19 @@ class RegisterScreen extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return BlocProvider<RegisterBloc>(
       create: (context) => RegisterBloc(),
-      child: BlocBuilder<RegisterBloc, RegisterState>(
+      child: BlocConsumer<RegisterBloc, RegisterState>(
+        listener: (context, state) => {
+          if (state.msgType == MessageType.error ||
+              state.msgType == MessageType.warning ||
+              state.msgType == MessageType.success)
+            {
+              SnackBarService.stopSnackBar(),
+              SnackBarService.showSnackBar(
+                content: state.errorText,
+                msgType: state.msgType,
+              )
+            },
+        },
         buildWhen: (previous, current) => previous != current,
         builder: (context, state) {
           return WillPopScope(

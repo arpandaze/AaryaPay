@@ -25,7 +25,6 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     on<PageChanged>(_onPageChanged);
     on<NextPage>(_onNextPage);
     on<PreviousPage>(_onPreviousPage);
-    on<StatusChanged>(_onStatusChanged);
     on<FormSubmitted>(_onFormSubmit);
     on<VerifyChanged>(_onVerifyChanged);
     on<VerifyClicked>(_onVerifyClicked);
@@ -33,49 +32,52 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
   void _onFirstNameChanged(
       FirstNameChanged event, Emitter<RegisterState> emit) {
-    emit(state.copyWith(firstName: event.firstName));
+    emit(state.copyWith(firstName: event.firstName, msgType: MessageType.idle));
   }
 
   void _onMiddleNameChanged(
       MiddleNameChanged event, Emitter<RegisterState> emit) {
-    emit(state.copyWith(middleName: event.middleName));
+    emit(state.copyWith(
+        middleName: event.middleName, msgType: MessageType.idle));
   }
 
   void _onLastNameChanged(LastNameChanged event, Emitter<RegisterState> emit) {
-    emit(state.copyWith(lastName: event.lastName));
+    emit(state.copyWith(lastName: event.lastName, msgType: MessageType.idle));
   }
 
   void _onDOBChanged(DOBChanged event, Emitter<RegisterState> emit) {
-    emit(state.copyWith(dob: event.dob));
-    print(state.dob);
+    emit(state.copyWith(dob: event.dob, msgType: MessageType.idle));
   }
 
   void _onEmailChanged(EmailChanged event, Emitter<RegisterState> emit) {
-    emit(state.copyWith(email: event.email));
+    emit(state.copyWith(email: event.email, msgType: MessageType.idle));
   }
 
   void _onPasswordChanged(PasswordChanged event, Emitter<RegisterState> emit) {
-    emit(state.copyWith(password: event.password));
+    emit(state.copyWith(password: event.password, msgType: MessageType.idle));
   }
 
   void _onPageChanged(PageChanged event, Emitter<RegisterState> emit) {
-    emit(state.copyWith(page: event.page));
+    emit(state.copyWith(page: event.page, msgType: MessageType.idle));
   }
 
   void _onNextPage(NextPage event, Emitter<RegisterState> emit) {
-    emit(state.copyWith(page: state.page + 1));
+    if (state.firstName != null && state.lastName != null) {
+      emit(state.copyWith(page: state.page + 1, msgType: MessageType.idle));
+    } else {
+      emit(state.copyWith(
+          msgType: MessageType.error,
+          errorText: "First name and Last name cannot be empty"));
+    }
   }
 
   void _onPreviousPage(PreviousPage event, Emitter<RegisterState> emit) {
-    emit(state.copyWith(page: state.page - 1, status: RegisterStatus.idle));
-  }
-
-  void _onStatusChanged(StatusChanged event, Emitter<RegisterState> emit) {
-    emit(state.copyWith(status: event.status));
+    emit(state.copyWith(
+        page: state.page - 1, status: false, msgType: MessageType.idle));
   }
 
   void _onFormSubmit(FormSubmitted event, Emitter<RegisterState> emit) async {
-    emit(state.copyWith(status: RegisterStatus.submitting));
+    emit(state.copyWith(status: true));
 
     if (state.firstName != null &&
         state.lastName != null &&
@@ -96,53 +98,81 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
       if (response.statusCode != 201) {
         if (response.statusCode == 409) {
-          emit(state.copyWith(status: RegisterStatus.errorEmailUsed));
+          emit(state.copyWith(
+              status: false,
+              msgType: MessageType.error,
+              errorText: "The email is already is use"));
           return;
         }
         if (response.statusCode == 400) {
-          emit(state.copyWith(status: RegisterStatus.errorUnknown));
+          emit(state.copyWith(
+              status: false,
+              msgType: MessageType.error,
+              errorText: "Unknown error occurred"));
           return;
         }
       }
       emit(state.copyWith(
-          status: RegisterStatus.success,
+          status: false,
+          msgType: MessageType.success,
+          errorText: "User successfully registered",
           uuid: decodedResponse["user_id"],
           page: state.page + 1));
+    } else {
+      emit(state.copyWith(
+          msgType: MessageType.error,
+          errorText: "The fields cannot be empty",
+          status: false));
     }
-    emit(state.copyWith(status: RegisterStatus.errorUnknown));
   }
 
   void _onVerifyClicked(
       VerifyClicked event, Emitter<RegisterState> emit) async {
-    emit(state.copyWith(status: RegisterStatus.verifying));
-    final url = Uri.parse('$backendBase/auth/verify');
-    var response = await http.post(
-      url,
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      encoding: Encoding.getByName('utf-8'),
-      body: {
-        "user_id": state.uuid!,
-        "token": state.token!,
-      },
-    );
-    if (response.statusCode != 202) {
-      if (response.statusCode == 401) {
-        print("wrong");
-        emit(state.copyWith(status: RegisterStatus.wrongToken));
-        return;
+    emit(state.copyWith(status: true));
+
+    if (state.token != null) {
+      final url = Uri.parse('$backendBase/auth/verify');
+      var response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        encoding: Encoding.getByName('utf-8'),
+        body: {
+          "user_id": state.uuid!,
+          "token": state.token!,
+        },
+      );
+      if (response.statusCode != 202) {
+        if (response.statusCode == 401) {
+          emit(state.copyWith(
+              status: false,
+              msgType: MessageType.error,
+              errorText: "Invalid token"));
+          return;
+        }
+        if (response.statusCode == 500) {
+          emit(state.copyWith(
+              status: false,
+              msgType: MessageType.error,
+              errorText: "Unknown error occurred"));
+          return;
+        }
       }
-      if (response.statusCode == 500) {
-        emit(state.copyWith(status: RegisterStatus.errorUnknown));
-        return;
-      }
+      emit(state.copyWith(
+          status: false,
+          page: state.page + 1,
+          msgType: MessageType.success,
+          errorText: "Verified Successfully"));
+    } else {
+      emit(state.copyWith(
+          status: false,
+          msgType: MessageType.error,
+          errorText: "The fields cannot be empty"));
     }
-    emit(state.copyWith(
-        status: RegisterStatus.verifySuccess, page: state.page + 1));
   }
 
   void _onVerifyChanged(VerifyChanged event, Emitter<RegisterState> emit) {
-    emit(state.copyWith(token: event.token));
+    emit(state.copyWith(token: event.token, msgType: MessageType.idle));
   }
 }
