@@ -25,6 +25,7 @@ class QrScanScreen extends StatelessWidget {
   }
 
   Widget body(Size size, BuildContext context) {
+    QRViewController? controller;
     return BlocConsumer<QrScannerBloc, QrScannerState>(
       listener: (context, state) {
         // TODO: implement listener
@@ -36,7 +37,10 @@ class QrScanScreen extends StatelessWidget {
             Container(
               child: QRView(
                 key: context.read<QrScannerBloc>().qrKey,
-                onQRViewCreated: context.read<QrScannerBloc>().onQRViewCreated,
+                onQRViewCreated: (controller) =>
+                    controller.scannedDataStream.listen((data) {
+                  context.read<QrScannerBloc>().add(QrCodeScanned(data.code!));
+                }),
                 overlay: QrScannerOverlayShape(
                     borderColor: Colors.white,
                     borderRadius: 34,
