@@ -1,7 +1,6 @@
 import 'package:aaryapay/components/CustomArrowedButton.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
 import 'package:aaryapay/repository/change_password.dart';
-import 'package:aaryapay/screens/Settings/Password/bloc/password_bloc.dart';
 import 'package:aaryapay/screens/Settings/Password/change_password.dart';
 import 'package:aaryapay/screens/Settings/Password/two_factor_auth_first.dart';
 import 'package:aaryapay/screens/Settings/components/custom_menu_selection.dart';

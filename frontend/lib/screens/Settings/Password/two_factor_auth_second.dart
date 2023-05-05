@@ -1,7 +1,11 @@
 import 'package:aaryapay/components/CustomActionButton.dart';
+import 'package:aaryapay/components/SnackBarService.dart';
+import 'package:aaryapay/constants.dart';
+import 'package:aaryapay/screens/Settings/Password/TwoFABloc/two_fa_bloc.dart';
 import 'package:aaryapay/screens/Settings/Password/two_factor_auth_third.dart';
 import 'package:aaryapay/screens/Settings/components/settings_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class TwoFactorAuthSecond extends StatelessWidget {
@@ -11,90 +15,102 @@ class TwoFactorAuthSecond extends StatelessWidget {
     var textTheme = Theme.of(context).textTheme;
     var colorScheme = Theme.of(context).colorScheme;
     Size size = MediaQuery.of(context).size;
-    return SettingsWrapper(
-      pageName: "Enter Verification Code",
-      children: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              alignment: Alignment.center,
-              // padding: EdgeInsets.symmetric(vertical: 30),
-              // decoration: BoxDecoration(
-              //     border: Border.all(color: Colors.cyanAccent)),
-              child: Container(
-                height: size.height * 0.3,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.contain,
-                    image: AssetImage("assets/images/logo.png"),
-                  ),
-                ),
-              ),
+    return BlocConsumer<TwoFaBloc, TwoFaState>(
+      listener: (context, state) {
+        if (state.msgType == MessageType.error ||
+            state.msgType == MessageType.success ||
+            state.msgType == MessageType.warning) {
+          SnackBarService.stopSnackBar();
+          SnackBarService.showSnackBar(
+              content: state.errorText, msgType: state.msgType);
+        }
+        if (state.success) {
+          Navigator.of(context).push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation1, animation2) =>
+                  const TwoFactorAuthThird(),
+              transitionDuration: Duration.zero,
+              reverseTransitionDuration: Duration.zero,
             ),
-            SizedBox(
-              child: Text(
-                "Enter OTP",
-                style: Theme.of(context).textTheme.headlineMedium!.merge(
-                      TextStyle(
-                          fontWeight: FontWeight.w900,
-                          color: Theme.of(context).colorScheme.primary),
+          );
+        }
+      },
+      builder: (context, state) {
+        return SettingsWrapper(
+          pageName: "Enter Verification Code",
+          children: Container(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  child: Container(
+                    height: size.height * 0.3,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.contain,
+                        image: AssetImage("assets/images/logo.png"),
+                      ),
                     ),
-              ),
-            ),
-            Text(
-              "Please enter the 6 digit code displayed by your Two Factor Authentication Application ",
-              style: Theme.of(context).textTheme.titleSmall!.merge(
-                    const TextStyle(height: 1.5),
-                  ),
-            ),
-            PinCodeTextField(
-              length: 6,
-              hapticFeedbackTypes: HapticFeedbackTypes.light,
-              textStyle:
-                  TextStyle(color: Theme.of(context).colorScheme.primary),
-              // obscureText: true,
-              animationType: AnimationType.fade,
-              pinTheme: PinTheme(
-                shape: PinCodeFieldShape.box,
-                borderRadius: BorderRadius.circular(5),
-                fieldHeight: 65,
-                fieldWidth: 50,
-                inactiveColor: Theme.of(context).colorScheme.primary,
-                activeFillColor: Colors.white,
-              ),
-              // activeColor: Theme.of(context).colorScheme.secondary),
-              animationDuration: const Duration(milliseconds: 300),
-              onCompleted: (v) {
-                print("Completed");
-              },
-              onChanged: (value) {
-                print(value);
-              },
-              beforeTextPaste: (text) {
-                print("Allowing to paste $text");
-                return true;
-              },
-              appContext: context,
-            ),
-            Center(
-              child: CustomActionButton(
-                label: "Submit",
-                onClick: () => Navigator.of(context).push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation1, animation2) =>
-                        const TwoFactorAuthThird(),
-                    transitionDuration: Duration.zero,
-                    reverseTransitionDuration: Duration.zero,
                   ),
                 ),
-              ),
-            )
-          ],
-        ),
-      ),
+                SizedBox(
+                  child: Text(
+                    "Enter code",
+                    style: Theme.of(context).textTheme.headlineMedium!.merge(
+                          TextStyle(
+                              fontWeight: FontWeight.w900,
+                              color: Theme.of(context).colorScheme.primary),
+                        ),
+                  ),
+                ),
+                Text(
+                  "Please enter the 6 digit code displayed by your Two Factor Authentication Application ",
+                  style: Theme.of(context).textTheme.titleSmall!.merge(
+                        const TextStyle(height: 1.5),
+                      ),
+                ),
+                PinCodeTextField(
+                  keyboardType: TextInputType.number,
+                  length: 6,
+                  hapticFeedbackTypes: HapticFeedbackTypes.light,
+                  textStyle:
+                      TextStyle(color: Theme.of(context).colorScheme.primary),
+                  animationType: AnimationType.fade,
+                  autoDismissKeyboard: true,
+                  pinTheme: PinTheme(
+                    shape: PinCodeFieldShape.box,
+                    borderRadius: BorderRadius.circular(5),
+                    fieldHeight: 65,
+                    fieldWidth: 50,
+                    inactiveColor: Theme.of(context).colorScheme.primary,
+                    activeFillColor: Colors.white,
+                  ),
+                  animationDuration: const Duration(milliseconds: 300),
+                  onCompleted: (value) {
+                    context.read<TwoFaBloc>().add(TokenChanged(token: value));
+                  },
+                  onChanged: (value) {},
+                  beforeTextPaste: (text) {
+                    return true;
+                  },
+                  appContext: context,
+                ),
+                Center(
+                  child: CustomActionButton(
+                    borderRadius: 10,
+                    label: "Verify",
+                    onClick: () =>
+                        {context.read<TwoFaBloc>().add(EnableTwoFA())},
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

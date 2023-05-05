@@ -4,7 +4,7 @@ import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
 import 'package:aaryapay/repository/change_password.dart';
-import 'package:aaryapay/screens/Settings/Password/bloc/password_bloc.dart';
+import 'package:aaryapay/screens/Settings/Password/PasswordBloc/password_bloc.dart';
 import 'package:aaryapay/screens/Settings/components/settings_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
