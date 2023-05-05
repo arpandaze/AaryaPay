@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 CONTAINER_NAME="backend-aaryapay"
 CONFIG_PATH="/etc/staging.yaml"
 

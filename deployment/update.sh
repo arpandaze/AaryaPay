@@ -1,3 +1,5 @@
+set -e
+
 if [ -z "$CI_REGISTRY_IMAGE" ]; then
     CI_REGISTRY_IMAGE="registry.gitlab.com/teamaarya/aaryapay"
 fi

@@ -20,7 +20,6 @@ class RecentPaymentCard extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
-      // decoration: BoxDecoration(border: Border.all(color: Colors.black12)),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Expanded(
           // width: 350,
@@ -34,29 +33,30 @@ class RecentPaymentCard extends StatelessWidget {
                     size: 20,
                     imageSrc: AssetImage("assets/images/default-pfp.png")),
               ),
-              Container(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: size.width * 0.45,
-                        child: Text(
-                          label,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.bodyLarge!.merge(
-                              const TextStyle(fontWeight: FontWeight.w600)),
-                        ),
-                      ),
-                      Container(
-                        width: size.width * 0.45,
-                        child: Text(
-                          date,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      )
-                    ]),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: size.width * 0.45,
+                    child: Text(
+                      label,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .merge(const TextStyle(fontWeight: FontWeight.w600)),
+                    ),
+                  ),
+                  SizedBox(
+                    width: size.width * 0.45,
+                    child: Text(
+                      date,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  )
+                ],
               ),
             ],
           ),
