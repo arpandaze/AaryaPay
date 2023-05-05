@@ -79,7 +79,7 @@ func InitKeysRoutes(routeGroup *gin.RouterGroup) {
 	routeGroup.GET("/server_keys", serverKeysController.ServerPubKey)
 }
 
-func InitToolsRoutes(routeGroup *gin.Engine) {
+func InitToolsRoutes(routeGroup *gin.RouterGroup) {
 	health := new(tools.HealthController)
 	authCheck := new(tools.AuthCheckController)
 
@@ -88,10 +88,9 @@ func InitToolsRoutes(routeGroup *gin.Engine) {
 }
 
 func RegisterRoutes(router *gin.Engine) *gin.Engine {
-	InitToolsRoutes(router)
-
 	v1 := router.Group("v1")
 	{
+		InitToolsRoutes(v1)
 		InitAuthRoutes(v1.Group("auth"))
 		InitProfileRoutes(v1.Group("profile"))
 		InitFavoritesRoute(v1.Group("favorites"))

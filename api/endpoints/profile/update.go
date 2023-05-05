@@ -101,7 +101,7 @@ func (UpdateProfileController) UpdateProfilePhoto(c *gin.Context) {
 
 	}
 
-	err = c.SaveUploadedFile(fileHeader, core.Configs.UPLOAD_DIR_ROOT+"/static/"+user.String())
+	err = c.SaveUploadedFile(fileHeader, core.Configs.UPLOAD_DIR_ROOT+"/"+user.String())
 
 	if err != nil {
 		l.Errorw("Error opening file!",

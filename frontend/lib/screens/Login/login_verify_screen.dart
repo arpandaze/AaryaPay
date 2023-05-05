@@ -27,12 +27,16 @@ class LoginVerifyScreen extends StatelessWidget {
           if (state.status == LoginVerifyStatus.error)
             {
               SnackBarService.stopSnackBar(),
-              SnackBarService.showSnackBar(content: state.errorText, msgType: MessageType.error)
+              SnackBarService.showSnackBar(
+                  content: state.errorText, msgType: MessageType.error)
             },
           if (state.status == LoginVerifyStatus.verified)
             {
               SnackBarService.stopSnackBar(),
-              SnackBarService.showSnackBar(content: state.errorText, msgType: MessageType.success),
+              SnackBarService.showSnackBar(
+                content: "Verified Successfully",
+                msgType: MessageType.success,
+              ),
               Navigator.of(context).pushAndRemoveUntil(
                 PageRouteBuilder(
                   pageBuilder: (context, animation1, animation2) =>

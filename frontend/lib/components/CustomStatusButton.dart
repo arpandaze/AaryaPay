@@ -1,27 +1,27 @@
-
 import 'package:flutter/material.dart';
 
-
 class CustomStatusButton extends StatelessWidget {
-  const CustomStatusButton(
-      {Key? key,
-      required this.widget,
-      required this.label,
-      this.width,
-      this.height,
-      this.borderRadius})
-      : super(key: key);
+  const CustomStatusButton({
+    Key? key,
+    required this.widget,
+    this.label,
+    this.width,
+    this.height,
+    this.borderRadius,
+    this.textStyle,
+  }) : super(key: key);
+
   final Widget widget;
   final double? width;
   final double? height;
-  final String label;
+  final String? label;
   final double? borderRadius;
+  final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var textTheme = Theme.of(context).textTheme;
-    var colorScheme = Theme.of(context).colorScheme;
     return GestureDetector(
       // onTap: print("lol"),
       child: Container(
@@ -32,18 +32,26 @@ class CustomStatusButton extends StatelessWidget {
             border: Border.all(color: Colors.black26),
             borderRadius:
                 BorderRadius.all(Radius.circular(borderRadius ?? 10))),
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        child: Row(
+          mainAxisAlignment: label != null
+              ? MainAxisAlignment.spaceEvenly
+              : MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
           // SvgPicture.asset(
           //   "assets/icons/sync.svg",
           //   height: 11,
           //   width: 11,
           // ),
           widget,
-          Text(
-            label,
-            style: textTheme.titleSmall,
-          )
-        ]),
+            label != null
+                ? Text(
+                    label ?? "",
+                    style: textStyle ?? textTheme.titleSmall,
+                  )
+                : Container(),
+          ],
+        ),
       ),
     );
   }

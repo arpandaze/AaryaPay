@@ -1,0 +1,77 @@
+http:
+  routers:
+    traefikapi:
+      rule: Host(`traefik.arpandaze.tech`) && PathPrefix(`/api`)
+      service: api@internal
+      tls:
+        certResolver: "tlsresolver"
+        domains:
+          - main: "traefik.arpandaze.tech"
+    traefikdashboard:
+      rule: Host(`traefik.arpandaze.tech`) && PathPrefix(`/`)
+      service: dashboard@internal
+      tls:
+        certResolver: "tlsresolver"
+        domains:
+          - main: "traefik.arpandaze.tech"
+    nginx:
+      entryPoints:
+        - websecure
+      rule: "Host(`arpandaze.tech`) && PathPrefix(`/profile`,`/static`)"
+      tls:
+        certResolver: "tlsresolver"
+        domains:
+          - main: "arpandaze.tech"
+      service: nginx
+    backend:
+      entryPoints:
+        - websecure
+      rule: "Host(`arpandaze.tech`)"
+      tls:
+        certResolver: "tlsresolver"
+        domains:
+          - main: "arpandaze.tech"
+      service: backend
+    mailpit:
+      entryPoints:
+        - websecure
+      rule: "Host(`mail.arpandaze.tech`)"
+      tls:
+        certResolver: "tlsresolver"
+        domains:
+          - main: "mail.arpandaze.tech"
+      service: mailpit
+  services:
+    nginx:
+      loadBalancer:
+        servers:
+          - url: http://localhost:32145
+    backend:
+      loadBalancer:
+        servers:
+          - url: http://localhost:32234
+    mailpit:
+      loadBalancer:
+        servers:
+          - url: http://localhost:32147
+tcp:
+  routers:
+    postgres:
+      entryPoints:
+        - postgres
+      rule: "HostSNI(`*`)"
+      service: postgres
+    redis:
+      entryPoints:
+        - redis
+      rule: "HostSNI(`*`)"
+      service: redis
+  services:
+    postgres:
+      loadBalancer:
+        servers:
+          - address: "localhost:32221"
+    redis:
+      loadBalancer:
+        servers:
+          - address: "localhost:34232"

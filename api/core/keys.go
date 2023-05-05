@@ -4,6 +4,8 @@ import (
 	"crypto/ed25519"
 	"database/sql"
 	"encoding/base64"
+	"errors"
+	"main/telemetry"
 	. "main/telemetry"
 	"main/utils"
 	"time"
@@ -12,7 +14,42 @@ import (
 	"github.com/google/uuid"
 )
 
-func GenerateKeyPair(c *gin.Context, userID uuid.UUID) ([]byte, []byte, time.Time, error) {
+type KeyPair struct {
+	IsEmpty  bool
+	rawbytes []byte
+}
+
+func KeyPairFromBytes(c *gin.Context, rawbytes []byte) (KeyPair, error) {
+	_, span := Tracer.Start(c.Request.Context(), "KeyPairFromBytes()")
+	defer span.End()
+
+	if len(rawbytes) != 64 {
+		Logger(c).Sugar().Errorw("Invalid key pair length",
+			"length", len(rawbytes),
+		)
+		return KeyPair{}, errors.New("Invalid key pair length")
+	}
+
+	return KeyPair{false, rawbytes}, nil
+}
+
+func (kp *KeyPair) Bytes() []byte {
+	return kp.rawbytes
+}
+
+func (kp *KeyPair) PrivateKey() []byte {
+	return kp.rawbytes
+}
+
+func (kp *KeyPair) PublicKey() []byte {
+	return kp.rawbytes[32:]
+}
+
+func (kp *KeyPair) PrivateHalf() []byte {
+	return kp.rawbytes[:32]
+}
+
+func GenerateKeyPair(c *gin.Context, userID uuid.UUID) (KeyPair, time.Time, error) {
 	_, span := Tracer.Start(c.Request.Context(), "GenerateKeyPair()")
 	defer span.End()
 
@@ -22,7 +59,7 @@ func GenerateKeyPair(c *gin.Context, userID uuid.UUID) ([]byte, []byte, time.Tim
 		Logger(c).Sugar().Errorw("Error generating key pair",
 			"error", err,
 		)
-		return nil, nil, time.Time{}, err
+		return KeyPair{}, time.Time{}, err
 	}
 
 	// Make the previous active key inactive
@@ -32,7 +69,7 @@ func GenerateKeyPair(c *gin.Context, userID uuid.UUID) ([]byte, []byte, time.Tim
 		Logger(c).Sugar().Errorw("Failed to update active key",
 			"error", err,
 		)
-		return nil, nil, time.Time{}, err
+		return KeyPair{}, time.Time{}, err
 	}
 
 	// Convert keys to base64-encoded strings
@@ -50,7 +87,7 @@ func GenerateKeyPair(c *gin.Context, userID uuid.UUID) ([]byte, []byte, time.Tim
 		Logger(c).Sugar().Errorw("Error inserting key pair into keys table",
 			"error", err,
 		)
-		return nil, nil, time.Time{}, err
+		return KeyPair{}, time.Time{}, err
 	}
 
 	lastRefreshedAtBytes := utils.Int32ToByteArray(int32(lastRefreshedAt.Unix()))
@@ -61,10 +98,12 @@ func GenerateKeyPair(c *gin.Context, userID uuid.UUID) ([]byte, []byte, time.Tim
 
 	mergedPayload = utils.MergeByteArray(mergedPayload, userIdByte)
 
-	return pubKey, fullKey, lastRefreshedAt, nil
+	keyPair, err := KeyPairFromBytes(c, fullKey)
+
+	return keyPair, lastRefreshedAt, nil
 }
 
-func GetUserKey(c *gin.Context, userID uuid.UUID) ([]byte, time.Time, error) {
+func GetUserKeyPair(c *gin.Context, userID uuid.UUID) (KeyPair, time.Time, error) {
 	_, span := Tracer.Start(c.Request.Context(), "GetUserKey()")
 	defer span.End()
 
@@ -78,7 +117,14 @@ func GetUserKey(c *gin.Context, userID uuid.UUID) ([]byte, time.Time, error) {
 		Logger(c).Sugar().Errorw("Error getting user key",
 			"error", err,
 		)
-		return nil, time.Time{}, err
+		return KeyPair{true, []byte{}}, time.Time{}, err
+	}
+
+	if sql.ErrNoRows == err {
+		Logger(c).Sugar().Errorw("No key found for user",
+			"error", err,
+		)
+		return KeyPair{}, time.Time{}, nil
 	}
 
 	keyBytes, err := base64.StdEncoding.DecodeString(key)
@@ -86,8 +132,17 @@ func GetUserKey(c *gin.Context, userID uuid.UUID) ([]byte, time.Time, error) {
 		Logger(c).Sugar().Errorw("Error decoding user key",
 			"error", err,
 		)
-		return nil, time.Time{}, err
+		return KeyPair{}, time.Time{}, err
 	}
 
-	return keyBytes, lastRefreshedAt, nil
+	keyPair, err := KeyPairFromBytes(c, keyBytes)
+
+	if err != nil {
+		telemetry.Logger(c).Sugar().Errorw("Error creating key pair from bytes",
+			"error", err,
+		)
+		return KeyPair{}, time.Time{}, err
+	}
+
+	return keyPair, lastRefreshedAt, nil
 }

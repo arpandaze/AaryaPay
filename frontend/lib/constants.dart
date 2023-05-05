@@ -1,4 +1,4 @@
-const backendBase = "http://192.168.1.71:8080/v1";
+const backendBase = "https://arpandaze.tech/v1";
 
 enum AuthenticationStatus {
   loggedIn,
@@ -8,8 +8,11 @@ enum AuthenticationStatus {
 
 enum VerificationStatus {
   unknown,
+  initial,
   verified,
   unverified,
+  twofa,
+  error,
 }
 
 enum MessageType {
@@ -19,5 +22,3 @@ enum MessageType {
   error,
   success,
 }
-
-

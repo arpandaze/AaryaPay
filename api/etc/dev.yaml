@@ -19,7 +19,7 @@ STATIC_PORT: 8081
 FRONTEND_HOST: localhost
 FRONTEND_PORT: 3001
 
-UPLOAD_DIR_ROOT: ../file_server
+UPLOAD_DIR_ROOT: ../.files
 
 BACKEND_CORS_ORIGINS:
   - http://localhost:3001

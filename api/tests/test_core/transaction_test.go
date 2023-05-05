@@ -12,6 +12,59 @@ import (
 	"github.com/google/uuid"
 )
 
+func TestBKVC(t *testing.T) {
+	_, c, _ := TestInit()
+
+	pub, _, _ := ed25519.GenerateKey(nil)
+
+	//Convert pub key to [32]byte
+	var pub32 [32]byte
+	copy(pub32[:], pub[:])
+
+	var BKVC = core.BalanceKeyVerificationCertificate{
+		MessageType:      core.BKVCMessageType,
+		UserID:           uuid.New(),
+		AvailableBalance: 100.0,
+		PublicKey:        pub32,
+		TimeStamp:        time.Now(),
+	}
+
+	BKVC.Sign(c)
+
+	assert.Equal(t, BKVC.Verify(c), true)
+}
+
+func TestBKVCRemake(t *testing.T) {
+	_, c, _ := TestInit()
+
+	pub, _, _ := ed25519.GenerateKey(nil)
+
+	//Convert pub key to [32]byte
+	var pub32 [32]byte
+	copy(pub32[:], pub[:])
+
+	var BKVC = core.BalanceKeyVerificationCertificate{
+		MessageType:      core.BKVCMessageType,
+		UserID:           uuid.New(),
+		AvailableBalance: 100.0,
+		PublicKey:        pub32,
+		TimeStamp:        time.Now(),
+	}
+
+	BKVC.Sign(c)
+	assert.Equal(t, BKVC.Verify(c), true)
+
+	base64BKVC := base64.StdEncoding.EncodeToString(BKVC.ToBytes(c))
+
+	base64BKVCBytes, _ := base64.StdEncoding.DecodeString(base64BKVC)
+
+	BKVCRebuilt, err := core.BKVCFromBytes(c, base64BKVCBytes)
+
+	assert.Equal(t, err, nil)
+
+	assert.Equal(t, BKVCRebuilt.Verify(c), true)
+}
+
 func TestTransaction(t *testing.T) {
 	_, c, _ := TestInit()
 

@@ -1,22 +1,26 @@
 #!/usr/bin/env bash
+
 set -x
 set -eo pipefail
 
-if [ "$(docker ps -q -f name=aarya_redis)" ]; then
+REDIS_PASSWORD="${REDIS_PASSWORD:=redispass}"
+CONTAINER_NAME="redis-aaryapay-dev"
+
+if [ "$(podman ps -q -f name=$CONTAINER_NAME)" ]; then
     echo "Redis already running!"
     exit
 fi
 
-if [ "$(docker ps -aq -f name=aarya_redis)" ]; then
+if [ "$(podman ps -aq -f name=$CONTAINER_NAME)" ]; then
     echo "Launching existing redis container!"
-    docker start aarya_redis
+    podman start $CONTAINER_NAME
     exit
 fi
 
 echo "Creating new redis container!"
 
-docker run --name aarya_redis \
+podman run --name $CONTAINER_NAME \
   -h redis \
-  -e REDIS_PASSWORD=redispass \
+  -e REDIS_PASSWORD=$REDIS_PASSWORD \
   -p 6379:6379 \
-  -d redis:6-alpine /bin/sh -c 'redis-server --requirepass ${REDIS_PASSWORD}'
+  -d docker.io/library/redis:6-alpine /bin/sh -c 'redis-server --requirepass ${REDIS_PASSWORD}'

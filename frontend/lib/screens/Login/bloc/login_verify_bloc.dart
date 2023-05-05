@@ -27,6 +27,7 @@ class LoginVerifyBloc extends Bloc<LoginVerifyEvent, LoginVerifyState> {
 
   void _onVerifyFormSubmitted(
       VerifyFormSubmitted event, Emitter<LoginVerifyState> emit) async {
+    // emit(state.copyWith(status: RegisterStatus.verifying));
     if (state.status == LoginVerifyStatus.none) {
       return;
     }

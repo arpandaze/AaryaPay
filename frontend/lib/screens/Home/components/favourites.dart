@@ -14,16 +14,8 @@ class Favourites extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Container(
       width: size.width,
-      height: size.height * 0.18,
       margin: const EdgeInsets.symmetric(horizontal: 15),
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: colorScheme.onPrimary,
-          ),
-        ),
-      ),
       // height: size.height * 0.8,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -33,25 +25,15 @@ class Favourites extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Favourites",
+                "Send Money",
                 style: textTheme.titleMedium,
               ),
-              CustomStatusButton(
-                label: "Offline",
-                widget: Container(
-                  width: 15,
-                  height: 15,
-                  decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-              )
             ],
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Padding(
-              padding: const EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.only(top: 20, bottom: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [

@@ -1,4 +1,5 @@
 import 'package:aaryapay/components/CustomTextField.dart';
+import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
 import 'package:aaryapay/repository/auth.dart';
@@ -22,8 +23,14 @@ class LoginScreen extends StatelessWidget {
       child: BlocProvider(
         create: (context) => LoginBloc(),
         child: BlocConsumer<LoginBloc, LoginState>(
+          listenWhen: (previous, current) =>
+              previous.verificationStatus != current.verificationStatus,
           listener: (context, state) {
             if (state.verificationStatus == VerificationStatus.unverified) {
+              SnackBarService.stopSnackBar();
+              SnackBarService.showSnackBar(
+                content: state.errorText,
+              );
               Navigator.of(context).push(
                 PageRouteBuilder(
                   pageBuilder: (context, animation1, animation2) =>
@@ -31,6 +38,12 @@ class LoginScreen extends StatelessWidget {
                   transitionDuration: Duration.zero,
                   reverseTransitionDuration: Duration.zero,
                 ),
+              );
+            }
+            if (state.verificationStatus == VerificationStatus.error) {
+              SnackBarService.stopSnackBar();
+              SnackBarService.showSnackBar(
+                content: state.errorText,
               );
             }
             if (state.loginSucess) {
@@ -70,7 +83,6 @@ class LoginScreen extends StatelessWidget {
         CustomTextField(
           onChanged: (value) =>
               context.read<LoginBloc>().add(LoginEmailChanged(value)),
-          padding: const EdgeInsets.only(top: 20),
           width: size.width,
           prefixIcon: Icon(
             FontAwesomeIcons.solidEnvelope,
@@ -86,24 +98,20 @@ class LoginScreen extends StatelessWidget {
               FontAwesomeIcons.lock,
               color: Theme.of(context).colorScheme.primary,
             ),
-            width: size.width,
-
-            // height: 1,
-            // error: "Incorrect Password",
-            isPassword: true,
-            padding: const EdgeInsets.only(top: 20),
+          width: size.width,
+          isPassword: true,
             placeHolder: "Password",
             counter: GestureDetector(
               behavior: HitTestBehavior.deferToChild,
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 15),
-                child: (Text(
+              child: Text(
                   "Forgot Password?",
                   style: Theme.of(context).textTheme.titleSmall!.merge(
                       TextStyle(
                           fontWeight: FontWeight.w900,
                           color: Theme.of(context).colorScheme.primary)),
-                )),
+              ),
               ),
               onTap: () => {
                 Navigator.of(context).push(
@@ -115,7 +123,8 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
               },
-            )),
+          ),
+        ),
       ],
     );
   }

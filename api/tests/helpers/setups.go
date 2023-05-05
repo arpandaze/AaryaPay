@@ -5,6 +5,7 @@ import (
 	"main/telemetry"
 	"net/http"
 	"net/http/httptest"
+	"os"
 
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
@@ -27,7 +28,14 @@ func TestInit() (*gin.Engine, *gin.Context, *httptest.ResponseRecorder) {
 
 func initTestRouter() *gin.Engine {
 	gin.SetMode(gin.TestMode)
-	core.LoadConfig("test")
+
+	mode, _ := os.LookupEnv("MODE")
+
+	if mode != "ci-test" {
+		mode = "test"
+	}
+
+	core.LoadConfigWithMode(mode)
 	core.ConnectDatabase()
 	core.ConnectRedis()
 

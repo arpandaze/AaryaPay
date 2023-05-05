@@ -28,15 +28,15 @@ func (GetProfileController) GetProfile(c *gin.Context) {
 	var profileDataReturn struct {
 		Id         uuid.UUID     `json:"id,omitempty" db:"id"`
 		FirstName  string        `json:"first_name,omitempty" db:"first_name" `
-		PhotoUrl   string        `json:"photo_url",omitempty db:"photo_url"`
-		MiddleName string        `json:"middle_name,omitempty" db:"middle_name"`
+		PhotoUrl   *string       `json:"photo_url,omitempty" db:"photo_url"`
+		MiddleName *string       `json:"middle_name,omitempty" db:"middle_name"`
 		LastName   string        `json:"last_name,omitempty" db:"last_name"`
 		DOB        UnixTimestamp `json:"dob,omitempty" db:"dob"`
 		Email      string        `json:"email,omitempty" db:"email"`
 	}
 
-	var profileData = core.DB.QueryRow("SELECT id, first_name, middle_name, last_name, dob, email FROM Users WHERE id = $1", user)
-	err = profileData.Scan(&profileDataReturn.Id, &profileDataReturn.FirstName, &profileDataReturn.MiddleName, &profileDataReturn.LastName, &profileDataReturn.DOB, &profileDataReturn.Email)
+	var profileData = core.DB.QueryRow("SELECT id, first_name, middle_name, last_name, photo_url, dob, email FROM Users WHERE id = $1", user)
+	err = profileData.Scan(&profileDataReturn.Id, &profileDataReturn.FirstName, &profileDataReturn.MiddleName, &profileDataReturn.LastName, &profileDataReturn.PhotoUrl, &profileDataReturn.DOB, &profileDataReturn.Email)
 
 	if err != nil {
 		l.Errorw("Error getting user profile!",
@@ -46,5 +46,5 @@ func (GetProfileController) GetProfile(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusAccepted, gin.H{"msg": "success", "data": profileDataReturn})
+	c.JSON(http.StatusOK, gin.H{"msg": "success", "data": profileDataReturn})
 }
