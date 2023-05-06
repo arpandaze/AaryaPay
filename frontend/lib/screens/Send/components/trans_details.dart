@@ -27,45 +27,41 @@ class TransactionDetails extends StatelessWidget {
                   ),
             ),
           ),
-          Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Receiver Id",
-                    style: Theme.of(context).textTheme.titleSmall!),
-                Text(
-                  recieverID,
-                  style: Theme.of(context).textTheme.titleSmall!.merge(
-                        const TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.w900),
-                      ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Transcation Number",
-                    style: Theme.of(context).textTheme.titleSmall!),
-                Text(
-                  transactionNo,
-                  style: Theme.of(context).textTheme.titleSmall!.merge(
-                        const TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.w900),
-                      ),
-                ),
-              ],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Receiver Id",
+                  style: Theme.of(context).textTheme.bodyLarge!),
+              Text(
+                recieverID,
+                style: Theme.of(context).textTheme.bodyLarge!.merge(
+                      const TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.w900),
+                    ),
+              ),
+            ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Time", style: Theme.of(context).textTheme.titleSmall!),
+              Text("Transcation Number",
+                  style: Theme.of(context).textTheme.bodyLarge!),
+              Text(
+                transactionNo,
+                style: Theme.of(context).textTheme.bodyLarge!.merge(
+                      const TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.w900),
+                    ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Time", style: Theme.of(context).textTheme.bodyLarge!),
               Text(
                 time,
-                style: Theme.of(context).textTheme.titleSmall!.merge(
+                style: Theme.of(context).textTheme.bodyLarge!.merge(
                       const TextStyle(
                           color: Colors.black, fontWeight: FontWeight.w900),
                     ),
