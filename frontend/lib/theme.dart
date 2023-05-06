@@ -23,7 +23,7 @@ class AppTheme with ChangeNotifier {
         onSecondary: Color(0xff1A1B24),
         error: Color(0xFFFFCE37),
         onError: Color(0xFFFFFFFF),
-        background: Color(0xffFfffff),
+        background: Color(0xffffffff),
         onBackground: Color(0xFF2A292F),
         surface: Color.fromARGB(255, 160, 160, 160),
         onSurface: Color.fromARGB(255, 206, 52, 52),

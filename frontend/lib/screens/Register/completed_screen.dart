@@ -32,7 +32,7 @@ class CompletedScreen extends StatelessWidget {
           ),
           Container(
             height: size.height * 0.48,
-            padding: EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+            padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
