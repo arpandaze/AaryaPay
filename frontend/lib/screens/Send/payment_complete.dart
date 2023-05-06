@@ -48,18 +48,20 @@ class PaymentComplete extends StatelessWidget {
                   Container(
                     alignment: Alignment.center,
                     child: Text("Transfer Completed",
-                        style: Theme.of(context).textTheme.headlineMedium!),
+                        style: Theme.of(context).textTheme.titleLarge!),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(right: 20),
+                    padding: const EdgeInsets.only(right: 20),
+                    decoration:
+                        BoxDecoration(border: Border.all(color: Colors.white)),
                     alignment: Alignment.centerRight,
                     child: IconButton(
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                       onPressed: () => Navigator.pop(context),
                       icon: SvgPicture.asset('assets/icons/close.svg',
-                          width: 20,
-                          height: 20,
+                          width: 15,
+                          height: 15,
                           colorFilter: const ColorFilter.mode(
                               Colors.black, BlendMode.srcIn)),
                     ),
@@ -77,15 +79,14 @@ class PaymentComplete extends StatelessWidget {
             Container(
               margin: const EdgeInsets.only(top: 20),
               child: SvgPicture.asset('assets/icons/check.svg',
-                  width: 100,
-                  height: 80,
+                  width: 80,
                   colorFilter: const ColorFilter.mode(
                       Color(0xff274233), BlendMode.srcIn)),
             ),
             Container(
               margin: const EdgeInsets.only(top: 30),
               child: Text("You Have Successfully sent!",
-                  style: Theme.of(context).textTheme.headlineSmall),
+                  style: Theme.of(context).textTheme.titleMedium),
             ),
             Container(
                 margin: const EdgeInsets.only(top: 10, bottom: 20),
@@ -93,22 +94,26 @@ class PaymentComplete extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SvgPicture.asset('assets/icons/rupee.svg',
-                        width: 25,
-                        height: 25,
+                      width: 24,
                         colorFilter: const ColorFilter.mode(
                             Color(0xff274233), BlendMode.srcIn)),
                     Container(
                       margin: const EdgeInsets.only(left: 10),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                       child: Text(
                         "250.00",
-                        style: Theme.of(context).textTheme.displaySmall!.merge(
+                      style: Theme.of(context).textTheme.labelLarge!.merge(
                               TextStyle(
-                                  color: Theme.of(context).colorScheme.primary),
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                             ),
                       ),
                     ),
                   ],
-                )),
+              ),
+            ),
             const GreenBox(
                 recipient: "Elon Musk",
                 amount: "2500000000000.00",
@@ -128,6 +133,10 @@ class PaymentComplete extends StatelessWidget {
               CustomActionButton(
                 width: size.width * 0.6,
                 label: "Back to Home",
+                textTheme: Theme.of(context).textTheme.titleMedium!.merge(
+                      TextStyle(
+                          color: Theme.of(context).colorScheme.background),
+                    ),
                 borderRadius: 10,
               ),
               GestureDetector(

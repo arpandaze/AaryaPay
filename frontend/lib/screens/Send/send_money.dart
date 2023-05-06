@@ -1,4 +1,3 @@
-import 'dart:ffi' as ffi;
 import 'package:aaryapay/components/CustomCircularAvatar.dart';
 import 'package:aaryapay/screens/Send/bloc/send_money_bloc.dart';
 import 'package:aaryapay/screens/Send/components/balance_box.dart';
@@ -6,9 +5,9 @@ import 'package:aaryapay/screens/Send/components/numpad_button.dart';
 import 'package:aaryapay/screens/Send/payment_complete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:math' as math;
 
 class SendMoney extends StatelessWidget {
   const SendMoney({Key? key}) : super(key: key);
@@ -16,16 +15,16 @@ class SendMoney extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        body: SafeArea(
-          top: true,
-          bottom: true,
-          left: true,
-          right: true,
-          child: BlocProvider(
-            create: (context) => SendMoneyBloc(),
-            child: body(size, context),
-          ),
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: SafeArea(
+        top: true,
+        bottom: true,
+        left: true,
+        right: true,
+        child: BlocProvider(
+          create: (context) => SendMoneyBloc(),
+          child: body(size, context),
+        ),
       ),
     );
   }
@@ -43,12 +42,23 @@ class SendMoney extends StatelessWidget {
                 children: [
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Container(
-                      padding: const EdgeInsets.all(15),
-                      child: GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onTap: () => Navigator.pop(context),
-                          child: const Icon(FontAwesomeIcons.arrowLeftLong)),
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Theme.of(context).colorScheme.background),
+                        ),
+                        child: Transform.rotate(
+                          angle: -math.pi,
+                          child: SvgPicture.asset(
+                            "assets/icons/arrow2.svg",
+                            width: 15,
+                            height: 15,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                   Align(

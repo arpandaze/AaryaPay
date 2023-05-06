@@ -11,7 +11,7 @@ class BalanceBox extends StatelessWidget {
     return Container(
       alignment: Alignment.topLeft,
       margin: const EdgeInsets.fromLTRB(20,15,20,0),
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
       decoration: BoxDecoration(
           border: Border.all(color: Theme.of(context).colorScheme.outline),
           borderRadius: BorderRadius.circular(5)),
@@ -22,7 +22,7 @@ class BalanceBox extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 5),
             child: Text(
               "Balance",
-              style: Theme.of(context).textTheme.titleMedium!,
+              style: Theme.of(context).textTheme.labelMedium,
             ),
           ),
           Row(
@@ -30,7 +30,7 @@ class BalanceBox extends StatelessWidget {
             children: [
               Text(
                 "\$18,645.33",
-                style: Theme.of(context).textTheme.displaySmall!,
+                style: Theme.of(context).textTheme.labelLarge!,
               ),
               Container(
                 padding: const EdgeInsets.all(8),

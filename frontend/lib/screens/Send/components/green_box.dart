@@ -49,7 +49,7 @@ class GreenBox extends StatelessWidget {
                   children: [
                     photo ??
                         const CustomWhiteCircularAvatar(
-                          size: 35,
+                          size: 30,
                           imageSrc: AssetImage("assets/images/pfp.jpg"),
                         ),
                     Padding(
@@ -100,7 +100,7 @@ class GreenBox extends StatelessWidget {
           ),
           Container(
             height: 100,
-            margin: EdgeInsets.fromLTRB(15, 0, 15, 0),
+            margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -111,7 +111,7 @@ class GreenBox extends StatelessWidget {
                       width: 100,
                       child: Text(
                         "Date",
-                        style: Theme.of(context).textTheme.titleMedium!.merge(
+                        style: Theme.of(context).textTheme.bodyLarge!.merge(
                               TextStyle(
                                   color:
                                       Theme.of(context).colorScheme.background),
@@ -123,7 +123,7 @@ class GreenBox extends StatelessWidget {
                       child: Text(
                         date,
                         textAlign: TextAlign.right,
-                        style: Theme.of(context).textTheme.titleMedium!.merge(
+                        style: Theme.of(context).textTheme.bodyLarge!.merge(
                               TextStyle(
                                   color:
                                       Theme.of(context).colorScheme.background),
@@ -139,7 +139,7 @@ class GreenBox extends StatelessWidget {
                       width: 80,
                       child: Text(
                         "Sender",
-                        style: Theme.of(context).textTheme.titleMedium!.merge(
+                        style: Theme.of(context).textTheme.bodyLarge!.merge(
                               TextStyle(
                                   color:
                                       Theme.of(context).colorScheme.background),
@@ -152,7 +152,7 @@ class GreenBox extends StatelessWidget {
                         "Susraya Bir Sing Tuladhar",
                         textAlign: TextAlign.right,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.titleMedium!.merge(
+                        style: Theme.of(context).textTheme.bodyLarge!.merge(
                               TextStyle(
                                   color:
                                       Theme.of(context).colorScheme.background),
@@ -168,7 +168,7 @@ class GreenBox extends StatelessWidget {
                       width: 100,
                       child: Text(
                         "Sent Status",
-                        style: Theme.of(context).textTheme.titleMedium!.merge(
+                        style: Theme.of(context).textTheme.bodyLarge!.merge(
                               TextStyle(
                                   color:
                                       Theme.of(context).colorScheme.background),
@@ -181,7 +181,7 @@ class GreenBox extends StatelessWidget {
                         status,
                         textAlign: TextAlign.right,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.titleMedium!.merge(
+                        style: Theme.of(context).textTheme.bodyLarge!.merge(
                               TextStyle(
                                   color:
                                       Theme.of(context).colorScheme.background),
