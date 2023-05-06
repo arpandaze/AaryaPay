@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"main/core"
+	. "main/payloads"
 	. "main/telemetry"
 	"main/utils"
 	"net/http"
@@ -186,8 +187,8 @@ func (LoginController) Login(c *gin.Context) {
 		"last_name", queryUser.LastName,
 	)
 
-	bkvc := core.BalanceKeyVerificationCertificate{
-		MessageType:      core.BKVCMessageType,
+	bkvc := BalanceKeyVerificationCertificate{
+		MessageType:      BKVCMessageType,
 		UserID:           queryUser.ID,
 		PublicKey:        [32]byte(keyPair.PublicKey()),
 		AvailableBalance: float32(userBalance),
