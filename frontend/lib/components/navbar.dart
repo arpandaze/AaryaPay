@@ -42,89 +42,85 @@ class NavBar extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  SizedBox(
-                    // decoration: BoxDecoration(
-                    //     border: Border.all(color: Colors.black54)),
-                    width: size.width * 0.20,
-                    // height: 100,
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () => Navigator.of(context).push(
-                        PageRouteBuilder(
-                          pageBuilder: (context, animation1, animation2) =>
-                              const HomeScreen(),
-                          transitionDuration: Duration.zero,
-                          reverseTransitionDuration: Duration.zero,
-                        ),
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => Navigator.of(context).push(
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation1, animation2) =>
+                            const HomeScreen(),
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
                       ),
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              pageName == "home"
-                                  ? "assets/icons/home-fill.svg"
-                                  : "assets/icons/home.svg",
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.primary,
-                                BlendMode.srcIn,
-                              ),
-                              width: 25,
-                              height: 25,
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white)),
+                      width: size.width * 0.20,
+                      // height: 100,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            pageName == "home"
+                                ? "assets/icons/home-fill.svg"
+                                : "assets/icons/home.svg",
+                            colorFilter: ColorFilter.mode(
+                              Theme.of(context).colorScheme.primary,
+                              BlendMode.srcIn,
                             ),
-                            Text(
-                              "Home",
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: pageName == "home"
-                                      ? FontWeight.w700
-                                      : FontWeight.w500,
-                                  color: Theme.of(context).colorScheme.primary),
-                            )
-                          ],
-                        ),
+                            width: 25,
+                            height: 25,
+                          ),
+                          Text(
+                            "Home",
+                            style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: pageName == "home"
+                                    ? FontWeight.w700
+                                    : FontWeight.w500,
+                                color: Theme.of(context).colorScheme.primary),
+                          )
+                        ],
                       ),
                     ),
                   ),
-                  SizedBox(
-                    // decoration:
-                    //     BoxDecoration(border: Border.all(color: Colors.black54)),
-                    width: size.width * 0.20,
-                    child: GestureDetector(
-                      onTap: () => Navigator.of(context).push(
-                        PageRouteBuilder(
-                          pageBuilder: (context, animation1, animation2) =>
-                              const Payments(),
-                          transitionDuration: Duration.zero,
-                          reverseTransitionDuration: Duration.zero,
-                        ),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).push(
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation1, animation2) =>
+                            const Payments(),
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
                       ),
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              pageName == "payments"
-                                  ? "assets/icons/wallet-fill.svg"
-                                  : "assets/icons/payments.svg",
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.primary,
-                                BlendMode.srcIn,
-                              ),
-                              width: 25,
-                              height: 25,
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white)),
+                      width: size.width * 0.20,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            pageName == "payments"
+                                ? "assets/icons/wallet-fill.svg"
+                                : "assets/icons/payments.svg",
+                            colorFilter: ColorFilter.mode(
+                              Theme.of(context).colorScheme.primary,
+                              BlendMode.srcIn,
                             ),
-                            Text(
-                              "Payments",
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: pageName == "payments"
-                                      ? FontWeight.w700
-                                      : FontWeight.w500,
-                                  color: Theme.of(context).colorScheme.primary),
-                            )
-                          ],
-                        ),
+                            width: 25,
+                            height: 25,
+                          ),
+                          Text(
+                            "Payments",
+                            style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: pageName == "payments"
+                                    ? FontWeight.w700
+                                    : FontWeight.w500,
+                                color: Theme.of(context).colorScheme.primary),
+                          )
+                        ],
                       ),
                     ),
                   ),
@@ -143,79 +139,76 @@ class NavBar extends StatelessWidget {
                       ),
                     ),
                     child: Container(
-                      child: SizedBox(
-                        // decoration:
-                        //     BoxDecoration(border: Border.all(color: Colors.black54)),
-                        width: size.width * 0.20,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              pageName == "statements"
-                                  ? "assets/icons/statements-fill.svg"
-                                  : "assets/icons/statements.svg",
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.primary,
-                                BlendMode.srcIn,
-                              ),
-                              width: 25,
-                              height: 25,
+
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white)),
+                      width: size.width * 0.20,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            pageName == "statements"
+                                ? "assets/icons/statements-fill.svg"
+                                : "assets/icons/statements.svg",
+                            colorFilter: ColorFilter.mode(
+                              Theme.of(context).colorScheme.primary,
+                              BlendMode.srcIn,
                             ),
-                            Text(
-                              "Statements",
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: pageName == "statements"
-                                      ? FontWeight.w700
-                                      : FontWeight.w500,
-                                  color: Theme.of(context).colorScheme.primary),
-                            )
-                          ],
-                        ),
+                            width: 25,
+                            height: 25,
+                          ),
+                          Text(
+                            "Statements",
+                            style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: pageName == "statements"
+                                    ? FontWeight.w700
+                                    : FontWeight.w500,
+                                color: Theme.of(context).colorScheme.primary),
+                          )
+                        ],
                       ),
                     ),
                   ),
-                  SizedBox(
-                    // decoration:
-                    //     BoxDecoration(border: Border.all(color: Colors.black54)),
-                    width: size.width * 0.20,
-                    // height: double.infinity,
-                    child: GestureDetector(
-                      onTap: () => Navigator.of(context).push(
-                        PageRouteBuilder(
-                          pageBuilder: (context, animation1, animation2) =>
-                              const Settings(),
-                          transitionDuration: Duration.zero,
-                          reverseTransitionDuration: Duration.zero,
-                        ),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).push(
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation1, animation2) =>
+                            const Settings(),
+                        transitionDuration: Duration.zero,
+                        reverseTransitionDuration: Duration.zero,
                       ),
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // SvgPicture.asset("assets/icons/home.svg"),
-                            SvgPicture.asset(
-                              (pageName == "settings")
-                                  ? "assets/icons/gear-fill.svg"
-                                  : "assets/icons/settings.svg",
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.primary,
-                                BlendMode.srcIn,
-                              ),
-                              width: 25,
-                              height: 25,
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white)),
+                      width: size.width * 0.20,
+                      // height: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // SvgPicture.asset("assets/icons/home.svg"),
+                          SvgPicture.asset(
+                            (pageName == "settings")
+                                ? "assets/icons/gear-fill.svg"
+                                : "assets/icons/settings.svg",
+                            colorFilter: ColorFilter.mode(
+                              Theme.of(context).colorScheme.primary,
+                              BlendMode.srcIn,
                             ),
-                            Text(
-                              "Settings",
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: pageName == "settings"
-                                      ? FontWeight.w700
-                                      : FontWeight.w500,
-                                  color: Theme.of(context).colorScheme.primary),
-                            )
-                          ],
-                        ),
+                            width: 25,
+                            height: 25,
+                          ),
+                          Text(
+                            "Settings",
+                            style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: pageName == "settings"
+                                    ? FontWeight.w700
+                                    : FontWeight.w500,
+                                color: Theme.of(context).colorScheme.primary),
+                          )
+                        ],
                       ),
                     ),
                   )
@@ -239,21 +232,20 @@ class NavBar extends StatelessWidget {
                   ),
                 ),
                 child: Container(
-                    width: 60,
-                    height: 60,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        boxShadow: kElevationToShadow[4],
-                        color: Theme.of(context).colorScheme.primary,
-                        borderRadius: const BorderRadius.vertical(
-                            bottom: Radius.circular(50),
-                            top: Radius.circular(50))),
-                    child: SvgPicture.asset(
-                      "assets/icons/qrcode.svg",
-                      width: 25,
-                      height: 25,
-                      color: colorScheme.background,
-               
+                  width: 60,
+                  height: 60,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      boxShadow: kElevationToShadow[4],
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: const BorderRadius.vertical(
+                          bottom: Radius.circular(50),
+                          top: Radius.circular(50))),
+                  child: SvgPicture.asset(
+                    "assets/icons/qrcode.svg",
+                    width: 25,
+                    height: 25,
+                    color: colorScheme.background,
                   ),
                 ),
               ),
