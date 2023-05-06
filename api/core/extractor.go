@@ -26,7 +26,7 @@ func GetUser(c *gin.Context) (uuid.UUID, error) {
 		telemetry.Logger(c).Sugar().Errorw("Error while parsing cookie",
 			"error", err,
 		)
-		panic(err)
+		return uuid.UUID{}, err
 	}
 
 	user, err := GetUserFromSession(c, cookieUUID)
