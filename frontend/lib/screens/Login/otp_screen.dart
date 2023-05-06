@@ -76,7 +76,7 @@ class OTPScreen extends StatelessWidget {
             fieldHeight: 65,
             fieldWidth: 50,
             inactiveColor: Theme.of(context).colorScheme.primary,
-            activeFillColor: Colors.white,
+            activeFillColor: Theme.of(context).colorScheme.background,
           ),
           // activeColor: Theme.of(context).colorScheme.secondary),
           animationDuration: const Duration(milliseconds: 300),

@@ -53,24 +53,24 @@ class RegisterScreen extends StatelessWidget {
     return Stack(
       children: [
         Visibility(
-          child: Identification(),
           visible: page == 1,
           maintainState: true,
+          child: const Identification(),
         ),
         Visibility(
-          child: AccountScreen(),
           visible: page == 2,
           maintainState: true,
+          child: const AccountScreen(),
         ),
         Visibility(
-          child: VerifyScreen(),
           visible: page == 3,
           maintainState: true,
+          child: const VerifyScreen(),
         ),
         Visibility(
-          child: CompletedScreen(),
           visible: page == 4,
           maintainState: true,
+          child: const CompletedScreen(),
         ),
       ],
     );

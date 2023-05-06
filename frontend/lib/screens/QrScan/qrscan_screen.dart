@@ -42,7 +42,7 @@ class QrScanScreen extends StatelessWidget {
                   context.read<QrScannerBloc>().add(QrCodeScanned(data.code!));
                 }),
                 overlay: QrScannerOverlayShape(
-                    borderColor: Colors.white,
+                    borderColor: Theme.of(context).colorScheme.background,
                     borderRadius: 34,
                     borderWidth: 10,
                     cutOutSize: (size.width < 400 || size.height < 400)
@@ -63,8 +63,9 @@ class QrScanScreen extends StatelessWidget {
                         icon: SvgPicture.asset('assets/icons/close.svg',
                             width: 20,
                             height: 20,
-                            colorFilter: const ColorFilter.mode(
-                                Colors.white, BlendMode.srcIn)),
+                            colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.background,
+                                BlendMode.srcIn)),
                       ),
                     )
                   ],
@@ -75,7 +76,9 @@ class QrScanScreen extends StatelessWidget {
                     "Scan QR Code",
                     style: Theme.of(context).textTheme.displaySmall!.merge(
                           const TextStyle(height: 1.5).merge(
-                            const TextStyle(color: Colors.white),
+                            TextStyle(
+                                color:
+                                    Theme.of(context).colorScheme.background),
                           ),
                         ),
                   ),
@@ -85,7 +88,8 @@ class QrScanScreen extends StatelessWidget {
                     "to Pay",
                     style: Theme.of(context).textTheme.displaySmall!.merge(
                         const TextStyle(height: 1.5)
-                            .merge(const TextStyle(color: Colors.white))),
+                            .merge(TextStyle(
+                            color: Theme.of(context).colorScheme.background))),
                   ),
                 ),
               ],

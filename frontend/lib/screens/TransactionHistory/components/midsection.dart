@@ -65,7 +65,7 @@ class MidSection extends StatelessWidget {
                         .toList()
                         .reversed
                   else
-                    Text("${state.loaded}")
+                    const Text("Nothing to show yet")
                 ],
               ),
             ),

@@ -23,7 +23,7 @@ class AppTheme with ChangeNotifier {
         onSecondary: Color(0xff1A1B24),
         error: Color(0xFFFFCE37),
         onError: Color(0xFFFFFFFF),
-        background: Color(0xffFfffff),
+        background: Color(0xffffffff),
         onBackground: Color(0xFF2A292F),
         surface: Color.fromARGB(255, 160, 160, 160),
         onSurface: Color.fromARGB(255, 206, 52, 52),
@@ -98,7 +98,7 @@ class AppTheme with ChangeNotifier {
           color: const Color(0xFF000000),
         ),
         labelLarge: GoogleFonts.questrial(
-            fontSize: 35,
+          fontSize: 30,
             fontWeight: FontWeight.w500,
             letterSpacing: 1.0,
             height: 1.0,

@@ -86,7 +86,7 @@ class TwoFactorAuthSecond extends StatelessWidget {
                     fieldHeight: 65,
                     fieldWidth: 50,
                     inactiveColor: Theme.of(context).colorScheme.primary,
-                    activeFillColor: Colors.white,
+                    activeFillColor: Theme.of(context).colorScheme.background,
                   ),
                   animationDuration: const Duration(milliseconds: 300),
                   onCompleted: (value) {

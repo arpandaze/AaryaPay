@@ -33,7 +33,8 @@ class BottomQrBar extends StatelessWidget {
                 child: Text(
                   "My QR Code",
                   style: Theme.of(context).textTheme.headlineSmall!.merge(
-                        const TextStyle(color: Colors.white),
+                        TextStyle(
+                            color: Theme.of(context).colorScheme.background),
                       ),
                 ),
               ),
@@ -54,8 +55,9 @@ class BottomQrBar extends StatelessWidget {
                     icon: SvgPicture.asset('assets/icons/arrow3.svg',
                         width: 20,
                         height: 20,
-                        colorFilter: const ColorFilter.mode(
-                            Colors.white, BlendMode.srcIn)),
+                        colorFilter: ColorFilter.mode(
+                            Theme.of(context).colorScheme.background,
+                            BlendMode.srcIn)),
                   ),
                 ),
               ),
