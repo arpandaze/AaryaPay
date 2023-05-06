@@ -394,7 +394,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                     //       width: 20,
                     //       height: 20,
                     //       colorFilter: const ColorFilter.mode(
-                    //         Colors.white,
+                    //         Theme.of(context).colorScheme.background,
                     //         BlendMode.srcIn,
                     //       ),
                     //     ),

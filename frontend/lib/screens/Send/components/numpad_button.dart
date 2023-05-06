@@ -52,7 +52,8 @@ class NumPadButton extends StatelessWidget {
                 style: Theme.of(context)
                     .textTheme
                     .titleSmall!
-                    .merge(const TextStyle(color: Colors.white)),
+                    .merge(
+                    TextStyle(color: Theme.of(context).colorScheme.background)),
               ),
         ),
       ),

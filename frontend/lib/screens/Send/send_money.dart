@@ -26,7 +26,8 @@ class SendMoney extends StatelessWidget {
             create: (context) => SendMoneyBloc(),
             child: body(size, context),
           ),
-        ));
+      ),
+    );
   }
 
   Widget body(Size size, BuildContext context) {
@@ -35,32 +36,31 @@ class SendMoney extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(15),
-                        alignment: Alignment.centerLeft,
-                        child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () => Navigator.pop(context),
-                            child: const Icon(FontAwesomeIcons.arrowLeftLong)),
-                      ),
-                      Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.all(15),
-                        child: Text("Send Money",
-                            style: Theme.of(context).textTheme.headlineMedium!),
-                      ),
-                    ],
+            SizedBox(
+              height: size.height * 0.1,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      padding: const EdgeInsets.all(15),
+                      child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => Navigator.pop(context),
+                          child: const Icon(FontAwesomeIcons.arrowLeftLong)),
+                    ),
                   ),
-                )
-              ],
+                  Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      padding: const EdgeInsets.all(15),
+                      child: Text("Send Money",
+                          style: Theme.of(context).textTheme.titleLarge),
+                    ),
+                  ),
+                ],
+              ),
             ),
             const BalanceBox(),
             Container(
@@ -84,7 +84,7 @@ class SendMoney extends StatelessWidget {
                         Color(0xff274233), BlendMode.srcIn),
                   ),
                   Container(
-                      margin: EdgeInsets.only(left: 15),
+                      margin: const EdgeInsets.only(left: 15),
                       child: Text("${state.displayAmount}",
                           style: Theme.of(context)
                               .textTheme
@@ -100,8 +100,8 @@ class SendMoney extends StatelessWidget {
             Expanded(
               child: Container(
                 width: size.width,
-                margin: EdgeInsets.only(top: 20),
-                padding: EdgeInsets.all(10),
+                margin: const EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   border: Border.all(
                       color: Theme.of(context).colorScheme.outline, width: 1.5),
@@ -126,19 +126,20 @@ class SendMoney extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
-                                  margin: EdgeInsets.only(left: 10, bottom: 10),
+                                  margin: const EdgeInsets.only(
+                                      left: 10, bottom: 10),
                                   child: Text("Send to",
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleSmall),
                                 ),
                                 Container(
-                                  margin: EdgeInsets.only(left: 10),
+                                  margin: const EdgeInsets.only(left: 10),
                                   child: Text("Mr. Elon Musk",
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleMedium!
-                                          .merge(TextStyle(
+                                          .merge(const TextStyle(
                                               fontWeight: FontWeight.w700))),
                                 )
                               ],
@@ -148,7 +149,7 @@ class SendMoney extends StatelessWidget {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
+                        children: const [
                           NumPadButton(text: '7'),
                           NumPadButton(text: '8'),
                           NumPadButton(text: '9'),
@@ -157,7 +158,7 @@ class SendMoney extends StatelessWidget {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
+                        children: const [
                           NumPadButton(text: '4'),
                           NumPadButton(text: '5'),
                           NumPadButton(text: '6'),
@@ -166,7 +167,7 @@ class SendMoney extends StatelessWidget {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
+                        children: const [
                           NumPadButton(text: '1'),
                           NumPadButton(text: '2'),
                           NumPadButton(text: '3'),
@@ -176,18 +177,19 @@ class SendMoney extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          NumPadButton(text: '.'),
-                          NumPadButton(text: '0'),
+                          const NumPadButton(text: '.'),
+                          const NumPadButton(text: '0'),
                           NumPadButton(
                             icon: SvgPicture.asset("assets/icons/erase.svg",
                                 height: 15,
                                 width: 15,
-                                colorFilter: const ColorFilter.mode(
-                                    Colors.white, BlendMode.srcIn)),
+                                colorFilter: ColorFilter.mode(
+                                    Theme.of(context).colorScheme.background,
+                                    BlendMode.srcIn)),
                             text: "erase",
                             color: Theme.of(context).colorScheme.outline,
                           ),
-                          NumPadButton(text: '='),
+                          const NumPadButton(text: '='),
                         ],
                       ),
                       CustomActionButton(

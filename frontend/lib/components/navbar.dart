@@ -54,7 +54,8 @@ class NavBar extends StatelessWidget {
                     ),
                     child: Container(
                       decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white)),
+                          border: Border.all(
+                              color: Theme.of(context).colorScheme.background)),
                       width: size.width * 0.20,
                       // height: 100,
                       child: Column(
@@ -95,7 +96,8 @@ class NavBar extends StatelessWidget {
                     ),
                     child: Container(
                       decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white)),
+                          border: Border.all(
+                              color: Theme.of(context).colorScheme.background)),
                       width: size.width * 0.20,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -141,7 +143,8 @@ class NavBar extends StatelessWidget {
                     child: Container(
 
                       decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white)),
+                          border: Border.all(
+                              color: Theme.of(context).colorScheme.background)),
                       width: size.width * 0.20,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -181,7 +184,8 @@ class NavBar extends StatelessWidget {
                     ),
                     child: Container(
                       decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white)),
+                          border: Border.all(
+                              color: Theme.of(context).colorScheme.background)),
                       width: size.width * 0.20,
                       // height: double.infinity,
                       child: Column(

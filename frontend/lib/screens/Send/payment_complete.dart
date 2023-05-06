@@ -98,7 +98,7 @@ class PaymentComplete extends StatelessWidget {
                         colorFilter: const ColorFilter.mode(
                             Color(0xff274233), BlendMode.srcIn)),
                     Container(
-                      margin: EdgeInsets.only(left: 10),
+                      margin: const EdgeInsets.only(left: 10),
                       child: Text(
                         "250.00",
                         style: Theme.of(context).textTheme.displaySmall!.merge(
@@ -115,7 +115,7 @@ class PaymentComplete extends StatelessWidget {
                 date: "2020-04-27",
                 sender: "Susraya Bir Singh Tuladhar",
                 status: "Verified"),
-            TransactionDetails(
+            const TransactionDetails(
                 recieverID: "@dropshipper",
                 transactionNo: "1x903412321",
                 time: "5:45 pm"),
@@ -139,15 +139,17 @@ class PaymentComplete extends StatelessWidget {
                   height: 50,
                   decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.outline,
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(10))),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SvgPicture.asset('assets/icons/share.svg',
                           width: 20,
                           height: 20,
-                          colorFilter: const ColorFilter.mode(
-                              Colors.white, BlendMode.srcIn))
+                          colorFilter: ColorFilter.mode(
+                              Theme.of(context).colorScheme.background,
+                              BlendMode.srcIn))
                     ],
                   ),
                 ),

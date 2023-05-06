@@ -47,7 +47,9 @@ class TopBar extends StatelessWidget {
                     child: SvgPicture.asset(
                       "assets/icons/rupee.svg",
                       colorFilter:
-                          const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                           ColorFilter.mode(
+                          Theme.of(context).colorScheme.background,
+                          BlendMode.srcIn),
                       width: 20,
                       height: 20,
                     ),
@@ -66,7 +68,9 @@ class TopBar extends StatelessWidget {
                     child: SvgPicture.asset(
                       "assets/icons/invisible.svg",
                       colorFilter:
-                          const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                          ColorFilter.mode(
+                          Theme.of(context).colorScheme.background,
+                          BlendMode.srcIn),
                       width: 22,
                       height: 22,
                     ),
