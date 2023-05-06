@@ -119,7 +119,7 @@ func CreateRandomUnverifiedUser(t *testing.T, c *gin.Context) TestUser {
 	firstName := "John" + strconv.Itoa(rand.Intn(100))
 	lastName := "Doe" + strconv.Itoa(rand.Intn(100))
 	dob := strconv.Itoa(rand.Intn(28)+1) + "-" + strconv.Itoa(rand.Intn(12)+1) + "-1999"
-	email := "test" + strconv.Itoa(rand.Intn(1000000)) + "@example.com"
+	email := "test" + uuid.New().String() + "@example.com"
 	password := "password" + strconv.Itoa(rand.Intn(100))
 
 	user := TestUser{
@@ -156,7 +156,7 @@ func CreateRandomVerifiedUser(t *testing.T, c *gin.Context) TestUser {
 	firstName := "John" + strconv.Itoa(rand.Intn(100))
 	lastName := "Doe" + strconv.Itoa(rand.Intn(100))
 	dob := getRandomDate()
-	email := "test" + strconv.Itoa(rand.Intn(100)) + "@example.com"
+	email := "test" + uuid.New().String() + "@example.com"
 	password := "password" + strconv.Itoa(rand.Intn(100))
 
 	user := TestUser{
