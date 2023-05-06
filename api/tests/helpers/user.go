@@ -18,9 +18,11 @@ type TestUser struct {
 	Password     string `form:"password"`
 	DOB          string `form:"dob"`
 	Remember     bool   `form:"remember"`
+	KeyPair      core.KeyPair
 	Verified     bool
 	SessionToken uuid.UUID
 	UserId       uuid.UUID
+	Balance      float32
 }
 
 func userCreator(t *testing.T, c *gin.Context, user *TestUser) *TestUser {
@@ -29,8 +31,6 @@ func userCreator(t *testing.T, c *gin.Context, user *TestUser) *TestUser {
 	if err != nil {
 		t.Fatalf("failed to hash password: %v", err)
 	}
-
-	var userID uuid.UUID
 
 	tx, err := core.DB.Begin()
 	if err != nil {
@@ -72,9 +72,13 @@ func userCreator(t *testing.T, c *gin.Context, user *TestUser) *TestUser {
 		tx.Rollback()
 	}
 
-	accountsCreateQuery := "INSERT INTO Accounts (id, balance) VALUES ($1, $2)"
+	rand.Seed(time.Now().UnixNano())
+	randBalance := rand.Intn(5000) + 5000
 
-	_, err = tx.Exec(accountsCreateQuery, user.UserId, 0)
+	user.Balance = float32(randBalance)
+
+	accountsCreateQuery := "INSERT INTO Accounts (id, balance) VALUES ($1, $2)"
+	_, err = tx.Exec(accountsCreateQuery, user.UserId, randBalance)
 
 	if err != nil {
 		msg := "Failed to execute account insert statement"
@@ -89,8 +93,6 @@ func userCreator(t *testing.T, c *gin.Context, user *TestUser) *TestUser {
 		t.Fatalf("failed to create test user: %v", err)
 		tx.Rollback()
 	}
-
-	user.UserId = userID
 
 	return user
 }
@@ -117,7 +119,7 @@ func CreateRandomUnverifiedUser(t *testing.T, c *gin.Context) TestUser {
 	firstName := "John" + strconv.Itoa(rand.Intn(100))
 	lastName := "Doe" + strconv.Itoa(rand.Intn(100))
 	dob := strconv.Itoa(rand.Intn(28)+1) + "-" + strconv.Itoa(rand.Intn(12)+1) + "-1999"
-	email := "test" + strconv.Itoa(rand.Intn(100)) + "@example.com"
+	email := "test" + strconv.Itoa(rand.Intn(1000000)) + "@example.com"
 	password := "password" + strconv.Itoa(rand.Intn(100))
 
 	user := TestUser{
@@ -167,9 +169,7 @@ func CreateRandomVerifiedUser(t *testing.T, c *gin.Context) TestUser {
 		Verified:  true,
 	}
 
-	userCreator(t, c, &user)
-
-	return user
+	return *userCreator(t, c, &user)
 }
 
 func CreateLoggedInUser(t *testing.T, c *gin.Context) TestUser {
@@ -179,6 +179,20 @@ func CreateLoggedInUser(t *testing.T, c *gin.Context) TestUser {
 	sessionToken := core.GenerateSessionToken(c, user.UserId, core.Configs.SESSION_EXPIRE_TIME)
 
 	user.SessionToken = sessionToken
+
+	return user
+}
+
+func CreateUserWithKeyPair(t *testing.T, c *gin.Context) TestUser {
+	user := CreateRandomVerifiedUser(t, c)
+
+	keyPair, _, err := core.GenerateKeyPair(c, user.UserId)
+
+	if err != nil {
+		t.Fatalf("failed to generate key pair: %v", err)
+	}
+
+	user.KeyPair = keyPair
 
 	return user
 }
