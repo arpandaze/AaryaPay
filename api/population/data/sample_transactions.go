@@ -1,8 +1,12 @@
 package data
 
 import (
+	"crypto/ed25519"
+	"encoding/base64"
 	"log"
 	"main/core"
+	"main/payloads"
+	population "main/population/helpers"
 	"math/rand"
 	"time"
 
@@ -15,7 +19,6 @@ type SampleTransaction struct {
 	receiver_id       uuid.UUID
 	amount            float32
 	generation_time   time.Time
-	received_time     time.Time
 	verification_time time.Time
 }
 
@@ -23,36 +26,33 @@ var SAMPLE_TRANSACTIONS = []SampleTransaction{
 	{
 		amount:            124.0,
 		generation_time:   time.Now().Add(-time.Second * 10),
-		received_time:     time.Now().Add(-time.Second * 5),
 		verification_time: time.Now(),
 	},
 	{
 		amount:            20.0,
 		generation_time:   time.Now().Add(-time.Minute * 7),
-		received_time:     time.Now().Add(-time.Minute * 6),
 		verification_time: time.Now().Add(-time.Minute * 5),
 	},
 	{
 		amount:            1244.0,
 		generation_time:   time.Now().Add(-time.Hour * 7),
-		received_time:     time.Now().Add(-time.Hour * 7),
 		verification_time: time.Now().Add(-time.Hour * 5),
 	},
 	{
 		amount:            312.0,
 		generation_time:   time.Now().Add(-time.Hour * 100),
-		received_time:     time.Now().Add(-time.Hour * 100),
 		verification_time: time.Now().Add(-time.Minute * 5),
 	},
 	{
 		amount:            452.0,
 		generation_time:   time.Now().Add(-time.Minute * 14),
-		received_time:     time.Now().Add(-time.Second * 5),
 		verification_time: time.Now(),
 	},
 }
 
 func PopulateTransactions() {
+	_, c, _ := population.PopulationInit()
+
 	for idx := range SAMPLE_USERS {
 		for transactionIdx := range SAMPLE_TRANSACTIONS {
 			var index = rand.Intn(len(SAMPLE_USERS)-1) + 1
@@ -66,21 +66,66 @@ func PopulateTransactions() {
 				sender = SAMPLE_USERS[(idx+index)%len(SAMPLE_USERS)]
 			}
 
-			_, err := core.DB.Exec("INSERT INTO Transactions (sender_id, receiver_id, amount, generation_time, received_time, verification_time) VALUES ($1, $2, $3, $4, $5, $6)",
+			pubKey, privKey, _ := ed25519.GenerateKey(nil)
+
+			sampleSenderBKVC := payloads.BalanceKeyVerificationCertificate{
+				UserID:           sender.id,
+				AvailableBalance: 15000,
+				PublicKey:        [32]byte(pubKey),
+				TimeStamp:        time.Now(),
+			}
+
+			sampleSenderBKVC.Sign(c)
+
+			sampleReceiverBKVC := payloads.BalanceKeyVerificationCertificate{
+				UserID:           receiver.id,
+				AvailableBalance: 15000,
+				PublicKey:        [32]byte(pubKey),
+				TimeStamp:        time.Now(),
+			}
+
+			sampleSenderBKVC.Sign(c)
+
+			sampleTransaction := payloads.Transaction{
+				Amount:    SAMPLE_TRANSACTIONS[transactionIdx].amount,
+				To:        receiver.id,
+				BKVC:      sampleSenderBKVC,
+				TimeStamp: SAMPLE_TRANSACTIONS[transactionIdx].generation_time,
+			}
+			sampleTransaction.Sign(c, privKey)
+
+			sampleSenderTVC := payloads.TransactionVerificationCertificate{
+				TransactionID:        SAMPLE_TRANSACTIONS[transactionIdx].id,
+				BKVC:                 sampleSenderBKVC,
+				TransactionSignature: sampleTransaction.Signature,
+			}
+
+			sampleReceiverTVC := payloads.TransactionVerificationCertificate{
+				TransactionID:        SAMPLE_TRANSACTIONS[transactionIdx].id,
+				BKVC:                 sampleReceiverBKVC,
+				TransactionSignature: sampleTransaction.Signature,
+			}
+
+			sampleSenderTVC.Sign(c)
+			sampleReceiverTVC.Sign(c)
+
+			// Print populated transaction data
+			log.Printf("Transaction from %s to %s for %f generated!", sender.first_name, receiver.first_name, SAMPLE_TRANSACTIONS[transactionIdx].amount)
+
+			_, err := core.DB.Exec("INSERT INTO Transactions (sender_id, receiver_id, amount, generation_time, verification_time, sender_tvc, receiver_tvc, signature) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
 				sender.id,
 				receiver.id,
 				SAMPLE_TRANSACTIONS[transactionIdx].amount,
 				SAMPLE_TRANSACTIONS[transactionIdx].generation_time,
-				SAMPLE_TRANSACTIONS[transactionIdx].received_time,
 				SAMPLE_TRANSACTIONS[transactionIdx].verification_time,
+				base64.StdEncoding.EncodeToString(sampleSenderTVC.ToBytes(c)),
+				base64.StdEncoding.EncodeToString(sampleReceiverTVC.ToBytes(c)),
+				base64.StdEncoding.EncodeToString(sampleTransaction.Signature[:]),
 			)
-
-			log.Printf("Transaction from %s to %s for %f populated!", sender.first_name, receiver.first_name, SAMPLE_TRANSACTIONS[transactionIdx].amount)
 
 			if err != nil {
 				log.Println(err)
 			}
-
 		}
 	}
 }
