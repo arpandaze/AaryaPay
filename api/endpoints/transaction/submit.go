@@ -1,8 +1,10 @@
 package transaction
 
 import (
+	"database/sql"
 	"encoding/base64"
 	"main/core"
+	. "main/payloads"
 	. "main/telemetry"
 	"net/http"
 	"time"
@@ -11,13 +13,21 @@ import (
 	"github.com/google/uuid"
 )
 
+type SubmitResponse struct {
+	Message     string  `json:"message"`
+	Success     bool    `json:"success"`
+	SenderTVC   *string `json:"sender_tvc,omitempty"`
+	ReceiverTVC *string `json:"receiver_tvc,omitempty"`
+	Signature   string  `json:"signature"`
+}
+
 type SubmitController struct{}
 
 func (SubmitController) Submit(c *gin.Context) {
 	l := Logger(c).Sugar()
 
 	var transactionSubmitForm struct {
-		EncodedTransaction string `form:"transaction"`
+		EncodedTransaction []string `form:"transactions"`
 	}
 
 	if err := c.Bind(&transactionSubmitForm); err != nil {
@@ -31,129 +41,220 @@ func (SubmitController) Submit(c *gin.Context) {
 		return
 	}
 
-	transactionsBytes, err := base64.RawStdEncoding.DecodeString(transactionSubmitForm.EncodedTransaction)
-
-	if err != nil {
-		msg := "Invalid transaction!"
-
-		l.Errorw("Failed to decode base64 transaction!",
-			"error", err,
-		)
-
+	if len(transactionSubmitForm.EncodedTransaction) == 0 {
+		msg := "No transactions to submit!"
+		l.Errorw(msg)
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
 		return
 	}
 
-	transaction, err := core.TransactionFromBytes(c, transactionsBytes)
-	if err != nil {
-		msg := "Invalid transaction!"
+	var responses []SubmitResponse
+	var hasError bool
 
-		l.Errorw("Failed to construct transaction from bytes!",
-			"error", err,
-		)
+	for _, encodedTransaction := range transactionSubmitForm.EncodedTransaction {
+		transactionsBytes, err := base64.RawStdEncoding.DecodeString(encodedTransaction)
 
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
-		return
-	}
+		if err != nil {
+			l.Errorw("Failed to decode base64 transaction!",
+				"error", err,
+			)
 
-	timeLimit := int64(core.Configs.KEY_VALIDITY_TIME_HOURS) * 60 * 60
+			hasError = true
 
-	if transaction.TimeStamp.Unix() < time.Now().Unix()-timeLimit {
-		msg := "Transaction is too old!"
+			responses = append(responses, SubmitResponse{
+				Message: "Unknown error occurred!",
+				Success: false,
+			})
 
-		l.Errorw(msg,
-			"error", err,
-			"transaction", transactionSubmitForm.EncodedTransaction,
-		)
+			continue
+		}
 
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
-		return
-	}
+		transaction, err := TransactionFromBytes(c, transactionsBytes)
+		if err != nil {
+			l.Errorw("Failed to construct transaction from bytes!",
+				"error", err,
+			)
 
-	validTransaction := transaction.Verify(c)
+			hasError = true
 
-	if !validTransaction {
-		msg := "Invalid transaction!"
+			responses = append(responses, SubmitResponse{
+				Message: "Unknown error occurred!",
+				Success: false,
+			})
 
-		l.Errorw("Failed to verify transaction!",
-			"transaction", transactionSubmitForm.EncodedTransaction,
-			"error", err)
+			continue
+		}
 
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
-		return
-	}
+		timeLimit := int64(core.Configs.KEY_VALIDITY_TIME_HOURS) * 60 * 60
 
-	if transaction.BKVC.Verify(c) {
-		msg := "Invalid transaction!"
+		if transaction.TimeStamp.Unix() < time.Now().Unix()-timeLimit {
+			msg := "Transaction is too old!"
 
-		l.Errorw("Failed to verify BKVC in transaction!",
-			"transaction", transactionSubmitForm.EncodedTransaction,
-			"error", err)
+			l.Errorw(msg,
+				"error", err,
+				"transaction", transactionSubmitForm.EncodedTransaction,
+			)
 
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
-		return
-	}
+			hasError = true
 
-	tx, err := core.DB.Begin()
-	if err != nil {
-		msg := "Failed to start transaction"
-		l.Errorw(msg,
-			"error", err,
-		)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
-		return
-	}
+			responses = append(responses, SubmitResponse{
+				Message:   "Transaction is too old!",
+				Success:   false,
+				Signature: base64.StdEncoding.EncodeToString(transaction.Signature[:]),
+			})
 
-	var transactionId uuid.UUID
-	var verificationTime time.Time
-	err = tx.QueryRow("INSERT INTO Transactions (sender_id, receiver_id, amount, generation_time) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, verification_time",
-		transaction.BKVC.UserID, transaction.To, transaction.Amount, transaction.TimeStamp, time.Now(),
-	).Scan(&transactionId, &verificationTime)
+			continue
+		}
 
-	if err != nil {
-		l.Errorw("Failed to insert transaction into database!",
-			"error", err,
-		)
+		validTransaction := transaction.Verify(c)
 
-		tx.Rollback()
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
-		return
-	}
+		if !validTransaction {
+			l.Errorw("Failed to verify transaction!",
+				"transaction", transactionSubmitForm.EncodedTransaction,
+				"error", err)
 
-	_, err = tx.Exec("UPDATE Accounts SET balance = balance - $1 WHERE id = $2", transaction.Amount, transaction.BKVC.UserID)
+			hasError = true
 
-	if err != nil {
-		l.Errorw("Failed to update sender balance!",
-			"error", err,
-		)
-		tx.Rollback()
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
-	}
+			responses = append(responses, SubmitResponse{
+				Message:   "Failed to verify transaction!",
+				Success:   false,
+				Signature: base64.StdEncoding.EncodeToString(transaction.Signature[:]),
+			})
 
-	_, err = tx.Exec("UPDATE Accounts SET balance = balance + $1 WHERE id = $2", transaction.Amount, transaction.To)
+			continue
+		}
 
-	if err != nil {
-		l.Errorw("Failed to update receiver balance!",
-			"error", err,
-		)
-		tx.Rollback()
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
-	}
+		validBKVC := transaction.BKVC.Verify(c)
+		if !validBKVC {
+			l.Errorw("Failed to verify BKVC in transaction!",
+				"transaction", transactionSubmitForm.EncodedTransaction,
+				"error", err)
 
-	err = tx.Commit()
+			hasError = true
 
-	if err != nil {
-		l.Errorw("Failed to commit transaction!",
-			"error", err,
-		)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
-	}
+			responses = append(responses, SubmitResponse{
+				Message:   "Failed to verify BKVC in transaction!",
+				Success:   false,
+				Signature: base64.StdEncoding.EncodeToString(transaction.Signature[:]),
+			})
 
-	var SenderAvailableBalance float32
-	var SenderPublicKey string
-	var SenderUpdatedTime time.Time
+			continue
+		}
 
-	err = tx.QueryRow(`
+		tx, err := core.DB.Begin()
+		if err != nil {
+			msg := "Failed to start transaction"
+			l.Errorw(msg,
+				"error", err,
+			)
+
+			hasError = true
+
+			responses = append(responses, SubmitResponse{
+				Message:   "Unknown error occurred!",
+				Success:   false,
+				Signature: base64.StdEncoding.EncodeToString(transaction.Signature[:]),
+			})
+
+			continue
+		}
+
+		var transactionId uuid.UUID
+		var verificationTime time.Time
+		var existingSenderTVC, existingReceiverTVC string
+
+		err = tx.QueryRow("SELECT id, verification_time, sender_tvc, receiver_tvc FROM Transactions WHERE signature = $1", base64.StdEncoding.EncodeToString(transaction.Signature[:])).Scan(&transactionId, &verificationTime, existingSenderTVC, existingReceiverTVC)
+
+		if err == nil {
+			tx.Rollback()
+
+			responses = append(responses, SubmitResponse{
+				Message:     "Transaction already submitted",
+				SenderTVC:   &existingSenderTVC,
+				ReceiverTVC: &existingReceiverTVC,
+				Success:     true,
+			})
+
+			continue
+
+		} else if err != sql.ErrNoRows {
+			l.Errorw("Failed to query transaction table",
+				"error", err,
+			)
+			tx.Rollback()
+			hasError = true
+
+			responses = append(responses, SubmitResponse{
+				Message:   "Unknown error occurred!",
+				Success:   false,
+				Signature: base64.StdEncoding.EncodeToString(transaction.Signature[:]),
+			})
+
+			continue
+		}
+
+		err = tx.QueryRow("INSERT INTO Transactions (sender_id, receiver_id, amount, generation_time, signature) VALUES ($1, $2, $3, $4, $5) RETURNING id, verification_time",
+			transaction.BKVC.UserID, transaction.To, transaction.Amount, transaction.TimeStamp, base64.StdEncoding.EncodeToString(transaction.Signature[:]),
+		).Scan(&transactionId, &verificationTime)
+
+		if err != nil {
+			l.Errorw("Failed to insert transaction into database!",
+				"error", err,
+			)
+
+			tx.Rollback()
+			hasError = true
+
+			responses = append(responses, SubmitResponse{
+				Message:   "Unknown error occurred!",
+				Success:   false,
+				Signature: base64.StdEncoding.EncodeToString(transaction.Signature[:]),
+			})
+
+			continue
+		}
+
+		_, err = tx.Exec("UPDATE Accounts SET balance = balance - $1 WHERE id = $2", transaction.Amount, transaction.BKVC.UserID)
+
+		if err != nil {
+			l.Errorw("Failed to update sender balance!",
+				"error", err,
+			)
+			tx.Rollback()
+			hasError = true
+
+			responses = append(responses, SubmitResponse{
+				Message:   "Unknown error occurred!",
+				Success:   false,
+				Signature: base64.StdEncoding.EncodeToString(transaction.Signature[:]),
+			})
+
+			continue
+		}
+
+		_, err = tx.Exec("UPDATE Accounts SET balance = balance + $1 WHERE id = $2", transaction.Amount, transaction.To)
+
+		if err != nil {
+			l.Errorw("Failed to update receiver balance!",
+				"error", err,
+			)
+			tx.Rollback()
+			hasError = true
+
+			responses = append(responses, SubmitResponse{
+				Message:   "Unknown error occurred!",
+				Success:   false,
+				Signature: base64.StdEncoding.EncodeToString(transaction.Signature[:]),
+			})
+
+			continue
+		}
+
+		var SenderAvailableBalance float32
+		var SenderPublicKey string
+		var SenderUpdatedTime time.Time
+
+		err = tx.QueryRow(`
       SELECT a.balance, k.value, NOW()
       FROM Users u
       JOIN Accounts a ON u.id = a.id
@@ -161,42 +262,49 @@ func (SubmitController) Submit(c *gin.Context) {
       WHERE u.id = $1
     `, transaction.BKVC.UserID).Scan(&SenderAvailableBalance, &SenderPublicKey, &SenderUpdatedTime)
 
-	senderKeyPairBytes, err := base64.StdEncoding.DecodeString(SenderPublicKey)
+		senderKeyPairBytes, err := base64.StdEncoding.DecodeString(SenderPublicKey)
 
-	if err != nil {
-		l.Errorw("Failed to decode base64 public key!",
-			"error", err,
-		)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
-		return
-	}
+		if err != nil {
+			l.Errorw("Failed to decode base64 public key!",
+				"error", err,
+			)
+			hasError = true
 
-	senderPublicKey := senderKeyPairBytes[32:]
+			responses = append(responses, SubmitResponse{
+				Message:   "Unknown error occurred!",
+				Success:   false,
+				Signature: base64.StdEncoding.EncodeToString(transaction.Signature[:]),
+			})
 
-	senderBKVC := core.BalanceKeyVerificationCertificate{
-		MessageType:      core.BKVCMessageType,
-		UserID:           transaction.BKVC.UserID,
-		AvailableBalance: SenderAvailableBalance,
-		PublicKey:        [32]byte(senderPublicKey),
-		TimeStamp:        SenderUpdatedTime,
-	}
+			continue
+		}
 
-	senderBKVC.Sign(c)
+		senderPublicKey := senderKeyPairBytes[32:]
 
-	senderTKVC := core.TransactionVerificationCertificate{
-		MessageType:          core.TVCMessageType,
-		TransactionSignature: transaction.Signature,
-		TransactionID:        transactionId,
-		BKVC:                 senderBKVC,
-	}
+		senderBKVC := BalanceKeyVerificationCertificate{
+			MessageType:      BKVCMessageType,
+			UserID:           transaction.BKVC.UserID,
+			AvailableBalance: SenderAvailableBalance,
+			PublicKey:        [32]byte(senderPublicKey),
+			TimeStamp:        SenderUpdatedTime,
+		}
 
-	senderTKVC.Sign(c)
+		senderBKVC.Sign(c)
 
-	var ReceiverAvailableBalance float32
-	var ReceiverPublicKey string
-	var ReceiverUpdatedTime time.Time
+		senderTVC := TransactionVerificationCertificate{
+			MessageType:          TVCMessageType,
+			TransactionSignature: transaction.Signature,
+			TransactionID:        transactionId,
+			BKVC:                 senderBKVC,
+		}
 
-	err = core.DB.QueryRow(`
+		senderTVC.Sign(c)
+
+		var ReceiverAvailableBalance float32
+		var ReceiverPublicKey string
+		var ReceiverUpdatedTime time.Time
+
+		err = tx.QueryRow(`
       SELECT a.balance, k.value, NOW()
       FROM Users u
       JOIN Accounts a ON u.id = a.id
@@ -204,38 +312,93 @@ func (SubmitController) Submit(c *gin.Context) {
       WHERE u.id = $1
     `, transaction.To).Scan(&ReceiverAvailableBalance, &ReceiverPublicKey, &ReceiverUpdatedTime)
 
-	receiverKeyPairBytes, err := base64.StdEncoding.DecodeString(ReceiverPublicKey)
+		receiverKeyPairBytes, err := base64.StdEncoding.DecodeString(ReceiverPublicKey)
 
-	if err != nil {
-		l.Errorw("Failed to decode base64 public key!",
-			"error", err,
-		)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
-		return
+		if err != nil {
+			l.Errorw("Failed to decode base64 public key!",
+				"error", err,
+			)
+			hasError = true
+
+			responses = append(responses, SubmitResponse{
+				Message:   "Unknown error occurred!",
+				Success:   false,
+				Signature: base64.StdEncoding.EncodeToString(transaction.Signature[:]),
+			})
+
+			continue
+		}
+
+		receiverPublicKey := receiverKeyPairBytes[32:]
+
+		receiverBKVC := BalanceKeyVerificationCertificate{
+			MessageType:      BKVCMessageType,
+			UserID:           transaction.To,
+			AvailableBalance: ReceiverAvailableBalance,
+			PublicKey:        [32]byte(receiverPublicKey),
+			TimeStamp:        ReceiverUpdatedTime,
+		}
+
+		receiverTVC := TransactionVerificationCertificate{
+			MessageType:          TVCMessageType,
+			TransactionSignature: transaction.Signature,
+			TransactionID:        transactionId,
+			BKVC:                 receiverBKVC,
+		}
+
+		receiverTVC.Sign(c)
+
+		senderTVCBase64 := base64.StdEncoding.EncodeToString(senderTVC.ToBytes(c))
+		receiverTVCBase64 := base64.StdEncoding.EncodeToString(receiverTVC.ToBytes(c))
+
+		_, err = tx.Exec("UPDATE Transactions SET sender_tvc = $1, receiver_tvc = $2 WHERE id = $3", senderTVCBase64, receiverTVCBase64, transactionId)
+
+		if err != nil {
+			l.Errorw("Failed to update transaction signatures!",
+				"error", err,
+			)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
+			return
+		}
+
+		err = tx.Commit()
+
+		if err != nil {
+			l.Errorw("Failed to commit transaction!",
+				"error", err,
+			)
+			hasError = true
+
+			responses = append(responses, SubmitResponse{
+				Message:   "Unknown error occurred!",
+				Success:   false,
+				Signature: base64.StdEncoding.EncodeToString(transaction.Signature[:]),
+			})
+
+			continue
+		}
+
+		responses = append(responses, SubmitResponse{
+			Message:     "Transaction submitted successfully!",
+			SenderTVC:   &senderTVCBase64,
+			ReceiverTVC: &receiverTVCBase64,
+			Signature:   base64.StdEncoding.EncodeToString(transaction.Signature[:]),
+			Success:     true,
+		})
 	}
 
-	receiverPublicKey := receiverKeyPairBytes[32:]
-
-	receiverBKVC := core.BalanceKeyVerificationCertificate{
-		MessageType:      core.BKVCMessageType,
-		UserID:           transaction.To,
-		AvailableBalance: ReceiverAvailableBalance,
-		PublicKey:        [32]byte(receiverPublicKey),
-		TimeStamp:        ReceiverUpdatedTime,
+	if !hasError {
+		c.JSON(http.StatusAccepted, gin.H{
+			"message":   "Transactions submitted successfully!",
+			"success":   true,
+			"responses": responses,
+		})
+	} else {
+		c.JSON(http.StatusMultiStatus, gin.H{
+			"message":   "Not all transactions were submitted successfully!",
+			"context":   TraceIDFromContext(c),
+			"success":   false,
+			"responses": responses,
+		})
 	}
-
-	receiverTKVC := core.TransactionVerificationCertificate{
-		MessageType:          core.TVCMessageType,
-		TransactionSignature: transaction.Signature,
-		TransactionID:        transactionId,
-		BKVC:                 receiverBKVC,
-	}
-
-	receiverTKVC.Sign(c)
-
-	c.JSON(http.StatusOK, gin.H{
-		"status":       "Transaction submitted successfully!",
-		"sender_tvc":   base64.StdEncoding.EncodeToString(senderTKVC.ToBytes(c)),
-		"receiver_tvc": base64.StdEncoding.EncodeToString(receiverTKVC.ToBytes(c)),
-	})
 }
