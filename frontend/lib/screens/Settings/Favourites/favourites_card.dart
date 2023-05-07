@@ -43,7 +43,7 @@ class FavouritesCard extends StatelessWidget {
                 width: 60,
                 imagesUrl: "assets/images/default-pfp.png",
               ),
-              Container( 
+              Container(
                 width: constraints.maxWidth * 0.55,
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Column(
@@ -102,15 +102,6 @@ class FavouritesCard extends StatelessWidget {
                         ),
                         borderRadius: 5,
                       ),
-
-                      // child: SvgPicture.asset(
-                      //   "assets/icons/close.svg",
-                      //   width: 12,
-                      //   height: 12,
-                      //   colorFilter: ColorFilter.mode(
-                      //       Theme.of(context).colorScheme.onSurface,
-                      //       BlendMode.srcIn),
-                      // ),
                     ),
                   ),
                 ],
