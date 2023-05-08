@@ -40,7 +40,6 @@ class LoginScreen extends StatelessWidget {
                 ),
               );
             }
-            print(state.verificationStatus);
             if (state.verificationStatus == VerificationStatus.twofa) {
               context.read<AuthenticationBloc>().add(TwoFA());
             }
