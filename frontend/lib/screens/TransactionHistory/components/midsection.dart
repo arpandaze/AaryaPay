@@ -15,7 +15,26 @@ class MidSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TranscationBloc, TranscationState>(
+    return BlocConsumer<TranscationBloc, TranscationState>(
+      listener: (context, state) => {
+        if (state.senderName != null &&
+            state.recieverName != null &&
+            state.item != null)
+          {
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                pageBuilder: (context, animation1, animation2) =>
+                    TransactionDetailsScreen(
+                  transactionItem: state.item as Map<String, dynamic>,
+                  recieverName: state.recieverName,
+                  senderName: state.senderName,
+                ),
+                transitionDuration: Duration.zero,
+                reverseTransitionDuration: Duration.zero,
+              ),
+            ),
+          }
+      },
       buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
         return Container(
@@ -40,16 +59,19 @@ class MidSection extends StatelessWidget {
                   if (state.loaded)
                     ...state.transactionHistory!
                         .map((item) => GestureDetector(
-                              onTap: () => {
-                                Navigator.of(context).push(
-                                  PageRouteBuilder(
-                                    pageBuilder:
-                                        (context, animation1, animation2) =>
-                                            const TransactionDetailsScreen(),
-                                    transitionDuration: Duration.zero,
-                                    reverseTransitionDuration: Duration.zero,
-                                  ),
-                                ),
+                              onTapDown: (details) => {
+                                context.read<TranscationBloc>().add(
+                                      LoadParticularUser(
+                                        recieverID: item["receiver_id"],
+                                        senderID: item["sender_id"],
+                                        item: item,
+                                      ),
+                                    ),
+                              },
+                              onTapUp: (details) => {
+                                context.read<TranscationBloc>().add(
+                                      ClearLoadedUser(),
+                                    ),
                               },
                               child: RecentPaymentCard(
                                   label: "Google Payment",
@@ -65,7 +87,8 @@ class MidSection extends StatelessWidget {
                         .toList()
                         .reversed
                   else
-                    Text("${state.loaded}")
+                    Text(
+                        "No Transaction History associated with the account was found.")
                 ],
               ),
             ),

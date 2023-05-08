@@ -19,7 +19,7 @@ class TransactionRepository {
 
       final response = await httpclient
           .get(Uri.parse('$backendBase/transaction'), headers: headers);
-      print(response.statusCode);
+
       if (response.statusCode != 200) {
         throw Exception("Retrieve Failed! Error getting statement list.");
       }
@@ -32,6 +32,32 @@ class TransactionRepository {
       }
     } else {
       throw Exception("No Session Found!!");
+    }
+  }
+
+  Future<Map<String, dynamic>?> getUserName(
+      String? senderID, String? recieverID) async {
+    var token = await storage.read(key: "token");
+    if (token != null) {
+      final headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cookie": "session=$token",
+      };
+
+      var responseSender = await http
+          .get(Uri.parse('$backendBase/profile/$senderID'), headers: headers);
+      var responseReciever = await http
+          .get(Uri.parse('$backendBase/profile/$recieverID'), headers: headers);
+
+      if (responseSender.statusCode == 200 &&
+          responseReciever.statusCode == 200) {
+        return {
+          "success": true,
+          "sender": jsonDecode(responseSender.body)["data"],
+          "reciever": jsonDecode(responseReciever.body)["data"],
+        };
+      }
+      return {"success": false};
     }
   }
 }
