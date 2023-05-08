@@ -116,9 +116,7 @@ class TwoFactorAuthSecond extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var textTheme = Theme.of(context).textTheme;
     var colorScheme = Theme.of(context).colorScheme;
-    Size size = MediaQuery.of(context).size;
     return Container(
       color: colorScheme.background,
       child: body(context),

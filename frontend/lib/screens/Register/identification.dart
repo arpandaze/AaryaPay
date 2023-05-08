@@ -1,4 +1,5 @@
 import 'package:aaryapay/components/CustomTextField.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Register/bloc/register_bloc.dart';
 import 'package:aaryapay/screens/Register/components/CustomRegisterButton.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class Identification extends StatelessWidget {
                   child: Visibility(
                     visible: true,
                     child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
+                      onTap: () => Utils.mainAppNav.currentState!.pop(),
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(

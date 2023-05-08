@@ -1,3 +1,4 @@
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Send/components/green_box.dart';
 import 'package:aaryapay/screens/Send/components/trans_details.dart';
 import 'package:aaryapay/screens/Send/receiver_scan_confirmation.dart';
@@ -133,6 +134,8 @@ class PaymentComplete extends StatelessWidget {
               CustomActionButton(
                 width: size.width * 0.6,
                 label: "Back to Home",
+                onClick: () => Utils.mainAppNav.currentState!
+                    .popUntil(ModalRoute.withName("/app")),
                 textTheme: Theme.of(context).textTheme.titleMedium!.merge(
                       TextStyle(
                           color: Theme.of(context).colorScheme.background),

@@ -17,7 +17,9 @@ class TransactionHistory extends StatelessWidget {
         builder: (context, state) {
           return Container(
             decoration:
-                BoxDecoration(border: Border.all(color: Colors.black12)),
+                BoxDecoration(
+                border: Border.all(color: Colors.black12),
+                color: Theme.of(context).colorScheme.background),
             clipBehavior: Clip.none,
             width: size.width,
             height: size.height * 0.75,

@@ -1,13 +1,11 @@
 import 'package:aaryapay/components/CustomArrowedButton.dart';
-import 'package:aaryapay/global/authentication/authentication_bloc.dart';
-import 'package:aaryapay/repository/change_password.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Settings/Password/change_password.dart';
 import 'package:aaryapay/screens/Settings/Password/two_factor_auth_first.dart';
 import 'package:aaryapay/screens/Settings/components/custom_menu_selection.dart';
 import 'package:aaryapay/screens/Settings/components/settings_wrapper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class PasswordScreen extends StatelessWidget {
@@ -31,14 +29,8 @@ class PasswordScreen extends StatelessWidget {
     List<MenuModal> itemList = [
       MenuModal("Password", [
         MenuItemModal(
-            onTap: () => Navigator.of(context).push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation1, animation2) =>
-                        const ChangePassword(),
-                    transitionDuration: Duration.zero,
-                    reverseTransitionDuration: Duration.zero,
-                  ),
-                ),
+            onTap: () => Utils.mainAppNav.currentState!
+                .pushNamed("/app/settings/password/change"),
             icon: SvgPicture.asset(
               "assets/icons/lock.svg",
               width: 20,
@@ -49,14 +41,8 @@ class PasswordScreen extends StatelessWidget {
       ]),
       MenuModal("Additional Security", [
         MenuItemModal(
-          onTap: () => Navigator.of(context).push(
-            PageRouteBuilder(
-              pageBuilder: (context, animation1, animation2) =>
-                  const TwoFactorAuthFirst(),
-              transitionDuration: Duration.zero,
-              reverseTransitionDuration: Duration.zero,
-            ),
-          ),
+          onTap: () => Utils.mainAppNav.currentState!
+              .pushNamed("/app/settings/password/twofa/first"),
           icon: SvgPicture.asset(
             "assets/icons/2fa.svg",
             width: 20,

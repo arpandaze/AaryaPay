@@ -24,7 +24,8 @@ class TwoFactorAuthFirst extends StatelessWidget {
         create: (context) => TwoFaBloc(
             twoFARepo: TwoFARepository(
           token: context.read<AuthenticationBloc>().state.token,
-        ))..add(GetTwoFA()),
+        ))
+          ..add(GetTwoFA()),
         child: body(context),
       ),
     );
@@ -36,9 +37,12 @@ class TwoFactorAuthFirst extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return BlocConsumer<TwoFaBloc, TwoFaState>(
       listener: (context, state) {
-        if (state.msgType == MessageType.error ||state.msgType == MessageType.success ||state.msgType == MessageType.warning ){
+        if (state.msgType == MessageType.error ||
+            state.msgType == MessageType.success ||
+            state.msgType == MessageType.warning) {
           SnackBarService.stopSnackBar();
-          SnackBarService.showSnackBar(content: state.errorText, msgType: state.msgType);
+          SnackBarService.showSnackBar(
+              content: state.errorText, msgType: state.msgType);
         }
       },
       builder: (context, state) {
@@ -97,13 +101,13 @@ class TwoFactorAuthFirst extends StatelessWidget {
                       pageBuilder: (context, animation1, animation2) =>
                           BlocProvider(
                         create: (context) => TwoFaBloc(
-                            twoFARepo: TwoFARepository(
-                                token: context
-                                    .read<AuthenticationBloc>()
-                                    .state
-                                    .token)),
-                        
-                        child: TwoFactorAuthSecond(),
+                          twoFARepo: TwoFARepository(
+                              token: context
+                                  .read<AuthenticationBloc>()
+                                  .state
+                                  .token),
+                        ),
+                        child: const TwoFactorAuthSecond(),
                       ),
                       transitionDuration: Duration.zero,
                       reverseTransitionDuration: Duration.zero,

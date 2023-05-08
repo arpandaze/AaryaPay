@@ -53,25 +53,28 @@ class Payments extends StatelessWidget {
     return SizedBox(
       width: size.width,
       child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            PaymentsTopBar(
-              items_length: list.length,
-            ),
-            ...list
-                .map(
-                  (e) => PaymentsMidSectionCard(
-                    title: e.title,
-                    amount: e.amount,
-                    sender: e.sender,
-                    reciever: e.reciever,
-                    startDate: e.startDate,
-                    endDate: e.endDate,
-                  ),
-                )
-                .toList()
-          ],
+        child: Container(
+          color: Theme.of(context).colorScheme.background,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              PaymentsTopBar(
+                items_length: list.length,
+              ),
+              ...list
+                  .map(
+                    (e) => PaymentsMidSectionCard(
+                      title: e.title,
+                      amount: e.amount,
+                      sender: e.sender,
+                      reciever: e.reciever,
+                      startDate: e.startDate,
+                      endDate: e.endDate,
+                    ),
+                  )
+                  .toList()
+            ],
+          ),
         ),
       ),
     );

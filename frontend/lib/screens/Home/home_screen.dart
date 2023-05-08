@@ -16,16 +16,21 @@ class HomeScreen extends StatelessWidget {
     return RefreshIndicator(
       color: Theme.of(context).colorScheme.primary,
       onRefresh: _refresh,
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
-            LastSynchronized(),
-            Favourites(),
-            QuickPayment(),
-            RecentCard(),
-          ],
+      child: GestureDetector(
+        child: SingleChildScrollView(
+          child: Container(
+            color: Theme.of(context).colorScheme.background,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                LastSynchronized(),
+                Favourites(),
+                QuickPayment(),
+                RecentCard(),
+              ],
+            ),
+          ),
         ),
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -94,14 +95,8 @@ class TopBar extends StatelessWidget {
                   //     borderRadius: BorderRadius.circular(20)),
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onTap: () => Navigator.of(context).push(
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation1, animation2) =>
-                            const LoginScreen(),
-                        transitionDuration: Duration.zero,
-                        reverseTransitionDuration: Duration.zero,
-                      ),
-                    ),
+                  onTap: () => Utils.mainAppNav.currentState!
+                      .pushNamed("/app/settings/account"),
                     // child: CircleAvatar(
                     //   backgroundImage: AssetImage("assets/images/default-pfp.png"),
                     //   // radius: ,

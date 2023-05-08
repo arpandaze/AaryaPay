@@ -1,6 +1,7 @@
 import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Home/home_screen.dart';
 import 'package:aaryapay/screens/Payments/payments.dart';
+import 'package:aaryapay/screens/QrScan/qrscan_screen.dart';
 import 'package:aaryapay/screens/Settings/settings.dart';
 import 'package:aaryapay/screens/TransactionHistory/transaction_history.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,6 @@ class MainAppWrapper extends StatelessWidget {
             initialRoute: '/app/home',
             onGenerateRoute: (RouteSettings settings) {
               Widget page;
-
               switch (settings.name) {
                 case '/app/home':
                   page = const HomeScreen();
@@ -45,19 +45,23 @@ class MainAppWrapper extends StatelessWidget {
                 case '/app/settings':
                   page = const Settings();
                   break;
+                case '/app/qrscan':
+                  page = const QrScanScreen();
+                  break;
                 default:
                   page = const HomeScreen();
                   break;
               }
 
               return PageRouteBuilder(
-                pageBuilder: (_, __, ___) => page,
+                pageBuilder: (context, animation, secondaryAnimation) => page,
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {
                   const begin = Offset(0.0, 1.0);
                   const end = Offset.zero;
                   final tween = Tween(begin: begin, end: end);
                   final offsetAnimation = animation.drive(tween);
+
                   return SlideTransition(
                     position: offsetAnimation,
                     child: child,

@@ -51,7 +51,7 @@ class LoginWrapper extends StatelessWidget {
                   child: Visibility(
                     visible: backButton ?? false,
                     child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
+                      onTap: () => Utils.mainAppNav.currentState!.pop(),
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(
@@ -119,7 +119,7 @@ class LoginWrapper extends StatelessWidget {
                                         Theme.of(context).colorScheme.primary)),
                           ),
                           onTap: () => Utils.mainAppNav.currentState!
-                              .pushReplacementNamed("/login"),
+                              .pushNamed("/register"),
                         )
                       ]),
                 ),
