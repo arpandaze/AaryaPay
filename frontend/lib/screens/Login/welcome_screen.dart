@@ -12,7 +12,6 @@ class WelcomeScreen extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return LoginWrapper(
-      children: _midSection(context, size),
       actionButtonLabel: "LOGIN",
       actionButtonFunction: () => {
         Navigator.of(context).push(
@@ -24,6 +23,7 @@ class WelcomeScreen extends StatelessWidget {
           ),
         ),
       },
+      children: _midSection(context, size),
     );
   }
 
@@ -32,7 +32,7 @@ class WelcomeScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Container(
+        SizedBox(
           width: size.width * 0.8,
           child: Text(
             "Pay Anywhere, You Go.",
@@ -43,24 +43,20 @@ class WelcomeScreen extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        Container(
-          child: Text(
-            "Fast. Secure. Reliable.",
-            style: Theme.of(context)
-                .textTheme
-                .titleSmall!
-                .merge(const TextStyle(height: 3)),
-            textAlign: TextAlign.center,
-          ),
+        Text(
+          "Fast. Secure. Reliable.",
+          style: Theme.of(context)
+              .textTheme
+              .titleSmall!
+              .merge(const TextStyle(height: 3)),
+          textAlign: TextAlign.center,
         ),
-        Container(
-          child: Text(
-            "Does anyone even read this text. No. Why are you reading this text. Just login already, this text is worthless.",
-            style: Theme.of(context).textTheme.titleMedium!.merge(
-                  const TextStyle(height: 1.5),
-                ),
-            textAlign: TextAlign.center,
-          ),
+        Text(
+          "Does anyone even read this text. No. Why are you reading this text. Just login already, this text is worthless.",
+          style: Theme.of(context).textTheme.titleMedium!.merge(
+                const TextStyle(height: 1.5),
+              ),
+          textAlign: TextAlign.center,
         ),
       ],
     );

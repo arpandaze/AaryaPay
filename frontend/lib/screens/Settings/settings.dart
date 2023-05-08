@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/components/CustomArrowedButton.dart';
-import 'package:aaryapay/components/Wrapper.dart';
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
 import 'package:aaryapay/screens/Login/welcome_screen.dart';
@@ -11,6 +10,7 @@ import 'package:aaryapay/screens/Settings/Favourites/favourites_screen.dart';
 import 'package:aaryapay/screens/Settings/Language/language_selection.dart';
 import 'package:aaryapay/screens/Settings/Password/password_screen.dart';
 import 'package:aaryapay/screens/Settings/Syncronization/syncronization_screen.dart';
+import 'package:aaryapay/screens/main_app_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -146,9 +146,7 @@ class Settings extends StatelessWidget {
           },
       },
       builder: (context, state) {
-        return Wrapper(
-          pageName: "settings",
-          children: SizedBox(
+        return SizedBox(
             width: size.width,
             child: SingleChildScrollView(
               child: Column(
@@ -167,7 +165,6 @@ class Settings extends StatelessWidget {
                   )
                 ],
               ),
-            ),
           ),
         );
       },
