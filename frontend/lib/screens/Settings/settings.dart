@@ -127,7 +127,6 @@ class Settings extends StatelessWidget {
 
     return BlocConsumer<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) => {
-        print("Auth Status: ${state.status}"),
         if (state.status == AuthenticationStatus.logOut)
           {
             Timer(

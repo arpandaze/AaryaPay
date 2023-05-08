@@ -12,7 +12,6 @@ class AuthenticationRepository {
   Future<Map<String, dynamic>> login(
       {required String email, required String password}) async {
     final url = Uri.parse('$backendBase/auth/login');
-    print("Upwards Here I am");
 
     var response = await http.post(
       url,
@@ -116,16 +115,12 @@ class AuthenticationRepository {
   Future<Object> logout() async {
     final url = Uri.parse('$backendBase/auth/logout');
     final token = await storage.read(key: "token");
-    print(token);
     final headers = {
       "Cookie": "temp_session=; session=$token",
       "Content-Type": "application/json; charset=utf-8"
     };
 
     var response = await http.post(url, headers: headers);
-
-    print(response.statusCode);
-    print(response.body);
 
     if (response.statusCode == 200) {
       await storage.deleteAll();

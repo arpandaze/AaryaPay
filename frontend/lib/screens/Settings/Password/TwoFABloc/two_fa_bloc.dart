@@ -19,26 +19,36 @@ class TwoFaBloc extends Bloc<TwoFaEvent, TwoFaState> {
   void _onGetTwoFA(GetTwoFA event, Emitter<TwoFaState> emit) async {
     try {
       final response = await twoFARepo.getTwoFA();
-      print(response);
       emit(state.copyWith(
           isLoaded: true, uri: response['uri'], secret: response['secret']));
     } catch (e) {
-      print(e);
-      emit(state.copyWith(isLoaded: false, msgType: MessageType.error, errorText: "Error TwoFA request"));
+      emit(state.copyWith(
+          isLoaded: false,
+          msgType: MessageType.error,
+          errorText: "Error TwoFA request"));
     }
   }
 
   void _onEnableTwoFA(EnableTwoFA event, Emitter<TwoFaState> emit) async {
     try {
       final response = await twoFARepo.enableTwoFA(code: state.token!);
-      if (response['status'] == 202){
-        emit(state.copyWith(success: true, msgType: MessageType.success, errorText: "Successfully enabled two factor authentication"));
+      if (response['status'] == 202) {
+        emit(state.copyWith(
+            success: true,
+            msgType: MessageType.success,
+            errorText: "Successfully enabled two factor authentication"));
         return;
       } else {
-        emit(state.copyWith(success: false, msgType: MessageType.error, errorText: "Invalid token"));
+        emit(state.copyWith(
+            success: false,
+            msgType: MessageType.error,
+            errorText: "Invalid token"));
       }
     } catch (e) {
-      emit(state.copyWith(success: false, msgType: MessageType.error, errorText: "Unknown Error"));
+      emit(state.copyWith(
+          success: false,
+          msgType: MessageType.error,
+          errorText: "Unknown Error"));
     }
   }
 

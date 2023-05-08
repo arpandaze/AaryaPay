@@ -33,18 +33,12 @@ class TwoFaBloc extends Bloc<TwoFaEvent, TwoFaState> {
       "Content-Type": "application/json"
     };
 
-    print(headers);
-
     final body = {
       "passcode": state.twoFACode,
     };
-    print(body);
     emit(state.copyWith(status: FAStatus.onprocess));
     var response =
         await http.post(url, headers: headers, body: jsonEncode(body));
-
-    print(response.statusCode);
-    print(response.body);
 
     if (response.statusCode == 202) {
       var decodedResponse =

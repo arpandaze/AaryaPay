@@ -124,7 +124,6 @@ class LoginVerifyScreen extends StatelessWidget {
             },
             onChanged: (value) {},
             beforeTextPaste: (text) {
-              print("Allowing to paste $text");
               return true;
             },
             appContext: context,
