@@ -1,17 +1,13 @@
 import 'dart:convert';
-import 'dart:ffi';
 
-import 'package:cryptography/cryptography.dart';
-import 'package:libaaryapay/BKVC.dart';
-import 'package:libaaryapay/TVC.dart';
-import 'package:libaaryapay/transaction.dart';
-import 'package:libaaryapay/utils.dart';
+import 'package:libaaryapay/libaaryapay.dart';
 import 'package:test/test.dart';
 
 Future<void> main() async {
   test("Test Transaction", testTransaction);
   test("Test BKVC", testBKVC);
   test("Test TVC", testTVC);
+  test("Test Payload", testPayload);
 }
 
 Future<void> testBKVC() async {
@@ -112,4 +108,23 @@ Future<void> testTVC() async {
   assert(
     await remakeTransaction.bkvc.verify(await serverKeyPair.extractPublicKey()),
   );
+}
+
+Future<void> testPayload() async {
+  final sampleTVC =
+      "A102rNijgAoEtD+K0ABj14i7mhKg+YeAyhk4EXJeumvUbwChFsGnP6Y5u6oplJIknUwSaeRsWGuthClNCnlj7AdTp9M7ksdHF69KyDktxbsEAgFdx/RO3UhRq4GtAZ1akc1CyAAAkxw76kIrxQbPXwHzV4YuIj4tpVcYrOsfUmhTpq6S4yhkTUnMGpUorLfNav7R6O/+VYyP4bCOBkCRkom8rxmBR5ryBDQo3nvpT5q5Ul7/kruH+C4JSl668jpcIYxZjcnXF7U6BODir+ebu4JtvtHUcT/w4VPRYl1783mh24HNWISPFMb7ba8Tus0OKSL08eK+kavHTyHt05H/Jc+gE2OFdzHXFww=";
+
+  final sampleBKVC =
+      "AgDsY4+ew0nvivGNkQHPt+NCyAAAJ64Og8584ZT6pcGqSNvuuOvfJqWkfO5UfG4p3mhrn9RkTT89ScYXj3lJkWUmDP0h8Z53J/MG62EkRZnQaGCc7wZnuJ7o3LMuDlfW1SyyG6U8bkUh98PSGMESuQCPhxoDE96eBA==";
+
+  final sampleTransaction =
+      "AUEgAABRZpp8YNFDOLP935oC3Fi2AoQca1GxKEuKrq02mrltN/9CyAAAQyFip62yQH8WPYd8Dx+t9oMAmgMFq7+R2QgDBaLeyVFkTUgTq0ndxE3GrBDm3zGZt24OWWXinxds+m4nHA1OtXKnzncmS5npG2jomZFu5G8isXtz8zgEEFpoFvZ6aXGmM7C7CGRNSBMDjaHL44Mwpwx9EexLN/QvvEPytkuoBAf/R874od6GFhTe+coVlmigw9BdcMel4+8wnOzKp5ncyWWCoshapAcP";
+
+  var payload = payloadfromBase64(sampleBKVC);
+  var payload2 = payloadfromBase64(sampleTVC);
+  var payload3 = payloadfromBase64(sampleTransaction);
+
+  assert(payload is BalanceKeyVerificationCertificate);
+  assert(payload2 is TransactionVerificationCertificate);
+  assert(payload3 is Transaction);
 }
