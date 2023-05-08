@@ -31,12 +31,20 @@ class TranscationBloc extends Bloc<TranscationEvent, TranscationState> {
         event.senderID, event.recieverID);
 
     if (decodedData?["success"]) {
+      String sMidName = "";
+      String rMidName = "";
+      if (decodedData?["sender"]["middle_name"] != "") {
+        sMidName = decodedData?["sender"]["middle_name"] + " ";
+      }
+      if (decodedData?["reciever"]["middle_name"] != "") {
+        rMidName = decodedData?["reciever"]["middle_name"] + " ";
+      }
       emit(
         state.copywith(
           senderName:
-              "${decodedData?["sender"]["first_name"]} ${decodedData?["sender"]["middle_name"]} ${decodedData?["sender"]["last_name"]}",
+              "${decodedData?["sender"]["first_name"]} $sMidName${decodedData?["sender"]["last_name"]}",
           recieverName:
-              "${decodedData?["reciever"]["first_name"]} ${decodedData?["reciever"]["middle_name"]} ${decodedData?["reciever"]["last_name"]}",
+              "${decodedData?["reciever"]["first_name"]} $rMidName${decodedData?["reciever"]["last_name"]}",
           item: event.item,
         ),
       );
