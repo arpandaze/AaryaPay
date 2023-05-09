@@ -1,4 +1,5 @@
 import 'package:aaryapay/components/TransactionsCard.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/TransactionHistory/bloc/transcation_bloc.dart';
 import 'package:aaryapay/screens/TransactionHistory/components/tranasaction_detailScreen.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class TransactionHistory extends StatelessWidget {
                       ...state.transactionHistory!
                           .map((item) => GestureDetector(
                                 onTap: () => {
-                                  Navigator.of(context).push(
+                                  Utils.mainAppNav.currentState!.push(
                                     PageRouteBuilder(
                                       pageBuilder:
                                           (context, animation1, animation2) =>

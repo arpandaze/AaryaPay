@@ -208,10 +208,40 @@ class SendMoney extends StatelessWidget {
                         borderRadius: 10,
                         onClick: () => Navigator.of(context).push(
                           PageRouteBuilder(
-                            pageBuilder: (context, animation1, animation2) =>
-                                const PaymentComplete(),
-                            transitionDuration: Duration.zero,
-                            reverseTransitionDuration: Duration.zero,
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) =>
+                                    const PaymentComplete(),
+                            transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) {
+                              final curve = CurvedAnimation(
+                                parent: animation,
+                                curve: Curves.decelerate,
+                              );
+
+                              return Stack(
+                                children: [
+                                  FadeTransition(
+                                    opacity: Tween<double>(
+                                      begin: 1.0,
+                                      end: 0.0,
+                                    ).animate(curve),
+                                  ),
+                                  SlideTransition(
+                                    position: Tween<Offset>(
+                                      begin: const Offset(0.0, 1.0),
+                                      end: Offset.zero,
+                                    ).animate(curve),
+                                    child: FadeTransition(
+                                      opacity: Tween<double>(
+                                        begin: 0.0,
+                                        end: 1.0,
+                                      ).animate(curve),
+                                      child: const PaymentComplete(),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
                           ),
                         ),
                       )

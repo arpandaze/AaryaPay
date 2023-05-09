@@ -1,5 +1,6 @@
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/components/CustomStatusButton.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -42,7 +43,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                     behavior: HitTestBehavior.opaque,
                     child: GestureDetector(
                       onTap: () => {
-                        Navigator.of(context).pop(true),
+                        Utils.mainAppNav.currentState!.pop(true),
                       },
                       child: SvgPicture.asset(
                         "assets/icons/close.svg",
