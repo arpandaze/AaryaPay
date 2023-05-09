@@ -17,10 +17,7 @@ class TransactionHistory extends StatelessWidget {
         buildWhen: (previous, current) => previous != current,
         builder: (context, state) {
           return Container(
-            decoration:
-                BoxDecoration(
-                border: Border.all(color: Colors.black12),
-                color: Theme.of(context).colorScheme.background),
+            color: Theme.of(context).colorScheme.background,
             clipBehavior: Clip.none,
             width: size.width,
             height: size.height * 0.75,
@@ -44,11 +41,41 @@ class TransactionHistory extends StatelessWidget {
                                 onTap: () => {
                                   Utils.mainAppNav.currentState!.push(
                                     PageRouteBuilder(
-                                      pageBuilder:
-                                          (context, animation1, animation2) =>
-                                              const TransactionDetailsScreen(),
-                                      transitionDuration: Duration.zero,
-                                      reverseTransitionDuration: Duration.zero,
+                                      pageBuilder: (context, animation,
+                                              secondaryAnimation) =>
+                                          const TransactionDetailsScreen(),
+                                      transitionsBuilder: (context, animation,
+                                          secondaryAnimation, child) {
+                                        final curve = CurvedAnimation(
+                                          parent: animation,
+                                          curve: Curves.decelerate,
+                                        );
+
+                                        return Stack(
+                                          children: [
+                                            FadeTransition(
+                                              opacity: Tween<double>(
+                                                begin: 1.0,
+                                                end: 0.0,
+                                              ).animate(curve),
+                                            ),
+                                            SlideTransition(
+                                              position: Tween<Offset>(
+                                                begin: const Offset(0.0, 1.0),
+                                                end: Offset.zero,
+                                              ).animate(curve),
+                                              child: FadeTransition(
+                                                opacity: Tween<double>(
+                                                  begin: 0.0,
+                                                  end: 1.0,
+                                                ).animate(curve),
+                                                child:
+                                                    const TransactionDetailsScreen(),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
                                     ),
                                   ),
                                 },

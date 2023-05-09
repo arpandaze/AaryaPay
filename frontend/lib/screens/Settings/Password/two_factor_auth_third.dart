@@ -70,7 +70,9 @@ class TwoFactorAuthThird extends StatelessWidget {
                 child: CustomActionButton(
                   label: "Done",
                   onClick: () => Utils.mainAppNav.currentState!
-                      .popUntil(ModalRoute.withName("/app")),
+                      .popUntil(
+                    ModalRoute.withName("/app"),
+                  ),
                   
                 ),
               )

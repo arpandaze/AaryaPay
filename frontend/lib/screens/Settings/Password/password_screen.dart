@@ -29,8 +29,45 @@ class PasswordScreen extends StatelessWidget {
     List<MenuModal> itemList = [
       MenuModal("Password", [
         MenuItemModal(
-            onTap: () => Utils.mainAppNav.currentState!
-                .pushNamed("/app/settings/password/change"),
+            onTap: () => {
+                  Utils.mainAppNav.currentState!.push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          const ChangePassword(),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        final curve = CurvedAnimation(
+                          parent: animation,
+                          curve: Curves.decelerate,
+                        );
+
+                        return Stack(
+                          children: [
+                            FadeTransition(
+                              opacity: Tween<double>(
+                                begin: 1.0,
+                                end: 0.0,
+                              ).animate(curve),
+                            ),
+                            SlideTransition(
+                              position: Tween<Offset>(
+                                begin: const Offset(0.0, 1.0),
+                                end: Offset.zero,
+                              ).animate(curve),
+                              child: FadeTransition(
+                                opacity: Tween<double>(
+                                  begin: 0.0,
+                                  end: 1.0,
+                                ).animate(curve),
+                                child: const ChangePassword(),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                },
             icon: SvgPicture.asset(
               "assets/icons/lock.svg",
               width: 20,
@@ -41,8 +78,45 @@ class PasswordScreen extends StatelessWidget {
       ]),
       MenuModal("Additional Security", [
         MenuItemModal(
-          onTap: () => Utils.mainAppNav.currentState!
-              .pushNamed("/app/settings/password/twofa/first"),
+          onTap: () => {
+            Utils.mainAppNav.currentState!.push(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    const TwoFactorAuthFirst(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  final curve = CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.decelerate,
+                  );
+
+                  return Stack(
+                    children: [
+                      FadeTransition(
+                        opacity: Tween<double>(
+                          begin: 1.0,
+                          end: 0.0,
+                        ).animate(curve),
+                      ),
+                      SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0.0, 1.0),
+                          end: Offset.zero,
+                        ).animate(curve),
+                        child: FadeTransition(
+                          opacity: Tween<double>(
+                            begin: 0.0,
+                            end: 1.0,
+                          ).animate(curve),
+                          child: const TwoFactorAuthFirst(),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          },
           icon: SvgPicture.asset(
             "assets/icons/2fa.svg",
             width: 20,

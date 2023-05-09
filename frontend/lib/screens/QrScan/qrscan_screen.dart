@@ -59,7 +59,7 @@ class QrScanScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(5),
                       child: IconButton(
-                        onPressed: () => Utils.mainAppNav.currentState!.pop(),
+                        onPressed: () => Navigator.of(context).pop(),
                         icon: SvgPicture.asset('assets/icons/close.svg',
                             width: 20,
                             height: 20,

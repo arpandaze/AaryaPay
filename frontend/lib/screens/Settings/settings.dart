@@ -3,6 +3,11 @@ import 'package:aaryapay/components/CustomArrowedButton.dart';
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
 import 'package:aaryapay/helper/utils.dart';
+import 'package:aaryapay/screens/Home/components/favourites.dart';
+import 'package:aaryapay/screens/Settings/AccountInformation/account_information.dart';
+import 'package:aaryapay/screens/Settings/Favourites/favourites_screen.dart';
+import 'package:aaryapay/screens/Settings/Password/password_screen.dart';
+import 'package:aaryapay/screens/Settings/Synchronization/synchronization_screen.dart';
 import 'package:aaryapay/screens/Settings/components/custom_menu_selection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,8 +22,45 @@ class Settings extends StatelessWidget {
     List<MenuModal> itemList = [
       MenuModal("Account", [
         MenuItemModal(
-          onTap: () =>
-              Utils.mainAppNav.currentState!.pushNamed("/app/settings/account"),
+          onTap: () => {
+            Utils.mainAppNav.currentState!.push(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    const AccountInformation(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  final curve = CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.decelerate,
+                  );
+
+                  return Stack(
+                    children: [
+                      FadeTransition(
+                        opacity: Tween<double>(
+                          begin: 1.0,
+                          end: 0.0,
+                        ).animate(curve),
+                      ),
+                      SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0.0, 1.0),
+                          end: Offset.zero,
+                        ).animate(curve),
+                        child: FadeTransition(
+                          opacity: Tween<double>(
+                            begin: 0.0,
+                            end: 1.0,
+                          ).animate(curve),
+                          child: const AccountInformation(),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          },
           icon: SvgPicture.asset(
             "assets/icons/profile-line.svg",
             width: 20,
@@ -28,8 +70,45 @@ class Settings extends StatelessWidget {
           trailingWidget: const CustomArrowedButton(),
         ),
         MenuItemModal(
-          onTap: () => Utils.mainAppNav.currentState!
-              .pushNamed("/app/settings/password"),
+          onTap: () => {
+            Utils.mainAppNav.currentState!.push(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    const PasswordScreen(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  final curve = CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.decelerate,
+                  );
+
+                  return Stack(
+                    children: [
+                      FadeTransition(
+                        opacity: Tween<double>(
+                          begin: 1.0,
+                          end: 0.0,
+                        ).animate(curve),
+                      ),
+                      SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0.0, 1.0),
+                          end: Offset.zero,
+                        ).animate(curve),
+                        child: FadeTransition(
+                          opacity: Tween<double>(
+                            begin: 0.0,
+                            end: 1.0,
+                          ).animate(curve),
+                          child: const PasswordScreen(),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          },
           icon: SvgPicture.asset(
             "assets/icons/lock.svg",
             width: 20,
@@ -39,8 +118,45 @@ class Settings extends StatelessWidget {
           trailingWidget: const CustomArrowedButton(),
         ),
         MenuItemModal(
-          onTap: () => Utils.mainAppNav.currentState!
-              .pushNamed("/app/settings/favorites"),
+          onTap: () => {
+            Utils.mainAppNav.currentState!.push(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    const FavouritesScreen(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  final curve = CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.decelerate,
+                  );
+
+                  return Stack(
+                    children: [
+                      FadeTransition(
+                        opacity: Tween<double>(
+                          begin: 1.0,
+                          end: 0.0,
+                        ).animate(curve),
+                      ),
+                      SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0.0, 1.0),
+                          end: Offset.zero,
+                        ).animate(curve),
+                        child: FadeTransition(
+                          opacity: Tween<double>(
+                            begin: 0.0,
+                            end: 1.0,
+                          ).animate(curve),
+                          child: const FavouritesScreen(),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          },
           icon: SvgPicture.asset(
             "assets/icons/star.svg",
             width: 20,
@@ -52,8 +168,45 @@ class Settings extends StatelessWidget {
       ]),
       MenuModal("General", [
         MenuItemModal(
-          onTap: () =>
-              Utils.mainAppNav.currentState!.pushNamed("/app/settings/sync"),
+          onTap: () => {
+            Utils.mainAppNav.currentState!.push(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    const SynchronizationScreen(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  final curve = CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.decelerate,
+                  );
+
+                  return Stack(
+                    children: [
+                      FadeTransition(
+                        opacity: Tween<double>(
+                          begin: 1.0,
+                          end: 0.0,
+                        ).animate(curve),
+                      ),
+                      SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0.0, 1.0),
+                          end: Offset.zero,
+                        ).animate(curve),
+                        child: FadeTransition(
+                          opacity: Tween<double>(
+                            begin: 0.0,
+                            end: 1.0,
+                          ).animate(curve),
+                          child: const SynchronizationScreen(),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          },
           icon: SvgPicture.asset(
             "assets/icons/sync.svg",
             width: 20,

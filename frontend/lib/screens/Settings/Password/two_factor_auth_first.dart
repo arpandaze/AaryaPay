@@ -2,6 +2,7 @@ import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/repository/enable_two_fa.dart';
 import 'package:aaryapay/screens/Settings/Password/TwoFABloc/two_fa_bloc.dart';
 import 'package:aaryapay/screens/Settings/Password/two_factor_auth_second.dart';
@@ -96,7 +97,7 @@ class TwoFactorAuthFirst extends StatelessWidget {
 
                 CustomActionButton(
                   label: "Next",
-                  onClick: () => Navigator.of(context).push(
+                  onClick: () => Utils.mainAppNav.currentState!.push(
                     PageRouteBuilder(
                       pageBuilder: (context, animation1, animation2) =>
                           BlocProvider(
@@ -109,8 +110,6 @@ class TwoFactorAuthFirst extends StatelessWidget {
                         ),
                         child: const TwoFactorAuthSecond(),
                       ),
-                      transitionDuration: Duration.zero,
-                      reverseTransitionDuration: Duration.zero,
                     ),
                   ),
                   borderRadius: 10,

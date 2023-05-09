@@ -17,85 +17,93 @@ class MainAppWrapper extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       top: true,
+      left: true,
+      right: true,
       bottom: true,
-      child: SizedBox(
-        width: double.infinity,
-        height: size.height,
-        child: Scaffold(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          bottomNavigationBar: const NavBar(),
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(150),
-            child: TopBar(size: size),
-          ),
-          body: Navigator(
-            key: Utils.mainListNav,
-            initialRoute: '/app/home',
-            onGenerateRoute: (RouteSettings settings) {
-              Widget page;
-              switch (settings.name) {
-                case '/app/home':
-                  page = const HomeScreen();
-                  break;
-                case '/app/payments':
-                  page = const Payments();
-                  break;
-                case '/app/transactions':
-                  page = const TransactionHistory();
-                  break;
-                case '/app/settings':
-                  page = const Settings();
-                  break;
-                case '/app/qrscan':
-                  page = const QrScanScreen();
-                  break;
-                default:
-                  page = const HomeScreen();
-                  break;
-              }
-              return PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) => page,
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  final curve = CurvedAnimation(
-                    parent: animation,
-                    curve: Curves.decelerate,
-                  );
+      child: GestureDetector(
+        onVerticalDragUpdate: (details) =>
+            {Utils.mainAppNav.currentState!.pushNamed("/app/qrscan")},
+        child: SizedBox(
+          width: double.infinity,
+          height: size.height,
+          child: Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.background,
+            bottomNavigationBar: const NavBar(),
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(150),
+              child: TopBar(size: size),
+            ),
+            body: Navigator(
+              key: Utils.mainListNav,
+              initialRoute: '/app/home',
+              onGenerateRoute: (RouteSettings settings) {
+                Widget page;
+                
+                switch (settings.name) {
+                  case '/app/home':
+                    page = const HomeScreen();
+                    break;
+                  case '/app/payments':
+                    page = const Payments();
+                    break;
+                  case '/app/transactions':
+                    page = const TransactionHistory();
+                    break;
+                  case '/app/settings':
+                    page = const Settings();
+                    break;
+                  case '/app/qrscan':
+                    page = const QrScanScreen();
+                    break;
+                  default:
+                    page = const HomeScreen();
+                    break;
+                }
+      
+                return PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) => page,
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    final curve = CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.decelerate,
+                    );
 
-                  animation.addStatusListener(
-                    (status) {
-                      if (status == AnimationStatus.completed) {
-                        HapticFeedback.mediumImpact();
-                      }
-                    },
-                  );
+                    animation.addStatusListener(
+                      (status) {
+                        if (status == AnimationStatus.completed) {
+                          HapticFeedback.mediumImpact();
+                        }
+                      },
+                    );
 
-                  return Stack(
-                    children: [
-                      FadeTransition(
-                        opacity: Tween<double>(
-                          begin: 1.0,
-                          end: 0.0,
-                        ).animate(curve),
-                      ),
-                      SlideTransition(
-                        position: Tween<Offset>(
-                          begin: const Offset(0.0, 1.0),
-                          end: Offset.zero,
-                        ).animate(curve),
-                        child: FadeTransition(
+                    return Stack(
+                      children: [
+                        FadeTransition(
                           opacity: Tween<double>(
-                            begin: 0.0,
-                            end: 1.0,
+                            begin: 1.0,
+                            end: 0.0,
                           ).animate(curve),
-                          child: page,
                         ),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
+                        SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(0.0, 1.0),
+                            end: Offset.zero,
+                          ).animate(curve),
+                          child: FadeTransition(
+                            opacity: Tween<double>(
+                              begin: 0.0,
+                              end: 1.0,
+                            ).animate(curve),
+                            child: page,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ),
       ),
