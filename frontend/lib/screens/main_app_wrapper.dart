@@ -7,6 +7,7 @@ import 'package:aaryapay/screens/TransactionHistory/transaction_history.dart';
 import 'package:flutter/material.dart';
 import 'package:aaryapay/components/topbar.dart';
 import 'package:aaryapay/components/navbar.dart';
+import 'package:flutter/services.dart';
 
 class MainAppWrapper extends StatelessWidget {
   const MainAppWrapper({Key? key, this.children}) : super(key: key);
@@ -52,19 +53,45 @@ class MainAppWrapper extends StatelessWidget {
                   page = const HomeScreen();
                   break;
               }
-
               return PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) => page,
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {
-                  const begin = Offset(0.0, 1.0);
-                  const end = Offset.zero;
-                  final tween = Tween(begin: begin, end: end);
-                  final offsetAnimation = animation.drive(tween);
+                  final curve = CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.decelerate,
+                  );
 
-                  return SlideTransition(
-                    position: offsetAnimation,
-                    child: child,
+                  animation.addStatusListener(
+                    (status) {
+                      if (status == AnimationStatus.completed) {
+                        HapticFeedback.mediumImpact();
+                      }
+                    },
+                  );
+
+                  return Stack(
+                    children: [
+                      FadeTransition(
+                        opacity: Tween<double>(
+                          begin: 1.0,
+                          end: 0.0,
+                        ).animate(curve),
+                      ),
+                      SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0.0, 1.0),
+                          end: Offset.zero,
+                        ).animate(curve),
+                        child: FadeTransition(
+                          opacity: Tween<double>(
+                            begin: 0.0,
+                            end: 1.0,
+                          ).animate(curve),
+                          child: page,
+                        ),
+                      ),
+                    ],
                   );
                 },
               );
