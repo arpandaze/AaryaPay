@@ -17,10 +17,7 @@ class CompletedScreen extends StatelessWidget {
             height: size.height * 0.1,
             child: Container(),
           ),
-          SizedBox(
-            height: size.height * 0.3,
-            child: Utils.mainlogo 
-          ),
+          SizedBox(height: size.height * 0.3, child: Utils.mainlogo),
           Container(
             height: size.height * 0.48,
             padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
@@ -60,14 +57,8 @@ class CompletedScreen extends StatelessWidget {
               width: size.width * 0.78,
               borderRadius: 10,
               label: "Done",
-              onClick: () => Navigator.of(context).push(
-                PageRouteBuilder(
-                  pageBuilder: (context, animation1, animation2) =>
-                      const LoginScreen(),
-                  transitionDuration: Duration.zero,
-                  reverseTransitionDuration: Duration.zero,
-                ),
-              ),
+              onClick: () =>
+                  Utils.mainAppNav.currentState!.pushReplacementNamed("/login"),
             ),
           ),
         ],

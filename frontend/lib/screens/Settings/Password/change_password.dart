@@ -3,6 +3,7 @@ import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/repository/change_password.dart';
 import 'package:aaryapay/screens/Settings/Password/PasswordBloc/password_bloc.dart';
 import 'package:aaryapay/screens/Settings/components/settings_wrapper.dart';
@@ -44,7 +45,8 @@ class ChangePassword extends StatelessWidget {
               msgType: state.msgType,
             )
           },
-        if (state.msgType == MessageType.success) {Navigator.of(context).pop()}
+        if (state.msgType == MessageType.success)
+          {Utils.mainAppNav.currentState!.pop()}
       },
       buildWhen: ((previous, current) => previous != current),
       builder: (context, state) {

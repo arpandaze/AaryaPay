@@ -38,13 +38,8 @@ class LoginVerifyScreen extends StatelessWidget {
                 content: "Verified Successfully",
                 msgType: MessageType.success,
               ),
-              Navigator.of(context).pushAndRemoveUntil(
-                PageRouteBuilder(
-                  pageBuilder: (context, animation1, animation2) =>
-                      const LoginScreen(),
-                  transitionDuration: Duration.zero,
-                  reverseTransitionDuration: Duration.zero,
-                ),
+              Utils.mainAppNav.currentState!.pushNamedAndRemoveUntil(
+                '/login',
                 (Route<dynamic> route) => false,
               ),
             }

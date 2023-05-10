@@ -4,7 +4,6 @@ import 'package:aaryapay/screens/Register/components/CustomRegisterButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:jovial_svg/jovial_svg.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'dart:math' as math;
 

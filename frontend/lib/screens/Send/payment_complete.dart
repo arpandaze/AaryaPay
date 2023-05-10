@@ -25,7 +25,7 @@ class PaymentComplete extends StatelessWidget {
 
   Widget body(Size size, BuildContext context) {
     void onClick() {
-      Navigator.of(context).push(
+      Utils.mainAppNav.currentState!.push(
         PageRouteBuilder(
           pageBuilder: (context, animation1, animation2) =>
               const ReceiverConfirmation(),

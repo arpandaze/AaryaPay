@@ -1,6 +1,7 @@
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/components/CustomStatusButton.dart';
 import 'package:aaryapay/components/CustomTextField.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Settings/components/settings_wrapper.dart';
 import 'package:aaryapay/screens/Settings/settings.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +95,7 @@ class AccountInformation extends StatelessWidget {
                 label: "Save",
                 borderRadius: 10,
                 width: size.width * 0.78,
-                onClick: () => Navigator.of(context).push(
+                onClick: () => Utils.mainAppNav.currentState!.push(
                   PageRouteBuilder(
                     pageBuilder: (context, animation1, animation2) =>
                         const Settings(),
