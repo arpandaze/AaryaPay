@@ -69,7 +69,7 @@ class MainAppWrapper extends StatelessWidget {
                   animation.addStatusListener(
                     (status) {
                       if (status == AnimationStatus.completed) {
-                        HapticFeedback.mediumImpact();
+                        HapticFeedback.selectionClick();
                       }
                     },
                   );
