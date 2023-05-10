@@ -1,4 +1,3 @@
-import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/helper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -55,6 +54,7 @@ class TransactionDetailsScreen extends StatelessWidget {
 
     return SingleChildScrollView(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(
             height: size.height * 0.1,
@@ -83,9 +83,9 @@ class TransactionDetailsScreen extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: size.height * 0.85,
+            height: size.height * 0.80,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   margin: const EdgeInsets.fromLTRB(30, 10, 30, 10),
@@ -359,53 +359,6 @@ class TransactionDetailsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const CustomActionButton(
-                      borderRadius: 10,
-                      height: 60,
-                      label: "Back to Home",
-                    ),
-                    CustomActionButton(
-                      width: size.width * 0.23,
-                      height: 60,
-                      color: Theme.of(context).colorScheme.surface,
-                      borderRadius: 10,
-                      actionLogo: SvgPicture.asset(
-                        "assets/icons/share.svg",
-                        width: 20,
-                        height: 20,
-                        colorFilter: ColorFilter.mode(
-                          Theme.of(context).colorScheme.background,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                    ),
-                    // GestureDetector(
-                    //   onTap: () => {},
-                    //   behavior: HitTestBehavior.opaque,
-                    //   child: Container(
-                    //     width: 70,
-                    //     alignment: Alignment.center,
-                    //     height: 50,
-                    //     decoration: BoxDecoration(
-                    //         color: Theme.of(context).colorScheme.outline,
-                    //         borderRadius:
-                    //             const BorderRadius.all(Radius.circular(10))),
-                    //     child: SvgPicture.asset(
-                    //       'assets/icons/share.svg',
-                    //       width: 20,
-                    //       height: 20,
-                    //       colorFilter: const ColorFilter.mode(
-                    //         Theme.of(context).colorScheme.background,
-                    //         BlendMode.srcIn,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // )
-                  ],
-                )
               ],
             ),
           ),

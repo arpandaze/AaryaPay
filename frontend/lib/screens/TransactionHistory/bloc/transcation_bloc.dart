@@ -39,6 +39,9 @@ class TranscationBloc extends Bloc<TranscationEvent, TranscationState> {
       if (decodedData?["reciever"]["middle_name"] != "") {
         rMidName = decodedData?["reciever"]["middle_name"] + " ";
       }
+      print(
+        "${decodedData?["sender"]["first_name"]} $sMidName${decodedData?["sender"]["last_name"]}",
+      );
       emit(
         state.copywith(
           senderName:
@@ -48,6 +51,7 @@ class TranscationBloc extends Bloc<TranscationEvent, TranscationState> {
           item: event.item,
         ),
       );
+
     }
   }
 }
