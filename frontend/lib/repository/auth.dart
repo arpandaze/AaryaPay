@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import 'package:aaryapay/constants.dart';
-import 'package:libaaryapay/BKVC.dart';
+import 'package:libaaryapay/bkvc.dart';
 
 class AuthenticationRepository {
   final client = http.Client();
