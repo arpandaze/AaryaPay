@@ -25,6 +25,7 @@ class FavouritesBloc extends Bloc<FavouritesEvent, FavouritesState> {
 
   void _onAddButtonClicked(
       AddButtonClicked event, Emitter<FavouritesState> emit) async {
+    emit(state.copyWith(msgType: MessageType.idle));
     try {
       final response =
           await favouritesRepository.postFavorites(email: state.email!);
@@ -34,7 +35,8 @@ class FavouritesBloc extends Bloc<FavouritesEvent, FavouritesState> {
         add(FavouritesLoadEvent());
       }
     } catch (e) {
-      emit(state.copyWith(msgType: MessageType.error, errorText: e.toString()));
+      emit(state.copyWith(
+          msgType: MessageType.error, errorText: "The field cannot be empty"));
     }
   }
 
