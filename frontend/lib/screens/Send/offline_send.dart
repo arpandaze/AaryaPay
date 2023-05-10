@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:aaryapay/components/QRImage.dart';
 import 'package:aaryapay/screens/Send/components/trans_details_outlined.dart';
 import 'package:aaryapay/screens/Send/receiver_scan_confirmation.dart';
 import 'package:flutter/material.dart';
@@ -72,10 +75,8 @@ class OfflineSend extends StatelessWidget {
           children: [
             Container(
               margin: const EdgeInsets.only(top: 20),
-              child: QrImage(
-                data:
-                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
-                size: 240,
+              child: QRView(
+                data: Uint8List.fromList([1, 2, 3]),
               ),
             ),
             Container(
