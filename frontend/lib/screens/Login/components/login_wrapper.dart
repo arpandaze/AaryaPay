@@ -1,4 +1,5 @@
 import 'package:aaryapay/components/AuthenticationStatusWrapper.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Register/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -50,7 +51,7 @@ class LoginWrapper extends StatelessWidget {
                   child: Visibility(
                     visible: backButton ?? false,
                     child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
+                      onTap: () => Utils.mainAppNav.currentState!.pop(),
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(
@@ -117,14 +118,8 @@ class LoginWrapper extends StatelessWidget {
                                     color:
                                         Theme.of(context).colorScheme.primary)),
                           ),
-                          onTap: () => Navigator.of(context).push(
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation1, animation2) =>
-                                  const RegisterScreen(),
-                              transitionDuration: Duration.zero,
-                              reverseTransitionDuration: Duration.zero,
-                            ),
-                          ),
+                          onTap: () => Utils.mainAppNav.currentState!
+                              .pushNamed("/register"),
                         )
                       ]),
                 ),

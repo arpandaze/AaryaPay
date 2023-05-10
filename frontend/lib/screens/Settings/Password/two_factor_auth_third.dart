@@ -1,3 +1,4 @@
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Settings/components/settings_wrapper.dart';
 import 'package:aaryapay/screens/Settings/settings.dart';
 import 'package:flutter/material.dart';
@@ -68,14 +69,11 @@ class TwoFactorAuthThird extends StatelessWidget {
               Center(
                 child: CustomActionButton(
                   label: "Done",
-                  onClick: () => Navigator.of(context).push(
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation1, animation2) =>
-                          const Settings(),
-                      transitionDuration: Duration.zero,
-                      reverseTransitionDuration: Duration.zero,
-                    ),
+                  onClick: () => Utils.mainAppNav.currentState!
+                      .popUntil(
+                    ModalRoute.withName("/app"),
                   ),
+                  
                 ),
               )
             ],

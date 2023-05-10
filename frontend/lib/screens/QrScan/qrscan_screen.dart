@@ -1,3 +1,4 @@
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/QrScan/components/bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -61,7 +62,7 @@ class QrScanScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(5),
                       child: IconButton(
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () => Navigator.of(context).pop(),
                         icon: SvgPicture.asset('assets/icons/close.svg',
                             width: 20,
                             height: 20,
@@ -85,13 +86,11 @@ class QrScanScreen extends StatelessWidget {
                         ),
                   ),
                 ),
-                Container(
-                  child: Text(
-                    "to Pay",
-                    style: Theme.of(context).textTheme.displaySmall!.merge(
-                        const TextStyle(height: 1.5).merge(TextStyle(
-                            color: Theme.of(context).colorScheme.background))),
-                  ),
+                Text(
+                  "to Pay",
+                  style: Theme.of(context).textTheme.displaySmall!.merge(
+                      const TextStyle(height: 1.5).merge(TextStyle(
+                          color: Theme.of(context).colorScheme.background))),
                 ),
               ],
             ),

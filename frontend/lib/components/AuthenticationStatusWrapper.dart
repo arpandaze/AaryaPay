@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Home/home_screen.dart';
 import 'package:aaryapay/screens/Login/login_two_fa_screen.dart';
 import 'package:aaryapay/screens/Login/welcome_screen.dart';
@@ -35,15 +36,8 @@ class AuthenticationStateWrapper extends StatelessWidget {
           Timer(
             const Duration(microseconds: 0),
             () {
-              Navigator.of(context).pushAndRemoveUntil(
-                PageRouteBuilder(
-                  pageBuilder: (context, animation1, animation2) =>
-                      const HomeScreen(),
-                  transitionDuration: Duration.zero,
-                  reverseTransitionDuration: Duration.zero,
-                ),
-                (Route<dynamic> route) => false,
-              );
+              Utils.mainAppNav.currentState!
+                  .pushNamedAndRemoveUntil("/app", (route) => false);
             },
           );
         }

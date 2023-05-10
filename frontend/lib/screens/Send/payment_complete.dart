@@ -1,3 +1,4 @@
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Send/components/green_box.dart';
 import 'package:aaryapay/screens/Send/components/trans_details.dart';
 import 'package:aaryapay/screens/Send/receiver_scan_confirmation.dart';
@@ -58,7 +59,10 @@ class PaymentComplete extends StatelessWidget {
                     child: IconButton(
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => {
+                        Utils.mainAppNav.currentState!
+                            .popUntil(ModalRoute.withName("/app"))
+                      },
                       icon: SvgPicture.asset('assets/icons/close.svg',
                           width: 15,
                           height: 15,
@@ -89,29 +93,29 @@ class PaymentComplete extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleMedium),
             ),
             Container(
-                margin: const EdgeInsets.only(top: 10, bottom: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset('assets/icons/rupee.svg',
+              margin: const EdgeInsets.only(top: 10, bottom: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset('assets/icons/rupee.svg',
                       width: 24,
-                        colorFilter: const ColorFilter.mode(
-                            Color(0xff274233), BlendMode.srcIn)),
-                    Container(
-                      margin: const EdgeInsets.only(left: 10),
+                      colorFilter: const ColorFilter.mode(
+                          Color(0xff274233), BlendMode.srcIn)),
+                  Container(
+                    margin: const EdgeInsets.only(left: 10),
                     padding:
                         const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                      child: Text(
-                        "250.00",
+                    child: Text(
+                      "250.00",
                       style: Theme.of(context).textTheme.labelLarge!.merge(
-                              TextStyle(
+                            TextStyle(
                               fontWeight: FontWeight.w600,
                               color: Theme.of(context).colorScheme.primary,
                             ),
-                            ),
-                      ),
+                          ),
                     ),
-                  ],
+                  ),
+                ],
               ),
             ),
             const GreenBox(
@@ -133,6 +137,8 @@ class PaymentComplete extends StatelessWidget {
               CustomActionButton(
                 width: size.width * 0.6,
                 label: "Back to Home",
+                onClick: () => Utils.mainAppNav.currentState!
+                    .popUntil(ModalRoute.withName("/app")),
                 textTheme: Theme.of(context).textTheme.titleMedium!.merge(
                       TextStyle(
                           color: Theme.of(context).colorScheme.background),

@@ -1,27 +1,29 @@
-import 'package:aaryapay/screens/Home/home_screen.dart';
-import 'package:aaryapay/screens/Payments/payments.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/QrScan/qrscan_screen.dart';
-import 'package:aaryapay/screens/Settings/settings.dart';
-import 'package:aaryapay/screens/TransactionHistory/transaction_history.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class NavBar extends StatelessWidget {
+class NavBar extends StatefulWidget {
   const NavBar({
     Key? key,
-    required this.size,
-    required this.pageName,
   }) : super(key: key);
-  final Size size;
-  final String pageName;
+
+  @override
+  State<NavBar> createState() => _NavBarState();
+}
+
+class _NavBarState extends State<NavBar> {
+  String currentPage = "home";
+
+  void switchPage(String pageName) {
+    setState(() => {currentPage = pageName});
+  }
+
   @override
   Widget build(BuildContext context) {
-    var colorScheme = Theme.of(context).colorScheme;
+    Size size = MediaQuery.of(context).size;
     return Container(
       clipBehavior: Clip.none,
-      // padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-      // padding: const EdgeInsets.only(top: 6, left: 15, right: 15),
-      // margin: const EdgeInsets.only(top: 20),
       alignment: const Alignment(-0.5, 0.5),
 
       decoration: BoxDecoration(
@@ -44,14 +46,14 @@ class NavBar extends StatelessWidget {
                 children: [
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onTap: () => Navigator.of(context).push(
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation1, animation2) =>
-                            const HomeScreen(),
-                        transitionDuration: Duration.zero,
-                        reverseTransitionDuration: Duration.zero,
-                      ),
-                    ),
+                    onTap: () {
+                      if (currentPage != "home") {
+                        Utils.mainListNav.currentState!
+                            .pushReplacementNamed("/app/home");
+                      }
+
+                      switchPage("home");
+                    },
                     child: Container(
                       decoration: BoxDecoration(
                           border: Border.all(
@@ -62,7 +64,7 @@ class NavBar extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SvgPicture.asset(
-                            pageName == "home"
+                            currentPage == "home"
                                 ? "assets/icons/home-fill.svg"
                                 : "assets/icons/home.svg",
                             colorFilter: ColorFilter.mode(
@@ -76,9 +78,6 @@ class NavBar extends StatelessWidget {
                             "Home",
                             style: TextStyle(
                                 fontSize: 10,
-                                fontWeight: pageName == "home"
-                                    ? FontWeight.w700
-                                    : FontWeight.w500,
                                 color: Theme.of(context).colorScheme.primary),
                           )
                         ],
@@ -86,14 +85,13 @@ class NavBar extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => Navigator.of(context).push(
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation1, animation2) =>
-                            const Payments(),
-                        transitionDuration: Duration.zero,
-                        reverseTransitionDuration: Duration.zero,
-                      ),
-                    ),
+                    onTap: () {
+                      if (currentPage != "payments") {
+                        Utils.mainListNav.currentState!
+                            .pushReplacementNamed("/app/payments");
+                      }
+                      switchPage("payments");
+                    },
                     child: Container(
                       decoration: BoxDecoration(
                           border: Border.all(
@@ -103,9 +101,9 @@ class NavBar extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SvgPicture.asset(
-                            pageName == "payments"
+                            currentPage == "payments"
                                 ? "assets/icons/wallet-fill.svg"
-                                : "assets/icons/payments.svg",
+                                : "assets/icons/wallet.svg",
                             colorFilter: ColorFilter.mode(
                               Theme.of(context).colorScheme.primary,
                               BlendMode.srcIn,
@@ -117,9 +115,6 @@ class NavBar extends StatelessWidget {
                             "Payments",
                             style: TextStyle(
                                 fontSize: 10,
-                                fontWeight: pageName == "payments"
-                                    ? FontWeight.w700
-                                    : FontWeight.w500,
                                 color: Theme.of(context).colorScheme.primary),
                           )
                         ],
@@ -132,16 +127,14 @@ class NavBar extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   GestureDetector(
-                    onTap: () => Navigator.of(context).push(
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation1, animation2) =>
-                            const TransactionHistory(),
-                        transitionDuration: Duration.zero,
-                        reverseTransitionDuration: Duration.zero,
-                      ),
-                    ),
+                    onTap: () {
+                      if (currentPage != "transactions") {
+                        Utils.mainListNav.currentState!
+                            .pushReplacementNamed("/app/transactions");
+                      }
+                      switchPage("transactions");
+                    },
                     child: Container(
-
                       decoration: BoxDecoration(
                           border: Border.all(
                               color: Theme.of(context).colorScheme.background)),
@@ -150,7 +143,7 @@ class NavBar extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SvgPicture.asset(
-                            pageName == "statements"
+                            currentPage == "transactions"
                                 ? "assets/icons/statements-fill.svg"
                                 : "assets/icons/statements.svg",
                             colorFilter: ColorFilter.mode(
@@ -164,9 +157,6 @@ class NavBar extends StatelessWidget {
                             "Statements",
                             style: TextStyle(
                                 fontSize: 10,
-                                fontWeight: pageName == "statements"
-                                    ? FontWeight.w700
-                                    : FontWeight.w500,
                                 color: Theme.of(context).colorScheme.primary),
                           )
                         ],
@@ -174,14 +164,13 @@ class NavBar extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => Navigator.of(context).push(
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation1, animation2) =>
-                            const Settings(),
-                        transitionDuration: Duration.zero,
-                        reverseTransitionDuration: Duration.zero,
-                      ),
-                    ),
+                    onTap: () {
+                      if (currentPage != "settings") {
+                        Utils.mainListNav.currentState!
+                            .pushReplacementNamed("/app/settings");
+                      }
+                      switchPage("settings");
+                    },
                     child: Container(
                       decoration: BoxDecoration(
                           border: Border.all(
@@ -193,7 +182,7 @@ class NavBar extends StatelessWidget {
                         children: [
                           // SvgPicture.asset("assets/icons/home.svg"),
                           SvgPicture.asset(
-                            (pageName == "settings")
+                            currentPage == "settings"
                                 ? "assets/icons/gear-fill.svg"
                                 : "assets/icons/settings.svg",
                             colorFilter: ColorFilter.mode(
@@ -207,9 +196,6 @@ class NavBar extends StatelessWidget {
                             "Settings",
                             style: TextStyle(
                                 fontSize: 10,
-                                fontWeight: pageName == "settings"
-                                    ? FontWeight.w700
-                                    : FontWeight.w500,
                                 color: Theme.of(context).colorScheme.primary),
                           )
                         ],
@@ -220,36 +206,32 @@ class NavBar extends StatelessWidget {
               ),
             ],
           ),
-          Container(
-            // height: 100,
-            // padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Positioned(
-              bottom: 30,
-              left: size.width / 2 - 30,
-              child: GestureDetector(
-                onTap: () => Navigator.of(context).push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation1, animation2) =>
-                        const QrScanScreen(),
-                    transitionDuration: Duration.zero,
-                    reverseTransitionDuration: Duration.zero,
+          Positioned(
+            bottom: 30,
+            left: size.width / 2 - 30,
+            child: GestureDetector(
+              onTap: () {
+                Utils.mainAppNav.currentState!.pushNamed("/app/qrscan");
+              },
+              child: Container(
+                width: 60,
+                height: 60,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  boxShadow: kElevationToShadow[4],
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(50),
+                    top: Radius.circular(50),
                   ),
                 ),
-                child: Container(
-                  width: 60,
-                  height: 60,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      boxShadow: kElevationToShadow[4],
-                      color: Theme.of(context).colorScheme.primary,
-                      borderRadius: const BorderRadius.vertical(
-                          bottom: Radius.circular(50),
-                          top: Radius.circular(50))),
-                  child: SvgPicture.asset(
-                    "assets/icons/qrcode.svg",
-                    width: 25,
-                    height: 25,
-                    color: colorScheme.background,
+                child: SvgPicture.asset(
+                  "assets/icons/qrcode.svg",
+                  width: 25,
+                  height: 25,
+                  colorFilter: ColorFilter.mode(
+                    Theme.of(context).colorScheme.background,
+                    BlendMode.srcIn,
                   ),
                 ),
               ),
