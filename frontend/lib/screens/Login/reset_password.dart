@@ -1,4 +1,5 @@
 import 'package:aaryapay/components/CustomTextField.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Login/components/login_wrapper.dart';
 import 'package:aaryapay/screens/Login/otp_screen.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,7 @@ class ResetPassword extends StatelessWidget {
         actionButtonLabel: "SUBMIT",
         backButttonFunction: () => {Navigator.pop(context)},
         actionButtonFunction: () => {
-              Navigator.of(context).push(
+              Utils.mainAppNav.currentState!.push(
                 PageRouteBuilder(
                   pageBuilder: (context, animation1, animation2) => const OTPScreen(),
                   transitionDuration: Duration.zero,

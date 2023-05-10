@@ -1,6 +1,8 @@
 import 'package:aaryapay/components/CustomActionButton.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Login/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:jovial_svg/jovial_svg.dart';
 
 class CompletedScreen extends StatelessWidget {
   const CompletedScreen({Key? key}) : super(key: key);
@@ -15,14 +17,9 @@ class CompletedScreen extends StatelessWidget {
             height: size.height * 0.1,
             child: Container(),
           ),
-          Container(
+          SizedBox(
             height: size.height * 0.3,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.contain,
-                image: AssetImage("assets/images/logo.png"),
-              ),
-            ),
+            child: Utils.mainlogo 
           ),
           Container(
             height: size.height * 0.48,

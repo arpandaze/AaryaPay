@@ -55,6 +55,7 @@ dependencies:
   flutter_secure_storage: ^8.0.0
   http: ^0.13.5
   intl: ^0.18.1
+  jovial_svg: ^1.1.14
 
 dev_dependencies:
   flutter_test:

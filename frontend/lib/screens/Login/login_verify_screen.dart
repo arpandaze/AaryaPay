@@ -1,5 +1,6 @@
 import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/constants.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Login/bloc/login_verify_bloc.dart';
 import 'package:aaryapay/screens/Login/login_screen.dart';
 import 'package:aaryapay/screens/Register/completed_screen.dart';
@@ -51,7 +52,7 @@ class LoginVerifyScreen extends StatelessWidget {
         builder: (context, state) => RegisterWrapper(
           backButton: true,
           backButttonFunction: () => {
-            Navigator.pop(context),
+            Utils.mainAppNav.currentState!.pop(context),
           },
           title: "Verify your account",
           actionButtonLabel: "Next",

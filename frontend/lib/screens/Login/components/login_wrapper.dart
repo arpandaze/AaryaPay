@@ -1,10 +1,11 @@
 import 'package:aaryapay/components/AuthenticationStatusWrapper.dart';
 import 'package:aaryapay/helper/utils.dart';
-import 'package:aaryapay/screens/Register/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'dart:math' as math;
+
+import 'package:jovial_svg/jovial_svg.dart';
 
 class LoginWrapper extends StatelessWidget {
   const LoginWrapper(
@@ -73,14 +74,9 @@ class LoginWrapper extends StatelessWidget {
               ],
             ),
           ),
-          Container(
+          SizedBox(
             height: size.height * 0.3,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.contain,
-                image: AssetImage("assets/images/logo.png"),
-              ),
-            ),
+              child: Utils.mainlogo 
           ),
           Container(
             height: size.height * 0.45,

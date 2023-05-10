@@ -2,6 +2,7 @@ import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/repository/auth.dart';
 import 'package:aaryapay/screens/Login/bloc/login_bloc.dart';
 import 'package:aaryapay/screens/Login/components/login_wrapper.dart';
@@ -31,7 +32,7 @@ class LoginScreen extends StatelessWidget {
               SnackBarService.showSnackBar(
                 content: state.errorText,
               );
-              Navigator.of(context).push(
+              Utils.mainAppNav.currentState!.push(
                 PageRouteBuilder(
                   pageBuilder: (context, animation1, animation2) =>
                       const LoginVerifyScreen(),
@@ -59,7 +60,7 @@ class LoginScreen extends StatelessWidget {
               actionButtonLabel: "LOGIN",
               backButton: true,
               backButttonFunction: () => {
-                Navigator.pop(context),
+                Utils.mainAppNav.currentState!.pop(context),
               },
               actionButtonFunction: () =>
                   context.read<LoginBloc>().add(LoginFormSubmitted()),
@@ -117,7 +118,7 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
             onTap: () => {
-              Navigator.of(context).push(
+              Utils.mainAppNav.currentState!.push(
                 PageRouteBuilder(
                   pageBuilder: (context, animation1, animation2) =>
                       const ForgotPassword(),
