@@ -2,8 +2,8 @@ import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 
 import 'package:uuid/uuid.dart';
-import 'package:libaaryapay/bkvc.dart';
-import 'package:libaaryapay/constants.dart';
+import 'package:libaaryapay/transaction/bkvc.dart';
+import 'package:libaaryapay/transaction/constants.dart';
 
 class Transaction {
   int messageType;

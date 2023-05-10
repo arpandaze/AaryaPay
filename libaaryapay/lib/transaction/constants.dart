@@ -1,4 +1,3 @@
 const TAM_MESSAGE_TYPE = 0x01;
 const BKVC_MESSAGE_TYPE = 0x02;
 const TVC_MESSAGE_TYPE = 0x03;
-
