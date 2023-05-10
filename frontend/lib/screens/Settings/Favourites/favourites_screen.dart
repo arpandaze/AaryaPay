@@ -1,9 +1,12 @@
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/components/CustomTextField.dart';
+import 'package:aaryapay/components/SnackBarService.dart';
+import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
 import 'package:aaryapay/repository/favourites.dart';
 import 'package:aaryapay/screens/Settings/Favourites/bloc/favourites_bloc.dart';
 import 'package:aaryapay/screens/Settings/Favourites/favourites_card.dart';
+import 'package:aaryapay/screens/Settings/Favourites/grey_card.dart';
 import 'package:aaryapay/screens/Settings/components/settings_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -44,8 +47,18 @@ class FavouritesScreen extends StatelessWidget {
   Widget body(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
     Size size = MediaQuery.of(context).size;
-    return BlocBuilder<FavouritesBloc, FavouritesState>(
-      buildWhen: (previous, current) => previous != current,
+    return BlocConsumer<FavouritesBloc, FavouritesState>(
+      listener: (context, state) {
+        if (state.msgType == MessageType.error ||
+            state.msgType == MessageType.warning ||
+            state.msgType == MessageType.success) {
+          SnackBarService.stopSnackBar();
+          SnackBarService.showSnackBar(
+            content: state.errorText,
+            msgType: state.msgType,
+          );
+        }
+      },
       builder: (context, state) {
         return SettingsWrapper(
             pageName: " Favourites",
@@ -112,7 +125,7 @@ class FavouritesScreen extends StatelessWidget {
                           .toList()
                           .reversed
                     else
-                      const Text("No favorites"),
+                      GreyCard(),
                   ],
                 ),
               ),
