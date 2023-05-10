@@ -1,4 +1,5 @@
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:aaryapay/screens/Login/login_screen.dart';
 import 'package:aaryapay/screens/Login/components/login_wrapper.dart';
@@ -14,7 +15,7 @@ class WelcomeScreen extends StatelessWidget {
     return LoginWrapper(
       actionButtonLabel: "LOGIN",
       actionButtonFunction: () => {
-        Navigator.of(context).push(
+        Utils.mainAppNav.currentState!.push(
           PageRouteBuilder(
             pageBuilder: (context, animation1, animation2) =>
                 const LoginScreen(),

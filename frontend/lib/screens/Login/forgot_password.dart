@@ -1,4 +1,5 @@
 import 'package:aaryapay/components/CustomTextField.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Login/components/login_wrapper.dart';
 import 'package:aaryapay/screens/Login/reset_password.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +14,9 @@ class ForgotPassword extends StatelessWidget {
     return LoginWrapper(
       backButton: true,
       actionButtonLabel: "SUBMIT",
-      backButttonFunction: () => {Navigator.pop(context)},
+      backButttonFunction: () => {Utils.mainAppNav.currentState!.pop(context)},
       actionButtonFunction: () => {
-        Navigator.of(context).push(
+        Utils.mainAppNav.currentState!.push(
           PageRouteBuilder(
             pageBuilder: (context, animation1, animation2) => const ResetPassword(),
             transitionDuration: Duration.zero,

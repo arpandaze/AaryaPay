@@ -21,7 +21,7 @@ class AuthenticationStateWrapper extends StatelessWidget {
           Timer(
             const Duration(microseconds: 0),
             () {
-              Navigator.of(context).push(
+              Utils.mainAppNav.currentState!.push(
                 PageRouteBuilder(
                   pageBuilder: (context, animation1, animation2) =>
                       const LoginTwoFA(),

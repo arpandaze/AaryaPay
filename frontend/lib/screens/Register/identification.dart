@@ -8,6 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:math' as math;
 
+import 'package:jovial_svg/jovial_svg.dart';
+
 class Identification extends StatelessWidget {
   const Identification({
     super.key,
@@ -69,14 +71,9 @@ class Identification extends StatelessWidget {
               ],
             ),
           ),
-          Container(
+          SizedBox(
             height: size.height * 0.3,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.contain,
-                image: AssetImage("assets/images/logo.png"),
-              ),
-            ),
+            child: Utils.mainlogo 
           ),
           Container(
             height: size.height * 0.48,

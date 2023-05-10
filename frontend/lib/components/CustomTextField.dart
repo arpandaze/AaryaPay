@@ -180,11 +180,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     suffixIcon: widget.isPassword
                         ? GestureDetector(
                             onTap: () => togglePassword(),
-                            child: SvgPicture.asset(
-                              "assets/icons/${showPassword ? 'show' : 'invisible'}.svg",
-                              colorFilter: ColorFilter.mode(
-                                  Theme.of(context).colorScheme.primary,
-                                  BlendMode.srcIn),
+                            child: Container(
+                              margin: const EdgeInsets.only(right: 8),
+                              child: SvgPicture.asset(
+                                "assets/icons/${showPassword ? 'show' : 'invisible'}.svg",
+                                colorFilter: ColorFilter.mode(
+                                    Theme.of(context).colorScheme.primary,
+                                    BlendMode.srcIn),
+                              ),
                             ),
                           )
                         : widget.suffixIcon,

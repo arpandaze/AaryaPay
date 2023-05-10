@@ -1,6 +1,8 @@
+import 'package:aaryapay/helper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:aaryapay/components/CustomActionButton.dart';
+import 'package:jovial_svg/jovial_svg.dart';
 
 class RegisterWrapper extends StatelessWidget {
   const RegisterWrapper(
@@ -38,47 +40,40 @@ class RegisterWrapper extends StatelessWidget {
         children: [
           SizedBox(
             height: size.height * 0.1,
-            child: Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: size.width * 0.1,
-                    // padding: const EdgeInsets.all(15),
-                    alignment: Alignment.center,
-                    child: Visibility(
-                        visible: backButton ?? false,
-                        child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: backButttonFunction,
-                            child: const Icon(
-                              FontAwesomeIcons.arrowLeftLong,
-                              size: 20,
-                            ))),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.all(15),
-                    child: Text(title!,
-                        style: Theme.of(context).textTheme.headlineSmall!),
-                  ),
-                  Container(
-                    width: size.width * 0.1,
-                    alignment: Alignment.center,
-                    // padding: const EdgeInsets.all(15),
-                  ),
-                ],
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: size.width * 0.1,
+                  // padding: const EdgeInsets.all(15),
+                  alignment: Alignment.center,
+                  child: Visibility(
+                      visible: backButton ?? false,
+                      child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: backButttonFunction,
+                          child: const Icon(
+                            FontAwesomeIcons.arrowLeftLong,
+                            size: 20,
+                          ))),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(15),
+                  child: Text(title!,
+                      style: Theme.of(context).textTheme.headlineSmall!),
+                ),
+                Container(
+                  width: size.width * 0.1,
+                  alignment: Alignment.center,
+                  // padding: const EdgeInsets.all(15),
+                ),
+              ],
             ),
           ),
-          Container(
+          SizedBox(
             height: size.height * 0.3,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.contain,
-                image: AssetImage("assets/images/logo.png"),
-              ),
-            ),
+            child: Utils.mainlogo 
           ),
           Container(
             height: size.height * 0.48,
