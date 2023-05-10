@@ -28,8 +28,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   void _onLoginFormSubmitted(
       LoginFormSubmitted event, Emitter<LoginState> emit) async {
-    print("Form Submitted");
-
     emit(state.copyWith(verificationStatus: VerificationStatus.initial));
 
     if (!state.isEmailValid) {
@@ -60,7 +58,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           errorText: "Unverified User",
         ));
       } else if (loginResponse["verification"] == true) {
-        print(loginResponse);
         if (loginResponse["two_fa_required"] == true) {
           emit(state.copyWith(verificationStatus: VerificationStatus.twofa));
         } else {
@@ -70,7 +67,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         }
       }
     } catch (e) {
-      print(e);
       emit(state.copyWith(
         errorText: "Email or Password incorrect!",
         verificationStatus: VerificationStatus.error,
@@ -80,7 +76,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   void _onResetLogin(ResetLogin event, Emitter<LoginState> emit) {
-    print("Login Resetted");
     emit(const LoginState());
   }
 }

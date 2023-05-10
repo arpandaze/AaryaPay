@@ -35,22 +35,25 @@ class QrScanScreen extends StatelessWidget {
       builder: (context, state) {
         return Stack(
           children: [
-            QRView(
-              key: context.read<QrScannerBloc>().qrKey,
-              onQRViewCreated: (controller) =>
-                  controller.scannedDataStream.listen(
-                (data) {
-                  context.read<QrScannerBloc>().add(QrCodeScanned(data.code!));
-                },
-              ),
-              overlay: QrScannerOverlayShape(
-                borderColor: Theme.of(context).colorScheme.background,
-                borderRadius: 34,
-                borderWidth: 10,
-                cutOutSize: size.width * 0.7,
+            Container(
+              child: QRView(
+                key: context.read<QrScannerBloc>().qrKey,
+                onQRViewCreated: (controller) =>
+                    controller.scannedDataStream.listen((data) {
+                  context
+                      .read<QrScannerBloc>()
+                      .add(QrCodeScanned(data.rawBytes!));
+                }),
+                overlay: QrScannerOverlayShape(
+                    borderColor: Theme.of(context).colorScheme.background,
+                    borderRadius: 34,
+                    borderWidth: 10,
+                    cutOutSize: (size.width < 400 || size.height < 400)
+                        ? 150.0
+                        : 300.0),
               ),
             ),
-            Text(state.code ?? ""),
+            // Text(state.code ?? ""),
             Column(
               children: <Widget>[
                 Row(
@@ -83,11 +86,13 @@ class QrScanScreen extends StatelessWidget {
                         ),
                   ),
                 ),
-                Text(
-                  "to Pay",
-                  style: Theme.of(context).textTheme.displaySmall!.merge(
-                      const TextStyle(height: 1.5).merge(TextStyle(
-                          color: Theme.of(context).colorScheme.background))),
+                Container(
+                  child: Text(
+                    "to Pay",
+                    style: Theme.of(context).textTheme.displaySmall!.merge(
+                        const TextStyle(height: 1.5).merge(TextStyle(
+                            color: Theme.of(context).colorScheme.background))),
+                  ),
                 ),
               ],
             ),

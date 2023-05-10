@@ -61,6 +61,7 @@ func InitProfileRoutes(routeGroup *gin.RouterGroup) {
 	updateProfileController := new(profile.UpdateProfileController)
 
 	routeGroup.GET("", retrieveProfileController.GetProfile)
+	routeGroup.GET("/:id", retrieveProfileController.GetSpecificProfile)
 	routeGroup.PATCH("", updateProfileController.UpdateProfile)
 	routeGroup.PATCH("/photo", updateProfileController.UpdateProfilePhoto)
 }

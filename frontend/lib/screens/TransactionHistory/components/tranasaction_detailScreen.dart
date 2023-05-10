@@ -1,15 +1,21 @@
 import 'package:aaryapay/components/CustomActionButton.dart';
-import 'package:aaryapay/components/CustomStatusButton.dart';
 import 'package:aaryapay/helper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:libaaryapay/libaaryapay.dart';
+import 'package:intl/intl.dart';
 
 class TransactionDetailsScreen extends StatelessWidget {
+  final Map<String, dynamic>? transactionItem;
+  final String? recieverName;
+  final String? senderName;
+
   const TransactionDetailsScreen({
     Key? key,
+    this.transactionItem,
+    this.recieverName,
+    this.senderName,
   }) : super(key: key);
+  //only for formatting
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +33,26 @@ class TransactionDetailsScreen extends StatelessWidget {
   }
 
   Widget body(Size size, BuildContext context) {
+    var generationDate = DateTime.fromMillisecondsSinceEpoch(
+        int.parse(transactionItem!["generation_time"].toString()) * 1000,
+        isUtc: true);
+
+    var verificationDate = DateTime.fromMillisecondsSinceEpoch(
+        int.parse(transactionItem!["verification_time"].toString()) * 1000,
+        isUtc: true);
+
+    // var todayDate = todayDateObj.millisecondsSinceEpoch.toInt() ~/ 1000;
+
+    //only for formatting
+    var verificationDateFormattedString =
+        DateFormat.yMMMMd().format(verificationDate.toLocal());
+    var verificationTimeFormattedString =
+        DateFormat.jm().format(verificationDate.toLocal());
+    var generationDateFormattedString =
+        DateFormat.yMMMMd().format(generationDate.toLocal());
+    var generationTimeFormattedString =
+        DateFormat.jm().format(generationDate.toLocal());
+
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -103,7 +129,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 5, vertical: 10),
                             child: Text(
-                              "250.00",
+                              transactionItem!["amount"].toString(),
                               style: Theme.of(context)
                                   .textTheme
                                   .labelLarge!
@@ -132,7 +158,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Transaction Number",
+                                  "Transaction No.",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
@@ -144,7 +170,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  "Initiated Mode",
+                                  "Initiated Time",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
@@ -156,19 +182,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  "Initiated Date/Time",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .merge(
-                                        const TextStyle(
-                                          height: 3.0,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                ),
-                                Text(
-                                  "Verification Date/Time",
+                                  "Verification Time",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
@@ -185,7 +199,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  "1x09384852",
+                                  transactionItem!["id"].substring(0, 8),
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
@@ -198,7 +212,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  "Offline",
+                                  "$generationDateFormattedString, $generationTimeFormattedString",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
@@ -211,20 +225,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  "May 2, 2023, 5:45 pm",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .merge(
-                                        const TextStyle(
-                                          height: 3.0,
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                ),
-                                Text(
-                                  "May 2, 2023, 5:45 pm",
+                                  "$verificationDateFormattedString, $verificationTimeFormattedString",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
@@ -250,7 +251,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Sender Id",
+                                  "Sender ID",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
@@ -272,7 +273,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  "Receiver Id",
+                                  "Receiver ID",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
@@ -301,7 +302,8 @@ class TransactionDetailsScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  "daze@test.com",
+                                  transactionItem!["sender_id"]
+                                      .substring(0, 13),
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
@@ -313,7 +315,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  "Arpan Koirala",
+                                  senderName ?? "__",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
@@ -325,7 +327,8 @@ class TransactionDetailsScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  "leo@test.com",
+                                  transactionItem!["receiver_id"]
+                                      .substring(0, 13),
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
@@ -337,7 +340,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  "Leo Gupta",
+                                  recieverName ?? "__",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!

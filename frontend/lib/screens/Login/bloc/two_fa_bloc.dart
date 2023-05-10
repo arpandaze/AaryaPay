@@ -5,7 +5,7 @@ import 'package:aaryapay/constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:libaaryapay/BKVC.dart';
+import 'package:libaaryapay/bkvc.dart';
 
 part 'two_fa_event.dart';
 part 'two_fa_state.dart';
@@ -33,18 +33,12 @@ class TwoFaBloc extends Bloc<TwoFaEvent, TwoFaState> {
       "Content-Type": "application/json"
     };
 
-    print(headers);
-
     final body = {
       "passcode": state.twoFACode,
     };
-    print(body);
     emit(state.copyWith(status: FAStatus.onprocess));
     var response =
         await http.post(url, headers: headers, body: jsonEncode(body));
-
-    print(response.statusCode);
-    print(response.body);
 
     if (response.statusCode == 202) {
       var decodedResponse =

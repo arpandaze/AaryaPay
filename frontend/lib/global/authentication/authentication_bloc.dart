@@ -22,23 +22,19 @@ class AuthenticationBloc
   }
 
   void _onLoggedIn(LoggedIn event, Emitter<AuthenticationState> emit) async {
-    // print("On Logged in Event Triggered!");
     var nauthState = await AuthenticationState.load();
     emit(nauthState);
   }
 
   void _onLoadAuthStatus(
       LoadAuthStatus event, Emitter<AuthenticationState> emit) async {
-    // print("On Authentication State Event Triggered!");
     emit(await AuthenticationState.load());
   }
 
   void _onLoggedOut(LoggedOut event, Emitter<AuthenticationState> emit) async {
-    var response = await authRepo.logout() as Map<String, dynamic>;
-    print(state.status);
+    await authRepo.logout() as Map<String, dynamic>;
 
     emit(await AuthenticationState.load());
-    print(state.status);
   }
 
   void _onTwoFA(TwoFA event, Emitter<AuthenticationState> emit) async {
