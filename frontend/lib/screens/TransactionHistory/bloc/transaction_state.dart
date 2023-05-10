@@ -1,4 +1,4 @@
-part of 'transcation_bloc.dart';
+part of 'transaction_bloc.dart';
 
 class TranscationState extends Equatable {
   final bool loaded;

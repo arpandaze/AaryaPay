@@ -1,6 +1,6 @@
 import 'package:aaryapay/components/TransactionsCard.dart';
 import 'package:aaryapay/helper/utils.dart';
-import 'package:aaryapay/screens/TransactionHistory/bloc/transcation_bloc.dart';
+import 'package:aaryapay/screens/TransactionHistory/bloc/transaction_bloc.dart';
 import 'package:aaryapay/screens/TransactionHistory/components/transaction_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
