@@ -59,7 +59,7 @@ class ReceiverConfirmation extends StatelessWidget {
           children: [
             Container(
               margin: const EdgeInsets.only(top: 20),
-              child: QrImage(
+              child: QrImageView(
                 data:
                     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
                 size: 240,
