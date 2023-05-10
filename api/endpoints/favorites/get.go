@@ -23,6 +23,7 @@ func (RetrieveFavoriteController) RetrieveFavorites(c *gin.Context) {
 		)
 		msg := "Invalid or expired session!"
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
+		return
 	}
 
 	var exists bool
@@ -38,7 +39,7 @@ func (RetrieveFavoriteController) RetrieveFavorites(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"msg": msg})
 		return
 	}
-	
+
 	query := `SELECT u.id, u.first_name, u.middle_name, u.last_name, u.email, f.date_added
 	FROM Users u
 	JOIN Favorites f ON u.id = f.favorite_account

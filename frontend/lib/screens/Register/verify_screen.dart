@@ -1,11 +1,10 @@
-import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/screens/Register/bloc/register_bloc.dart';
-import 'package:aaryapay/screens/Register/completed_screen.dart';
 import 'package:aaryapay/screens/Register/components/CustomRegisterButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:icons_plus/icons_plus.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'dart:math' as math;
 
 class VerifyScreen extends StatelessWidget {
   const VerifyScreen({Key? key}) : super(key: key);
@@ -20,46 +19,53 @@ class VerifyScreen extends StatelessWidget {
             children: [
               SizedBox(
                 height: size.height * 0.1,
-                child: Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        width: size.width * 0.1,
-                        // padding: const EdgeInsets.all(15),
-                        alignment: Alignment.center,
-                        child: Visibility(
-                            visible: true,
-                            child: GestureDetector(
-                                behavior: HitTestBehavior.opaque,
-                                onTap: () => {
-                                      context
-                                          .read<RegisterBloc>()
-                                          .add(PreviousPage()),
-                                      context
-                                          .read<RegisterBloc>()
-                                          .add(VerifyChanged(token: ""))
-                                    },
-                                child: const Icon(
-                                  FontAwesome.arrow_left_long,
-                                  size: 20,
-                                ))),
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Visibility(
+                        visible: true,
+                        child: GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color:
+                                      Theme.of(context).colorScheme.background),
+                            ),
+                            padding: const EdgeInsets.all(15),
+                            child: Transform.rotate(
+                              angle: -math.pi,
+                              child: SvgPicture.asset(
+                                "assets/icons/arrow2.svg",
+                                width: 15,
+                                height: 15,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                      Container(
-                        alignment: Alignment.center,
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Container(
                         padding: const EdgeInsets.all(15),
-                        child: Text("Verify Your Account",
+                        child: Text("Verify your Account",
                             style: Theme.of(context).textTheme.headlineSmall!),
                       ),
-                      Container(
-                        width: size.width * 0.1,
-                        alignment: Alignment.center,
-                        // padding: const EdgeInsets.all(15),
-                        child: Text("3/3",
-                            style: Theme.of(context).textTheme.titleSmall!),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                        child: SizedBox(
+                          // padding: const EdgeInsets.all(15),
+                          child: Text("3/3",
+                              style: Theme.of(context).textTheme.titleSmall!),
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
               Container(
@@ -141,7 +147,8 @@ class VerifyScreen extends StatelessWidget {
                           fieldHeight: 65,
                           fieldWidth: 50,
                           inactiveColor: Theme.of(context).colorScheme.primary,
-                          activeFillColor: Colors.white,
+                          activeFillColor:
+                              Theme.of(context).colorScheme.background,
                         ),
                         // activeColor: Theme.of(context).colorScheme.secondary),
                         animationDuration: const Duration(milliseconds: 300),

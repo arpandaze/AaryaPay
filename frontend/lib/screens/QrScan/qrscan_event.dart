@@ -6,13 +6,13 @@ abstract class QrScannerEvent extends Equatable {
 }
 
 class QrCodeScanned extends QrScannerEvent {
-  final String code;
+  final List<int> code;
   QrCodeScanned(this.code);
 
   @override
   List<Object> get props => [code];
 }
 
-class QrScanStarted extends QrScannerEvent{}
+class QrScanStarted extends QrScannerEvent {}
 
-class QrScanStopped extends QrScannerEvent{}
+class QrScanStopped extends QrScannerEvent {}

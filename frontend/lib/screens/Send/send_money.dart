@@ -1,4 +1,3 @@
-import 'dart:ffi' as ffi;
 import 'package:aaryapay/components/CustomCircularAvatar.dart';
 import 'package:aaryapay/screens/Send/bloc/send_money_bloc.dart';
 import 'package:aaryapay/screens/Send/components/balance_box.dart';
@@ -6,9 +5,9 @@ import 'package:aaryapay/screens/Send/components/numpad_button.dart';
 import 'package:aaryapay/screens/Send/payment_complete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:math' as math;
 
 class SendMoney extends StatelessWidget {
   const SendMoney({Key? key}) : super(key: key);
@@ -16,17 +15,18 @@ class SendMoney extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        body: SafeArea(
-          top: true,
-          bottom: true,
-          left: true,
-          right: true,
-          child: BlocProvider(
-            create: (context) => SendMoneyBloc(),
-            child: body(size, context),
-          ),
-        ));
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: SafeArea(
+        top: true,
+        bottom: true,
+        left: true,
+        right: true,
+        child: BlocProvider(
+          create: (context) => SendMoneyBloc(),
+          child: body(size, context),
+        ),
+      ),
+    );
   }
 
   Widget body(Size size, BuildContext context) {
@@ -35,32 +35,42 @@ class SendMoney extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Container(
+            SizedBox(
+              height: size.height * 0.1,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
                         padding: const EdgeInsets.all(15),
-                        alignment: Alignment.centerLeft,
-                        child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () => Navigator.pop(context),
-                            child: const Icon(FontAwesomeIcons.arrowLeftLong)),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Theme.of(context).colorScheme.background),
+                        ),
+                        child: Transform.rotate(
+                          angle: -math.pi,
+                          child: SvgPicture.asset(
+                            "assets/icons/arrow2.svg",
+                            width: 15,
+                            height: 15,
+                          ),
+                        ),
                       ),
-                      Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.all(15),
-                        child: Text("Send Money",
-                            style: Theme.of(context).textTheme.headlineMedium!),
-                      ),
-                    ],
+                    ),
                   ),
-                )
-              ],
+                  Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      padding: const EdgeInsets.all(15),
+                      child: Text("Send Money",
+                          style: Theme.of(context).textTheme.titleLarge),
+                    ),
+                  ),
+                ],
+              ),
             ),
             const BalanceBox(),
             Container(
@@ -84,7 +94,7 @@ class SendMoney extends StatelessWidget {
                         Color(0xff274233), BlendMode.srcIn),
                   ),
                   Container(
-                      margin: EdgeInsets.only(left: 15),
+                      margin: const EdgeInsets.only(left: 15),
                       child: Text("${state.displayAmount}",
                           style: Theme.of(context)
                               .textTheme
@@ -100,8 +110,8 @@ class SendMoney extends StatelessWidget {
             Expanded(
               child: Container(
                 width: size.width,
-                margin: EdgeInsets.only(top: 20),
-                padding: EdgeInsets.all(10),
+                margin: const EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   border: Border.all(
                       color: Theme.of(context).colorScheme.outline, width: 1.5),
@@ -126,19 +136,20 @@ class SendMoney extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
-                                  margin: EdgeInsets.only(left: 10, bottom: 10),
+                                  margin: const EdgeInsets.only(
+                                      left: 10, bottom: 10),
                                   child: Text("Send to",
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleSmall),
                                 ),
                                 Container(
-                                  margin: EdgeInsets.only(left: 10),
+                                  margin: const EdgeInsets.only(left: 10),
                                   child: Text("Mr. Elon Musk",
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleMedium!
-                                          .merge(TextStyle(
+                                          .merge(const TextStyle(
                                               fontWeight: FontWeight.w700))),
                                 )
                               ],
@@ -148,7 +159,7 @@ class SendMoney extends StatelessWidget {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
+                        children: const [
                           NumPadButton(text: '7'),
                           NumPadButton(text: '8'),
                           NumPadButton(text: '9'),
@@ -157,7 +168,7 @@ class SendMoney extends StatelessWidget {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
+                        children: const [
                           NumPadButton(text: '4'),
                           NumPadButton(text: '5'),
                           NumPadButton(text: '6'),
@@ -166,7 +177,7 @@ class SendMoney extends StatelessWidget {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
+                        children: const [
                           NumPadButton(text: '1'),
                           NumPadButton(text: '2'),
                           NumPadButton(text: '3'),
@@ -176,18 +187,19 @@ class SendMoney extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          NumPadButton(text: '.'),
-                          NumPadButton(text: '0'),
+                          const NumPadButton(text: '.'),
+                          const NumPadButton(text: '0'),
                           NumPadButton(
                             icon: SvgPicture.asset("assets/icons/erase.svg",
                                 height: 15,
                                 width: 15,
-                                colorFilter: const ColorFilter.mode(
-                                    Colors.white, BlendMode.srcIn)),
+                                colorFilter: ColorFilter.mode(
+                                    Theme.of(context).colorScheme.background,
+                                    BlendMode.srcIn)),
                             text: "erase",
                             color: Theme.of(context).colorScheme.outline,
                           ),
-                          NumPadButton(text: '='),
+                          const NumPadButton(text: '='),
                         ],
                       ),
                       CustomActionButton(

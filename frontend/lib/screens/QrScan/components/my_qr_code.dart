@@ -1,4 +1,6 @@
 import 'dart:math' as math;
+import 'dart:typed_data';
+import 'package:aaryapay/components/QRImage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -34,7 +36,8 @@ class MyQRCode extends StatelessWidget {
                 child: Text(
                   "My QR Code",
                   style: Theme.of(context).textTheme.headlineSmall!.merge(
-                        const TextStyle(color: Colors.white),
+                        TextStyle(
+                            color: Theme.of(context).colorScheme.background),
                       ),
                 ),
               ),
@@ -45,8 +48,9 @@ class MyQRCode extends StatelessWidget {
                   icon: SvgPicture.asset('assets/icons/arrow3.svg',
                       width: 20,
                       height: 20,
-                      colorFilter: const ColorFilter.mode(
-                          Colors.white, BlendMode.srcIn)),
+                      colorFilter: ColorFilter.mode(
+                          Theme.of(context).colorScheme.background,
+                          BlendMode.srcIn)),
                 ),
               ),
             ],
@@ -54,24 +58,23 @@ class MyQRCode extends StatelessWidget {
         ),
         Container(
           margin: const EdgeInsets.only(top: 20, bottom: 15),
-          child: QrImage(
-            data:
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
-            size: 250,
+          child: QRView(
+            data: Uint8List.fromList([1, 2, 3, 4]),
           ),
         ),
         Container(
           margin: const EdgeInsets.only(bottom: 10),
           child: Text(
             "AaryaPay Nepali",
-            style: Theme.of(context).textTheme.titleMedium!.merge(const TextStyle(fontWeight: FontWeight.w700)),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium!
+                .merge(const TextStyle(fontWeight: FontWeight.w700)),
           ),
         ),
-        Text(
-          "Scan QR Code to receive Money",
-          style: Theme.of(context).textTheme.titleMedium!,
-          textAlign: TextAlign.center
-        )
+        Text("Scan QR Code to receive Money",
+            style: Theme.of(context).textTheme.titleMedium!,
+            textAlign: TextAlign.center)
       ]),
     );
   }

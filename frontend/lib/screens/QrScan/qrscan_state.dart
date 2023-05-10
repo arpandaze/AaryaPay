@@ -1,12 +1,12 @@
 part of 'qrscan_bloc.dart';
 
 class QrScannerState extends Equatable {
-  final String? code;
+  final List<int>? code;
 
   const QrScannerState({this.code});
 
   QrScannerState copyWith({
-    String? code,
+    List<int>? code,
   }) {
     return QrScannerState(code: code ?? this.code);
   }

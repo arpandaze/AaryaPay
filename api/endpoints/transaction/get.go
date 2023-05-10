@@ -16,8 +16,10 @@ type TransactionRow struct {
 	ReceiverID       uuid.UUID            `db:"receiver_id" json:"receiver_id"`
 	Amount           float32              `db:"amount" json:"amount"`
 	GenerationTime   *utils.UnixTimestamp `db:"generation_time" json:"generation_time"`
-	ReceivedTime     *utils.UnixTimestamp `db:"received_time" json:"received_time"`
 	VerificationTime *utils.UnixTimestamp `db:"verification_time" json:"verification_time"`
+	Signature        string               `db:"signature" json:"signature"`
+	SenderTVC        string               `db:"sender_tvc" json:"sender_tvc"`
+	ReceiverTVC      string               `db:"receiver_tvc" json:"receiver_tvc"`
 }
 
 type TransactionRetrieve struct{}
@@ -35,7 +37,22 @@ func (TransactionRetrieve) Retrieve(c *gin.Context) {
 		return
 	}
 
-	var transactionHistory, queryErr = DB.Query("SELECT * FROM Transactions WHERE sender_id = $1 OR receiver_id = $1", user)
+	var transactionHistory, queryErr = DB.Query(`
+    SELECT 
+      id, 
+      sender_id, 
+      receiver_id, 
+      amount, 
+      generation_time, 
+      verification_time, 
+      signature, 
+      sender_tvc, 
+      receiver_tvc 
+    FROM 
+      Transactions 
+    WHERE 
+      sender_id = $1 OR receiver_id = $1
+    `, user)
 
 	if queryErr != nil {
 		l.Errorw("Failed to query transaction history!",
@@ -50,7 +67,7 @@ func (TransactionRetrieve) Retrieve(c *gin.Context) {
 	for transactionHistory.Next() {
 		var transaction TransactionRow
 
-		err = transactionHistory.Scan(&transaction.ID, &transaction.SenderID, &transaction.ReceiverID, &transaction.Amount, &transaction.GenerationTime, &transaction.ReceivedTime, &transaction.VerificationTime)
+		err = transactionHistory.Scan(&transaction.ID, &transaction.SenderID, &transaction.ReceiverID, &transaction.Amount, &transaction.GenerationTime, &transaction.VerificationTime, &transaction.Signature, &transaction.SenderTVC, &transaction.ReceiverTVC)
 
 		if err != nil {
 			l.Errorw("Failed to scan transaction!",

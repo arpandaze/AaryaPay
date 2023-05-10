@@ -1,14 +1,9 @@
 import 'package:aaryapay/components/AuthenticationStatusWrapper.dart';
-import 'package:aaryapay/constants.dart';
-import 'package:aaryapay/global/authentication/authentication_bloc.dart';
-import 'package:aaryapay/screens/Home/home_screen.dart';
 import 'package:aaryapay/screens/Register/register_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:aaryapay/components/CustomActionButton.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:aaryapay/screens/Login/bloc/login_bloc.dart';
+import 'dart:math' as math;
 
 class LoginWrapper extends StatelessWidget {
   const LoginWrapper(
@@ -48,35 +43,33 @@ class LoginWrapper extends StatelessWidget {
         children: [
           SizedBox(
             height: size.height * 0.1,
-            child: Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: size.width * 0.1,
-                    // padding: const EdgeInsets.all(15),
-                    alignment: Alignment.center,
-                    child: Visibility(
-                        visible: backButton ?? false,
-                        child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: backButttonFunction,
-                            child: const Icon(
-                              FontAwesomeIcons.arrowLeftLong,
-                              size: 20,
-                            ))),
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Visibility(
+                    visible: backButton ?? false,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Theme.of(context).colorScheme.background),
+                        ),
+                        padding: const EdgeInsets.all(15),
+                        child: Transform.rotate(
+                          angle: -math.pi,
+                          child: SvgPicture.asset(
+                            "assets/icons/arrow2.svg",
+                            width: 15,
+                            height: 15,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                  Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.all(15),
-                  ),
-                  Container(
-                    width: size.width * 0.1,
-                    alignment: Alignment.center,
-                    // padding: const EdgeInsets.all(15),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           Container(

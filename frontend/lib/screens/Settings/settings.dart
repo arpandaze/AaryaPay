@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/components/CustomArrowedButton.dart';
 import 'package:aaryapay/components/Wrapper.dart';
@@ -177,7 +176,6 @@ class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).colorScheme.background,
       child: body(context),
     );
   }

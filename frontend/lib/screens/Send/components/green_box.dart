@@ -49,7 +49,7 @@ class GreenBox extends StatelessWidget {
                   children: [
                     photo ??
                         const CustomWhiteCircularAvatar(
-                          size: 35,
+                          size: 30,
                           imageSrc: AssetImage("assets/images/pfp.jpg"),
                         ),
                     Padding(
@@ -64,18 +64,24 @@ class GreenBox extends StatelessWidget {
                               "Recipient",
                               style:
                                   Theme.of(context).textTheme.titleSmall!.merge(
-                                        const TextStyle(color: Colors.white),
+                                        TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .background),
                                       ),
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             width: 180,
                             child: Text(recipient,
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium!
                                     .merge(
-                                        const TextStyle(color: Colors.white))),
+                                        TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background))),
                           ),
                         ],
                       ),
@@ -86,35 +92,41 @@ class GreenBox extends StatelessWidget {
                     width: 25,
                     height: 25,
                     colorFilter:
-                        const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+                        ColorFilter.mode(
+                        Theme.of(context).colorScheme.background,
+                        BlendMode.srcIn)),
               ],
             ),
           ),
           Container(
             height: 100,
-            margin: EdgeInsets.fromLTRB(15, 0, 15, 0),
+            margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
+                    SizedBox(
                       width: 100,
                       child: Text(
                         "Date",
-                        style: Theme.of(context).textTheme.titleMedium!.merge(
-                              TextStyle(color: Colors.white),
+                        style: Theme.of(context).textTheme.bodyLarge!.merge(
+                              TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.background),
                             ),
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       width: 150,
                       child: Text(
                         date,
                         textAlign: TextAlign.right,
-                        style: Theme.of(context).textTheme.titleMedium!.merge(
-                              TextStyle(color: Colors.white),
+                        style: Theme.of(context).textTheme.bodyLarge!.merge(
+                              TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.background),
                             ),
                       ),
                     ),
@@ -123,23 +135,27 @@ class GreenBox extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
+                    SizedBox(
                       width: 80,
                       child: Text(
                         "Sender",
-                        style: Theme.of(context).textTheme.titleMedium!.merge(
-                              TextStyle(color: Colors.white),
+                        style: Theme.of(context).textTheme.bodyLarge!.merge(
+                              TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.background),
                             ),
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       width: 150,
                       child: Text(
                         "Susraya Bir Sing Tuladhar",
                         textAlign: TextAlign.right,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.titleMedium!.merge(
-                              TextStyle(color: Colors.white),
+                        style: Theme.of(context).textTheme.bodyLarge!.merge(
+                              TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.background),
                             ),
                       ),
                     ),
@@ -148,23 +164,27 @@ class GreenBox extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
+                    SizedBox(
                       width: 100,
                       child: Text(
                         "Sent Status",
-                        style: Theme.of(context).textTheme.titleMedium!.merge(
-                              TextStyle(color: Colors.white),
+                        style: Theme.of(context).textTheme.bodyLarge!.merge(
+                              TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.background),
                             ),
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       width: 150,
                       child: Text(
                         status,
                         textAlign: TextAlign.right,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.titleMedium!.merge(
-                              TextStyle(color: Colors.white),
+                        style: Theme.of(context).textTheme.bodyLarge!.merge(
+                              TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.background),
                             ),
                       ),
                     ),

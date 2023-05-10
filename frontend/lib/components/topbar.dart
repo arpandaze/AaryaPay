@@ -38,49 +38,52 @@ class TopBar extends StatelessWidget {
                       ),
                 ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: SvgPicture.asset(
                       "assets/icons/rupee.svg",
                       colorFilter:
-                          const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                      width: 25,
-                      height: 25,
-                      ),
+                           ColorFilter.mode(
+                          Theme.of(context).colorScheme.background,
+                          BlendMode.srcIn),
+                      width: 20,
+                      height: 20,
                     ),
-                    Container(
+                  ),
+                  SizedBox(
                     width: size.width * 0.45,
-                      child: Text(
+                    child: Text(
                       "233,124.45",
                       style: Theme.of(context).textTheme.labelLarge!.merge(
-                            TextStyle(
-                                color:
-                                    Theme.of(context).colorScheme.onPrimary)),
-                      ),
+                          TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary)),
                     ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
                     child: SvgPicture.asset(
                       "assets/icons/invisible.svg",
                       colorFilter:
-                          const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                          ColorFilter.mode(
+                          Theme.of(context).colorScheme.background,
+                          BlendMode.srcIn),
                       width: 22,
                       height: 22,
                     ),
                   ),
-                    // Container(
-                    //   margin: EdgeInsets.only(left: 10),
-                    //   child: ImageIcon(
-                    //     AssetImage("assets/icons/hide.png"),
-                    //     color: Theme.of(context).colorScheme.onPrimary,
-                    //   ),
-                    // )
-                  ],
-                ),
+                  // Container(
+                  //   margin: EdgeInsets.only(left: 10),
+                  //   child: ImageIcon(
+                  //     AssetImage("assets/icons/hide.png"),
+                  //     color: Theme.of(context).colorScheme.onPrimary,
+                  //   ),
+                  // )
+                ],
+              ),
               ],
             ),
             Stack(

@@ -10,7 +10,7 @@ class CustomWhiteCircularAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+          color: Theme.of(context).colorScheme.background,
           border: Border.all(color: Colors.black26),
           borderRadius: const BorderRadius.all(Radius.circular(50))),
       padding: const EdgeInsets.all(4),

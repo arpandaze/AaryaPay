@@ -1,12 +1,6 @@
 import 'package:aaryapay/components/CustomActionButton.dart';
-import 'package:aaryapay/screens/Home/home_screen.dart';
 import 'package:aaryapay/screens/Login/login_screen.dart';
-import 'package:aaryapay/screens/Login/welcome_screen.dart';
-import 'package:aaryapay/screens/Register/bloc/register_bloc.dart';
-import 'package:aaryapay/screens/Send/offline_send.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CompletedScreen extends StatelessWidget {
   const CompletedScreen({Key? key}) : super(key: key);
@@ -32,7 +26,7 @@ class CompletedScreen extends StatelessWidget {
           ),
           Container(
             height: size.height * 0.48,
-            padding: EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+            padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,

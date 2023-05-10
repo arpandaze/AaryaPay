@@ -87,8 +87,7 @@ class MidSection extends StatelessWidget {
                         .toList()
                         .reversed
                   else
-                    Text(
-                        "No Transaction History associated with the account was found.")
+                    const Text("Nothing to show yet")
                 ],
               ),
             ),
