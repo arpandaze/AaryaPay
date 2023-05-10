@@ -51,7 +51,7 @@ class TwoFactorAuthFirst extends StatelessWidget {
               children: [
                 //replace with new generated qr
                 state.isLoaded!
-                    ? QrImage(
+                    ? QrImageView(
                         data: state.uri!,
                         size: 250,
                       )

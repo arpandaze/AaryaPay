@@ -39,7 +39,9 @@ class QrScanScreen extends StatelessWidget {
                 key: context.read<QrScannerBloc>().qrKey,
                 onQRViewCreated: (controller) =>
                     controller.scannedDataStream.listen((data) {
-                  context.read<QrScannerBloc>().add(QrCodeScanned(data.code!));
+                  context
+                      .read<QrScannerBloc>()
+                      .add(QrCodeScanned(data.rawBytes!));
                 }),
                 overlay: QrScannerOverlayShape(
                     borderColor: Theme.of(context).colorScheme.background,
@@ -50,7 +52,7 @@ class QrScanScreen extends StatelessWidget {
                         : 300.0),
               ),
             ),
-            Text(state.code ?? ""),
+            // Text(state.code ?? ""),
             Column(
               children: <Widget>[
                 Row(
@@ -87,8 +89,7 @@ class QrScanScreen extends StatelessWidget {
                   child: Text(
                     "to Pay",
                     style: Theme.of(context).textTheme.displaySmall!.merge(
-                        const TextStyle(height: 1.5)
-                            .merge(TextStyle(
+                        const TextStyle(height: 1.5).merge(TextStyle(
                             color: Theme.of(context).colorScheme.background))),
                   ),
                 ),
