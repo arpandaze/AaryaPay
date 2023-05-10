@@ -86,13 +86,11 @@ class QrScanScreen extends StatelessWidget {
                         ),
                   ),
                 ),
-                Container(
-                  child: Text(
-                    "to Pay",
-                    style: Theme.of(context).textTheme.displaySmall!.merge(
-                        const TextStyle(height: 1.5).merge(TextStyle(
-                            color: Theme.of(context).colorScheme.background))),
-                  ),
+                Text(
+                  "to Pay",
+                  style: Theme.of(context).textTheme.displaySmall!.merge(
+                      const TextStyle(height: 1.5).merge(TextStyle(
+                          color: Theme.of(context).colorScheme.background))),
                 ),
               ],
             ),
