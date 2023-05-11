@@ -22,7 +22,8 @@ class TranscationBloc extends Bloc<TranscationEvent, TranscationState> {
 
   void _onClearLoadedUser(
       ClearLoadedUser event, Emitter<TranscationState> emit) async {
-    emit(state.copywith(senderName: null, recieverName: null, item: null));
+    emit(TranscationState(
+        transactionHistory: state.transactionHistory, loaded: true));
   }
 
   void _onLoadParticularUser(
@@ -39,9 +40,7 @@ class TranscationBloc extends Bloc<TranscationEvent, TranscationState> {
       if (decodedData?["reciever"]["middle_name"] != "") {
         rMidName = decodedData?["reciever"]["middle_name"] + " ";
       }
-      print(
-        "${decodedData?["sender"]["first_name"]} $sMidName${decodedData?["sender"]["last_name"]}",
-      );
+
       emit(
         state.copywith(
           senderName:
