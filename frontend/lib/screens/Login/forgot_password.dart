@@ -1,8 +1,13 @@
 import 'package:aaryapay/components/CustomTextField.dart';
+import 'package:aaryapay/components/SnackBarService.dart';
+import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/helper/utils.dart';
+import 'package:aaryapay/screens/Login/bloc/forgot_bloc.dart';
 import 'package:aaryapay/screens/Login/components/login_wrapper.dart';
 import 'package:aaryapay/screens/Login/reset_password.dart';
+import 'package:aaryapay/screens/Register/bloc/register_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ForgotPassword extends StatelessWidget {
@@ -11,20 +16,44 @@ class ForgotPassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return LoginWrapper(
-      backButton: true,
-      actionButtonLabel: "SUBMIT",
-      backButttonFunction: () => {Utils.mainAppNav.currentState!.pop(context)},
-      actionButtonFunction: () => {
-        Utils.mainAppNav.currentState!.push(
-          PageRouteBuilder(
-            pageBuilder: (context, animation1, animation2) => const ResetPassword(),
-            transitionDuration: Duration.zero,
-            reverseTransitionDuration: Duration.zero,
-          ),
-        ),
-      },
-      children: _midsection(context, size),
+    return BlocProvider(
+      create: (context) => ForgotBloc(),
+      child: BlocConsumer<ForgotBloc, ForgotState>(
+        listener: (context, state) {
+          if (state.status == ForgotStatus.error) {
+            SnackBarService.stopSnackBar();
+            SnackBarService.showSnackBar(
+              content: state.errorText,
+            );
+          }
+          if (state.status == ForgotStatus.success && state.userid != null) {
+            Utils.mainAppNav.currentState!.push(
+              PageRouteBuilder(
+                pageBuilder: (context, animation1, animation2) =>
+                    ResetPassword(userid: state.userid),
+                transitionDuration: Duration.zero,
+                reverseTransitionDuration: Duration.zero,
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          return LoginWrapper(
+            forgotStatus: state.status,
+            backButton: true,
+            actionButtonLabel: "Submit",
+            backButttonFunction: () =>
+                {Utils.mainAppNav.currentState!.pop(context)},
+            actionButtonFunction: () => {
+              context.read<ForgotBloc>().add(
+                    SendEmail(),
+                  ),
+              //
+            },
+            children: _midsection(context, size),
+          );
+        },
+      ),
     );
   }
 
@@ -50,6 +79,8 @@ class ForgotPassword extends StatelessWidget {
               ),
         ),
         CustomTextField(
+          onChanged: (value) =>
+              context.read<ForgotBloc>().add(ForgotEmailChanged(email: value)),
           padding: const EdgeInsets.only(top: 20),
           width: size.width,
           prefixIcon: Icon(

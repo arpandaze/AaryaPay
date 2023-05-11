@@ -1,29 +1,58 @@
+import 'package:aaryapay/components/SnackBarService.dart';
+import 'package:aaryapay/constants.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Home/home_screen.dart';
+import 'package:aaryapay/screens/Login/bloc/forgot_bloc.dart';
 import 'package:aaryapay/screens/Login/components/login_wrapper.dart';
+import 'package:aaryapay/screens/Login/welcome_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class OTPScreen extends StatelessWidget {
-  const OTPScreen({Key? key}) : super(key: key);
-
+  const OTPScreen({Key? key, this.password, this.userid}) : super(key: key);
+  final String? userid;
+  final String? password;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return LoginWrapper(
-      backButton: true,
-      actionButtonLabel: "SUBMIT",
-      backButttonFunction: () => {Navigator.pop(context)},
-      actionButtonFunction: () => {
-        Navigator.of(context).push(
-          PageRouteBuilder(
-            pageBuilder: (context, animation1, animation2) =>
-                const HomeScreen(),
-            transitionDuration: Duration.zero,
-            reverseTransitionDuration: Duration.zero,
-          ),
-        ),
-      },
-      children: _midsection(context, size),
+    return BlocProvider(
+      create: (context) => ForgotBloc(),
+      child: BlocConsumer<ForgotBloc, ForgotState>(
+        listener: (context, state) {
+          if (state.status == ForgotStatus.error) {
+            SnackBarService.stopSnackBar();
+            SnackBarService.showSnackBar(
+              content: state.errorText,
+            );
+          }
+          if (state.status == ForgotStatus.otpSuccess) {
+            Utils.mainAppNav.currentState!.push(
+              PageRouteBuilder(
+                pageBuilder: (context, animation1, animation2) =>
+                    const WelcomeScreen(),
+                transitionDuration: Duration.zero,
+                reverseTransitionDuration: Duration.zero,
+              ),
+            );
+          }
+          // TODO: implement listener
+        },
+        builder: (context, state) {
+          return LoginWrapper(
+            forgotStatus: state.status,
+            backButton: true,
+            actionButtonLabel: "Submit",
+            backButttonFunction: () => {Navigator.pop(context)},
+            actionButtonFunction: () => {
+              context.read<ForgotBloc>().add(
+                    SubmitOTP(userid: userid, password: password),
+                  )
+            },
+            children: _midsection(context, size),
+          );
+        },
+      ),
     );
   }
 
@@ -66,6 +95,7 @@ class OTPScreen extends StatelessWidget {
           ],
         ),
         PinCodeTextField(
+          keyboardType: TextInputType.number,
           length: 6,
           hapticFeedbackTypes: HapticFeedbackTypes.light,
           textStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
@@ -85,7 +115,9 @@ class OTPScreen extends StatelessWidget {
           // enableActiveFill: true,
           // errorAnimationController: errorController.add(ErrorAnimationType.shake);,
           // controller: textEditingController,
-          onCompleted: (v) {},
+          onCompleted: (value) {
+            context.read<ForgotBloc>().add(TokenChanged(otpToken: value));
+          },
           onChanged: (value) {
             // setState(() {
             //   currentText = value;
