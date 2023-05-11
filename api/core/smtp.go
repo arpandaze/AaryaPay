@@ -136,7 +136,7 @@ func SendResetPasswordEmail(c *gin.Context, user *CommonUser) (bool, error) {
 		Link:      token,
 	}
 
-	if err := re.ParseTemplate(c, fmt.Sprintf("%s/reset-password.html", Configs.EMAIL_TEMPLATES_DIR), templateData); err == nil {
+	if err := re.ParseTemplate(c, fmt.Sprintf("%s/reset-password.html", Configs.TEMPLATE_DIR()), templateData); err == nil {
 		res, resErr := SendEmail(c, re)
 		if res {
 			return true, resErr
