@@ -32,3 +32,10 @@ enum MessageType {
   error,
   success,
 }
+
+enum LoginStatus {
+  initial,
+  onprocess,
+  success,
+  faliure,
+}

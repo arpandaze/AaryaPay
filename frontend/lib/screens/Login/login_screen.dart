@@ -65,6 +65,7 @@ class LoginScreen extends StatelessWidget {
               actionButtonFunction: () =>
                   context.read<LoginBloc>().add(LoginFormSubmitted()),
               children: _midsection(context, size),
+              status: state.status,
             );
           },
         ),
