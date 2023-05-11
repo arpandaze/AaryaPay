@@ -39,3 +39,12 @@ enum LoginStatus {
   success,
   faliure,
 }
+
+enum ForgotStatus {
+  initial,
+  error,
+  success,
+  onprocess,
+  otpOnProcess,
+  otpSuccess,
+}
