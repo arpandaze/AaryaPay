@@ -86,7 +86,7 @@ func PopulateTransactions() {
 
 			sampleSenderBKVC.Sign(c)
 
-			sampleTransaction := payloads.Transaction{
+			sampleTransaction := payloads.TransactionAuthorizationMessage{
 				Amount:    SAMPLE_TRANSACTIONS[transactionIdx].amount,
 				To:        receiver.id,
 				BKVC:      sampleSenderBKVC,
@@ -95,15 +95,17 @@ func PopulateTransactions() {
 			sampleTransaction.Sign(c, privKey)
 
 			sampleSenderTVC := payloads.TransactionVerificationCertificate{
-				TransactionID:        SAMPLE_TRANSACTIONS[transactionIdx].id,
-				BKVC:                 sampleSenderBKVC,
-				TransactionSignature: sampleTransaction.Signature,
+				Amount:    SAMPLE_TRANSACTIONS[transactionIdx].amount,
+				From:      receiver.id,
+				BKVC:      sampleSenderBKVC,
+				TimeStamp: SAMPLE_TRANSACTIONS[transactionIdx].generation_time,
 			}
 
 			sampleReceiverTVC := payloads.TransactionVerificationCertificate{
-				TransactionID:        SAMPLE_TRANSACTIONS[transactionIdx].id,
-				BKVC:                 sampleReceiverBKVC,
-				TransactionSignature: sampleTransaction.Signature,
+				Amount:    SAMPLE_TRANSACTIONS[transactionIdx].amount,
+				From:      receiver.id,
+				BKVC:      sampleReceiverBKVC,
+				TimeStamp: SAMPLE_TRANSACTIONS[transactionIdx].generation_time,
 			}
 
 			sampleSenderTVC.Sign(c)

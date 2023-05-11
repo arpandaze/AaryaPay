@@ -30,7 +30,7 @@ payloadfromBase64(String base64) {
 
 payloadfromBytes(Uint8List bytes) {
   switch (bytes[0]) {
-    case TRANSACTION_MESSAGE_TYPE:
+    case TAM_MESSAGE_TYPE:
       return Transaction.fromBytes(bytes);
     case BKVC_MESSAGE_TYPE:
       return BalanceKeyVerificationCertificate.fromBytes(bytes);

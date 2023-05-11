@@ -69,7 +69,7 @@ func (SubmitController) Submit(c *gin.Context) {
 			continue
 		}
 
-		transaction, err := TransactionFromBytes(c, transactionsBytes)
+		transaction, err := TAMFromBytes(c, transactionsBytes)
 		if err != nil {
 			l.Errorw("Failed to construct transaction from bytes!",
 				"error", err,
@@ -292,10 +292,11 @@ func (SubmitController) Submit(c *gin.Context) {
 		senderBKVC.Sign(c)
 
 		senderTVC := TransactionVerificationCertificate{
-			MessageType:          TVCMessageType,
-			TransactionSignature: transaction.Signature,
-			TransactionID:        transactionId,
-			BKVC:                 senderBKVC,
+			MessageType: TVCMessageType,
+			Amount:      transaction.Amount,
+			From:        transaction.BKVC.UserID,
+			TimeStamp:   transaction.TimeStamp,
+			BKVC:        senderBKVC,
 		}
 
 		senderTVC.Sign(c)
@@ -340,10 +341,11 @@ func (SubmitController) Submit(c *gin.Context) {
 		}
 
 		receiverTVC := TransactionVerificationCertificate{
-			MessageType:          TVCMessageType,
-			TransactionSignature: transaction.Signature,
-			TransactionID:        transactionId,
-			BKVC:                 receiverBKVC,
+			MessageType: TVCMessageType,
+			Amount:      transaction.Amount,
+			From:        transaction.BKVC.UserID,
+			TimeStamp:   transaction.TimeStamp,
+			BKVC:        receiverBKVC,
 		}
 
 		receiverTVC.Sign(c)

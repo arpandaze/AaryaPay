@@ -29,7 +29,7 @@ class Transaction {
   Uint8List toBytes() {
     final buffer = Uint8List(210);
 
-    buffer[0] = TRANSACTION_MESSAGE_TYPE;
+    buffer[0] = TAM_MESSAGE_TYPE;
     buffer.buffer.asByteData().setFloat32(1, amount);
     buffer.setRange(5, 21, to.toBytes());
     buffer.setRange(21, 142, bkvc.toBytes());
@@ -69,7 +69,7 @@ class Transaction {
 
   Future<void> sign(SimpleKeyPair keyPair) async {
     final data = Uint8List(146);
-    data[0] = TRANSACTION_MESSAGE_TYPE;
+    data[0] = TAM_MESSAGE_TYPE;
     data.buffer.asByteData().setFloat32(1, amount);
     data.setRange(5, 21, to.toBytes());
     data.setRange(21, 142, bkvc.toBytes());
@@ -84,7 +84,7 @@ class Transaction {
 
   Future<bool> verify() async {
     final data = Uint8List(146);
-    data[0] = TRANSACTION_MESSAGE_TYPE;
+    data[0] = TAM_MESSAGE_TYPE;
     data.buffer.asByteData().setFloat32(1, amount);
     data.setRange(5, 21, to.toBytes());
     data.setRange(21, 142, bkvc.toBytes());

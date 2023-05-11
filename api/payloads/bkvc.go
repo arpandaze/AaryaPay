@@ -105,11 +105,9 @@ func (b *BalanceKeyVerificationCertificate) Verify(c *gin.Context) bool {
 
 	sig := b.Signature[:]
 
-	var pubKeyBytes []byte
 	staticPublicKey := Configs.PUBLIC_KEY()
-	copy(pubKeyBytes, staticPublicKey[:])
 
-	if ed25519.Verify(staticPublicKey[:], data, sig) {
+	if ed25519.Verify([]byte(staticPublicKey[:]), data, sig) {
 		l.Infow("BKVC verified")
 		return true
 	} else {

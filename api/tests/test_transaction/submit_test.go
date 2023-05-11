@@ -38,7 +38,7 @@ func TestSubmitTransaction(t *testing.T) {
 
 	testBKVC.Sign(c)
 
-	testTransaction := payloads.Transaction{
+	testTransaction := payloads.TransactionAuthorizationMessage{
 		Amount:    85,
 		To:        receiver.UserId,
 		BKVC:      testBKVC,
