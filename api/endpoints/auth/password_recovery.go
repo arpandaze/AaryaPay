@@ -75,6 +75,7 @@ func (PasswordRecoveryController) PasswordRecovery(c *gin.Context) {
 	} else {
 		msg := "Failed to send recovery email"
 		l.Errorw(msg,
+			"error", err,
 			"email", queryUser.Email)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": telemetry.TraceIDFromContext(c)})
 		return
