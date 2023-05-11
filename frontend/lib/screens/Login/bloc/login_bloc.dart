@@ -28,7 +28,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   void _onLoginFormSubmitted(
       LoginFormSubmitted event, Emitter<LoginState> emit) async {
-    emit(state.copyWith(verificationStatus: VerificationStatus.initial));
+    emit(state.copyWith(
+      verificationStatus: VerificationStatus.initial,
+      status: LoginStatus.initial,
+    ));
 
     if (!state.isEmailValid) {
       return emit(state.copyWith(
@@ -42,7 +45,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             verificationStatus: VerificationStatus.error),
       );
     }
-
+    emit(state.copyWith(status: LoginStatus.onprocess));
     try {
       final loginResponse =
           await authRepo.login(email: state.email, password: state.password);
@@ -51,19 +54,26 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         emit(state.copyWith(
           verificationStatus: VerificationStatus.error,
           errorText: loginResponse["response"]["msg"],
+          status: LoginStatus.faliure,
         ));
       } else if (loginResponse["verification"] == false) {
         emit(state.copyWith(
           verificationStatus: VerificationStatus.unverified,
           errorText: "Unverified User",
+          status: LoginStatus.faliure,
         ));
       } else if (loginResponse["verification"] == true) {
         if (loginResponse["two_fa_required"] == true) {
-          emit(state.copyWith(verificationStatus: VerificationStatus.twofa));
+          emit(state.copyWith(
+            verificationStatus: VerificationStatus.twofa,
+            status: LoginStatus.initial,
+          ));
         } else {
           emit(state.copyWith(
-              loginSucess: true,
-              verificationStatus: VerificationStatus.verified));
+            loginSucess: true,
+            verificationStatus: VerificationStatus.verified,
+            status: LoginStatus.success,
+          ));
         }
       }
     } catch (e) {
