@@ -1,9 +1,11 @@
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/components/CustomArrowedButton.dart';
+import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
 import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Home/components/favourites.dart';
+import 'package:aaryapay/screens/Login/components/login_wrapper.dart';
 import 'package:aaryapay/screens/Settings/AccountInformation/account_information.dart';
 import 'package:aaryapay/screens/Settings/Favourites/favourites_screen.dart';
 import 'package:aaryapay/screens/Settings/Password/password_screen.dart';
@@ -264,19 +266,45 @@ class Settings extends StatelessWidget {
                 CustomMenuSelection(
                   itemList: itemList,
                 ),
-                CustomActionButton(
-                  label: "Logout",
-                  borderRadius: 10,
-                  width: size.width * 0.5,
-                  height: 45,
-                  onClick: () => {
-                    context.read<AuthenticationBloc>().add(LoggedOut()),
-                  },
-                )
+                button(context, size),
               ],
             ),
           ),
         );
+      },
+    );
+  }
+
+  Widget button(BuildContext context, Size size) {
+    return BlocBuilder<AuthenticationBloc, AuthenticationState>(
+      builder: (context, state) {
+        if (state.status == AuthenticationStatus.error) {
+          SnackBarService.stopSnackBar();
+          SnackBarService.showSnackBar(
+              content: state.errorText, msgType: MessageType.error);
+        }
+
+        if (state.status != AuthenticationStatus.onLogOutProcess) {
+          return CustomActionButton(
+            label: "Logout",
+            borderRadius: 10,
+            width: size.width * 0.5,
+            height: 45,
+            onClick: () => {
+              context.read<AuthenticationBloc>().add(LoggedOut()),
+            },
+          );
+        } else {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Container(
+                alignment: Alignment.bottomCenter,
+                child: const CircularProgressIndicator(),
+              )
+            ],
+          );
+        }
       },
     );
   }
