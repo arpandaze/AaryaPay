@@ -75,9 +75,7 @@ class OfflineSend extends StatelessWidget {
           children: [
             Container(
               margin: const EdgeInsets.only(top: 20),
-              child: QRView(
-                data: Uint8List.fromList([1, 2, 3]),
-              ),
+              child: QRView(stringdata: "Uint8List.fromList([1, 2, 3])"),
             ),
             Container(
               margin: const EdgeInsets.only(top: 10),

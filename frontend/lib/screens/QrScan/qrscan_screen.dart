@@ -1,10 +1,13 @@
+import 'dart:typed_data';
+
 import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/QrScan/components/bottom_bar.dart';
+import 'package:aaryapay/screens/QrScan/components/qr_scanner_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aaryapay/screens/QrScan/qrscan_bloc.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
 class QrScanScreen extends StatelessWidget {
   const QrScanScreen({Key? key}) : super(key: key);
@@ -26,7 +29,6 @@ class QrScanScreen extends StatelessWidget {
   }
 
   Widget body(Size size, BuildContext context) {
-    QRViewController? controller;
     return BlocConsumer<QrScannerBloc, QrScannerState>(
       listener: (context, state) {
         // TODO: implement listener
@@ -36,22 +38,25 @@ class QrScanScreen extends StatelessWidget {
         return Stack(
           children: [
             Container(
-              child: QRView(
-                key: context.read<QrScannerBloc>().qrKey,
-                onQRViewCreated: (controller) =>
-                    controller.scannedDataStream.listen((data) {
-                  context
-                      .read<QrScannerBloc>()
-                      .add(QrCodeScanned(data.rawBytes!));
-                }),
-                overlay: QrScannerOverlayShape(
-                    borderColor: Theme.of(context).colorScheme.background,
-                    borderRadius: 34,
-                    borderWidth: 10,
-                    cutOutSize: (size.width < 400 || size.height < 400)
-                        ? 150.0
-                        : 300.0),
+              child: MobileScanner(
+                controller: MobileScannerController(
+                  detectionSpeed: DetectionSpeed.noDuplicates,
+                  facing: CameraFacing.back,
+                  torchEnabled: false,
+                ),
+                onDetect: (capture) {
+                  final List<Barcode> barcodes = capture.barcodes;
+                  final Uint8List? image = capture.image;
+                  for (final barcode in barcodes) {
+                    context
+                        .read<QrScannerBloc>()
+                        .add(QrCodeScanned(barcode.rawBytes!));
+                  }
+                },
               ),
+            ),
+            QRScannerOverlay(
+              overlayColour: Colors.black.withOpacity(0.5),
             ),
             // Text(state.code ?? ""),
             Column(
@@ -62,7 +67,10 @@ class QrScanScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(5),
                       child: IconButton(
-                        onPressed: () => Utils.mainAppNav.currentState!.pop(),
+                        onPressed: () => {
+                          context.read<QrScannerBloc>().add(CloseScanner()),
+                          Utils.mainAppNav.currentState!.pop()
+                        },
                         icon: SvgPicture.asset('assets/icons/close.svg',
                             width: 20,
                             height: 20,
