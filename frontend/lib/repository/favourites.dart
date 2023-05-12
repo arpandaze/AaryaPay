@@ -11,7 +11,7 @@ class FavouritesRepository {
   Future<Map<String, dynamic>> getFavourites() async {
     if (token != null) {
       final headers = {
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "application/json",
         "Cookie": "session=$token",
       };
       final response = await httpclient.get(Uri.parse('$backendBase/favorites'),

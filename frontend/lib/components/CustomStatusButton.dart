@@ -9,6 +9,7 @@ class CustomStatusButton extends StatelessWidget {
     this.height,
     this.borderRadius,
     this.textStyle,
+    this.color,
   }) : super(key: key);
 
   final Widget widget;
@@ -17,19 +18,19 @@ class CustomStatusButton extends StatelessWidget {
   final String? label;
   final double? borderRadius;
   final TextStyle? textStyle;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var textTheme = Theme.of(context).textTheme;
     return GestureDetector(
-      // onTap: print("lol"),
       child: Container(
         padding: const EdgeInsets.all(5),
         width: width ?? size.width * 0.20,
         height: height ?? size.height * 0.04,
         decoration: BoxDecoration(
-            border: Border.all(color: Colors.black26),
+            border: Border.all(color: color ?? Colors.black26),
             borderRadius:
                 BorderRadius.all(Radius.circular(borderRadius ?? 10))),
         child: Row(
