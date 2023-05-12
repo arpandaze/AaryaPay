@@ -1,6 +1,7 @@
 part of 'login_bloc.dart';
 
 class LoginState extends Equatable {
+  final LoginStatus status;
   final String email;
   final String password;
   final String? errorText;
@@ -10,6 +11,7 @@ class LoginState extends Equatable {
   final String? temporaryToken;
 
   const LoginState({
+    this.status = LoginStatus.initial,
     this.verificationStatus = VerificationStatus.unknown,
     this.email = "",
     this.password = "",
@@ -26,6 +28,7 @@ class LoginState extends Equatable {
   }
 
   LoginState copyWith({
+    LoginStatus? status,
     VerificationStatus? verificationStatus,
     bool? twoFARequired,
     String? email,
@@ -35,6 +38,7 @@ class LoginState extends Equatable {
     String? temporaryToken,
   }) {
     return LoginState(
+      status: status ?? this.status,
       verificationStatus: verificationStatus ?? this.verificationStatus,
       twoFARequired: twoFARequired ?? this.twoFARequired,
       email: email ?? this.email,
@@ -47,6 +51,7 @@ class LoginState extends Equatable {
 
   @override
   List<Object?> get props => [
+        status,
         verificationStatus,
         email,
         password,

@@ -2,8 +2,8 @@ import 'package:aaryapay/repository/transaction.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
-part 'transcation_event.dart';
-part 'transcation_state.dart';
+part 'transaction_event.dart';
+part 'transaction_state.dart';
 
 class TranscationBloc extends Bloc<TranscationEvent, TranscationState> {
   final transactionRepository = TransactionRepository();
@@ -22,7 +22,8 @@ class TranscationBloc extends Bloc<TranscationEvent, TranscationState> {
 
   void _onClearLoadedUser(
       ClearLoadedUser event, Emitter<TranscationState> emit) async {
-    emit(state.copywith(senderName: null, recieverName: null, item: null));
+    emit(TranscationState(
+        transactionHistory: state.transactionHistory, loaded: true));
   }
 
   void _onLoadParticularUser(
@@ -39,6 +40,7 @@ class TranscationBloc extends Bloc<TranscationEvent, TranscationState> {
       if (decodedData?["reciever"]["middle_name"] != "") {
         rMidName = decodedData?["reciever"]["middle_name"] + " ";
       }
+
       emit(
         state.copywith(
           senderName:

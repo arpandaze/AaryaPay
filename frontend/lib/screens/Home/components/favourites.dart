@@ -1,6 +1,5 @@
-import 'package:aaryapay/components/CustomCircularAvatar.dart';
 import 'package:aaryapay/components/CustomFavoritesAvatar.dart';
-import 'package:aaryapay/components/CustomStatusButton.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Send/send_money.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +9,6 @@ class Favourites extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
-    var colorScheme = Theme.of(context).colorScheme;
     Size size = MediaQuery.of(context).size;
     return Container(
       width: size.width,
@@ -39,19 +37,49 @@ class Favourites extends StatelessWidget {
                 children: [
                   GestureDetector(
                       onTap: () => {
-                            Navigator.of(context).push(
-                              PageRouteBuilder(
-                                pageBuilder:
-                                    (context, animation1, animation2) =>
-                                        const SendMoney(),
-                                transitionDuration: Duration.zero,
-                                reverseTransitionDuration: Duration.zero,
-                              ),
-                            ),
+                      Utils.mainAppNav.currentState!.push(
+                        PageRouteBuilder(
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  const SendMoney(),
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) {
+                            final curve = CurvedAnimation(
+                              parent: animation,
+                              curve: Curves.decelerate,
+                            );
+
+                            return Stack(
+                              children: [
+                                FadeTransition(
+                                  opacity: Tween<double>(
+                                    begin: 1.0,
+                                    end: 0.0,
+                                  ).animate(curve),
+                                ),
+                                SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: const Offset(0.0, 1.0),
+                                    end: Offset.zero,
+                                  ).animate(curve),
+                                  child: FadeTransition(
+                                    opacity: Tween<double>(
+                                      begin: 0.0,
+                                      end: 1.0,
+                                    ).animate(curve),
+                                    child: const SendMoney(),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
                           },
                       child: const CustomFavoritesAvatar(
                         imagesUrl: "assets/images/pfp.jpg",
-                      )),
+                    ),
+                  ),
                   const CustomFavoritesAvatar(),
                   const CustomFavoritesAvatar(
                     imagesUrl: "assets/images/pfp.jpg",

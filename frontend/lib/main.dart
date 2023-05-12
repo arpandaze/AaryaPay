@@ -1,5 +1,6 @@
 import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:aaryapay/routes.dart';
 import 'package:aaryapay/theme.dart';
@@ -17,7 +18,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    precacheImage(const AssetImage("assets/images/logo.png"), context);
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthenticationBloc>(
@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+        navigatorKey: Utils.mainAppNav,
         scaffoldMessengerKey: SnackBarService.scaffoldKey,
         debugShowCheckedModeBanner: false,
         routes: routes,

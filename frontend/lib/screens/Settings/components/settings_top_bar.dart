@@ -1,3 +1,4 @@
+import 'package:aaryapay/helper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:math' as math;
@@ -22,7 +23,7 @@ class SettingsTopBar extends StatelessWidget {
           Align(
             alignment: Alignment.centerLeft,
             child: GestureDetector(
-              onTap: () => Navigator.pop(context),
+              onTap: () => Utils.mainAppNav.currentState!.pop(),
               child: Container(
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(

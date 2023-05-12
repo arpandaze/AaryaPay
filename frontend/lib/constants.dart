@@ -8,6 +8,8 @@ enum AuthenticationStatus {
   logOut,
   none,
   twoFA,
+  onLogOutProcess,
+  error,
 }
 
 enum VerificationStatus {
@@ -33,4 +35,20 @@ enum MessageType {
   warning,
   error,
   success,
+}
+
+enum LoginStatus {
+  initial,
+  onprocess,
+  success,
+  faliure,
+}
+
+enum ForgotStatus {
+  initial,
+  error,
+  success,
+  onprocess,
+  otpOnProcess,
+  otpSuccess,
 }

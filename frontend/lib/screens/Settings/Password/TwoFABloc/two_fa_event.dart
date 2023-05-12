@@ -7,7 +7,6 @@ abstract class TwoFaEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-
 class TokenChanged extends TwoFaEvent {
   final String? token;
   const TokenChanged({this.token});
@@ -18,7 +17,21 @@ class TokenChanged extends TwoFaEvent {
       ];
 }
 
-
 class GetTwoFA extends TwoFaEvent {}
 
 class EnableTwoFA extends TwoFaEvent {}
+
+class DisableTwoFA extends TwoFaEvent {}
+
+class ChangeSwitchValue extends TwoFaEvent {
+  final bool? currentValue;
+
+  const ChangeSwitchValue({this.currentValue});
+
+  @override
+  List<Object?> get props => [
+        currentValue,
+      ];
+}
+
+class LoadSwitch extends TwoFaEvent {}

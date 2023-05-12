@@ -1,6 +1,7 @@
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/constants.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Settings/Password/TwoFABloc/two_fa_bloc.dart';
 import 'package:aaryapay/screens/Settings/Password/two_factor_auth_third.dart';
 import 'package:aaryapay/screens/Settings/components/settings_wrapper.dart';
@@ -12,8 +13,6 @@ class TwoFactorAuthSecond extends StatelessWidget {
   const TwoFactorAuthSecond({Key? key}) : super(key: key);
 
   Widget body(BuildContext context) {
-    var textTheme = Theme.of(context).textTheme;
-    var colorScheme = Theme.of(context).colorScheme;
     Size size = MediaQuery.of(context).size;
     return BlocConsumer<TwoFaBloc, TwoFaState>(
       listener: (context, state) {
@@ -25,7 +24,7 @@ class TwoFactorAuthSecond extends StatelessWidget {
               content: state.errorText, msgType: state.msgType);
         }
         if (state.success) {
-          Navigator.of(context).push(
+          Utils.mainAppNav.currentState!.push(
             PageRouteBuilder(
               pageBuilder: (context, animation1, animation2) =>
                   const TwoFactorAuthThird(),
@@ -39,7 +38,7 @@ class TwoFactorAuthSecond extends StatelessWidget {
         return SettingsWrapper(
           pageName: "Enter Verification Code",
           children: Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,9 +115,7 @@ class TwoFactorAuthSecond extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var textTheme = Theme.of(context).textTheme;
     var colorScheme = Theme.of(context).colorScheme;
-    Size size = MediaQuery.of(context).size;
     return Container(
       color: colorScheme.background,
       child: body(context),

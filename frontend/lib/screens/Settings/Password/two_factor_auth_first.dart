@@ -2,6 +2,7 @@ import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/repository/enable_two_fa.dart';
 import 'package:aaryapay/screens/Settings/Password/TwoFABloc/two_fa_bloc.dart';
 import 'package:aaryapay/screens/Settings/Password/two_factor_auth_second.dart';
@@ -24,7 +25,8 @@ class TwoFactorAuthFirst extends StatelessWidget {
         create: (context) => TwoFaBloc(
             twoFARepo: TwoFARepository(
           token: context.read<AuthenticationBloc>().state.token,
-        ))..add(GetTwoFA()),
+        ))
+          ..add(GetTwoFA()),
         child: body(context),
       ),
     );
@@ -36,9 +38,12 @@ class TwoFactorAuthFirst extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return BlocConsumer<TwoFaBloc, TwoFaState>(
       listener: (context, state) {
-        if (state.msgType == MessageType.error ||state.msgType == MessageType.success ||state.msgType == MessageType.warning ){
+        if (state.msgType == MessageType.error ||
+            state.msgType == MessageType.success ||
+            state.msgType == MessageType.warning) {
           SnackBarService.stopSnackBar();
-          SnackBarService.showSnackBar(content: state.errorText, msgType: state.msgType);
+          SnackBarService.showSnackBar(
+              content: state.errorText, msgType: state.msgType);
         }
       },
       builder: (context, state) {
@@ -92,21 +97,19 @@ class TwoFactorAuthFirst extends StatelessWidget {
 
                 CustomActionButton(
                   label: "Next",
-                  onClick: () => Navigator.of(context).push(
+                  onClick: () => Utils.mainAppNav.currentState!.push(
                     PageRouteBuilder(
                       pageBuilder: (context, animation1, animation2) =>
                           BlocProvider(
                         create: (context) => TwoFaBloc(
-                            twoFARepo: TwoFARepository(
-                                token: context
-                                    .read<AuthenticationBloc>()
-                                    .state
-                                    .token)),
-                        
-                        child: TwoFactorAuthSecond(),
+                          twoFARepo: TwoFARepository(
+                              token: context
+                                  .read<AuthenticationBloc>()
+                                  .state
+                                  .token),
+                        ),
+                        child: const TwoFactorAuthSecond(),
                       ),
-                      transitionDuration: Duration.zero,
-                      reverseTransitionDuration: Duration.zero,
                     ),
                   ),
                   borderRadius: 10,

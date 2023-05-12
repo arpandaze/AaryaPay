@@ -1,4 +1,4 @@
-part of 'transcation_bloc.dart';
+part of 'transaction_bloc.dart';
 
 abstract class TranscationEvent extends Equatable {
   @override

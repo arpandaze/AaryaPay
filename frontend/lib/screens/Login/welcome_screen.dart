@@ -1,4 +1,5 @@
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:aaryapay/screens/Login/login_screen.dart';
 import 'package:aaryapay/screens/Login/components/login_wrapper.dart';
@@ -12,10 +13,9 @@ class WelcomeScreen extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return LoginWrapper(
-      children: _midSection(context, size),
       actionButtonLabel: "LOGIN",
       actionButtonFunction: () => {
-        Navigator.of(context).push(
+        Utils.mainAppNav.currentState!.push(
           PageRouteBuilder(
             pageBuilder: (context, animation1, animation2) =>
                 const LoginScreen(),
@@ -24,6 +24,7 @@ class WelcomeScreen extends StatelessWidget {
           ),
         ),
       },
+      children: _midSection(context, size),
     );
   }
 
@@ -32,7 +33,7 @@ class WelcomeScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Container(
+        SizedBox(
           width: size.width * 0.8,
           child: Text(
             "Pay Anywhere, You Go.",
@@ -43,24 +44,20 @@ class WelcomeScreen extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        Container(
-          child: Text(
-            "Fast. Secure. Reliable.",
-            style: Theme.of(context)
-                .textTheme
-                .titleSmall!
-                .merge(const TextStyle(height: 3)),
-            textAlign: TextAlign.center,
-          ),
+        Text(
+          "Fast. Secure. Reliable.",
+          style: Theme.of(context)
+              .textTheme
+              .titleSmall!
+              .merge(const TextStyle(height: 3)),
+          textAlign: TextAlign.center,
         ),
-        Container(
-          child: Text(
-            "Does anyone even read this text. No. Why are you reading this text. Just login already, this text is worthless.",
-            style: Theme.of(context).textTheme.titleMedium!.merge(
-                  const TextStyle(height: 1.5),
-                ),
-            textAlign: TextAlign.center,
-          ),
+        Text(
+          "Does anyone even read this text. No. Why are you reading this text. Just login already, this text is worthless.",
+          style: Theme.of(context).textTheme.titleMedium!.merge(
+                const TextStyle(height: 1.5),
+              ),
+          textAlign: TextAlign.center,
         ),
       ],
     );
