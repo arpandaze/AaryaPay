@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/repository/auth.dart';
@@ -32,9 +33,14 @@ class AuthenticationBloc
   }
 
   void _onLoggedOut(LoggedOut event, Emitter<AuthenticationState> emit) async {
-    await authRepo.logout() as Map<String, dynamic>;
-
+    emit(state.copyWith(status: AuthenticationStatus.onLogOutProcess));
+    var response = await authRepo.logout() as Map<String, dynamic>;
     emit(await AuthenticationState.load());
+
+    if (!response["logoutSuccess"]) {
+      emit(state.copyWith(
+          status: AuthenticationStatus.error, errorText: response["msg"]));
+    }
   }
 
   void _onTwoFA(TwoFA event, Emitter<AuthenticationState> emit) async {

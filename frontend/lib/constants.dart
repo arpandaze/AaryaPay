@@ -6,6 +6,8 @@ enum AuthenticationStatus {
   logOut,
   none,
   twoFA,
+  onLogOutProcess,
+  error,
 }
 
 enum VerificationStatus {
