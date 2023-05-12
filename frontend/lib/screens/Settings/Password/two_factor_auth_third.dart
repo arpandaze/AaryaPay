@@ -1,4 +1,5 @@
 import 'package:aaryapay/helper/utils.dart';
+import 'package:aaryapay/screens/Settings/Password/password_screen.dart';
 import 'package:aaryapay/screens/Settings/components/settings_wrapper.dart';
 import 'package:aaryapay/screens/Settings/settings.dart';
 import 'package:flutter/material.dart';
@@ -20,10 +21,10 @@ class TwoFactorAuthThird extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                  alignment: Alignment.center,
-                  // padding: EdgeInsets.symmetric(vertical: 30),
-                  // decoration: BoxDecoration(
-                  //     border: Border.all(color: Colors.cyanAccent)),
+                alignment: Alignment.center,
+                // padding: EdgeInsets.symmetric(vertical: 30),
+                // decoration: BoxDecoration(
+                //     border: Border.all(color: Colors.cyanAccent)),
                 child: Container(
                   height: size.height * 0.3,
                   decoration: const BoxDecoration(
@@ -65,15 +66,20 @@ class TwoFactorAuthThird extends StatelessWidget {
                 style: textTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
-             
               Center(
                 child: CustomActionButton(
                   label: "Done",
-                  onClick: () => Utils.mainAppNav.currentState!
-                      .popUntil(
-                    ModalRoute.withName("/app"),
-                  ),
-                  
+                  onClick: () => {
+                    Utils.mainAppNav.currentState!.popUntil(
+                      ModalRoute.withName("/app"),
+                    ),
+                    Utils.mainAppNav.currentState!.push(
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            const PasswordScreen(),
+                      ),
+                    ),
+                  },
                 ),
               )
             ],

@@ -57,6 +57,33 @@ class TwoFARepository {
         throw Exception("Unknown error occured");
       }
 
+      if (response.body.isNotEmpty) {
+        return {"response": decodedResponse, "status": response.statusCode};
+      } else {
+        throw Exception("Body Empty!");
+      }
+    } else {
+      throw Exception("Session not found!");
+    }
+  }
+
+  Future<Map<String, dynamic>> disableTwoFA() async {
+    if (token != null) {
+      final headers = {
+        "Cookie": "session=$token",
+        "Content-Type": "application/x-www-form-urlencoded"
+      };
+      var response = await client.post(
+        Uri.parse('$backendBase/auth/twofa/disable'),
+        headers: headers,
+      );
+
+      var decodedResponse = jsonDecode(response.body);
+
+      print(response.statusCode);
+      if (response.statusCode != 202) {
+        throw Exception("Unknown error occured");
+      }
 
       if (response.body.isNotEmpty) {
         return {"response": decodedResponse, "status": response.statusCode};

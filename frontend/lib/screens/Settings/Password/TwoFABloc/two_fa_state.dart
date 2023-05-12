@@ -8,6 +8,9 @@ class TwoFaState extends Equatable {
   final String? errorText;
   final MessageType msgType;
   final bool success;
+  final bool switchValue;
+  final bool enableCall;
+  final bool disableCall;
 
   const TwoFaState({
     this.secret,
@@ -17,6 +20,9 @@ class TwoFaState extends Equatable {
     this.errorText,
     this.msgType = MessageType.idle,
     this.success = false,
+    this.switchValue = true,
+    this.enableCall = false,
+    this.disableCall = false,
   });
 
   TwoFaState copyWith({
@@ -27,8 +33,12 @@ class TwoFaState extends Equatable {
     String? errorText,
     MessageType? msgType,
     bool? success,
+    bool? switchValue,
+    bool? enableCall,
+    bool? disableCall,
   }) {
     return TwoFaState(
+      switchValue: switchValue ?? this.switchValue,
       uri: uri ?? this.uri,
       secret: secret ?? this.secret,
       isLoaded: isLoaded ?? this.isLoaded,
@@ -36,11 +46,14 @@ class TwoFaState extends Equatable {
       msgType: msgType ?? this.msgType,
       errorText: errorText ?? this.errorText,
       success: success ?? this.success,
+      enableCall: enableCall ?? this.enableCall,
+      disableCall: disableCall ?? this.disableCall,
     );
   }
 
   @override
   List<Object?> get props => [
+        switchValue,
         secret,
         uri,
         isLoaded,
@@ -48,5 +61,7 @@ class TwoFaState extends Equatable {
         msgType,
         errorText,
         success,
+        enableCall,
+        disableCall,
       ];
 }
