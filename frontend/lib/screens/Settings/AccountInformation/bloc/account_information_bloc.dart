@@ -29,9 +29,9 @@ class AccountInformationBloc
     try {
       final response = await repository.getProfile();
       emit(state.copyWith(
-        firstname: response['first_name'],
-        middlename: response['middle_name'],
-        lastname: response['last_name'],
+        tempFirstName: response['first_name'],
+        tempMiddleName: response['middle_name'],
+        tempLastName: response['last_name'],
         photoUrl: response['photo_url'],
       ));
     } catch (e) {
@@ -109,9 +109,10 @@ class AccountInformationBloc
           "last_name": state.lastname,
           "dob": (state.dob!.millisecondsSinceEpoch ~/ 1000).toString(),
         };
+        print(body);
         var response = await repository.editPersonal(body: body);
         emit(state.copyWith(
-            msgType: MessageType.success, errorText: "Edited Successfully"));
+            msgType: MessageType.success, errorText: "Edited Successfully", success: true));
       } else {
         emit(state.copyWith(
             msgType: MessageType.error, errorText: "Fields cannot be empty"));
