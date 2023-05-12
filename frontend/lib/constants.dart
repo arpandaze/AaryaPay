@@ -1,5 +1,7 @@
 const backendBase = "https://arpandaze.tech/v1";
 
+const fileServerBase = "https://arpandaze.tech/profile";
+
 enum AuthenticationStatus {
   unknown,
   loggedIn,
