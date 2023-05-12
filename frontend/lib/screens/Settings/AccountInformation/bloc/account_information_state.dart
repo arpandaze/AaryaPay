@@ -5,6 +5,9 @@ class AccountInformationState extends Equatable {
   final String firstname;
   final String middlename;
   final String lastname;
+  final String tempFirstName;
+  final String tempMiddleName;
+  final String tempLastName;
   final DateTime? dob;
   final File? image;
   final String? paths;
@@ -25,12 +28,18 @@ class AccountInformationState extends Equatable {
     this.msgType = MessageType.idle,
     this.errorText = "",
     this.success = false,
+    this.tempFirstName = "",
+    this.tempMiddleName = "",
+    this.tempLastName = "",
   });
 
   AccountInformationState copyWith({
     String? firstname,
     String? middlename,
     String? lastname,
+    String? tempFirstName,
+    String? tempMiddleName,
+    String? tempLastName,
     DateTime? dob,
     Map<String, dynamic>? profileInfo,
     File? image,
@@ -52,6 +61,9 @@ class AccountInformationState extends Equatable {
       msgType: msgType ?? this.msgType,
       errorText: errorText ?? this.errorText,
       success: success ?? this.success,
+      tempFirstName: tempFirstName ?? this.tempFirstName,
+      tempMiddleName: tempMiddleName ?? this.tempMiddleName,
+      tempLastName: tempLastName ?? this.tempLastName,
     );
   }
 
@@ -68,5 +80,8 @@ class AccountInformationState extends Equatable {
         msgType,
         errorText,
         success,
+        tempFirstName,
+        tempMiddleName,
+        tempLastName,
       ];
 }

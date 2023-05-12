@@ -51,6 +51,10 @@ class AccountInformation extends StatelessWidget {
             msgType: state.msgType,
           );
         }
+
+        if (state.success) {
+          Utils.mainAppNav.currentState!.popUntil(ModalRoute.withName('/app'));
+        }
       },
       builder: (context, state) {
         return SettingsWrapper(
@@ -117,7 +121,7 @@ class AccountInformation extends StatelessWidget {
                         outlined: true,
                         topText: "First Name",
                         enableTopText: true,
-                        placeHolder: state.firstname,
+                        placeHolder: state.tempFirstName,
                         onChanged: (value) => {
                               context
                                   .read<AccountInformationBloc>()
@@ -130,7 +134,7 @@ class AccountInformation extends StatelessWidget {
                       outlined: true,
                       topText: "Middle Name",
                       enableTopText: true,
-                      placeHolder: state.middlename,
+                      placeHolder: state.tempMiddleName,
                       onChanged: (value) => {
                         context
                             .read<AccountInformationBloc>()
@@ -144,7 +148,7 @@ class AccountInformation extends StatelessWidget {
                         outlined: true,
                         topText: "Last Name",
                         enableTopText: true,
-                        placeHolder: state.lastname,
+                        placeHolder: state.tempLastName,
                         onChanged: (value) => {
                               context
                                   .read<AccountInformationBloc>()
