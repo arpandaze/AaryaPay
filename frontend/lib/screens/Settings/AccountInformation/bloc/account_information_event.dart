@@ -7,56 +7,73 @@ abstract class AccountInformationEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class EditPersonal extends AccountInformationEvent {}
-
 class FirstNameChanged extends AccountInformationEvent {
   final String firstname;
 
-  FirstNameChanged({
+  const FirstNameChanged({
     this.firstname = "",
   });
 
   @override
-  List<Object> get props => [
-        firstname,
-      ];
+  List<Object> get props => [firstname];
 }
 
 class MiddleNameChanged extends AccountInformationEvent {
   final String middlename;
 
-  MiddleNameChanged({
+  const MiddleNameChanged({
     this.middlename = "",
   });
 
   @override
-  List<Object> get props => [
-        middlename,
-      ];
+  List<Object> get props => [middlename];
 }
 
 class LastNameChanged extends AccountInformationEvent {
   final String lastname;
 
-  LastNameChanged({
+  const LastNameChanged({
     this.lastname = "",
   });
 
   @override
-  List<Object> get props => [
-        lastname,
-      ];
+  List<Object> get props => [lastname];
 }
 
 class DateChanged extends AccountInformationEvent {
   final DateTime? dob;
 
-  DateChanged({
+  const DateChanged({
     this.dob,
   });
 
   @override
+  List<Object?> get props => [dob];
+}
+
+class ImagePicked extends AccountInformationEvent {
+  final File image;
+  final String? paths;
+
+  const ImagePicked({
+    required this.image,
+    required this.paths,
+  });
+
+  @override
   List<Object?> get props => [
-        dob,
+        image,
+        paths,
       ];
 }
+
+class GetPersonal extends AccountInformationEvent {}
+
+class GetPhoto extends AccountInformationEvent {}
+
+class EditPersonal extends AccountInformationEvent {}
+
+class UploadPhoto extends AccountInformationEvent {}
+
+
+
