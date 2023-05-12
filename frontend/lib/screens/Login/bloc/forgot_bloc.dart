@@ -69,8 +69,21 @@ class ForgotBloc extends Bloc<ForgotEvent, ForgotState> {
   }
 
   void _onCheckMatching(CheckMatching event, Emitter<ForgotState> emit) {
-    emit(state.copyWith(matched: state.isPasswordsValid));
-    emit(state.copyWith(matched: false));
+    if (state.isPasswordsValid) {
+      emit(state.copyWith(matched: state.isPasswordsValid));
+      emit(state.copyWith(matched: false));
+    } else if (state.passOne.isEmpty || state.passTwo.isEmpty) {
+      emit(state.copyWith(
+          matched: false,
+          status: ForgotStatus.error,
+          errorText: "Passwords Fields cannot be empty."));
+    } else {
+      emit(state.copyWith(
+          matched: false,
+          status: ForgotStatus.error,
+          errorText: "Passwords : Do not match or Have < 4 characters."));
+    }
+    emit(state.copyWith(status: ForgotStatus.initial));
   }
 
   void _onSendEmail(SendEmail event, Emitter<ForgotState> emit) async {
