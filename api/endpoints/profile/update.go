@@ -22,7 +22,7 @@ func (UpdateProfileController) UpdateProfile(c *gin.Context) {
 		l.Errorw(msg,
 			"error", err,
 		)
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
 		return
 	}
 
@@ -78,7 +78,7 @@ func (UpdateProfileController) UpdateProfilePhoto(c *gin.Context) {
 		l.Errorw(msg,
 			"error", err,
 		)
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
 		return
 	}
 

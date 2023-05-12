@@ -5,8 +5,8 @@ import (
 	favorites "main/endpoints/favorites"
 	keys "main/endpoints/keys"
 	profile "main/endpoints/profile"
+	sync "main/endpoints/sync"
 	tools "main/endpoints/tools"
-	transaction "main/endpoints/transaction"
 
 	"github.com/gin-gonic/gin"
 )
@@ -66,12 +66,12 @@ func InitProfileRoutes(routeGroup *gin.RouterGroup) {
 	routeGroup.PATCH("/photo", updateProfileController.UpdateProfilePhoto)
 }
 
-func InitTransactionRoutes(routeGroup *gin.RouterGroup) {
-	retrieveController := new(transaction.TransactionRetrieve)
-	submitController := new(transaction.SubmitController)
+func InitSyncRoutes(routeGroup *gin.RouterGroup) {
+	retrieveController := new(sync.TransactionRetrieve)
+	syncController := new(sync.SyncController)
 
-	routeGroup.GET("", retrieveController.Retrieve)
-	routeGroup.POST("", submitController.Submit)
+	routeGroup.GET("/transaction", retrieveController.Retrieve)
+	routeGroup.POST("/sync", syncController.Sync)
 }
 
 func InitKeysRoutes(routeGroup *gin.RouterGroup) {
@@ -95,7 +95,7 @@ func RegisterRoutes(router *gin.Engine) *gin.Engine {
 		InitAuthRoutes(v1.Group("auth"))
 		InitProfileRoutes(v1.Group("profile"))
 		InitFavoritesRoute(v1.Group("favorites"))
-		InitTransactionRoutes(v1.Group("transaction"))
+		InitSyncRoutes(v1.Group(""))
 		InitKeysRoutes(v1.Group("keys"))
 	}
 
