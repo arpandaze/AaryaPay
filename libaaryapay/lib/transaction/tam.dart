@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 
@@ -5,7 +6,7 @@ import 'package:uuid/uuid.dart';
 import 'package:libaaryapay/transaction/bkvc.dart';
 import 'package:libaaryapay/transaction/constants.dart';
 
-class Transaction {
+class TransactionAuthorizationMessage {
   int messageType;
   double amount;
   UuidValue to;
@@ -13,7 +14,7 @@ class Transaction {
   DateTime timeStamp;
   List<int> signature = List<int>.filled(64, 0, growable: false);
 
-  Transaction(
+  TransactionAuthorizationMessage(
     this.messageType,
     this.amount,
     this.to,
@@ -43,7 +44,7 @@ class Transaction {
     return buffer;
   }
 
-  static Transaction fromBytes(Uint8List data) {
+  static TransactionAuthorizationMessage fromBytes(Uint8List data) {
     final messageType = data[0];
     final amount = ByteData.view(data.buffer).getFloat32(1);
     final to = UuidValue.fromByteList(data.sublist(5, 21));
@@ -57,7 +58,7 @@ class Transaction {
 
     final signature = data.sublist(146, 210);
 
-    return Transaction(
+    return TransactionAuthorizationMessage(
       messageType,
       amount,
       to,
@@ -97,5 +98,9 @@ class Transaction {
       data,
       signature: Signature(signature, publicKey: await bkvc.getPublicKey()),
     );
+  }
+
+  static TransactionAuthorizationMessage fromBase64(String base64) {
+    return fromBytes(base64Decode(base64));
   }
 }

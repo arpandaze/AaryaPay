@@ -1,9 +1,10 @@
+import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 
 import 'package:uuid/uuid.dart';
-import 'package:libaaryapay/bkvc.dart';
-import 'package:libaaryapay/constants.dart';
+import 'package:libaaryapay/transaction/bkvc.dart';
+import 'package:libaaryapay/transaction/constants.dart';
 
 class TransactionVerificationCertificate {
   int messageType;
@@ -98,4 +99,11 @@ class TransactionVerificationCertificate {
       signature: Signature(signature, publicKey: serverPublicKey),
     );
   }
+
+  static TransactionVerificationCertificate fromBase64(String base64) {
+    return fromBytes(base64Decode(base64));
+  }
+
+  DateTime get generationTime => timeStamp;
+  DateTime get verificationTime => bkvc.timeStamp;
 }

@@ -50,7 +50,7 @@ Future<void> testTransaction() async {
     "GgYzFdDJ0ODfkhZVIrrg8wvEI3njc43caDzSP34IlR8mkf7y1NPUbgmfscvlx9tkrvEY5qU6h2ggN4KbFjpaYw==",
   );
 
-  final testTransaction = Transaction.fromBytes(testTransactionBytes);
+  final testTransaction = TransactionAuthorizationMessage.fromBytes(testTransactionBytes);
 
   assert(
     await testTransaction.bkvc.verify(await serverKeyPair.extractPublicKey()),
@@ -58,7 +58,7 @@ Future<void> testTransaction() async {
 
   assert(await testTransaction.verify());
 
-  var remakeTransaction = Transaction(
+  var remakeTransaction = TransactionAuthorizationMessage(
     testTransaction.messageType,
     testTransaction.amount,
     testTransaction.to,
@@ -128,5 +128,5 @@ Future<void> testPayload() async {
 
   assert(payload is BalanceKeyVerificationCertificate);
   assert(payload2 is TransactionVerificationCertificate);
-  assert(payload3 is Transaction);
+  assert(payload3 is TransactionAuthorizationMessage);
 }

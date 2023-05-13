@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
@@ -25,7 +26,7 @@ class BalanceKeyVerificationCertificate {
     }
   }
 
-  Future<SimplePublicKey> getPublicKey() async {
+  SimplePublicKey getPublicKey() {
     return SimplePublicKey(publicKey, type: KeyPairType.ed25519);
   }
 
@@ -98,5 +99,9 @@ class BalanceKeyVerificationCertificate {
       timeStamp,
       signature: signature,
     );
+  }
+
+  static BalanceKeyVerificationCertificate fromBase64(String base64) {
+    return fromBytes(base64Decode(base64));
   }
 }
