@@ -65,7 +65,9 @@ func (AddFavoriteController) AddFavorite(c *gin.Context) {
 
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
 		return
-	} else if err != nil {
+	}
+
+	if err != nil {
 		msg := "Failed to execute SQL statement"
 		l.Errorw(msg,
 			"error", err,
@@ -80,6 +82,15 @@ func (AddFavoriteController) AddFavorite(c *gin.Context) {
 		l.Errorw("Error while parsing UUID",
 			"error", err,
 		)
+		return
+	}
+
+	if user == favUUID {
+		msg := "You can not add yourself as a favorite"
+		l.Errorw(msg,
+			"error", err,
+		)
+		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"msg": "Can not add yourself as favorite", "context": TraceIDFromContext(c)})
 		return
 	}
 
