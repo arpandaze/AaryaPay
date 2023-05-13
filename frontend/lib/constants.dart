@@ -1,11 +1,15 @@
 const backendBase = "https://arpandaze.tech/v1";
 
+const fileServerBase = "https://arpandaze.tech/profile";
+
 enum AuthenticationStatus {
   unknown,
   loggedIn,
   logOut,
   none,
   twoFA,
+  onLogOutProcess,
+  error,
 }
 
 enum VerificationStatus {
@@ -38,4 +42,13 @@ enum LoginStatus {
   onprocess,
   success,
   faliure,
+}
+
+enum ForgotStatus {
+  initial,
+  error,
+  success,
+  onprocess,
+  otpOnProcess,
+  otpSuccess,
 }

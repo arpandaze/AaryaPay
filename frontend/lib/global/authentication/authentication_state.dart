@@ -5,10 +5,12 @@ class AuthenticationState extends Equatable {
   final String? token;
   final Map<String, dynamic>? user;
   final AuthenticationStatus status;
+  final String? errorText;
 
   static const storage = FlutterSecureStorage();
 
   const AuthenticationState({
+    this.errorText,
     this.loaded = false,
     this.token,
     this.user,
@@ -16,11 +18,15 @@ class AuthenticationState extends Equatable {
   });
 
   AuthenticationState copyWith({
+    bool? loaded,
     String? token,
     Map<String, dynamic>? user,
     AuthenticationStatus? status,
+    String? errorText,
   }) {
     return AuthenticationState(
+        loaded: loaded ?? this.loaded,
+        errorText: errorText ?? this.errorText,
         token: token ?? this.token,
         user: user ?? this.user,
         status: status ?? this.status);
@@ -44,5 +50,11 @@ class AuthenticationState extends Equatable {
   }
 
   @override
-  List<Object> get props => [loaded, status];
+  List<Object?> get props => [
+        loaded,
+        status,
+        token,
+        user,
+        errorText,
+      ];
 }

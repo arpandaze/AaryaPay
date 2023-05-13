@@ -19,6 +19,7 @@ class LoginWrapper extends StatelessWidget {
     this.actionButtonFunction,
     this.actionButtonLabel,
     this.status,
+    this.forgotStatus,
   }) : super(key: key);
   final Widget children;
   final bool? backButton;
@@ -26,6 +27,7 @@ class LoginWrapper extends StatelessWidget {
   final Function()? backButttonFunction;
   final Function()? actionButtonFunction;
   final LoginStatus? status;
+  final ForgotStatus? forgotStatus;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -93,6 +95,7 @@ class LoginWrapper extends StatelessWidget {
                   actionButtonLabel,
                   actionButtonFunction,
                   status,
+                  forgotStatus,
                 ),
                 SizedBox(
                   height: 30,
@@ -130,9 +133,17 @@ class LoginWrapper extends StatelessWidget {
   }
 }
 
-Widget button(BuildContext context, Size size, String? label,
-    dynamic Function()? buttonFunc, LoginStatus? status) {
-  if (status != LoginStatus.onprocess) {
+Widget button(
+  BuildContext context,
+  Size size,
+  String? label,
+  dynamic Function()? buttonFunc,
+  LoginStatus? status,
+  ForgotStatus? forgotStatus,
+) {
+  if (status != LoginStatus.onprocess &&
+      forgotStatus != ForgotStatus.onprocess &&
+      forgotStatus != ForgotStatus.otpOnProcess) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.center,
