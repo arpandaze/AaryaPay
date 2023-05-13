@@ -1,4 +1,5 @@
 import 'package:aaryapay/components/CustomCircularAvatar.dart';
+import 'package:aaryapay/components/CustomFavoritesAvatar.dart';
 import 'package:flutter/material.dart';
 
 class RecentPaymentCard extends StatelessWidget {
@@ -29,9 +30,8 @@ class RecentPaymentCard extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.only(right: 10),
-                child: const CustomCircularAvatar(
-                    size: 20,
-                    imageSrc: AssetImage("assets/images/default-pfp.png")),
+                child: const CustomFavoritesAvatar(
+                    width: 50, imagesUrl: "assets/images/default-pfp.png"),
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
