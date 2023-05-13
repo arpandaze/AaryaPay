@@ -48,9 +48,9 @@ class TransactionRepository {
           .get(Uri.parse('$backendBase/profile/$senderID'), headers: headers);
       var responseReciever = await http
           .get(Uri.parse('$backendBase/profile/$recieverID'), headers: headers);
-
       if (responseSender.statusCode == 200 &&
           responseReciever.statusCode == 200) {
+        print("gako cha");
         return {
           "success": true,
           "sender": jsonDecode(responseSender.body)["data"],

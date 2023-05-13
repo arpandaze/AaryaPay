@@ -95,31 +95,36 @@ class TransactionHistory extends StatelessWidget {
                       ),
                     ),
                     if (state.loaded)
-                      ...state.transactionHistory!
+                      ...state.transactionDecoded!
                           .map((item) => GestureDetector(
                                 onTapDown: (details) => {
                                   context.read<TranscationBloc>().add(
                                         LoadParticularUser(
-                                          recieverID: item["receiver_id"],
-                                          senderID: item["sender_id"],
+                                          recieverID: item["receiverTVC"]
+                                              .bkvc
+                                              .userID
+                                              .toString(),
+                                          senderID: item["senderTVC"]
+                                              .bkvc
+                                              .userID
+                                              .toString(),
                                           item: item,
                                         ),
                                       ),
                                 },
-                                onTapUp: (details) => {
-                                  context.read<TranscationBloc>().add(
-                                        ClearLoadedUser(),
-                                      ),
-                                },
+                                // onTapUp: (details) => {
+                                //   context.read<TranscationBloc>().add(
+                                //         ClearLoadedUser(),
+                                //       ),
+                                // },
                                 child: RecentPaymentCard(
+                                    isDebit: item["isSender"],
                                     label: "Google Payment",
                                     date: DateFormat.yMMMMd().format(
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                              item['generation_time'] * 1000,
-                                              isUtc: true)
-                                          .toLocal(),
+                                      item['receiverTVC'].timeStamp.toLocal(),
                                     ),
-                                    transactionAmt: item["amount"].toString(),
+                                    transactionAmt:
+                                        item["receiverTVC"].amount.toString(),
                                     finalAmt: "1200"),
                               ))
                           .toList()
