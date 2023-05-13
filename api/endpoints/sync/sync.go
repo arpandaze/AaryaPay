@@ -206,7 +206,7 @@ func (SyncController) Sync(c *gin.Context) {
       JOIN Users r ON t.receiver_id = r.id 
       WHERE t.signature = $1`,
 			signature,
-		).Scan(&transactionId, &senderId, &senderFirstName, &senderMiddleName, &senderLastName, &receiverId, &receiverFirstName, &receiverMiddleName, &receiverLastName, &verificationTime, existingSenderTVC, existingReceiverTVC)
+		).Scan(&transactionId, &senderId, &senderFirstName, &senderMiddleName, &senderLastName, &receiverId, &receiverFirstName, &receiverMiddleName, &receiverLastName, &verificationTime, &existingSenderTVC, &existingReceiverTVC)
 
 		if err == nil {
 			tx.Rollback()
@@ -344,7 +344,7 @@ func (SyncController) Sync(c *gin.Context) {
 
 		senderTVC.Sign(c)
 
-		var ReceiverAvailableBalance float32
+		var receiverAvailableBalance float32
 		var ReceiverPublicKey string
 		var ReceiverUpdatedTime time.Time
 
@@ -354,7 +354,23 @@ func (SyncController) Sync(c *gin.Context) {
       JOIN Accounts a ON u.id = a.id
       JOIN Keys k ON u.id = k.associated_user AND k.active = TRUE
       WHERE u.id = $1
-    `, transaction.To).Scan(&ReceiverAvailableBalance, &ReceiverPublicKey, &receiverFirstName, &receiverMiddleName, &receiverLastName, &ReceiverUpdatedTime)
+    `, transaction.To).Scan(&receiverAvailableBalance, &ReceiverPublicKey, &receiverFirstName, &receiverMiddleName, &receiverLastName, &ReceiverUpdatedTime)
+
+		if err != nil {
+			l.Errorw("Receiver account is inactive!",
+				"error", err,
+			)
+
+			hasError = true
+
+			responses = append(responses, TransactionSubmissionResponse{
+				Message:   "Receiver account is inactive!",
+				Success:   false,
+				Signature: &signature,
+			})
+
+			continue
+		}
 
 		receiverKeyPairBytes, err := base64.StdEncoding.DecodeString(ReceiverPublicKey)
 
@@ -378,7 +394,7 @@ func (SyncController) Sync(c *gin.Context) {
 		receiverBKVC := BalanceKeyVerificationCertificate{
 			MessageType:      BKVCMessageType,
 			UserID:           transaction.To,
-			AvailableBalance: ReceiverAvailableBalance,
+			AvailableBalance: receiverAvailableBalance,
 			PublicKey:        [32]byte(receiverPublicKey),
 			TimeStamp:        ReceiverUpdatedTime,
 		}
