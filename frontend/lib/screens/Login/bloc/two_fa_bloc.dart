@@ -5,7 +5,7 @@ import 'package:aaryapay/constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:libaaryapay/bkvc.dart';
+import 'package:libaaryapay/transaction/bkvc.dart';
 
 part 'two_fa_event.dart';
 part 'two_fa_state.dart';
