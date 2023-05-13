@@ -32,7 +32,7 @@ class AccountInformationBloc
         tempFirstName: response['first_name'],
         tempMiddleName: response['middle_name'],
         tempLastName: response['last_name'],
-        photoUrl: response['photo_url'],
+        photoUrl: response['id'],
       ));
     } catch (e) {
       print(e.toString());
@@ -83,18 +83,22 @@ class AccountInformationBloc
       if (state.paths != "") {
         var response = await repository.uploadProfile(imagePath: state.paths!);
         emit(state.copyWith(
+            imageSuccess: true,
             msgType: MessageType.success,
             errorText: "Uploaded Successfully",
             paths: "",
             image: null));
       } else {
         emit(state.copyWith(
+            imageSuccess: false,
             msgType: MessageType.error,
             errorText: "Please select an image first"));
       }
     } catch (e) {
       emit(state.copyWith(
-          msgType: MessageType.error, errorText: "Upload failed"));
+          imageSuccess: false,
+          msgType: MessageType.error,
+          errorText: "Upload failed"));
     }
   }
 
@@ -112,7 +116,9 @@ class AccountInformationBloc
         print(body);
         var response = await repository.editPersonal(body: body);
         emit(state.copyWith(
-            msgType: MessageType.success, errorText: "Edited Successfully", success: true));
+            msgType: MessageType.success,
+            errorText: "Edited Successfully",
+            success: true));
       } else {
         emit(state.copyWith(
             msgType: MessageType.error, errorText: "Fields cannot be empty"));

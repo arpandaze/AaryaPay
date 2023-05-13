@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'package:aaryapay/components/CircularLoadingAnimation.dart';
 import 'package:aaryapay/components/CustomCircularAvatar.dart';
 import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:http/http.dart' as http;
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/components/CustomStatusButton.dart';
@@ -41,7 +43,7 @@ class AccountInformation extends StatelessWidget {
 
   Widget body(Size size, ColorScheme colorScheme, BuildContext context) {
     return BlocConsumer<AccountInformationBloc, AccountInformationState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state.msgType == MessageType.error ||
             state.msgType == MessageType.warning ||
             state.msgType == MessageType.success) {
@@ -51,9 +53,14 @@ class AccountInformation extends StatelessWidget {
             msgType: state.msgType,
           );
         }
-
         if (state.success) {
           Utils.mainAppNav.currentState!.popUntil(ModalRoute.withName('/app'));
+        }
+        if (state.imageSuccess) {
+          Utils.mainAppNav.currentState!.pop(ModalRoute.withName('/app'));
+          await Utils()
+              .cacheManager
+              .removeFile("$fileServerBase/${state.photoUrl}");
         }
       },
       builder: (context, state) {
@@ -87,11 +94,7 @@ class AccountInformation extends StatelessWidget {
                                 );
                           }
                         },
-                        child: SizedBox(
-                          width: 120,
-                          height: 120,
-                          child: getProfileImage(state),
-                        ),
+                        child: getProfileImage(state),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -193,49 +196,23 @@ class AccountInformation extends StatelessWidget {
   }
 
   Widget getProfileImage(AccountInformationState profileSnapshot) {
-    final Dio dio = Dio();
     final String profileUrl = profileSnapshot.photoUrl;
-
-    Future<http.Response> fetchImage() async {
-      final Response<List<int>> response = await dio.get(
-        "$fileServerBase/$profileUrl",
-        options: Options(responseType: ResponseType.bytes),
-      );
-      final Map<String, String> headers = {};
-      response.headers.map.forEach((key, value) {
-        headers[key] = value.join(',');
-      });
-      return http.Response.bytes(
-        response.data!,
-        response.statusCode!,
-        headers: headers,
-        request: http.Request('GET', Uri.parse('$fileServerBase/$profileUrl')),
-      );
-    }
-
     if (profileSnapshot.image != null) {
-      return CircleAvatar(
-        backgroundImage: FileImage(profileSnapshot.image!),
+      return Container(
+        width: 120,
+        height: 120,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: FileImage(profileSnapshot.image!),
+          ),
+        ),
       );
     } else if (profileUrl != "") {
-      return FutureBuilder<http.Response>(
-        future: fetchImage(),
-        builder: (BuildContext context, AsyncSnapshot<http.Response> snapshot) {
-          if (snapshot.hasData) {
-            return CircleAvatar(
-              backgroundImage: MemoryImage(snapshot.data!.bodyBytes),
-            );
-          } else if (snapshot.hasError) {
-            return const Text('Error loading image');
-          } else {
-            return const CircularProgressIndicator();
-          }
-        },
-      );
+      return imageLoader(imageUrl: profileUrl, shape: ImageType.circle, width: 120, height: 120);
     } else {
-      return const CustomCircularAvatar(
-        imageSrc: AssetImage("assets/images/default-pfp.png"),
-      );
+      return CircularLoadingAnimation(width: 120, height: 120);
     }
   }
 }
