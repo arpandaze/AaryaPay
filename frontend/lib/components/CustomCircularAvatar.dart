@@ -1,22 +1,34 @@
 import 'package:flutter/material.dart';
 
 class CustomCircularAvatar extends StatelessWidget {
-  const CustomCircularAvatar({Key? key, required this.imageSrc, this.size})
-      : super(key: key);
-  final AssetImage imageSrc;
-  final double? size;
+  const CustomCircularAvatar({
+    Key? key,
+    this.width = 65,
+    required this.image,
+  }) : super(key: key);
+
+  final FileImage image;
+  final double width;
+
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: width,
+      height: width,
+      margin: const EdgeInsets.only(right: 10),
+      alignment: Alignment.center,
       decoration: BoxDecoration(
-          border: Border.all(color: Colors.black26),
-          borderRadius: const BorderRadius.all(Radius.circular(50))),
-      padding: const EdgeInsets.all(4),
-      margin: const EdgeInsets.all(5),
-      child: CircleAvatar(
-        radius: size ?? 25,
-        backgroundImage: imageSrc,
-        // color: Theme.of(context).colorScheme.primary,
+          border: Border.all(color: Colors.grey), shape: BoxShape.circle),
+      child: Container(
+        width: width - 10,
+        height: width - 10,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: image,
+          ),
+        ),
       ),
     );
   }
