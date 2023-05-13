@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"encoding/base64"
 	"main/core"
 	"math/rand"
 	"strconv"
@@ -191,6 +192,20 @@ func CreateUserWithKeyPair(t *testing.T, c *gin.Context) TestUser {
 	if err != nil {
 		t.Fatalf("failed to generate key pair: %v", err)
 	}
+
+	// CREATE TABLE Keys (
+	//     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+	//     value TEXT NOT NULL,
+	//     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+	//     active BOOLEAN NOT NULL DEFAULT FALSE,
+	//     associated_user UUID NOT NULL REFERENCES Users(id),
+	//     last_refreshed_at TIMESTAMP NOT NULL DEFAULT NOW(),
+	//
+	//     CONSTRAINT active_key_per_user UNIQUE (associated_user, active)
+	// );
+
+	accountsCreateQuery := "INSERT INTO Keys (value, active, associated_user) VALUES ($1, true, $2)"
+	_, err = core.DB.Exec(accountsCreateQuery, base64.StdEncoding.EncodeToString(keyPair.PrivateKey()), user.UserId)
 
 	user.KeyPair = keyPair
 

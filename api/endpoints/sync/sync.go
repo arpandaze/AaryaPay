@@ -180,12 +180,12 @@ func (SyncController) Sync(c *gin.Context) {
 
 		var senderId uuid.UUID
 		var senderFirstName string
-		var senderMiddleName string
+		var senderMiddleName *string
 		var senderLastName string
 
 		var receiverId uuid.UUID
 		var receiverFirstName string
-		var receiverMiddleName string
+		var receiverMiddleName *string
 		var receiverLastName string
 
 		err = tx.QueryRow(`
@@ -442,10 +442,10 @@ func (SyncController) Sync(c *gin.Context) {
 		responses = append(responses, TransactionSubmissionResponse{
 			Message:            "Transaction submitted successfully!",
 			SenderFirstName:    &senderFirstName,
-			SenderMiddleName:   &senderMiddleName,
+			SenderMiddleName:   senderMiddleName,
 			SenderLastName:     &senderLastName,
 			ReceiverFirstName:  &receiverFirstName,
-			ReceiverMiddleName: &receiverMiddleName,
+			ReceiverMiddleName: receiverMiddleName,
 			ReceiverLastName:   &receiverLastName,
 			SenderTVC:          &senderTVCBase64,
 			ReceiverTVC:        &receiverTVCBase64,
