@@ -15,6 +15,7 @@ class AccountInformationState extends Equatable {
   final MessageType msgType;
   final String errorText;
   final bool success;
+  final bool imageSuccess;
 
   const AccountInformationState({
     this.firstname = "",
@@ -31,6 +32,7 @@ class AccountInformationState extends Equatable {
     this.tempFirstName = "",
     this.tempMiddleName = "",
     this.tempLastName = "",
+    this.imageSuccess = false,
   });
 
   AccountInformationState copyWith({
@@ -48,6 +50,7 @@ class AccountInformationState extends Equatable {
     MessageType? msgType,
     String? errorText,
     bool? success,
+    bool? imageSuccess,
   }) {
     return AccountInformationState(
       firstname: firstname ?? this.firstname,
@@ -64,6 +67,7 @@ class AccountInformationState extends Equatable {
       tempFirstName: tempFirstName ?? this.tempFirstName,
       tempMiddleName: tempMiddleName ?? this.tempMiddleName,
       tempLastName: tempLastName ?? this.tempLastName,
+      imageSuccess: imageSuccess ?? this.imageSuccess,
     );
   }
 
@@ -83,5 +87,6 @@ class AccountInformationState extends Equatable {
         tempFirstName,
         tempMiddleName,
         tempLastName,
+        imageSuccess,
       ];
 }
