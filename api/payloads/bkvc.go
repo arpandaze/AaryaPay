@@ -3,6 +3,7 @@ package payloads
 import (
 	"crypto/ed25519"
 	"encoding/binary"
+	"errors"
 	. "main/core"
 	. "main/telemetry"
 	"math"
@@ -28,6 +29,13 @@ func BKVCFromBytes(c *gin.Context, data []byte) (BalanceKeyVerificationCertifica
 	_, span := Tracer.Start(c.Request.Context(), "BKVCFromBytes()")
 	defer span.End()
 	l := Logger(c).Sugar()
+
+	if len(data) != 121 {
+		l.Errorw("Invalid TAM length",
+			"length", len(data),
+		)
+		return BalanceKeyVerificationCertificate{}, errors.New("invalid TAM length")
+	}
 
 	b := BalanceKeyVerificationCertificate{}
 

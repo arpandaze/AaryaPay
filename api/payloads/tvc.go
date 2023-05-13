@@ -3,6 +3,7 @@ package payloads
 import (
 	"crypto/ed25519"
 	"encoding/binary"
+	"errors"
 	"main/core"
 	. "main/telemetry"
 	"math"
@@ -47,6 +48,13 @@ func TVCFromBytes(c *gin.Context, data []byte) (TransactionVerificationCertifica
 	_, span := Tracer.Start(c.Request.Context(), "TVCFromBytes()")
 	defer span.End()
 	l := Logger(c).Sugar()
+
+	if len(data) != 210 {
+		l.Errorw("Invalid TVC length",
+			"length", len(data),
+		)
+		return TransactionVerificationCertificate{}, errors.New("invalid TVC length")
+	}
 
 	t := TransactionVerificationCertificate{}
 	t.MessageType = TVCMessageType

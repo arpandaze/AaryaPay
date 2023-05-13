@@ -30,12 +30,12 @@ type TransactionSubmissionResponse struct {
 	Message            string     `json:"message"`
 	Success            bool       `json:"success"`
 	ID                 *uuid.UUID `json:"transaction_id,omitempty"`
-	SenderFirstName    *string    `json:"sender_first_name"`
+	SenderFirstName    *string    `json:"sender_first_name,omitempty"`
 	SenderMiddleName   *string    `json:"sender_middle_name,omitempty"`
-	SenderLastName     *string    `json:"sender_last_name"`
-	ReceiverFirstName  *string    `json:"receiver_first_name"`
+	SenderLastName     *string    `json:"sender_last_name,omitempty"`
+	ReceiverFirstName  *string    `json:"receiver_first_name,omitempty"`
 	ReceiverMiddleName *string    `json:"receiver_middle_name,omitempty"`
-	ReceiverLastName   *string    `json:"receiver_last_name"`
+	ReceiverLastName   *string    `json:"receiver_last_name,omitempty"`
 	SenderTVC          *string    `json:"sender_tvc,omitempty"`
 	ReceiverTVC        *string    `json:"receiver_tvc,omitempty"`
 	Signature          *string    `json:"signature,omitempty"`

@@ -3,6 +3,7 @@ package payloads
 import (
 	"crypto/ed25519"
 	"encoding/binary"
+	"errors"
 	. "main/telemetry"
 	"math"
 	"time"
@@ -46,6 +47,13 @@ func TAMFromBytes(c *gin.Context, data []byte) (TransactionAuthorizationMessage,
 	_, span := Tracer.Start(c.Request.Context(), "TAMFromBytes()")
 	defer span.End()
 	l := Logger(c).Sugar()
+
+	if len(data) != 210 {
+		l.Errorw("Invalid TAM length",
+			"length", len(data),
+		)
+		return TransactionAuthorizationMessage{}, errors.New("invalid TAM length")
+	}
 
 	t := TransactionAuthorizationMessage{}
 	t.MessageType = TAMMessageType
