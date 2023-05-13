@@ -1,7 +1,7 @@
 package test_auth
 
 import (
-	"main/endpoints/transaction"
+	"main/endpoints/sync"
 	. "main/tests/helpers"
 	test "main/tests/helpers"
 	"net/http"
@@ -13,15 +13,15 @@ import (
 func TestTransactionRetrieve(t *testing.T) {
 	r, c, w := TestInit()
 
-	retrieveController := transaction.TransactionRetrieve{}
+	retrieveController := sync.TransactionRetrieve{}
 
 	user := test.CreateLoggedInUser(t, c)
 
-	r.POST("/v1/transaction", retrieveController.Retrieve)
+	r.GET("/v1/transaction", retrieveController.Retrieve)
 
 	// Set cookie with user session user.SessionToken
 
-	req, err := http.NewRequest("POST", "/v1/transaction", nil)
+	req, err := http.NewRequest("GET", "/v1/transaction", nil)
 
 	cookie := http.Cookie{Name: "session", Value: user.SessionToken.String()}
 	req.AddCookie(&cookie)

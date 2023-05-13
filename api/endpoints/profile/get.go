@@ -11,6 +11,16 @@ import (
 	"github.com/google/uuid"
 )
 
+type ProfileData struct {
+	Id         uuid.UUID     `json:"id,omitempty" db:"id"`
+	FirstName  string        `json:"first_name,omitempty" db:"first_name" `
+	PhotoUrl   *string       `json:"photo_url,omitempty" db:"photo_url"`
+	MiddleName *string       `json:"middle_name,omitempty" db:"middle_name"`
+	LastName   string        `json:"last_name,omitempty" db:"last_name"`
+	DOB        UnixTimestamp `json:"dob,omitempty" db:"dob"`
+	Email      string        `json:"email,omitempty" db:"email"`
+}
+
 type GetProfileController struct{}
 
 func (GetProfileController) GetProfile(c *gin.Context) {
@@ -22,7 +32,7 @@ func (GetProfileController) GetProfile(c *gin.Context) {
 		Logger(c).Sugar().Errorw(msg,
 			"error", err,
 		)
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
 		return
 	}
 
@@ -59,7 +69,7 @@ func (GetProfileController) GetSpecificProfile(c *gin.Context) {
 		Logger(c).Sugar().Errorw(msg,
 			"error", err,
 		)
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg})
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": msg})
 		return
 	}
 

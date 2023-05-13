@@ -1,11 +1,12 @@
+import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 
 import 'package:uuid/uuid.dart';
-import 'package:libaaryapay/bkvc.dart';
-import 'package:libaaryapay/constants.dart';
+import 'package:libaaryapay/transaction/bkvc.dart';
+import 'package:libaaryapay/transaction/constants.dart';
 
-class Transaction {
+class TransactionAuthorizationMessage {
   int messageType;
   double amount;
   UuidValue to;
@@ -13,7 +14,7 @@ class Transaction {
   DateTime timeStamp;
   List<int> signature = List<int>.filled(64, 0, growable: false);
 
-  Transaction(
+  TransactionAuthorizationMessage(
     this.messageType,
     this.amount,
     this.to,
@@ -29,7 +30,7 @@ class Transaction {
   Uint8List toBytes() {
     final buffer = Uint8List(210);
 
-    buffer[0] = TRANSACTION_MESSAGE_TYPE;
+    buffer[0] = TAM_MESSAGE_TYPE;
     buffer.buffer.asByteData().setFloat32(1, amount);
     buffer.setRange(5, 21, to.toBytes());
     buffer.setRange(21, 142, bkvc.toBytes());
@@ -43,7 +44,7 @@ class Transaction {
     return buffer;
   }
 
-  static Transaction fromBytes(Uint8List data) {
+  static TransactionAuthorizationMessage fromBytes(Uint8List data) {
     final messageType = data[0];
     final amount = ByteData.view(data.buffer).getFloat32(1);
     final to = UuidValue.fromByteList(data.sublist(5, 21));
@@ -57,7 +58,7 @@ class Transaction {
 
     final signature = data.sublist(146, 210);
 
-    return Transaction(
+    return TransactionAuthorizationMessage(
       messageType,
       amount,
       to,
@@ -69,7 +70,7 @@ class Transaction {
 
   Future<void> sign(SimpleKeyPair keyPair) async {
     final data = Uint8List(146);
-    data[0] = TRANSACTION_MESSAGE_TYPE;
+    data[0] = TAM_MESSAGE_TYPE;
     data.buffer.asByteData().setFloat32(1, amount);
     data.setRange(5, 21, to.toBytes());
     data.setRange(21, 142, bkvc.toBytes());
@@ -84,7 +85,7 @@ class Transaction {
 
   Future<bool> verify() async {
     final data = Uint8List(146);
-    data[0] = TRANSACTION_MESSAGE_TYPE;
+    data[0] = TAM_MESSAGE_TYPE;
     data.buffer.asByteData().setFloat32(1, amount);
     data.setRange(5, 21, to.toBytes());
     data.setRange(21, 142, bkvc.toBytes());
@@ -97,5 +98,9 @@ class Transaction {
       data,
       signature: Signature(signature, publicKey: await bkvc.getPublicKey()),
     );
+  }
+
+  static TransactionAuthorizationMessage fromBase64(String base64) {
+    return fromBytes(base64Decode(base64));
   }
 }

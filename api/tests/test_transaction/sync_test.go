@@ -3,7 +3,7 @@ package test_auth
 import (
 	"encoding/base64"
 	"main/core"
-	"main/endpoints/transaction"
+	"main/endpoints/sync"
 	"main/payloads"
 	. "main/tests/helpers"
 	test "main/tests/helpers"
@@ -19,7 +19,7 @@ import (
 func TestSubmitTransaction(t *testing.T) {
 	r, c, w := TestInit()
 
-	submitController := transaction.SubmitController{}
+	submitController := sync.SyncController{}
 
 	receiver := test.CreateUserWithKeyPair(t, c)
 	sender := test.CreateUserWithKeyPair(t, c)
@@ -38,7 +38,7 @@ func TestSubmitTransaction(t *testing.T) {
 
 	testBKVC.Sign(c)
 
-	testTransaction := payloads.Transaction{
+	testTransaction := payloads.TransactionAuthorizationMessage{
 		Amount:    85,
 		To:        receiver.UserId,
 		BKVC:      testBKVC,
@@ -47,13 +47,13 @@ func TestSubmitTransaction(t *testing.T) {
 
 	testTransaction.Sign(c, sender.KeyPair.PrivateKey())
 
-	r.POST("/v1/transaction", submitController.Submit)
+	r.POST("/v1/sync", submitController.Sync)
 
 	// Make a test request to log in the user.
 	requestBody := url.Values{}
 	requestBody.Set("transactions", base64.StdEncoding.EncodeToString(testTransaction.ToBytes(c)))
 
-	req, err := http.NewRequest("POST", "/v1/transaction", strings.NewReader(requestBody.Encode()))
+	req, err := http.NewRequest("POST", "/v1/sync", strings.NewReader(requestBody.Encode()))
 	if err != nil {
 		t.Fatalf("failed to create test request: %v", err)
 	}
