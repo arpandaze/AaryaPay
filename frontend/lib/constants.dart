@@ -52,3 +52,9 @@ enum ForgotStatus {
   otpOnProcess,
   otpSuccess,
 }
+
+enum ImageType {
+  circle,
+  rectangle,
+  initial,
+}
