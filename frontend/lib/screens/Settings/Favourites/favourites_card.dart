@@ -1,25 +1,24 @@
 import 'package:aaryapay/components/CustomActionButton.dart';
-import 'package:aaryapay/components/CustomCircularAvatar.dart';
-import 'package:aaryapay/components/CustomFavoritesAvatar.dart';
+import 'package:aaryapay/constants.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class FavouritesCard extends StatelessWidget {
   const FavouritesCard({
     Key? key,
     this.imageSrc,
-    this.name,
-    this.userTag,
-    this.dateAdded,
+    required this.name,
+    required this.userTag,
+    required this.dateAdded,
     this.onRemove,
   }) : super(key: key);
 
   final void Function()? onRemove;
   final AssetImage? imageSrc;
-  final String? name;
-  final String? userTag;
-  final String? dateAdded;
+  final String name;
+  final String userTag;
+  final String dateAdded;
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +38,7 @@ class FavouritesCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const CustomFavoritesAvatar(
-                width: 60,
-                imagesUrl: "assets/images/default-pfp.png",
-              ),
+             imageLoader(imageUrl: "xx", shape: ImageType.initial), 
               Container(
                 width: constraints.maxWidth * 0.55,
                 padding: const EdgeInsets.symmetric(vertical: 10),
@@ -52,10 +48,10 @@ class FavouritesCard extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
-                      child: Text(name ?? "", style: textTheme.titleMedium),
+                      child: Text(name, style: textTheme.titleMedium),
                     ),
                     Text(
-                      userTag ?? "",
+                      userTag,
                       style: textTheme.bodyMedium,
                     )
                   ],
@@ -70,7 +66,7 @@ class FavouritesCard extends StatelessWidget {
                     style: textTheme.bodyMedium,
                   ),
                   Text(
-                    dateAdded ?? "10th Dec 2020",
+                    dateAdded,
                     style: textTheme.bodyMedium,
                   ),
                   Padding(
@@ -79,7 +75,7 @@ class FavouritesCard extends StatelessWidget {
                       onTap: onRemove,
                       child: CustomActionButton(
                         width: size.width * 0.08,
-                        color: Theme.of(context).colorScheme.onSurface,
+                        color: colorScheme.onSurface,
                         height: 35,
                         textTheme: Theme.of(context)
                             .textTheme
@@ -87,7 +83,7 @@ class FavouritesCard extends StatelessWidget {
                             .merge(
                               TextStyle(
                                   color:
-                                      Theme.of(context).colorScheme.background),
+                                      colorScheme.background),
                             ),
                         actionLogo: Padding(
                           padding: const EdgeInsets.all(5.0),
@@ -96,7 +92,7 @@ class FavouritesCard extends StatelessWidget {
                             width: 15,
                             height: 15,
                             colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.background,
+                                colorScheme.background,
                                 BlendMode.srcIn),
                           ),
                         ),
