@@ -1,4 +1,5 @@
-import 'package:aaryapay/components/CustomCircularAvatar.dart';
+import 'package:aaryapay/components/CustomFavoritesAvatar.dart';
+import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Send/bloc/send_money_bloc.dart';
 import 'package:aaryapay/screens/Send/components/balance_box.dart';
@@ -11,7 +12,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:math' as math;
 
 class SendMoney extends StatelessWidget {
-  const SendMoney({Key? key}) : super(key: key);
+  final String? firstname;
+  final String? lastname;
+  final String? uuid;
+  final String? email;
+  const SendMoney({
+    Key? key,
+    required this.firstname,
+    required this.uuid,
+    required this.email,
+    required this.lastname,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -122,130 +133,131 @@ class SendMoney extends StatelessWidget {
                   ),
                 ),
                 child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(9.0, 0.0, 9.0, 0.0),
-                        child: Row(
-                          children: [
-                            const CustomCircularAvatar(
-                                size: 30,
-                                imageSrc: AssetImage("assets/images/pfp.jpg")),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 10, bottom: 10),
-                                  child: Text("Send to",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(left: 10),
-                                  child: Text("Mr. Elon Musk",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .merge(const TextStyle(
-                                              fontWeight: FontWeight.w700))),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: const [
-                          NumPadButton(text: '7'),
-                          NumPadButton(text: '8'),
-                          NumPadButton(text: '9'),
-                          NumPadButton(text: 'X'),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: const [
-                          NumPadButton(text: '4'),
-                          NumPadButton(text: '5'),
-                          NumPadButton(text: '6'),
-                          NumPadButton(text: '-'),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: const [
-                          NumPadButton(text: '1'),
-                          NumPadButton(text: '2'),
-                          NumPadButton(text: '3'),
-                          NumPadButton(text: '+'),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(9.0, 0.0, 9.0, 0.0),
+                      child: Row(
                         children: [
-                          const NumPadButton(text: '.'),
-                          const NumPadButton(text: '0'),
-                          NumPadButton(
-                            icon: SvgPicture.asset("assets/icons/erase.svg",
-                                height: 15,
-                                width: 15,
-                                colorFilter: ColorFilter.mode(
-                                    Theme.of(context).colorScheme.background,
-                                    BlendMode.srcIn)),
-                            text: "erase",
-                            color: Theme.of(context).colorScheme.outline,
-                          ),
-                          const NumPadButton(text: '='),
+                          imageLoader(
+                              imageUrl: uuid!,
+                              shape: ImageType.initial,
+                              width: 60,
+                              height: 60),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                margin:
+                                    const EdgeInsets.only(left: 10, bottom: 10),
+                                child: Text("Send to",
+                                    style:
+                                        Theme.of(context).textTheme.titleSmall),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(left: 10),
+                                child: Text("$firstname $lastname",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .merge(const TextStyle(
+                                            fontWeight: FontWeight.w700))),
+                              )
+                            ],
+                          )
                         ],
                       ),
-                      CustomActionButton(
-                        label: "Send",
-                        width: size.width,
-                        borderRadius: 10,
-                      onClick: () => Utils.mainAppNav.currentState!.push(
-                          PageRouteBuilder(
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) =>
-                                    const PaymentComplete(),
-                            transitionsBuilder: (context, animation,
-                                secondaryAnimation, child) {
-                              final curve = CurvedAnimation(
-                                parent: animation,
-                                curve: Curves.decelerate,
-                              );
-
-                              return Stack(
-                                children: [
-                                  FadeTransition(
-                                    opacity: Tween<double>(
-                                      begin: 1.0,
-                                      end: 0.0,
-                                    ).animate(curve),
-                                  ),
-                                  SlideTransition(
-                                    position: Tween<Offset>(
-                                      begin: const Offset(0.0, 1.0),
-                                      end: Offset.zero,
-                                    ).animate(curve),
-                                    child: FadeTransition(
-                                      opacity: Tween<double>(
-                                        begin: 0.0,
-                                        end: 1.0,
-                                      ).animate(curve),
-                                      child: const PaymentComplete(),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: const [
+                        NumPadButton(text: '7'),
+                        NumPadButton(text: '8'),
+                        NumPadButton(text: '9'),
+                        NumPadButton(text: 'X'),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: const [
+                        NumPadButton(text: '4'),
+                        NumPadButton(text: '5'),
+                        NumPadButton(text: '6'),
+                        NumPadButton(text: '-'),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: const [
+                        NumPadButton(text: '1'),
+                        NumPadButton(text: '2'),
+                        NumPadButton(text: '3'),
+                        NumPadButton(text: '+'),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const NumPadButton(text: '.'),
+                        const NumPadButton(text: '0'),
+                        NumPadButton(
+                          icon: SvgPicture.asset("assets/icons/erase.svg",
+                              height: 15,
+                              width: 15,
+                              colorFilter: ColorFilter.mode(
+                                  Theme.of(context).colorScheme.background,
+                                  BlendMode.srcIn)),
+                          text: "erase",
+                          color: Theme.of(context).colorScheme.outline,
                         ),
-                      )
+                        const NumPadButton(text: '='),
+                      ],
+                    ),
+                    CustomActionButton(
+                      label: "Send",
+                      width: size.width,
+                      borderRadius: 10,
+                      onClick: () => Utils.mainAppNav.currentState!.push(
+                        PageRouteBuilder(
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  const PaymentComplete(),
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) {
+                            final curve = CurvedAnimation(
+                              parent: animation,
+                              curve: Curves.decelerate,
+                            );
+
+                            return Stack(
+                              children: [
+                                FadeTransition(
+                                  opacity: Tween<double>(
+                                    begin: 1.0,
+                                    end: 0.0,
+                                  ).animate(curve),
+                                ),
+                                SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: const Offset(0.0, 1.0),
+                                    end: Offset.zero,
+                                  ).animate(curve),
+                                  child: FadeTransition(
+                                    opacity: Tween<double>(
+                                      begin: 0.0,
+                                      end: 1.0,
+                                    ).animate(curve),
+                                    child: const PaymentComplete(),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),

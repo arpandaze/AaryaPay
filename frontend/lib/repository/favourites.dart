@@ -32,6 +32,30 @@ class FavouritesRepository {
     }
   }
 
+  Future<Map<String, dynamic>> getParticularUser({required String uuid}) async {
+    if (token != null) {
+      final headers = {
+        "Content-Type": "application/json",
+        "Cookie": "session=$token",
+      };
+      final response = await httpclient
+          .get(Uri.parse('$backendBase/profile/$uuid'), headers: headers);
+
+      if (response.statusCode != 200) {
+        throw Exception("Retrieve Failed! Error getting user details.");
+      }
+
+      if (response.body.isNotEmpty) {
+        var decodedResponse = jsonDecode(response.body);
+        return decodedResponse;
+      } else {
+        throw Exception("User not found");
+      }
+    } else {
+      throw Exception("No Session Found!!");
+    }
+  }
+
   Future<Map<String, dynamic>> postFavorites({required String email}) async {
     if (token != null) {
       final headers = {
