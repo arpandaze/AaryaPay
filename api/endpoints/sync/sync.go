@@ -1,7 +1,7 @@
 package sync
 
 import (
-	"database/sql"
+	"context"
 	"encoding/base64"
 	"main/core"
 	"main/endpoints/favorites"
@@ -13,6 +13,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 )
 
 type SyncResponse struct {
@@ -156,8 +157,10 @@ func (SyncController) Sync(c *gin.Context) {
 			continue
 		}
 
-		tx, err := core.DB.Begin()
+		tx, err := core.DB.Begin(context.Background())
 		if err != nil {
+			tx.Rollback(context.Background())
+
 			msg := "Failed to start transaction"
 			l.Errorw(msg,
 				"error", err,
@@ -188,7 +191,7 @@ func (SyncController) Sync(c *gin.Context) {
 		var receiverMiddleName *string
 		var receiverLastName string
 
-		err = tx.QueryRow(`
+		err = tx.QueryRow(context.Background(), `
       SELECT t.id, 
              t.sender_id, 
              s.first_name AS sender_first_name, 
@@ -209,7 +212,7 @@ func (SyncController) Sync(c *gin.Context) {
 		).Scan(&transactionId, &senderId, &senderFirstName, &senderMiddleName, &senderLastName, &receiverId, &receiverFirstName, &receiverMiddleName, &receiverLastName, &verificationTime, &existingSenderTVC, &existingReceiverTVC)
 
 		if err == nil {
-			tx.Rollback()
+			tx.Rollback(context.Background())
 
 			responses = append(responses, TransactionSubmissionResponse{
 				Message:     "Transaction already submitted",
@@ -220,11 +223,11 @@ func (SyncController) Sync(c *gin.Context) {
 
 			continue
 
-		} else if err != sql.ErrNoRows {
+		} else if err != pgx.ErrNoRows {
 			l.Errorw("Failed to query transaction table",
 				"error", err,
 			)
-			tx.Rollback()
+			tx.Rollback(context.Background())
 			hasError = true
 
 			responses = append(responses, TransactionSubmissionResponse{
@@ -236,7 +239,7 @@ func (SyncController) Sync(c *gin.Context) {
 			continue
 		}
 
-		err = tx.QueryRow("INSERT INTO Transactions (sender_id, receiver_id, amount, generation_time, signature) VALUES ($1, $2, $3, $4, $5) RETURNING id, verification_time",
+		err = tx.QueryRow(context.Background(), "INSERT INTO Transactions (sender_id, receiver_id, amount, generation_time, signature) VALUES ($1, $2, $3, $4, $5) RETURNING id, verification_time",
 			transaction.BKVC.UserID, transaction.To, transaction.Amount, transaction.TimeStamp, signature,
 		).Scan(&transactionId, &verificationTime)
 
@@ -245,7 +248,7 @@ func (SyncController) Sync(c *gin.Context) {
 				"error", err,
 			)
 
-			tx.Rollback()
+			tx.Rollback(context.Background())
 			hasError = true
 
 			responses = append(responses, TransactionSubmissionResponse{
@@ -257,13 +260,13 @@ func (SyncController) Sync(c *gin.Context) {
 			continue
 		}
 
-		_, err = tx.Exec("UPDATE Accounts SET balance = balance - $1 WHERE id = $2", transaction.Amount, transaction.BKVC.UserID)
+		_, err = tx.Exec(context.Background(), "UPDATE Accounts SET balance = balance - $1 WHERE id = $2", transaction.Amount, transaction.BKVC.UserID)
 
 		if err != nil {
 			l.Errorw("Failed to update sender balance!",
 				"error", err,
 			)
-			tx.Rollback()
+			tx.Rollback(context.Background())
 			hasError = true
 
 			responses = append(responses, TransactionSubmissionResponse{
@@ -275,13 +278,13 @@ func (SyncController) Sync(c *gin.Context) {
 			continue
 		}
 
-		_, err = tx.Exec("UPDATE Accounts SET balance = balance + $1 WHERE id = $2", transaction.Amount, transaction.To)
+		_, err = tx.Exec(context.Background(), "UPDATE Accounts SET balance = balance + $1 WHERE id = $2", transaction.Amount, transaction.To)
 
 		if err != nil {
 			l.Errorw("Failed to update receiver balance!",
 				"error", err,
 			)
-			tx.Rollback()
+			tx.Rollback(context.Background())
 			hasError = true
 
 			responses = append(responses, TransactionSubmissionResponse{
@@ -297,7 +300,7 @@ func (SyncController) Sync(c *gin.Context) {
 		var SenderPublicKey string
 		var SenderUpdatedTime time.Time
 
-		err = tx.QueryRow(`
+		err = tx.QueryRow(context.Background(), `
       SELECT a.balance, k.value, u.first_name, u.middle_name, u.last_name, NOW()
       FROM Users u
       JOIN Accounts a ON u.id = a.id
@@ -306,6 +309,7 @@ func (SyncController) Sync(c *gin.Context) {
     `, transaction.BKVC.UserID).Scan(&SenderAvailableBalance, &SenderPublicKey, &senderFirstName, &senderMiddleName, &senderLastName, &SenderUpdatedTime)
 
 		if err != nil {
+			tx.Rollback(context.Background())
 			l.Errorw("Failed to query sender account!",
 				"error", err,
 			)
@@ -322,6 +326,7 @@ func (SyncController) Sync(c *gin.Context) {
 		senderKeyPairBytes, err := base64.StdEncoding.DecodeString(SenderPublicKey)
 
 		if err != nil {
+			tx.Rollback(context.Background())
 			l.Errorw("Failed to decode base64 public key!",
 				"error", err,
 			)
@@ -362,7 +367,7 @@ func (SyncController) Sync(c *gin.Context) {
 		var ReceiverPublicKey string
 		var ReceiverUpdatedTime time.Time
 
-		err = tx.QueryRow(`
+		err = tx.QueryRow(context.Background(), `
       SELECT a.balance, k.value, u.first_name, u.middle_name, u.last_name, NOW()
       FROM Users u
       JOIN Accounts a ON u.id = a.id
@@ -371,6 +376,8 @@ func (SyncController) Sync(c *gin.Context) {
     `, transaction.To).Scan(&receiverAvailableBalance, &ReceiverPublicKey, &receiverFirstName, &receiverMiddleName, &receiverLastName, &ReceiverUpdatedTime)
 
 		if err != nil {
+			tx.Rollback(context.Background())
+
 			l.Errorw("Receiver account is inactive!",
 				"error", err,
 			)
@@ -389,6 +396,8 @@ func (SyncController) Sync(c *gin.Context) {
 		receiverKeyPairBytes, err := base64.StdEncoding.DecodeString(ReceiverPublicKey)
 
 		if err != nil {
+			tx.Rollback(context.Background())
+
 			l.Errorw("Failed to decode base64 public key!",
 				"error", err,
 			)
@@ -426,9 +435,10 @@ func (SyncController) Sync(c *gin.Context) {
 		senderTVCBase64 := base64.StdEncoding.EncodeToString(senderTVC.ToBytes(c))
 		receiverTVCBase64 := base64.StdEncoding.EncodeToString(receiverTVC.ToBytes(c))
 
-		_, err = tx.Exec("UPDATE Transactions SET sender_tvc = $1, receiver_tvc = $2 WHERE id = $3", senderTVCBase64, receiverTVCBase64, transactionId)
+		_, err = tx.Exec(context.Background(), "UPDATE Transactions SET sender_tvc = $1, receiver_tvc = $2 WHERE id = $3", senderTVCBase64, receiverTVCBase64, transactionId)
 
 		if err != nil {
+			tx.Rollback(context.Background())
 			l.Errorw("Failed to update transaction signatures!",
 				"error", err,
 			)
@@ -442,9 +452,10 @@ func (SyncController) Sync(c *gin.Context) {
 			continue
 		}
 
-		err = tx.Commit()
+		err = tx.Commit(context.Background())
 
 		if err != nil {
+			tx.Rollback(context.Background())
 			l.Errorw("Failed to commit transaction!",
 				"error", err,
 			)
@@ -513,7 +524,7 @@ func (SyncController) Sync(c *gin.Context) {
 
 		var userKeyPairBase64 string
 		var updatedTime time.Time
-		err = core.DB.QueryRow(`
+		err = core.DB.QueryRow(context.Background(), `
       SELECT a.balance, k.value, u.id, u.first_name, u.middle_name, u.last_name, u.photo_url, u.dob, u.email, NOW()
       FROM Users u
       JOIN Accounts a ON u.id = a.id

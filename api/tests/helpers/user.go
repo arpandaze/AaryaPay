@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"context"
 	"encoding/base64"
 	"main/core"
 	"math/rand"
@@ -33,7 +34,7 @@ func userCreator(t *testing.T, c *gin.Context, user *TestUser) *TestUser {
 		t.Fatalf("failed to hash password: %v", err)
 	}
 
-	tx, err := core.DB.Begin()
+	tx, err := core.DB.Begin(context.Background())
 	if err != nil {
 		msg := "Failed to start transaction"
 		t.Fatal(err)
@@ -63,14 +64,14 @@ func userCreator(t *testing.T, c *gin.Context, user *TestUser) *TestUser {
 `
 
 	err = tx.
-		QueryRow(query, user.FirstName, user.LastName, user.DOB, hashedPassword, user.Email, user.Verified).
+		QueryRow(context.Background(), query, user.FirstName, user.LastName, user.DOB, hashedPassword, user.Email, user.Verified).
 		Scan(&user.UserId)
 
 	if err != nil {
 		msg := "Failed to execute SQL statement"
 		t.Logf(msg)
 		t.Fatal(err)
-		tx.Rollback()
+		tx.Rollback(context.Background())
 	}
 
 	rand.Seed(time.Now().UnixNano())
@@ -79,20 +80,20 @@ func userCreator(t *testing.T, c *gin.Context, user *TestUser) *TestUser {
 	user.Balance = float32(randBalance)
 
 	accountsCreateQuery := "INSERT INTO Accounts (id, balance) VALUES ($1, $2)"
-	_, err = tx.Exec(accountsCreateQuery, user.UserId, randBalance)
+	_, err = tx.Exec(context.Background(), accountsCreateQuery, user.UserId, randBalance)
 
 	if err != nil {
 		msg := "Failed to execute account insert statement"
 		t.Logf(msg)
 		t.Fatal(err)
-		tx.Rollback()
+		tx.Rollback(context.Background())
 	}
 
 	// Commit the transaction if both statements succeeded
-	err = tx.Commit()
+	err = tx.Commit(context.Background())
 	if err != nil {
 		t.Fatalf("failed to create test user: %v", err)
-		tx.Rollback()
+		tx.Rollback(context.Background())
 	}
 
 	return user
@@ -193,19 +194,8 @@ func CreateUserWithKeyPair(t *testing.T, c *gin.Context) TestUser {
 		t.Fatalf("failed to generate key pair: %v", err)
 	}
 
-	// CREATE TABLE Keys (
-	//     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-	//     value TEXT NOT NULL,
-	//     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-	//     active BOOLEAN NOT NULL DEFAULT FALSE,
-	//     associated_user UUID NOT NULL REFERENCES Users(id),
-	//     last_refreshed_at TIMESTAMP NOT NULL DEFAULT NOW(),
-	//
-	//     CONSTRAINT active_key_per_user UNIQUE (associated_user, active)
-	// );
-
 	accountsCreateQuery := "INSERT INTO Keys (value, active, associated_user) VALUES ($1, true, $2)"
-	_, err = core.DB.Exec(accountsCreateQuery, base64.StdEncoding.EncodeToString(keyPair.PrivateKey()), user.UserId)
+	_, err = core.DB.Exec(context.Background(), accountsCreateQuery, base64.StdEncoding.EncodeToString(keyPair.PrivateKey()), user.UserId)
 
 	user.KeyPair = keyPair
 

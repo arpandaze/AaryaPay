@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"database/sql"
 	"encoding/base64"
 	"main/core"
@@ -52,7 +53,7 @@ func (LoginController) Login(c *gin.Context) {
 
 	queryUser := loginUser{}
 	userBalance := 0.0
-	row := core.DB.QueryRow(`
+	row := core.DB.QueryRow(context.Background(), `
     SELECT users.id, users.first_name, users.middle_name, users.last_name, users.dob, users.email, users.password, users.is_verified, users.two_factor_auth, keys.value as keypair, keys.last_refreshed_at as pubkey_updated_at, a.balance
     FROM Users users
     LEFT JOIN Keys keys ON users.id = keys.associated_user AND keys.active = true

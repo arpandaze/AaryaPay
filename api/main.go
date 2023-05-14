@@ -11,8 +11,9 @@ func main() {
 	tracerShutdown := telemetry.InitTracer()
 	defer tracerShutdown()
 
-
 	r := Init()
 
 	r.Run(core.Configs.PORT_STUB())
+
+	defer core.DB.Close()
 }

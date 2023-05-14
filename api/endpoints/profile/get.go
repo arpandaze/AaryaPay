@@ -1,6 +1,7 @@
 package profile
 
 import (
+	"context"
 	"database/sql"
 	"main/core"
 	. "main/telemetry"
@@ -46,7 +47,7 @@ func (GetProfileController) GetProfile(c *gin.Context) {
 		Email      string        `json:"email,omitempty" db:"email"`
 	}
 
-	var profileData = core.DB.QueryRow("SELECT id, first_name, middle_name, last_name, photo_url, dob, email FROM Users WHERE id = $1", user)
+	var profileData = core.DB.QueryRow(context.Background(), "SELECT id, first_name, middle_name, last_name, photo_url, dob, email FROM Users WHERE id = $1", user)
 	err = profileData.Scan(&profileDataReturn.Id, &profileDataReturn.FirstName, &profileDataReturn.MiddleName, &profileDataReturn.LastName, &profileDataReturn.PhotoUrl, &profileDataReturn.DOB, &profileDataReturn.Email)
 
 	if err != nil {
@@ -99,7 +100,7 @@ func (GetProfileController) GetSpecificProfile(c *gin.Context) {
 		return
 	}
 
-	var profileData = core.DB.QueryRow("SELECT id, first_name, middle_name, last_name, photo_url, dob, email FROM Users WHERE id = $1", userIdUUID)
+	var profileData = core.DB.QueryRow(context.Background(), "SELECT id, first_name, middle_name, last_name, photo_url, dob, email FROM Users WHERE id = $1", userIdUUID)
 	err = profileData.Scan(&profileDataReturn.Id, &profileDataReturn.FirstName, &profileDataReturn.MiddleName, &profileDataReturn.LastName, &profileDataReturn.PhotoUrl, &profileDataReturn.DOB, &profileDataReturn.Email)
 
 	if err == sql.ErrNoRows {

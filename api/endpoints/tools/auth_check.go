@@ -1,6 +1,7 @@
 package tools
 
 import (
+	"context"
 	"fmt"
 	"main/core"
 	. "main/telemetry"
@@ -25,7 +26,7 @@ func (AuthCheckController) AuthCheck(c *gin.Context) {
 	}
 
 	var userName string
-	row := core.DB.QueryRow("SELECT first_name FROM Users WHERE id=$1", user)
+	row := core.DB.QueryRow(context.Background(), "SELECT first_name FROM Users WHERE id=$1", user)
 
 	err = row.Scan(&userName)
 	if err != nil {

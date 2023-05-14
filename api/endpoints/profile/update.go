@@ -1,6 +1,7 @@
 package profile
 
 import (
+	"context"
 	"main/core"
 	. "main/telemetry"
 	"main/utils"
@@ -43,7 +44,7 @@ func (UpdateProfileController) UpdateProfile(c *gin.Context) {
 		return
 	}
 
-	_, err = core.DB.Exec(`
+	_, err = core.DB.Exec(context.Background(), `
     UPDATE Users
     SET first_name = COALESCE($1, first_name),
         middle_name = COALESCE($2, middle_name),
@@ -111,7 +112,7 @@ func (UpdateProfileController) UpdateProfilePhoto(c *gin.Context) {
 		return
 	}
 
-	_, err = core.DB.Exec(`
+	_, err = core.DB.Exec(context.Background(), `
     UPDATE Users
     SET photo_url = $1
     WHERE id = $2

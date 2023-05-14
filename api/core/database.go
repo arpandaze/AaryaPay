@@ -1,16 +1,16 @@
 package core
 
 import (
-	"database/sql"
+	"context"
 	"main/telemetry"
 
-	_ "github.com/lib/pq"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-var DB *sql.DB
+var DB *pgxpool.Pool
 
 func ConnectDatabase() {
-	var db, err = sql.Open("postgres", Configs.POSTGRES_DATABASE_URI(false))
+	conn, err := pgxpool.New(context.Background(), Configs.POSTGRES_DATABASE_URI(false))
 
 	if err != nil {
 		telemetry.Logger(nil).Sugar().Panicw("Failed to connect to database!",
@@ -20,7 +20,7 @@ func ConnectDatabase() {
 		panic(err)
 	}
 
-	_, err = db.Query("SELECT 1")
+	_, err = conn.Query(context.Background(), "SELECT 1")
 
 	if err != nil {
 		telemetry.Logger(nil).Sugar().Panicw("Failed to connect to database!",
@@ -29,5 +29,5 @@ func ConnectDatabase() {
 		)
 	}
 
-	DB = db
+	DB = conn
 }

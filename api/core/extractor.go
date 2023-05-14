@@ -1,6 +1,7 @@
 package core
 
 import (
+	"context"
 	"fmt"
 	"main/telemetry"
 
@@ -54,7 +55,7 @@ func GetActiveUser(c *gin.Context) (uuid.UUID, error) {
 		return uuid.UUID{}, err
 	}
 
-	row := DB.QueryRow("SELECT is_verified FROM Users WHERE id=$1", user)
+	row := DB.QueryRow(context.Background(), "SELECT is_verified FROM Users WHERE id=$1", user)
 
 	var isActive bool
 	err = row.Scan(&isActive)

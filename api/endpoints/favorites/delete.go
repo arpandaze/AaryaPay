@@ -1,6 +1,7 @@
 package favorites
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"main/core"
@@ -56,7 +57,7 @@ func (RemoveFavoriteController) RemoveFavorite(c *gin.Context) {
 	}
 
 	var userID string
-	err = core.DB.QueryRow("SELECT id FROM Users WHERE email = $1", favRemoveInput.Email).Scan(&userID)
+	err = core.DB.QueryRow(context.Background(), "SELECT id FROM Users WHERE email = $1", favRemoveInput.Email).Scan(&userID)
 
 	if err == sql.ErrNoRows {
 		msg := "No account associated with the email was found"
@@ -90,7 +91,7 @@ func (RemoveFavoriteController) RemoveFavorite(c *gin.Context) {
 	query := `
 		SELECT EXISTS(SELECT 1 FROM Favorites WHERE favorite_owner = $1 AND favorite_account = $2) AS favorite_exists
 	`
-	core.DB.QueryRow(query, user, favUUID).Scan(&favoriteExists)
+	core.DB.QueryRow(context.Background(), query, user, favUUID).Scan(&favoriteExists)
 
 	if !favoriteExists {
 		msg := "The account is not added as favorite!"
@@ -108,7 +109,7 @@ func (RemoveFavoriteController) RemoveFavorite(c *gin.Context) {
 	DELETE FROM favorites
 	WHERE favorite_owner = $1 AND favorite_account = $2
 	`
-	_, err = core.DB.Exec(query, user, favUUID.String())
+	_, err = core.DB.Exec(context.Background(), query, user, favUUID.String())
 
 	if err != nil {
 		msg := "Failed to execute SQL statement"

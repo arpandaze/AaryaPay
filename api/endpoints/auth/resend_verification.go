@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"database/sql"
 	"main/core"
 	"main/telemetry"
@@ -41,7 +42,7 @@ func (ResendVerificationController) ResendVerification(c *gin.Context) {
 	}
 
 	queryUser := core.CommonUser{}
-	row := core.DB.QueryRow(`
+	row := core.DB.QueryRow(context.Background(), `
 	SELECT id, first_name, middle_name, last_name, email, is_verified, last_sync
     FROM Users 
     WHERE id = $1;
