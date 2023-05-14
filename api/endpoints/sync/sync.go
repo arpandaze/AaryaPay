@@ -305,6 +305,20 @@ func (SyncController) Sync(c *gin.Context) {
       WHERE u.id = $1;
     `, transaction.BKVC.UserID).Scan(&SenderAvailableBalance, &SenderPublicKey, &senderFirstName, &senderMiddleName, &senderLastName, &SenderUpdatedTime)
 
+		if err != nil {
+			l.Errorw("Failed to query sender account!",
+				"error", err,
+			)
+
+			responses = append(responses, TransactionSubmissionResponse{
+				Message:   "Unknown error occurred!",
+				Success:   false,
+				Signature: &signature,
+			})
+
+			continue
+		}
+
 		senderKeyPairBytes, err := base64.StdEncoding.DecodeString(SenderPublicKey)
 
 		if err != nil {
@@ -418,8 +432,14 @@ func (SyncController) Sync(c *gin.Context) {
 			l.Errorw("Failed to update transaction signatures!",
 				"error", err,
 			)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
-			return
+
+			responses = append(responses, TransactionSubmissionResponse{
+				Message:   "Unknown error occurred!",
+				Success:   false,
+				Signature: &signature,
+			})
+
+			continue
 		}
 
 		err = tx.Commit()
@@ -505,7 +525,13 @@ func (SyncController) Sync(c *gin.Context) {
 			l.Errorw("Failed to get user details!",
 				"error", err,
 			)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
+
+			c.AbortWithStatusJSON(http.StatusMultiStatus, gin.H{
+				"message":           "Unknown error occurred!",
+				"success":           false,
+				"submission_status": transactionSubmissionStatus,
+				"context":           TraceIDFromContext(c),
+			})
 			return
 		}
 
