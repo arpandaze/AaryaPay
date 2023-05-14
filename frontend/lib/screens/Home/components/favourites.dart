@@ -27,10 +27,12 @@ class Favourites extends StatelessWidget {
               PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) =>
                     SendMoney(
-                        uuid: state.particularUser!['id'],
-                        firstname: state.particularUser!['first_name'],
-                        lastname: state.particularUser!['last_name'],
-                        email: state.particularUser!['email']),
+                  uuid: state.particularUser!['id'],
+                  firstname: state.particularUser!['first_name'],
+                  lastname: state.particularUser!['last_name'],
+                  email: state.particularUser!['email'],
+                  displayAmount: state.displayAmount!,
+                ),
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {
                   final curve = CurvedAnimation(
@@ -57,10 +59,12 @@ class Favourites extends StatelessWidget {
                             end: 1.0,
                           ).animate(curve),
                           child: SendMoney(
-                              uuid: state.particularUser!['id'],
-                              firstname: state.particularUser!['first_name'],
-                              lastname: state.particularUser!['last_name'],
-                              email: state.particularUser!['email']),
+                            uuid: state.particularUser!['id'],
+                            firstname: state.particularUser!['first_name'],
+                            lastname: state.particularUser!['last_name'],
+                            email: state.particularUser!['email'],
+                            displayAmount: state.displayAmount!,
+                          ),
                         ),
                       ),
                     ],

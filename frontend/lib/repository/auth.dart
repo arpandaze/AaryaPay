@@ -98,11 +98,16 @@ class AuthenticationRepository {
         value: bkvcObject.availableBalance.toString());
 
     storage.write(key: "public_key", value: bkvcObject.publicKey.toString());
+    storage.write(key: "amount", value: "10000");
     storage.write(key: "timestamp", value: bkvcObject.timeStamp.toString());
     storage.write(key: "signature", value: bkvcObject.signature.toString());
-    // storage.write(
-    //     key: "private_key",
-    //     value: base64Decode(decodedResponse["private_key"]).toString());
+    storage.write(key: "bkvc", value: decodedResponse["bkvc"]);
+
+    print(decodedResponse);
+    if (decodedResponse["primary"]) {
+      storage.write(
+          key: "private_key", value: decodedResponse["private_key"].toString());
+    }
 
     return {
       "response": decodedResponse,
