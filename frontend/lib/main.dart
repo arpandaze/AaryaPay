@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:aaryapay/routes.dart';
 import 'package:aaryapay/theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthenticationBloc>(
