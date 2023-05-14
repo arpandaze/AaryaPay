@@ -5,10 +5,13 @@ import 'package:aaryapay/screens/Send/receiver_scan_confirmation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:aaryapay/components/CustomActionButton.dart';
+import 'package:intl/intl.dart';
+import 'package:libaaryapay/libaaryapay.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class PaymentComplete extends StatelessWidget {
-  const PaymentComplete({Key? key}) : super(key: key);
+  final Map<String, dynamic> tvc;
+  const PaymentComplete({Key? key, required this.tvc}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -106,7 +109,7 @@ class PaymentComplete extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                     child: Text(
-                      "250.00",
+                      tvc["amount"].toString(),
                       style: Theme.of(context).textTheme.labelLarge!.merge(
                             TextStyle(
                               fontWeight: FontWeight.w600,
@@ -118,16 +121,17 @@ class PaymentComplete extends StatelessWidget {
                 ],
               ),
             ),
-            const GreenBox(
-                recipient: "Elon Musk",
-                amount: "2500000000000.00",
-                date: "2020-04-27",
-                sender: "Susraya Bir Singh Tuladhar",
+            GreenBox(
+                recipient: tvc["receiverName"] ?? "",
+                amount: tvc["amount"].toString(),
+                date: DateFormat.yMMMMd().format(tvc["date"]),
+                sender: tvc["senderName"] ?? "",
                 status: "Verified"),
-            const TransactionDetails(
-                recieverID: "@dropshipper",
-                transactionNo: "1x903412321",
-                time: "5:45 pm"),
+            TransactionDetails(
+              recieverID: tvc["receiverID"],
+              transactionNo: "1x903412321",
+              time: DateFormat.jm().format(tvc["date"]),
+            ),
           ],
         ),
         Expanded(

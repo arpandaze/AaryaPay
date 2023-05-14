@@ -4,19 +4,26 @@ class HomeFavoritesState extends Equatable {
   final List<dynamic>? favouritesList;
   final bool isLoaded;
   final Map? particularUser;
+  final String? displayAmount;
 
   const HomeFavoritesState({
     this.favouritesList,
     this.isLoaded = false,
     this.particularUser,
+    this.displayAmount,
   });
 
-  HomeFavoritesState copyWith(
-      {List<dynamic>? favouritesList, bool? isLoaded, Map? particularUser}) {
+  HomeFavoritesState copyWith({
+    List<dynamic>? favouritesList,
+    bool? isLoaded,
+    Map? particularUser,
+    String? displayAmount,
+  }) {
     return HomeFavoritesState(
       favouritesList: favouritesList ?? this.favouritesList,
       isLoaded: isLoaded ?? this.isLoaded,
       particularUser: particularUser ?? this.particularUser,
+      displayAmount: displayAmount ?? this.displayAmount,
     );
   }
 
@@ -25,5 +32,6 @@ class HomeFavoritesState extends Equatable {
         favouritesList,
         isLoaded,
         particularUser,
+        displayAmount,
       ];
 }

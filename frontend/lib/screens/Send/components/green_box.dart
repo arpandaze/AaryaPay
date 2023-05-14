@@ -9,12 +9,12 @@ class GreenBox extends StatelessWidget {
   final String amount;
   final String date;
   final String status;
-  const GreenBox(
-      {super.key,
-      this.photo,
-      required this.recipient,
-      required this.amount,
-      required this.date,
+  const GreenBox({
+    super.key,
+    this.photo,
+    required this.recipient,
+    required this.amount,
+    required this.date,
     required this.sender,
     required this.status,
   });
@@ -77,8 +77,7 @@ class GreenBox extends StatelessWidget {
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium!
-                                    .merge(
-                                        TextStyle(
+                                    .merge(TextStyle(
                                         color: Theme.of(context)
                                             .colorScheme
                                             .background))),
@@ -91,8 +90,7 @@ class GreenBox extends StatelessWidget {
                 SvgPicture.asset('assets/icons/star.svg',
                     width: 25,
                     height: 25,
-                    colorFilter:
-                        ColorFilter.mode(
+                    colorFilter: ColorFilter.mode(
                         Theme.of(context).colorScheme.background,
                         BlendMode.srcIn)),
               ],
@@ -149,7 +147,7 @@ class GreenBox extends StatelessWidget {
                     SizedBox(
                       width: 150,
                       child: Text(
-                        "Susraya Bir Sing Tuladhar",
+                        sender,
                         textAlign: TextAlign.right,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodyLarge!.merge(
