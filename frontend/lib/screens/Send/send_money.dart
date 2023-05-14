@@ -1,5 +1,6 @@
 import 'package:aaryapay/components/CustomFavoritesAvatar.dart';
 import 'package:aaryapay/constants.dart';
+import 'package:aaryapay/global/authentication/authentication_bloc.dart';
 import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Send/bloc/send_money_bloc.dart';
 import 'package:aaryapay/screens/Send/components/balance_box.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uuid/uuid.dart';
 import 'dart:math' as math;
 
 class SendMoney extends StatelessWidget {
@@ -16,13 +18,16 @@ class SendMoney extends StatelessWidget {
   final String? lastname;
   final String? uuid;
   final String? email;
-  const SendMoney({
-    Key? key,
-    required this.firstname,
-    required this.uuid,
-    required this.email,
-    required this.lastname,
-  }) : super(key: key);
+  final String displayAmount;
+
+  const SendMoney(
+      {Key? key,
+      required this.firstname,
+      required this.uuid,
+      required this.email,
+      required this.lastname,
+      required this.displayAmount})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -42,7 +47,49 @@ class SendMoney extends StatelessWidget {
   }
 
   Widget body(Size size, BuildContext context) {
-    return BlocBuilder<SendMoneyBloc, SendMoneyState>(
+    return BlocConsumer<SendMoneyBloc, SendMoneyState>(
+      listener: (context, state) => {
+        if (state.submitted)
+          {
+            Utils.mainAppNav.currentState!.push(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    PaymentComplete(tvc: state.submitResponse!),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  final curve = CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.decelerate,
+                  );
+
+                  return Stack(
+                    children: [
+                      FadeTransition(
+                        opacity: Tween<double>(
+                          begin: 1.0,
+                          end: 0.0,
+                        ).animate(curve),
+                      ),
+                      SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0.0, 1.0),
+                          end: Offset.zero,
+                        ).animate(curve),
+                        child: FadeTransition(
+                          opacity: Tween<double>(
+                            begin: 0.0,
+                            end: 1.0,
+                          ).animate(curve),
+                          child: PaymentComplete(tvc: state.submitResponse!),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          }
+      },
       builder: (context, state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -84,7 +131,9 @@ class SendMoney extends StatelessWidget {
                 ],
               ),
             ),
-            const BalanceBox(),
+            BalanceBox(
+              balance: displayAmount,
+            ),
             Container(
               padding: const EdgeInsets.all(15),
               margin: const EdgeInsets.fromLTRB(50, 30, 50, 5),
@@ -219,44 +268,12 @@ class SendMoney extends StatelessWidget {
                       label: "Send",
                       width: size.width,
                       borderRadius: 10,
-                      onClick: () => Utils.mainAppNav.currentState!.push(
-                        PageRouteBuilder(
-                          pageBuilder:
-                              (context, animation, secondaryAnimation) =>
-                                  const PaymentComplete(),
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) {
-                            final curve = CurvedAnimation(
-                              parent: animation,
-                              curve: Curves.decelerate,
-                            );
-
-                            return Stack(
-                              children: [
-                                FadeTransition(
-                                  opacity: Tween<double>(
-                                    begin: 1.0,
-                                    end: 0.0,
-                                  ).animate(curve),
-                                ),
-                                SlideTransition(
-                                  position: Tween<Offset>(
-                                    begin: const Offset(0.0, 1.0),
-                                    end: Offset.zero,
-                                  ).animate(curve),
-                                  child: FadeTransition(
-                                    opacity: Tween<double>(
-                                      begin: 0.0,
-                                      end: 1.0,
-                                    ).animate(curve),
-                                    child: const PaymentComplete(),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
+                      onClick: () => {
+                        context.read<SendMoneyBloc>().add(SubmitTransfer(
+                            UuidValue.fromList(Uuid.parse(uuid!)),
+                            "${context.read<AuthenticationBloc>().state.user!["first_name"]} ${context.read<AuthenticationBloc>().state.user!["last_name"]}",
+                            "$firstname $lastname")),
+                      },
                     )
                   ],
                 ),

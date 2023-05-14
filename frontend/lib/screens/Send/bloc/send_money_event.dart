@@ -21,7 +21,6 @@ class StateChanged extends SendMoneyEvent {
   List<Object> get props => [status];
 }
 
-
 class SendMoneyAddEvent extends SendMoneyEvent {}
 
 class SendMoneySubtractEvent extends SendMoneyEvent {}
@@ -36,3 +35,13 @@ class SendMoneyEqualsEvent extends SendMoneyEvent {}
 
 class SendMoneyEraseEvent extends SendMoneyEvent {}
 
+class SubmitTransfer extends SendMoneyEvent {
+  final UuidValue to;
+  final String senderName;
+  final String receiverName;
+
+  SubmitTransfer(this.to, this.senderName, this.receiverName);
+
+  @override
+  List<Object> get props => [to, senderName, receiverName];
+}
