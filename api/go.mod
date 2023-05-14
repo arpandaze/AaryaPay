@@ -21,7 +21,14 @@ require (
 	gopkg.in/yaml.v3 v3.0.1
 )
 
-require github.com/boombuler/barcode v1.0.1-0.20190219062509-6c824513bacc // indirect
+require (
+	github.com/boombuler/barcode v1.0.1-0.20190219062509-6c824513bacc // indirect
+	github.com/jackc/pgpassfile v1.0.0 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
+	github.com/jackc/pgx/v5 v5.3.1 // indirect
+	github.com/jackc/puddle/v2 v2.2.0 // indirect
+	golang.org/x/sync v0.1.0 // indirect
+)
 
 require (
 	github.com/bytedance/sonic v1.8.3 // indirect

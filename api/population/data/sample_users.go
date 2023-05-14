@@ -1,6 +1,7 @@
 package data
 
 import (
+	"context"
 	"log"
 	"main/core"
 	"math/rand"
@@ -181,7 +182,7 @@ func PopulateUsers() {
 	for idx := range SAMPLE_USERS {
 		user := &SAMPLE_USERS[idx]
 
-		tx, err := core.DB.Begin()
+		tx, err := core.DB.Begin(context.Background())
 		if err != nil {
 			msg := "Failed to start transaction"
 			log.Fatal(err)
@@ -216,14 +217,14 @@ func PopulateUsers() {
 `
 
 		err = tx.
-			QueryRow(query, user.first_name, user.middle_name, user.last_name, user.dob, user.password, user.email, user.is_verified, user.two_factor_auth).
+			QueryRow(context.Background(), query, user.first_name, user.middle_name, user.last_name, user.dob, user.password, user.email, user.is_verified, user.two_factor_auth).
 			Scan(&user.id)
 
 		if err != nil {
 			msg := "Failed to execute SQL statement"
 			log.Printf(msg)
 			log.Fatal(err)
-			tx.Rollback()
+			tx.Rollback(context.Background())
 			return
 		}
 
@@ -232,21 +233,21 @@ func PopulateUsers() {
 		rand.Seed(time.Now().UnixNano())
 		randBalance := rand.Intn(5000) + 5000
 
-		_, err = tx.Exec(accountsCreateQuery, user.id, randBalance)
+		_, err = tx.Exec(context.Background(), accountsCreateQuery, user.id, randBalance)
 
 		if err != nil {
 			msg := "Failed to execute account insert statement"
 			log.Printf(msg)
 			log.Fatal(err)
-			tx.Rollback()
+			tx.Rollback(context.Background())
 			return
 		}
 
 		// Commit the transaction if both statements succeeded
-		err = tx.Commit()
+		err = tx.Commit(context.Background())
 		if err != nil {
 			log.Fatal(err)
-			tx.Rollback()
+			tx.Rollback(context.Background())
 			return
 		}
 		log.Printf("User and account for %s %s created", user.first_name, user.last_name)

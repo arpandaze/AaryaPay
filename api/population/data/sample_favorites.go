@@ -1,6 +1,7 @@
 package data
 
 import (
+	"context"
 	"log"
 	"main/core"
 )
@@ -22,7 +23,7 @@ func PopulateFavorites() {
           $2
         )
       `
-			_, err := core.DB.Exec(query, user.id, nextUser.id)
+			_, err := core.DB.Exec(context.Background(), query, user.id, nextUser.id)
 			if err != nil {
 				msg := "Failed to execute SQL statement"
 				log.Printf(msg)

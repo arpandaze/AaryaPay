@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"database/sql"
 	"main/core"
 	"main/telemetry"
@@ -31,7 +32,7 @@ func (PasswordRecoveryController) PasswordRecovery(c *gin.Context) {
 	}
 
 	queryUser := &core.CommonUser{}
-	row := core.DB.QueryRow(`
+	row := core.DB.QueryRow(context.Background(), `
 	SELECT id, first_name, middle_name, last_name, email, is_verified, last_sync
 	FROM 
 		Users 
@@ -148,7 +149,7 @@ func (PasswordRecoveryController) PasswordReset(c *gin.Context) {
 		return
 	}
 
-	_, err = core.DB.Exec("UPDATE Users SET password=$1 WHERE id=$2", passwordHash, resetPass.Id)
+	_, err = core.DB.Exec(context.Background(), "UPDATE Users SET password=$1 WHERE id=$2", passwordHash, resetPass.Id)
 
 	if err != nil {
 		msg := "Failed to execute SQL statement"

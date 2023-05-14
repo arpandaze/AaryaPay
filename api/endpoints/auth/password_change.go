@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"database/sql"
 	"main/core"
 	"main/telemetry"
@@ -43,10 +44,12 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 	}
 
 	var queryPassword string
-	row := core.DB.QueryRow(`
-	SELECT password 
-	FROM Users 
-	WHERE id=$1
+	row := core.DB.QueryRow(
+		context.Background(),
+		`
+    SELECT password 
+    FROM Users 
+    WHERE id=$1
 	`, user,
 	)
 
@@ -115,7 +118,7 @@ func (PasswordChangeController) PasswordChange(c *gin.Context) {
 		return
 	}
 
-	_, err = core.DB.Exec("UPDATE Users SET password=$1 WHERE id=$2", passwordHash, user)
+	_, err = core.DB.Exec(context.Background(), "UPDATE Users SET password=$1 WHERE id=$2", passwordHash, user)
 
 	if err != nil {
 		msg := "Failed to execute SQL statement"

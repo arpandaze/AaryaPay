@@ -1,6 +1,7 @@
 package favorites
 
 import (
+	"context"
 	"main/core"
 	"main/telemetry"
 	"main/utils"
@@ -32,7 +33,7 @@ func GetFavoritesById(c *gin.Context, userId uuid.UUID) ([]FavoriteUser, error) 
 	ORDER BY f.date_added ASC
 	`
 
-	rows, err := core.DB.Query(query, userId)
+	rows, err := core.DB.Query(context.Background(), query, userId)
 
 	if err != nil {
 		msg := "Failed to execute SQL statement"
@@ -92,7 +93,7 @@ func (RetrieveFavoriteController) RetrieveFavorites(c *gin.Context) {
 	}
 
 	var exists bool
-	core.DB.QueryRow("SELECT EXISTS (SELECT id FROM Users WHERE id=$1)", user).Scan(&exists)
+	core.DB.QueryRow(context.Background(), "SELECT EXISTS (SELECT id FROM Users WHERE id=$1)", user).Scan(&exists)
 
 	if !exists {
 		msg := "User does not exist"

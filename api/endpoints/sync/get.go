@@ -1,6 +1,7 @@
 package sync
 
 import (
+	"context"
 	. "main/core"
 	. "main/telemetry"
 	"net/http"
@@ -27,7 +28,7 @@ func GetTransactionsById(c *gin.Context, userID uuid.UUID) ([]TransactionRow, er
 	defer span.End()
 	l := Logger(c).Sugar()
 
-	var transactionHistory, queryErr = DB.Query(`
+	var transactionHistory, queryErr = DB.Query(context.Background(), `
       SELECT t.id, 
              s.first_name AS sender_first_name, 
              s.middle_name AS sender_middle_name, 

@@ -1,8 +1,8 @@
 package core
 
 import (
+	"context"
 	"crypto/ed25519"
-	"database/sql"
 	"encoding/base64"
 	"errors"
 	"main/telemetry"
@@ -12,6 +12,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 )
 
 type KeyPair struct {
@@ -63,7 +64,7 @@ func GenerateKeyPair(c *gin.Context, userID uuid.UUID) (KeyPair, time.Time, erro
 	}
 
 	// Make the previous active key inactive
-	if _, err := DB.Exec(`
+	if _, err := DB.Exec(context.Background(), `
 		UPDATE keys SET active = false WHERE associated_user = $1 AND active = true
 	`, userID); err != nil {
 		Logger(c).Sugar().Errorw("Failed to update active key",
@@ -77,7 +78,7 @@ func GenerateKeyPair(c *gin.Context, userID uuid.UUID) (KeyPair, time.Time, erro
 
 	// Insert key pair into the keys table
 	var lastRefreshedAt time.Time
-	err = DB.QueryRow(`
+	err = DB.QueryRow(context.Background(), `
     INSERT INTO keys (value, active, associated_user)
     VALUES ($1, true, $2)
     RETURNING last_refreshed_at
@@ -109,18 +110,18 @@ func GetUserKeyPair(c *gin.Context, userID uuid.UUID) (KeyPair, time.Time, error
 
 	var key string
 	var lastRefreshedAt time.Time
-	err := DB.QueryRow(`
-    SELECT value, last_refreshed_at FROM keys WHERE associated_user = $1 AND active = true
+	err := DB.QueryRow(context.Background(), `
+    SELECT value, last_refreshed_at FROM Keys WHERE associated_user = $1 AND active = true
   `, userID).Scan(&key, &lastRefreshedAt)
 
-	if err != nil && err != sql.ErrNoRows {
+	if err != nil && err != pgx.ErrNoRows {
 		Logger(c).Sugar().Errorw("Error getting user key",
 			"error", err,
 		)
 		return KeyPair{true, []byte{}}, time.Time{}, err
 	}
 
-	if sql.ErrNoRows == err {
+	if pgx.ErrNoRows == err {
 		Logger(c).Sugar().Errorw("No key found for user",
 			"error", err,
 		)

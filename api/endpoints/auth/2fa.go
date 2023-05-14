@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"database/sql"
 	"encoding/base64"
 	"encoding/json"
@@ -41,7 +42,7 @@ func (TwoFaController) TwoFAEnableRequest(c *gin.Context) {
 
 	twoFAUser := TwoFAUserStruct{}
 
-	row := core.DB.QueryRow(`
+	row := core.DB.QueryRow(context.Background(), `
 	SELECT id, email, two_factor_auth
 	FROM 
 	users 
@@ -132,7 +133,7 @@ func (TwoFaController) TwoFAEnableConfirm(c *gin.Context) {
 
 	twoFAUser := TwoFAUserStruct{}
 
-	row := core.DB.QueryRow(`
+	row := core.DB.QueryRow(context.Background(), `
 	SELECT two_factor_auth
 	FROM 
 	users 
@@ -187,7 +188,7 @@ func (TwoFaController) TwoFAEnableConfirm(c *gin.Context) {
 		WHERE id = $2
 	`
 
-	_, err = core.DB.Exec(query, totp_secret.Val(), user)
+	_, err = core.DB.Exec(context.Background(), query, totp_secret.Val(), user)
 
 	if err != nil {
 		msg := "Failed to execute SQL statement"
@@ -310,7 +311,7 @@ func (TwoFaController) TwoFALoginConfirm(c *gin.Context) {
 
 	queryUser := loginUser{}
 	userBalance := 0.0
-	row := core.DB.QueryRow(`
+	row := core.DB.QueryRow(context.Background(), `
     SELECT users.id, users.first_name, users.middle_name, users.last_name, users.dob, users.email, users.password, users.is_verified, users.two_factor_auth, keys.value as keypair, keys.last_refreshed_at as pubkey_updated_at, a.balance
     FROM Users users
     LEFT JOIN Keys keys ON users.id = keys.associated_user AND keys.active = true
@@ -470,7 +471,7 @@ func (TwoFaController) TwoFADisable(c *gin.Context) {
 		WHERE id = $2
 	`
 
-	_, err = core.DB.Exec(query, "", user)
+	_, err = core.DB.Exec(context.Background(), query, "", user)
 
 	if err != nil {
 		msg := "Failed to execute SQL statement"

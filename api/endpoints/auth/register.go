@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"main/core"
 	"main/telemetry"
 	"main/utils"
@@ -44,7 +45,7 @@ func (RegisterController) Register(c *gin.Context) {
 
 	// Check if email is already used
 	var exists bool
-	core.DB.QueryRow("SELECT EXISTS (SELECT id FROM Users WHERE email=$1)", user.Email).Scan(&exists)
+	core.DB.QueryRow(context.Background(), "SELECT EXISTS (SELECT id FROM Users WHERE email=$1)", user.Email).Scan(&exists)
 
 	if exists {
 		msg := "Email already exists!"
@@ -69,7 +70,7 @@ func (RegisterController) Register(c *gin.Context) {
 		return
 	}
 
-	tx, err := core.DB.Begin()
+	tx, err := core.DB.Begin(context.Background())
 	if err != nil {
 		msg := "Failed to start transaction"
 		l.Errorw(msg,
@@ -110,7 +111,7 @@ func (RegisterController) Register(c *gin.Context) {
 
 	returnedUser := core.CommonUser{}
 
-	err = tx.QueryRow(query, user.FirstName, user.MiddleName, user.LastName, user.DOB.Time(), passwordHash, user.Email).Scan(
+	err = tx.QueryRow(context.Background(), query, user.FirstName, user.MiddleName, user.LastName, user.DOB.Time(), passwordHash, user.Email).Scan(
 		&returnedUser.Id, &returnedUser.FirstName, &returnedUser.MiddleName, &returnedUser.LastName, &returnedUser.Email,
 		&returnedUser.IsVerified, &returnedUser.LastSync)
 
@@ -119,26 +120,26 @@ func (RegisterController) Register(c *gin.Context) {
 		l.Errorw(msg,
 			"error", err,
 		)
-		tx.Rollback()
+		tx.Rollback(context.Background())
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 
 	accountsCreateQuery := "INSERT INTO Accounts (id, balance) VALUES ($1, $2)"
 
-	_, err = tx.Exec(accountsCreateQuery, returnedUser.Id, 0)
+	_, err = tx.Exec(context.Background(), accountsCreateQuery, returnedUser.Id, 0)
 
 	if err != nil {
 		l.Errorw("Failed to create account for user!",
 			"error", err,
 		)
-		tx.Rollback()
+		tx.Rollback(context.Background())
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": telemetry.TraceIDFromContext(c)})
 		return
 	}
 
 	// Commit the transaction if both statements succeeded
-	err = tx.Commit()
+	err = tx.Commit(context.Background())
 	if err != nil {
 		l.Errorw("Failed to commit transaction",
 			"error", err,

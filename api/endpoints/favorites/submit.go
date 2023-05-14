@@ -1,6 +1,7 @@
 package favorites
 
 import (
+	"context"
 	"database/sql"
 	"main/core"
 	"main/telemetry"
@@ -53,7 +54,7 @@ func (AddFavoriteController) AddFavorite(c *gin.Context) {
 	}
 
 	var userID string
-	err = core.DB.QueryRow("SELECT id FROM Users WHERE email = $1", favInput.Email).Scan(&userID)
+	err = core.DB.QueryRow(context.Background(), "SELECT id FROM Users WHERE email = $1", favInput.Email).Scan(&userID)
 
 	if err == sql.ErrNoRows {
 		msg := "No account associated with the email was found"
@@ -96,7 +97,7 @@ func (AddFavoriteController) AddFavorite(c *gin.Context) {
 	query := `
 		SELECT EXISTS(SELECT 1 FROM Favorites WHERE favorite_owner = $1 AND favorite_account = $2) AS favorite_exists
 	`
-	core.DB.QueryRow(query, user, favUUID).Scan(&favoriteExists)
+	core.DB.QueryRow(context.Background(), query, user, favUUID).Scan(&favoriteExists)
 
 	if favoriteExists {
 		msg := "The account has already been added as favorite!"
@@ -126,7 +127,7 @@ func (AddFavoriteController) AddFavorite(c *gin.Context) {
   `
 
 	var r_date_added string
-	row := core.DB.QueryRow(query, user, favUUID)
+	row := core.DB.QueryRow(context.Background(), query, user, favUUID)
 
 	err = row.Scan(&r_date_added)
 

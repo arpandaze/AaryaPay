@@ -1,6 +1,7 @@
 package test_auth
 
 import (
+	"context"
 	"encoding/base64"
 	"main/core"
 	"main/endpoints/sync"
@@ -26,8 +27,8 @@ func TestSubmitTransaction(t *testing.T) {
 
 	beforeReceiverBalance := 0.0
 	beforeSenderBalance := 0.0
-	core.DB.QueryRow("SELECT balance FROM Accounts WHERE id = $1", receiver.UserId).Scan(&beforeReceiverBalance)
-	core.DB.QueryRow("SELECT balance FROM Accounts WHERE id = $1", sender.UserId).Scan(&beforeSenderBalance)
+	core.DB.QueryRow(context.Background(), "SELECT balance FROM Accounts WHERE id = $1", receiver.UserId).Scan(&beforeReceiverBalance)
+	core.DB.QueryRow(context.Background(), "SELECT balance FROM Accounts WHERE id = $1", sender.UserId).Scan(&beforeSenderBalance)
 
 	testBKVC := payloads.BalanceKeyVerificationCertificate{
 		UserID:           sender.UserId,
@@ -65,8 +66,8 @@ func TestSubmitTransaction(t *testing.T) {
 
 	afterReceiverBalance := 0.0
 	afterSenderBalance := 0.0
-	core.DB.QueryRow("SELECT balance FROM Accounts WHERE id = $1", receiver.UserId).Scan(&afterReceiverBalance)
-	core.DB.QueryRow("SELECT balance FROM Accounts WHERE id = $1", sender.UserId).Scan(&afterSenderBalance)
+	core.DB.QueryRow(context.Background(), "SELECT balance FROM Accounts WHERE id = $1", receiver.UserId).Scan(&afterReceiverBalance)
+	core.DB.QueryRow(context.Background(), "SELECT balance FROM Accounts WHERE id = $1", sender.UserId).Scan(&afterSenderBalance)
 
 	assert.Equal(t, beforeReceiverBalance+85, afterReceiverBalance)
 	assert.Equal(t, beforeSenderBalance-85, afterSenderBalance)

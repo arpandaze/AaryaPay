@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"main/core"
 	"main/telemetry"
 	"net/http"
@@ -36,7 +37,7 @@ func (VerifyController) VerifyUser(c *gin.Context) {
 			"error", parseErr,
 		)
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": "Invalid user id!", "context": telemetry.TraceIDFromContext(c)})
-    return
+		return
 	}
 
 	verified := core.VerifyVerificationToken(c, userID, verifyUser.Token)
@@ -51,7 +52,7 @@ func (VerifyController) VerifyUser(c *gin.Context) {
 	}
 
 	var err error
-	_, err = core.DB.Exec("UPDATE Users SET is_verified=$1 WHERE id=$2", true, userID)
+	_, err = core.DB.Exec(context.Background(), "UPDATE Users SET is_verified=$1 WHERE id=$2", true, userID)
 
 	if err != nil {
 		msg := "Failed to execute SQL statement"
