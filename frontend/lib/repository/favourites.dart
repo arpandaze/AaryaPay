@@ -17,7 +17,7 @@ class FavouritesRepository {
       final response = await httpclient.get(Uri.parse('$backendBase/favorites'),
           headers: headers);
 
-      if (response.statusCode != 202) {
+      if (response.statusCode != 200) {
         throw Exception("Retrieve Failed! Error getting favorites list.");
       }
 
