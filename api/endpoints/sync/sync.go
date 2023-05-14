@@ -180,12 +180,12 @@ func (SyncController) Sync(c *gin.Context) {
 
 		var senderId uuid.UUID
 		var senderFirstName string
-		var senderMiddleName string
+		var senderMiddleName *string
 		var senderLastName string
 
 		var receiverId uuid.UUID
 		var receiverFirstName string
-		var receiverMiddleName string
+		var receiverMiddleName *string
 		var receiverLastName string
 
 		err = tx.QueryRow(`
@@ -206,7 +206,7 @@ func (SyncController) Sync(c *gin.Context) {
       JOIN Users r ON t.receiver_id = r.id 
       WHERE t.signature = $1`,
 			signature,
-		).Scan(&transactionId, &senderId, &senderFirstName, &senderMiddleName, &senderLastName, &receiverId, &receiverFirstName, &receiverMiddleName, &receiverLastName, &verificationTime, existingSenderTVC, existingReceiverTVC)
+		).Scan(&transactionId, &senderId, &senderFirstName, &senderMiddleName, &senderLastName, &receiverId, &receiverFirstName, &receiverMiddleName, &receiverLastName, &verificationTime, &existingSenderTVC, &existingReceiverTVC)
 
 		if err == nil {
 			tx.Rollback()
@@ -305,6 +305,20 @@ func (SyncController) Sync(c *gin.Context) {
       WHERE u.id = $1;
     `, transaction.BKVC.UserID).Scan(&SenderAvailableBalance, &SenderPublicKey, &senderFirstName, &senderMiddleName, &senderLastName, &SenderUpdatedTime)
 
+		if err != nil {
+			l.Errorw("Failed to query sender account!",
+				"error", err,
+			)
+
+			responses = append(responses, TransactionSubmissionResponse{
+				Message:   "Unknown error occurred!",
+				Success:   false,
+				Signature: &signature,
+			})
+
+			continue
+		}
+
 		senderKeyPairBytes, err := base64.StdEncoding.DecodeString(SenderPublicKey)
 
 		if err != nil {
@@ -344,7 +358,7 @@ func (SyncController) Sync(c *gin.Context) {
 
 		senderTVC.Sign(c)
 
-		var ReceiverAvailableBalance float32
+		var receiverAvailableBalance float32
 		var ReceiverPublicKey string
 		var ReceiverUpdatedTime time.Time
 
@@ -354,7 +368,23 @@ func (SyncController) Sync(c *gin.Context) {
       JOIN Accounts a ON u.id = a.id
       JOIN Keys k ON u.id = k.associated_user AND k.active = TRUE
       WHERE u.id = $1
-    `, transaction.To).Scan(&ReceiverAvailableBalance, &ReceiverPublicKey, &receiverFirstName, &receiverMiddleName, &receiverLastName, &ReceiverUpdatedTime)
+    `, transaction.To).Scan(&receiverAvailableBalance, &ReceiverPublicKey, &receiverFirstName, &receiverMiddleName, &receiverLastName, &ReceiverUpdatedTime)
+
+		if err != nil {
+			l.Errorw("Receiver account is inactive!",
+				"error", err,
+			)
+
+			hasError = true
+
+			responses = append(responses, TransactionSubmissionResponse{
+				Message:   "Receiver account is inactive!",
+				Success:   false,
+				Signature: &signature,
+			})
+
+			continue
+		}
 
 		receiverKeyPairBytes, err := base64.StdEncoding.DecodeString(ReceiverPublicKey)
 
@@ -378,7 +408,7 @@ func (SyncController) Sync(c *gin.Context) {
 		receiverBKVC := BalanceKeyVerificationCertificate{
 			MessageType:      BKVCMessageType,
 			UserID:           transaction.To,
-			AvailableBalance: ReceiverAvailableBalance,
+			AvailableBalance: receiverAvailableBalance,
 			PublicKey:        [32]byte(receiverPublicKey),
 			TimeStamp:        ReceiverUpdatedTime,
 		}
@@ -402,8 +432,14 @@ func (SyncController) Sync(c *gin.Context) {
 			l.Errorw("Failed to update transaction signatures!",
 				"error", err,
 			)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
-			return
+
+			responses = append(responses, TransactionSubmissionResponse{
+				Message:   "Unknown error occurred!",
+				Success:   false,
+				Signature: &signature,
+			})
+
+			continue
 		}
 
 		err = tx.Commit()
@@ -426,10 +462,10 @@ func (SyncController) Sync(c *gin.Context) {
 		responses = append(responses, TransactionSubmissionResponse{
 			Message:            "Transaction submitted successfully!",
 			SenderFirstName:    &senderFirstName,
-			SenderMiddleName:   &senderMiddleName,
+			SenderMiddleName:   senderMiddleName,
 			SenderLastName:     &senderLastName,
 			ReceiverFirstName:  &receiverFirstName,
-			ReceiverMiddleName: &receiverMiddleName,
+			ReceiverMiddleName: receiverMiddleName,
 			ReceiverLastName:   &receiverLastName,
 			SenderTVC:          &senderTVCBase64,
 			ReceiverTVC:        &receiverTVCBase64,
@@ -489,7 +525,13 @@ func (SyncController) Sync(c *gin.Context) {
 			l.Errorw("Failed to get user details!",
 				"error", err,
 			)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
+
+			c.AbortWithStatusJSON(http.StatusMultiStatus, gin.H{
+				"message":           "Unknown error occurred!",
+				"success":           false,
+				"submission_status": transactionSubmissionStatus,
+				"context":           TraceIDFromContext(c),
+			})
 			return
 		}
 

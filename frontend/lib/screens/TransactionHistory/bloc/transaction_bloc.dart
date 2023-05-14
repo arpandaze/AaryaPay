@@ -1,12 +1,18 @@
 import 'package:aaryapay/repository/transaction.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:libaaryapay/transaction/tvc.dart';
+import 'package:uuid/uuid.dart';
 
 part 'transaction_event.dart';
 part 'transaction_state.dart';
 
 class TranscationBloc extends Bloc<TranscationEvent, TranscationState> {
   final transactionRepository = TransactionRepository();
+
+  static const storage = FlutterSecureStorage();
+
   TranscationBloc() : super(const TranscationState()) {
     on<LoadTransaction>(_onLoadTransaction);
     on<LoadParticularUser>(_onLoadParticularUser);
@@ -16,8 +22,37 @@ class TranscationBloc extends Bloc<TranscationEvent, TranscationState> {
 
   void _onLoadTransaction(
       LoadTransaction event, Emitter<TranscationState> emit) async {
-    var decodedData = await transactionRepository.getTransactions();
-    emit(state.copywith(loaded: true, transactionHistory: decodedData['data']));
+    try {
+      var decodedData = await transactionRepository.getTransactions();
+      var user_id = (await storage.read(key: 'user_id'));
+      var uuid = UuidValue.fromList(Uuid.parse(user_id!));
+
+      List<Map<String, dynamic>>? decodedTVC = [];
+      for (var item in decodedData['data']) {
+        bool isSender = false;
+        TransactionVerificationCertificate senderTVC =
+            TransactionVerificationCertificate.fromBase64(item['sender_tvc']);
+        TransactionVerificationCertificate recieverTVC =
+            TransactionVerificationCertificate.fromBase64(item['receiver_tvc']);
+        if (senderTVC.from == uuid) {
+          isSender = true;
+        }
+
+        decodedTVC.add({
+          "senderTVC": senderTVC,
+          "receiverTVC": recieverTVC,
+          "isSender": isSender,
+          "transactionID" : item['id']
+        });
+      }
+
+      emit(state.copywith(
+          loaded: true,
+          transactionHistory: decodedData['data'],
+          transactionDecoded: decodedTVC));
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   void _onClearLoadedUser(
@@ -40,7 +75,6 @@ class TranscationBloc extends Bloc<TranscationEvent, TranscationState> {
       if (decodedData?["reciever"]["middle_name"] != "") {
         rMidName = decodedData?["reciever"]["middle_name"] + " ";
       }
-
       emit(
         state.copywith(
           senderName:

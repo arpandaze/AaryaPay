@@ -6,6 +6,7 @@ class TranscationState extends Equatable {
   final String? senderName;
   final String? recieverName;
   final Map<String, dynamic>? item;
+  final List<Map<String,dynamic>>? transactionDecoded;
 
   const TranscationState({
     this.loaded = false,
@@ -13,6 +14,7 @@ class TranscationState extends Equatable {
     this.senderName,
     this.recieverName,
     this.item,
+    this.transactionDecoded,
   });
 
   TranscationState copywith({
@@ -21,6 +23,7 @@ class TranscationState extends Equatable {
     String? senderName,
     String? recieverName,
     Map<String, dynamic>? item,
+    List<Map<String,dynamic>>? transactionDecoded,
   }) {
     return TranscationState(
       loaded: loaded ?? this.loaded,
@@ -28,6 +31,7 @@ class TranscationState extends Equatable {
       senderName: senderName ?? this.senderName,
       recieverName: recieverName ?? this.recieverName,
       item: item ?? this.item,
+      transactionDecoded: transactionDecoded ?? this.transactionDecoded,
     );
   }
 
@@ -38,5 +42,6 @@ class TranscationState extends Equatable {
         senderName,
         recieverName,
         item,
+        transactionDecoded,
       ];
 }

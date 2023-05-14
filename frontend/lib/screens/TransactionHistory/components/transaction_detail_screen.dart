@@ -32,25 +32,15 @@ class TransactionDetailsScreen extends StatelessWidget {
   }
 
   Widget body(Size size, BuildContext context) {
-    var generationDate = DateTime.fromMillisecondsSinceEpoch(
-        int.parse(transactionItem!["generation_time"].toString()) * 1000,
-        isUtc: true);
-
-    var verificationDate = DateTime.fromMillisecondsSinceEpoch(
-        int.parse(transactionItem!["verification_time"].toString()) * 1000,
-        isUtc: true);
-
-    // var todayDate = todayDateObj.millisecondsSinceEpoch.toInt() ~/ 1000;
-
     //only for formatting
-    var verificationDateFormattedString =
-        DateFormat.yMMMMd().format(verificationDate.toLocal());
+    var verificationDateFormattedString = DateFormat.yMMMMd()
+        .format(transactionItem!['senderTVC'].verificationTime);
     var verificationTimeFormattedString =
-        DateFormat.jm().format(verificationDate.toLocal());
-    var generationDateFormattedString =
-        DateFormat.yMMMMd().format(generationDate.toLocal());
+        DateFormat.jm().format(transactionItem!['senderTVC'].verificationTime);
+    var generationDateFormattedString = DateFormat.yMMMMd()
+        .format(transactionItem!['senderTVC'].generationTime);
     var generationTimeFormattedString =
-        DateFormat.jm().format(generationDate.toLocal());
+        DateFormat.jm().format(transactionItem!['senderTVC'].generationTime);
 
     return SingleChildScrollView(
       child: Column(
@@ -129,7 +119,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 5, vertical: 10),
                             child: Text(
-                              transactionItem!["amount"].toString(),
+                              transactionItem!["senderTVC"].amount.toString(),
                               style: Theme.of(context)
                                   .textTheme
                                   .labelLarge!
@@ -199,7 +189,8 @@ class TransactionDetailsScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  transactionItem!["id"].substring(0, 8),
+                                  transactionItem!["transactionID"]
+                                      .substring(0, 8),
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
@@ -302,7 +293,10 @@ class TransactionDetailsScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  transactionItem!["sender_id"]
+                                  transactionItem!["senderTVC"]
+                                      .bkvc
+                                      .userID
+                                      .toString()
                                       .substring(0, 13),
                                   style: Theme.of(context)
                                       .textTheme
@@ -327,7 +321,10 @@ class TransactionDetailsScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  transactionItem!["receiver_id"]
+                                  transactionItem!["receiverTVC"]
+                                      .bkvc
+                                      .userID
+                                      .toString()
                                       .substring(0, 13),
                                   style: Theme.of(context)
                                       .textTheme
