@@ -2,6 +2,7 @@ import 'package:aaryapay/components/CustomTextField.dart';
 import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
+import 'package:aaryapay/global/bloc/data_bloc.dart';
 import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/repository/auth.dart';
 import 'package:aaryapay/screens/Login/bloc/login_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:aaryapay/screens/Login/components/login_wrapper.dart';
 import 'package:aaryapay/screens/Login/forgot_password.dart';
 import 'package:aaryapay/screens/Login/login_verify_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,6 +20,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var storage = const FlutterSecureStorage();
 
     return RepositoryProvider<AuthenticationRepository>(
       create: (_) => AuthenticationRepository(),
@@ -26,7 +29,7 @@ class LoginScreen extends StatelessWidget {
         child: BlocConsumer<LoginBloc, LoginState>(
           listenWhen: (previous, current) =>
               previous.verificationStatus != current.verificationStatus,
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state.verificationStatus == VerificationStatus.unverified) {
               SnackBarService.stopSnackBar();
               SnackBarService.showSnackBar(
@@ -52,7 +55,17 @@ class LoginScreen extends StatelessWidget {
               );
             }
             if (state.loginSucess) {
+
               context.read<AuthenticationBloc>().add(LoggedIn());
+
+              if (context.read<AuthenticationBloc>().state.loaded) {
+                String? token = await storage.read(key: "token");
+                bool isPrimary = await storage.read(key: "isPrimary") == "true";
+                // ignore: use_build_context_synchronously
+                context
+                    .read<DataBloc>()
+                    .add(UserAuthenticatedEvent(token!, isPrimary));
+              }
             }
           },
           builder: (context, state) {
@@ -64,8 +77,8 @@ class LoginScreen extends StatelessWidget {
               },
               actionButtonFunction: () =>
                   context.read<LoginBloc>().add(LoginFormSubmitted()),
-              children: _midsection(context, size),
               status: state.status,
+              children: _midsection(context, size),
             );
           },
         ),

@@ -1,14 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'dart:convert';
-
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:cryptography/cryptography.dart';
-import 'package:libaaryapay/caching/profile.dart';
-import 'package:libaaryapay/caching/transaction.dart';
-import 'package:libaaryapay/caching/favorite.dart';
-import 'package:libaaryapay/transaction/bkvc.dart';
-
-const backendBase = 'http://localhost:8080';
+part of 'data_bloc.dart';
 
 class DataState extends Equatable {
   final SimplePublicKey? serverPublicKey;

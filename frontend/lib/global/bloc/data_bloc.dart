@@ -1,20 +1,24 @@
 import 'dart:convert';
-
 import 'package:cryptography/cryptography.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import "package:libaaryapay/bloc/data_event.dart";
-import "package:libaaryapay/bloc/data_state.dart";
-import 'package:libaaryapay/caching/favorite.dart';
-import 'package:libaaryapay/caching/profile.dart';
-import 'package:libaaryapay/caching/transaction.dart';
+import 'package:aaryapay/global/caching/profile.dart';
+import 'package:aaryapay/global/caching/transaction.dart';
+import 'package:aaryapay/global/caching/favorite.dart';
 import 'package:libaaryapay/transaction/bkvc.dart';
 import 'package:libaaryapay/transaction/utils.dart';
+import 'package:aaryapay/constants.dart';
+import 'package:libaaryapay/transaction/tvc.dart';
+import 'package:libaaryapay/transaction/tam.dart';
 
-const backendBase = 'http://localhost:8080';
+part 'data_state.dart';
+part 'data_event.dart';
+
 
 class DataBloc extends Bloc<DataEvent, DataState> {
+
   static const storage = FlutterSecureStorage();
   final httpclient = http.Client();
 
@@ -207,6 +211,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     UserAuthenticatedEvent event,
     Emitter<DataState> emit,
   ) async {
+    print("DATA BLOC");
     emit(state.copyWith(
       sessionToken: event.sessionToken,
       primary: event.isPrimary,
