@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 
 class Payment {
   //modal class
-  String title, amount, sender, reciever, startDate, endDate;
+  String title, amount, sender, reciever, startDate, endDate, senderName;
 
   Payment({
     required this.title,
     required this.amount,
     required this.sender,
+    required this.senderName,
     required this.startDate,
     required this.endDate,
     required this.reciever,
@@ -29,14 +30,16 @@ class Payments extends StatelessWidget {
         title: "Payment for momo",
         amount: "300",
         sender: "321371",
+        senderName: "John Doe",
         reciever: "213621",
         startDate: "1682985600",
-        endDate: "1683676800",
+        endDate: "1685024671",
       ),
       Payment(
         title: "Payment for momo",
         amount: "300",
         sender: "321371",
+        senderName: "John Doe",
         reciever: "213621",
         startDate: "1682899200",
         endDate: "1683027008",
@@ -48,6 +51,7 @@ class Payments extends StatelessWidget {
         reciever: "213621",
         startDate: "1682812800",
         endDate: "1682985600",
+        senderName: "John Doe",
       ),
     ];
     return SizedBox(
@@ -60,6 +64,7 @@ class Payments extends StatelessWidget {
             children: [
               PaymentsTopBar(
                 items_length: list.length,
+                total_amount: "900",
               ),
               ...list
                   .map(
@@ -68,6 +73,7 @@ class Payments extends StatelessWidget {
                       amount: e.amount,
                       sender: e.sender,
                       reciever: e.reciever,
+                      senderName: e.senderName,
                       startDate: e.startDate,
                       endDate: e.endDate,
                     ),

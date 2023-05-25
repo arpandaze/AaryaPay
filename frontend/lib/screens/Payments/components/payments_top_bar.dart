@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class PaymentsTopBar extends StatelessWidget {
-  const PaymentsTopBar({Key? key, this.items_length}) : super(key: key);
+  const PaymentsTopBar({Key? key, this.items_length, this.total_amount})
+      : super(key: key);
   final int? items_length;
+  final String? total_amount;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +50,7 @@ class PaymentsTopBar extends StatelessWidget {
                           horizontal: 8.0, vertical: 3),
                       child: Text(("Rs."), style: textTheme.bodyLarge),
                     ),
-                    Text("350", style: textTheme.headlineMedium)
+                    Text(total_amount ?? "N/A", style: textTheme.headlineMedium)
                   ],
                 )
               ],

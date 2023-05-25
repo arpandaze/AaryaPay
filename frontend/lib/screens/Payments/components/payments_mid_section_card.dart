@@ -1,3 +1,5 @@
+import 'package:aaryapay/components/CustomCircularAvatar.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -25,15 +27,15 @@ class TimeRemaining {
       if (hour == 0) {
         if (minute == 0) {
           if (second > 5) {
-            return "Expires in $second second(s)";
+            return "$second second(s)";
           }
           return "The payment is expiring soon";
         }
-        return "Expires in $minute minute(s)";
+        return "$minute minute(s)";
       }
-      return "Expires in $hour hour(s)";
+      return "$hour hour(s)";
     }
-    return "Expires in $day day(s)";
+    return "$day day(s)";
   }
 }
 
@@ -45,13 +47,15 @@ class PaymentsMidSectionCard extends StatelessWidget {
       required this.sender,
       required this.reciever,
       required this.startDate,
-      required this.endDate})
+      required this.endDate,
+      required this.senderName})
       : super(key: key);
 
   final String title;
   final String amount;
   final String sender;
   final String reciever;
+  final String senderName;
   final String startDate;
   final String endDate;
 
@@ -83,6 +87,9 @@ class PaymentsMidSectionCard extends StatelessWidget {
         DateFormat.yMMMEd().format(endDateObj.toLocal());
     var endTimeFormattedString = DateFormat.jms().format(endDateObj.toLocal());
     var expiryString = d1.display();
+
+    print(timeRemaining.inHours);
+    print(expiryString);
 
     return Container(
       padding: const EdgeInsets.all(15),
@@ -130,124 +137,38 @@ class PaymentsMidSectionCard extends StatelessWidget {
                 ),
               ],
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Sender : $sender", style: textTheme.bodyMedium),
-                Text(
-                  "Reciever  : $reciever",
-                  style: textTheme.bodyMedium,
-                ),
-              ],
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 10),
+            // Column(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   crossAxisAlignment: CrossAxisAlignment.start,
+            //   children: [
+            //     Text("Sender : $sender", style: textTheme.bodyMedium),
+            //     Text(
+            //       "Reciever  : $reciever",
+            //       style: textTheme.bodyMedium,
+            //     ),
+            //   ],
+            // ),
+            // NewWidget(startDateFormattedString: startDateFormattedString, textTheme: textTheme, startTimeFormattedString: startTimeFormattedString, endDateFormattedString: endDateFormattedString, endTimeFormattedString: endTimeFormattedString),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  imageLoader(imageUrl: "imageUrxl"),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              "assets/icons/calendar.svg",
-                              width: 16,
-                              height: 16,
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.primary,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                            Text(
-                              " $startDateFormattedString ",
-                              style: textTheme.bodyMedium,
-                            ),
-                          ],
-                        ),
+                      Text(
+                        "$senderName",
+                        style: textTheme.bodyLarge!
+                            .merge(TextStyle(fontWeight: FontWeight.w800)),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              "assets/icons/clock.svg",
-                              width: 18,
-                              height: 18,
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.primary,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                            Text(
-                              " $startTimeFormattedString ",
-                              style: textTheme.bodyMedium,
-                            ),
-                          ],
-                        ),
-                      ),
+                      Text("$sender")
                     ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              "assets/icons/calendar.svg",
-                              width: 18,
-                              height: 18,
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.primary,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                            Text(
-                              " $endDateFormattedString ",
-                              style: textTheme.bodyMedium,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              "assets/icons/clock.svg",
-                              width: 18,
-                              height: 18,
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.primary,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                            Text(
-                              " $endTimeFormattedString ",
-                              style: textTheme.bodyMedium,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  )
                 ],
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 15),
               child: Row(
@@ -293,12 +214,34 @@ class PaymentsMidSectionCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  expiryString,
-                  style: textTheme.bodyMedium,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      "assets/icons/calendar.svg",
+                      width: 16,
+                      height: 16,
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).colorScheme.primary,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: Text(
+                        " $startTimeFormattedString, $startDateFormattedString ",
+                        style: textTheme.bodySmall!.merge(
+                          TextStyle(
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Container(
-                  width: size.width * 0.20,
+                  width: size.width * 0.23,
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   decoration: BoxDecoration(
                     color: timeRemaining.inMilliseconds > 0
@@ -307,11 +250,15 @@ class PaymentsMidSectionCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    timeRemaining.inMilliseconds > 0 ? "Pending" : "Expired",
+                    timeRemaining.inMilliseconds > 0
+                        ? "$expiryString"
+                        : "Expired",
                     textAlign: TextAlign.center,
                     style: textTheme.bodyMedium!.merge(
                       TextStyle(
-                        color: colorScheme.background,
+                        color: timeRemaining.inMilliseconds > 0
+                            ? colorScheme.onSecondary
+                            : colorScheme.background,
                       ),
                     ),
                   ),
@@ -322,3 +269,131 @@ class PaymentsMidSectionCard extends StatelessWidget {
     );
   }
 }
+
+// class NewWidget extends StatelessWidget {
+//   const NewWidget({
+//     super.key,
+//     required this.startDateFormattedString,
+//     required this.textTheme,
+//     required this.startTimeFormattedString,
+//     required this.endDateFormattedString,
+//     required this.endTimeFormattedString,
+//   });
+
+//   final String startDateFormattedString;
+//   final TextTheme textTheme;
+//   final String startTimeFormattedString;
+//   final String endDateFormattedString;
+//   final String endTimeFormattedString;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       margin: const EdgeInsets.only(top: 10),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//         children: [
+//           Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Padding(
+//                 padding: const EdgeInsets.symmetric(vertical: 5.0),
+//                 child: Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                   crossAxisAlignment: CrossAxisAlignment.center,
+//                   children: [
+//                     SvgPicture.asset(
+//                       "assets/icons/calendar.svg",
+//                       width: 16,
+//                       height: 16,
+//                       colorFilter: ColorFilter.mode(
+//                         Theme.of(context).colorScheme.primary,
+//                         BlendMode.srcIn,
+//                       ),
+//                     ),
+//                     Text(
+//                       " $startDateFormattedString ",
+//                       style: textTheme.bodyMedium,
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//               Padding(
+//                 padding: const EdgeInsets.symmetric(vertical: 5.0),
+//                 child: Row(
+//                   mainAxisAlignment: MainAxisAlignment.center,
+//                   crossAxisAlignment: CrossAxisAlignment.center,
+//                   children: [
+//                     SvgPicture.asset(
+//                       "assets/icons/clock.svg",
+//                       width: 18,
+//                       height: 18,
+//                       colorFilter: ColorFilter.mode(
+//                         Theme.of(context).colorScheme.primary,
+//                         BlendMode.srcIn,
+//                       ),
+//                     ),
+//                     Text(
+//                       " $startTimeFormattedString ",
+//                       style: textTheme.bodyMedium,
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ],
+//           ),
+//           Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Padding(
+//                 padding: const EdgeInsets.symmetric(vertical: 5.0),
+//                 child: Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                   crossAxisAlignment: CrossAxisAlignment.center,
+//                   children: [
+//                     SvgPicture.asset(
+//                       "assets/icons/calendar.svg",
+//                       width: 18,
+//                       height: 18,
+//                       colorFilter: ColorFilter.mode(
+//                         Theme.of(context).colorScheme.primary,
+//                         BlendMode.srcIn,
+//                       ),
+//                     ),
+//                     Text(
+//                       " $endDateFormattedString ",
+//                       style: textTheme.bodyMedium,
+//                     ),
+//                   ],
+//                 ),
+//               ),
+             
+//               Padding(
+//                 padding: const EdgeInsets.symmetric(vertical: 5.0),
+//                 child: Row(
+//                   mainAxisAlignment: MainAxisAlignment.center,
+//                   crossAxisAlignment: CrossAxisAlignment.center,
+//                   children: [
+//                     SvgPicture.asset(
+//                       "assets/icons/clock.svg",
+//                       width: 18,
+//                       height: 18,
+//                       colorFilter: ColorFilter.mode(
+//                         Theme.of(context).colorScheme.primary,
+//                         BlendMode.srcIn,
+//                       ),
+//                     ),
+//                     Text(
+//                       " $endTimeFormattedString ",
+//                       style: textTheme.bodyMedium,
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
