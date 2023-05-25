@@ -21,6 +21,14 @@ class Utils {
       compact: true,
     ),
   );
+
+  static Widget background = ScalableImageWidget.fromSISource(
+    si: ScalableImageSource.fromSvg(
+      MySVG(imagePath: "assets/svgs/bamboo.svg"),
+      "background",
+      compact: true,
+    ),
+  );
 }
 
 class MySVG extends AssetBundle {
