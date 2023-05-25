@@ -1,7 +1,7 @@
 part of 'home_favorites_bloc.dart';
 
 class HomeFavoritesState extends Equatable {
-  final List<dynamic>? favouritesList;
+  final List<Favorite>? favouritesList;
   final bool isLoaded;
   final Map? particularUser;
   final String? displayAmount;
@@ -14,7 +14,7 @@ class HomeFavoritesState extends Equatable {
   });
 
   HomeFavoritesState copyWith({
-    List<dynamic>? favouritesList,
+    List<Favorite>? favouritesList,
     bool? isLoaded,
     Map? particularUser,
     String? displayAmount,
