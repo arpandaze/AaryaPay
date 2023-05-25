@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:aaryapay/global/bloc/data_bloc.dart';
 import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Home/home_screen.dart';
 import 'package:aaryapay/screens/Login/login_two_fa_screen.dart';
@@ -15,35 +16,44 @@ class AuthenticationStateWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AuthenticationBloc, AuthenticationState>(
-      listener: ((context, state) {
-        if (state.status == AuthenticationStatus.twoFA) {
-          Timer(
-            const Duration(microseconds: 0),
-            () {
-              Utils.mainAppNav.currentState!.push(
-                PageRouteBuilder(
-                  pageBuilder: (context, animation1, animation2) =>
-                      const LoginTwoFA(),
-                  transitionDuration: Duration.zero,
-                  reverseTransitionDuration: Duration.zero,
-                ),
+    return BlocConsumer<DataBloc, DataState>(
+      listener: (context, dataState) {
+        print("Auth wrapper");
+        print(dataState.isLoaded);
+        // TODO: implement listener
+      },
+      builder: (context, dataState) {
+        return BlocConsumer<AuthenticationBloc, AuthenticationState>(
+          listener: ((context, state) {
+            if (state.status == AuthenticationStatus.twoFA) {
+              Timer(
+                const Duration(microseconds: 0),
+                () {
+                  Utils.mainAppNav.currentState!.push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation1, animation2) =>
+                          const LoginTwoFA(),
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                  );
+                },
               );
-            },
-          );
-        }
-        if (state.status == AuthenticationStatus.loggedIn) {
-          Timer(
-            const Duration(microseconds: 0),
-            () {
-              Utils.mainAppNav.currentState!
-                  .pushNamedAndRemoveUntil("/app", (route) => false);
-            },
-          );
-        }
-      }),
-      builder: (context, state) {
-        return child;
+            }
+            if (state.status == AuthenticationStatus.loggedIn) {
+              Timer(
+                const Duration(microseconds: 0),
+                () {
+                  Utils.mainAppNav.currentState!
+                      .pushNamedAndRemoveUntil("/app", (route) => false);
+                },
+              );
+            }
+          }),
+          builder: (context, state) {
+            return child;
+          },
+        );
       },
     );
   }

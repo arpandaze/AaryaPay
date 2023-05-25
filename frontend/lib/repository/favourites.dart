@@ -1,3 +1,5 @@
+import 'package:aaryapay/global/caching/favorite.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:aaryapay/constants.dart';
 import 'dart:convert';
@@ -9,6 +11,7 @@ class FavouritesRepository {
   FavouritesRepository({required this.token});
 
   Future<Map<String, dynamic>> getFavourites() async {
+
     if (token != null) {
       final headers = {
         "Content-Type": "application/json",
@@ -31,6 +34,10 @@ class FavouritesRepository {
       throw Exception("No Session Found!!");
     }
   }
+
+  // Future<Favorite> getFavourites() async {
+
+  // }
 
   Future<Map<String, dynamic>> getParticularUser({required String uuid}) async {
     if (token != null) {

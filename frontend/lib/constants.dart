@@ -2,6 +2,9 @@ const backendBase = "https://arpandaze.tech/v1";
 
 const fileServerBase = "https://arpandaze.tech/profile";
 
+const serverKeyPair =
+    "fzAng9P5nxQCaxh4+sExTCdRI2++KmwBRKohfBJ8RuuD5sb/gfzu1BrFiJeGJudEOwAp1ZVekbVwWrLmRlzu1g==";
+
 enum AuthenticationStatus {
   unknown,
   loggedIn,
@@ -10,6 +13,7 @@ enum AuthenticationStatus {
   twoFA,
   onLogOutProcess,
   error,
+  loaded,
 }
 
 enum VerificationStatus {
