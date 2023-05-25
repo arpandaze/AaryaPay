@@ -35,6 +35,8 @@ class SendMoneyEqualsEvent extends SendMoneyEvent {}
 
 class SendMoneyEraseEvent extends SendMoneyEvent {}
 
+class OnlineEvent extends SendMoneyEvent {}
+
 class SubmitTransfer extends SendMoneyEvent {
   final UuidValue to;
   final String senderName;
