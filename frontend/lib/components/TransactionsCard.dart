@@ -80,7 +80,7 @@ class RecentPaymentCard extends StatelessWidget {
               margin: const EdgeInsets.only(right: 10),
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Text(
-                finalAmt,
+                " Rs.$finalAmt",
                 textAlign: TextAlign.right,
                 style: Theme.of(context).textTheme.labelSmall!.merge(
                       TextStyle(
