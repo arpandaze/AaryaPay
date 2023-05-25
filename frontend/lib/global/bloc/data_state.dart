@@ -9,16 +9,17 @@ class DataState extends Equatable {
   final String? sessionToken;
   final BalanceKeyVerificationCertificate? bkvc;
   final bool? primary;
-
-  final DateTime? lastSyncTime;
-
   final bool isLoaded;
+  final bool isOnline;
 
   SimplePublicKey get userPublicKey {
     return bkvc!.getPublicKey();
   }
 
   double get balance {
+    if (bkvc == null) {
+      return 0;
+    }
     double balance = bkvc!.availableBalance;
 
     var unsubmittedTransactions = transactions.transactions
@@ -32,8 +33,11 @@ class DataState extends Equatable {
         balance -= transaction.authorizationMessage!.amount;
       }
     }
-
     return balance;
+  }
+
+  DateTime get lastSyncTime {
+    return bkvc!.timeStamp;
   }
 
   const DataState({
@@ -42,10 +46,10 @@ class DataState extends Equatable {
     this.favorites = const [],
     this.bkvc,
     this.primary,
-    this.lastSyncTime,
     this.serverPublicKey,
     this.sessionToken,
     this.isLoaded = false,
+    this.isOnline = false,
   });
 
   DataState copyWith({
@@ -54,10 +58,10 @@ class DataState extends Equatable {
     Transactions? transactions,
     BalanceKeyVerificationCertificate? bkvc,
     bool? primary,
-    DateTime? lastSyncTime,
     SimplePublicKey? serverPublicKey,
     String? sessionToken,
     bool? isLoaded,
+    bool? isOnline,
   }) {
     return DataState(
       profile: profile ?? this.profile,
@@ -65,56 +69,65 @@ class DataState extends Equatable {
       transactions: transactions ?? this.transactions,
       bkvc: bkvc ?? this.bkvc,
       primary: primary ?? this.primary,
-      lastSyncTime: lastSyncTime ?? this.lastSyncTime,
       serverPublicKey: serverPublicKey ?? this.serverPublicKey,
       sessionToken: sessionToken ?? this.sessionToken,
       isLoaded: isLoaded ?? this.isLoaded,
+      isOnline: isOnline ?? this.isOnline,
     );
   }
 
-  void save(FlutterSecureStorage storage) {
+  bool save(FlutterSecureStorage storage) {
     storage.write(key: 'profile', value: jsonEncode(profile));
     storage.write(key: 'transactions', value: jsonEncode(transactions));
     storage.write(key: 'favorites', value: jsonEncode(favorites));
-    storage.write(key: 'bkvc', value: jsonEncode(bkvc));
+    storage.write(
+        key: 'bkvc', value: jsonEncode(base64Encode(bkvc!.toBytes())));
     storage.write(key: 'primary', value: jsonEncode(primary));
-    storage.write(key: 'lastSyncTime', value: jsonEncode(lastSyncTime));
     storage.write(key: 'serverPublicKey', value: jsonEncode(serverPublicKey));
     storage.write(key: 'sessionToken', value: jsonEncode(sessionToken));
+    return true;
   }
 
   static Future<DataState> fromStorage(FlutterSecureStorage storage) async {
     var storageProfile = await storage.read(key: 'profile');
-    Profile storageProfileObj =
-        storageProfile == null ? null : jsonDecode(storageProfile);
+    print("HERE");
+    var decodedProfile = jsonDecode(storageProfile!);
+    decodedProfile['dob'] = int.parse(decodedProfile['dob']);
+    Profile? storageProfileObj = decodedProfile == null
+        ? null
+        : Profile.fromJson(decodedProfile);
+
+    var userID = storageProfileObj?.id;
 
     var storageTransactions = await storage.read(key: 'transactions');
     Transactions storageTransactionsObj = storageTransactions == null
         ? Transactions(transactions: [])
-        : jsonDecode(storageTransactions);
+        : Transactions.fromMap(jsonDecode(storageTransactions), userID!);
 
     var storageBkvc = await storage.read(key: 'bkvc');
-    BalanceKeyVerificationCertificate storageBkvcObj =
-        storageBkvc == null ? null : jsonDecode(storageBkvc);
+    BalanceKeyVerificationCertificate? storageBkvcObj = storageBkvc == null
+        ? null
+        : BalanceKeyVerificationCertificate.fromBase64(jsonDecode(storageBkvc));
 
     var storagePrimary = await storage.read(key: 'primary');
     bool storagePrimaryObj =
         storagePrimary == null ? false : jsonDecode(storagePrimary) as bool;
 
-    var storageLastSyncTime = await storage.read(key: 'lastSyncTime');
-    DateTime storageLastSyncTimeObj = storageLastSyncTime == null
-        ? DateTime.fromMillisecondsSinceEpoch(0)
-        : jsonDecode(storageLastSyncTime) as DateTime;
-
     var favorites = await storage.read(key: 'favorites');
-    List<Favorite> storageFavoritesObj = favorites == null
+    var decodedFavorites = jsonDecode(favorites!);
+    decodedFavorites.forEach((element) {
+      element['date_added'] = int.parse(element['date_added']);
+    });
+    List<Favorite> storageFavoritesObj = decodedFavorites == null
         ? []
-        : jsonDecode(favorites).map((e) => Favorite.fromJson(e)).toList();
+        : (decodedFavorites as List<dynamic>)
+            .map((e) => Favorite.fromJson(e))
+            .toList();
 
     var storageServerPublicKey = await storage.read(key: 'serverPublicKey');
     SimplePublicKey? storageServerPublicKeyObj = storageServerPublicKey == null
         ? null
-        : jsonDecode(storageServerPublicKey) as SimplePublicKey;
+        : jsonDecode(storageServerPublicKey);
 
     var storageSessionToken = await storage.read(key: 'sessionToken');
     String? storageSessionTokenObj = storageSessionToken == null
@@ -127,9 +140,9 @@ class DataState extends Equatable {
       favorites: storageFavoritesObj,
       bkvc: storageBkvcObj,
       primary: storagePrimaryObj,
-      lastSyncTime: storageLastSyncTimeObj,
       serverPublicKey: storageServerPublicKeyObj,
       sessionToken: storageSessionTokenObj,
+      isLoaded: true,
     );
   }
 
@@ -140,9 +153,9 @@ class DataState extends Equatable {
         favorites,
         bkvc,
         primary,
-        lastSyncTime,
         serverPublicKey,
         sessionToken,
         isLoaded,
+        isOnline,
       ];
 }

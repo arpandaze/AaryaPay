@@ -151,7 +151,7 @@ class Transaction {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'id': id.toString(),
       'sender_first_name': senderFirstName,
       'sender_middle_name': senderMiddleName,
       'sender_last_name': senderLastName,
@@ -165,7 +165,7 @@ class Transaction {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'id': id.toString(),
       'sender_first_name': senderFirstName,
       'sender_middle_name': senderMiddleName,
       'sender_last_name': senderLastName,

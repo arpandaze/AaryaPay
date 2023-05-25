@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:cryptography/cryptography.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,9 +17,7 @@ import 'package:libaaryapay/transaction/tam.dart';
 part 'data_state.dart';
 part 'data_event.dart';
 
-
 class DataBloc extends Bloc<DataEvent, DataState> {
-
   static const storage = FlutterSecureStorage();
   final httpclient = http.Client();
 
@@ -44,70 +43,85 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     RequestSyncEvent event,
     Emitter<DataState> emit,
   ) async {
-    var url = Uri.parse('$backendBase/v1/sync');
+    bool isOnline = await checkInternetConnectivity();
 
-    var transactionToSubmit =
-        await state.transactions.getUnsubmittedTransactions();
+    if (isOnline) {
+      print("ONLINE");
+      var url = Uri.parse('$backendBase/sync');
 
-    var base64Transactions = transactionToSubmit
-        .map(
-          (transaction) => base64.encode(
-            transaction.authorizationMessage!.toBytes(),
-          ),
-        )
-        .toList();
+      var transactionToSubmit =
+          await state.transactions.getUnsubmittedTransactions();
 
-    final headers = {
-      "Content-Type": "application/x-www-form-urlencoded",
-      "Cookie": "session=${state.sessionToken}",
-    };
+      var base64Transactions = transactionToSubmit
+          .map(
+            (transaction) => base64.encode(
+              transaction.authorizationMessage!.toBytes(),
+            ),
+          )
+          .toList();
 
-    http.Response response;
-    if (transactionToSubmit.isEmpty) {
-      response = await httpclient.post(url, headers: headers);
+      final headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cookie": "session=${state.sessionToken}",
+      };
+
+      http.Response response;
+      if (transactionToSubmit.isEmpty) {
+        response = await httpclient.post(url, headers: headers);
+      } else {
+        response = await httpclient.post(url, headers: headers, body: {
+          'transactions': base64Transactions,
+        });
+      }
+
+      if (response.statusCode != 202) {
+        return;
+      }
+
+      var responseData = jsonDecode(response.body);
+
+      if (responseData.containsKey('success')) {
+        List<Favorite> favorites = responseData['favorites']
+            .map<Favorite>(
+              (favorite) => Favorite.fromJson(favorite),
+            )
+            .toList();
+
+        BalanceKeyVerificationCertificate bkvc =
+            BalanceKeyVerificationCertificate.fromBase64(responseData['bkvc']);
+
+        Profile profile = Profile.fromJson(responseData['profile']);
+
+        Transactions transactions = Transactions.fromJson(
+          responseData['transactions'],
+          bkvc.userID,
+        );
+
+        DataState newState = DataState(
+          profile: profile,
+          transactions: transactions,
+          favorites: favorites,
+          bkvc: bkvc,
+          primary: state.primary,
+          serverPublicKey: state.serverPublicKey,
+          sessionToken: state.sessionToken,
+          isLoaded: true,
+        );
+
+        newState.save(storage);
+        emit(state.copyWith(
+          profile: profile,
+          transactions: transactions,
+          favorites: favorites,
+          bkvc: bkvc,
+          primary: state.primary,
+          serverPublicKey: state.serverPublicKey,
+          sessionToken: state.sessionToken,
+          isLoaded: true,));
+      }
     } else {
-      response = await httpclient.post(url, headers: headers, body: {
-        'transactions': base64Transactions,
-      });
+      print("Offline");
     }
-
-    if (response.statusCode != 200) {
-      return;
-    }
-
-    var resposeData = jsonDecode(response.body);
-
-    List<Favorite> favorites = resposeData['favorites']
-        .map<Favorite>(
-          (favorite) => Favorite.fromJson(favorite),
-        )
-        .toList();
-
-    BalanceKeyVerificationCertificate bkvc =
-        BalanceKeyVerificationCertificate.fromBase64(resposeData['bkvc']);
-
-    Profile profile = Profile.fromJson(resposeData['profile']);
-
-    Transactions transactions = Transactions.fromJson(
-      resposeData['transactions'],
-      bkvc.userID,
-    );
-
-    DateTime lastSyncTime = bkvc.timeStamp;
-
-    DataState newState = DataState(
-      profile: profile,
-      transactions: transactions,
-      favorites: favorites,
-      bkvc: bkvc,
-      primary: state.primary,
-      lastSyncTime: lastSyncTime,
-      serverPublicKey: state.serverPublicKey,
-      sessionToken: state.sessionToken,
-      isLoaded: true,
-    );
-
-    emit(newState);
   }
 
   Future<void> _onSubmitTAM(
@@ -173,38 +187,44 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     UpdateServerKeyEvent event,
     Emitter<DataState> emit,
   ) async {
-    var url = Uri.parse('$backendBase/v1/keys/server_keys');
+    var url = Uri.parse('$backendBase/keys/server_keys');
 
     final response = await httpclient.get(url);
 
-    var resposeData = jsonDecode(response.body);
-
-    var publicKeyBase64 = resposeData['pubkey'];
-
-    if (publicKeyBase64 == null) {
+    if (response.statusCode != 200) {
       throw Exception('Server key could not be retrieved!');
     }
 
-    var serverPublicKeyDecoded = publicKeyFromBase64(publicKeyBase64);
+    if (response.body.isNotEmpty) {
+      var resposeData = jsonDecode(response.body);
 
-    bool verified = await Ed25519().verify(
-      utf8.encode(resposeData['message']),
-      signature: Signature(
-        base64Decode(resposeData['signature']),
-        publicKey: serverPublicKeyDecoded,
-      ),
-    );
+      var publicKeyBase64 = resposeData['pubkey'];
 
-    if (!verified) {
-      throw Exception('Server key could not be verified!');
+      if (publicKeyBase64 == null) {
+        throw Exception('Server key could not be retrieved!');
+      }
+
+      var serverPublicKeyDecoded = publicKeyFromBase64(publicKeyBase64);
+
+      bool verified = await Ed25519().verify(
+        utf8.encode(resposeData['message']),
+        signature: Signature(
+          base64Decode(resposeData['signature']),
+          publicKey: serverPublicKeyDecoded,
+        ),
+      );
+
+      if (!verified) {
+        throw Exception('Server key could not be verified!');
+      }
+
+      DataState newState =
+          state.copyWith(serverPublicKey: serverPublicKeyDecoded);
+
+      newState.save(storage);
+
+      emit(newState);
     }
-
-    DataState newState =
-        state.copyWith(serverPublicKey: serverPublicKeyDecoded);
-
-    newState.save(storage);
-
-    emit(newState);
   }
 
   Future<void> _onUserAuthenticated(

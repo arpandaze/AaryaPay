@@ -30,12 +30,12 @@ class Favorite {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'id': id.toString(),
       'first_name': firstName,
       'middle_name': middleName,
       'last_name': lastName,
       'email': email,
-      'date_added': dateAdded.millisecondsSinceEpoch ~/ 1000,
+      'date_added': (dateAdded.millisecondsSinceEpoch ~/ 1000).toString(),
     };
   }
 }

@@ -18,23 +18,25 @@ class Profile {
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) {
+    print("getter");
+    print(json['dob'].runtimeType);
     return Profile(
       id: UuidValue.fromList(Uuid.parse(json['id'])),
       firstName: json['first_name'],
       middleName: json['middle_name'],
       lastName: json['last_name'],
-      dob: DateTime.fromMillisecondsSinceEpoch(json['dob'] * 1000),
+      dob:  DateTime.fromMillisecondsSinceEpoch(json['dob'] * 1000),
       email: json['email'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'id': id.toString(),
       'first_name': firstName,
       'middle_name': middleName,
       'last_name': lastName,
-      'dob': dob,
+      'dob': (dob.millisecondsSinceEpoch ~/ 1000).toString(),
       'email': email,
     };
   }
