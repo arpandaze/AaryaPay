@@ -5,7 +5,7 @@ import 'package:aaryapay/screens/Send/receiver_scan_confirmation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:aaryapay/components/CustomActionButton.dart';
-import 'package:aaryapay/components/CustomAnimationWidget.dart';
+import 'package:aaryapay/components/CustomLottieAnimationWidget.dart';
 import 'package:intl/intl.dart';
 import 'package:libaaryapay/libaaryapay.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -90,25 +90,14 @@ class PaymentComplete extends StatelessWidget {
                 Container(
                     // padding: const EdgeInsets.symmetric(vertical: 2),
                     ),
-                Stack(children: [
+                const Stack(children: [
 
-                  Container(
-              
-                      child: CustomAnimationWidget(
+                  CustomAnimationWidget(
                     assetSrc: 'assets/animations/check.json',
                   )
-
-                      // child: SvgPicture.asset('assets/icons/check.svg',
-                      //     width: 80,
-                      //     colorFilter: const ColorFilter.mode(
-                      //         Color(0xff274233), BlendMode.srcIn)),
-                      )
                 ]),
-                Container(
-                  margin: const EdgeInsets.only(top: 30),
-                  child: Text("You Have Successfully sent!",
-                      style: Theme.of(context).textTheme.titleMedium),
-                ),
+                Text("You Have Successfully sent!",
+                    style: Theme.of(context).textTheme.titleMedium),
                 Container(
                   margin: const EdgeInsets.only(top: 10, bottom: 20),
                   child: Row(

@@ -92,6 +92,7 @@ class SendMoney extends StatelessWidget {
       },
       builder: (context, state) {
         return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             SizedBox(
@@ -134,36 +135,49 @@ class SendMoney extends StatelessWidget {
             BalanceBox(
               balance: displayAmount,
             ),
-            Container(
-              padding: const EdgeInsets.all(15),
-              margin: const EdgeInsets.fromLTRB(50, 30, 50, 5),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                      width: 2.0, color: Theme.of(context).colorScheme.outline),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    'assets/icons/rupee.svg',
-                    width: 30,
-                    height: 30,
-                    colorFilter: const ColorFilter.mode(
-                        Color(0xff274233), BlendMode.srcIn),
+            Expanded(
+              flex: 0,
+              child: Container(
+                padding: const EdgeInsets.all(15),
+                margin: const EdgeInsets.fromLTRB(50, 30, 50, 5),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                        width: 2.0,
+                        color: Theme.of(context).colorScheme.outline),
                   ),
-                  Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Text("${state.displayAmount}",
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall!
-                              .merge(TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.primary)))),
-                ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/icons/rupee.svg',
+                      width: 30,
+                      height: 30,
+                      colorFilter: const ColorFilter.mode(
+                          Color(0xff274233), BlendMode.srcIn),
+                    ),
+                    Container(
+                        constraints: const BoxConstraints(maxWidth: 200),
+                        margin: const EdgeInsets.only(left: 15),
+                        child: Expanded(
+                          child: Text("${state.displayAmount}",
+                              // overflow: TextOverflow.fade,
+                              // softWrap: true,
+                              // maxLines: 2,
+                              textDirection: TextDirection.ltr,
+                              // softWrap: false,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall!
+                                  .merge(TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary))),
+                        )),
+                  ],
+                ),
               ),
             ),
             Text("*Max Limit is 2000.00",
@@ -172,8 +186,10 @@ class SendMoney extends StatelessWidget {
                     .bodyMedium!
                     .merge(TextStyle(fontWeight: FontWeight.w800))),
             Expanded(
+              flex: 1,
               child: Container(
                 width: size.width,
+                // height: double.infinity,
                 margin: const EdgeInsets.only(top: 20),
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
@@ -185,7 +201,7 @@ class SendMoney extends StatelessWidget {
                   ),
                 ),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
@@ -222,103 +238,8 @@ class SendMoney extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Container(
-                      // width: double.infinity,
-                      // decoration:
-                      //     BoxDecoration(border: Border.all(color: Colors.red)),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              NumPadButton(text: 'AC'),
-                              NumPadButton(
-                                icon: SvgPicture.asset("assets/icons/erase.svg",
-                                    height: 15,
-                                    width: 15,
-                                    colorFilter: ColorFilter.mode(
-                                        Theme.of(context)
-                                            .colorScheme
-                                            .background,
-                                        BlendMode.srcIn)),
-                                text: "erase",
-                                color: Theme.of(context).colorScheme.outline,
-                              ),
-                              NumPadButton(text: '÷'),
-                              NumPadButton(text: 'X'),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              NumPadButton(text: '7'),
-                              NumPadButton(text: '8'),
-                              NumPadButton(text: '9'),
-                              NumPadButton(text: '-'),
-                            ],
-                          ),
-                          Container(
-                            width: double.infinity,
-                            // decoration: BoxDecoration(
-                            //     border: Border.all(color: Colors.red)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  // width: double.infinity,
-                                  // decoration: BoxDecoration(
-                                  //     border: Border.all(color: Colors.red)),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: const [
-                                          NumPadButton(text: '4'),
-                                          NumPadButton(text: '5'),
-                                          NumPadButton(text: '6'),
-                                          // NumPadButton(text: '-'),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: const [
-                                          NumPadButton(text: '1'),
-                                          NumPadButton(text: '2'),
-                                          NumPadButton(text: '3'),
-                                        
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                NumPadButton(
-                                  text: '+',
-                                  height: 145,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const NumPadButton(
-                                text: '0',
-                                width: 150,
-                              ),
-                              const NumPadButton(text: '.'),
-                                      
-                              const NumPadButton(text: '='),
-                            ],
-                          ),
-                        ],
-                      ),
+                    const Center(
+                      child: midMatrix(),
                     ),
                     CustomActionButton(
                       label: "Send",
@@ -341,3 +262,117 @@ class SendMoney extends StatelessWidget {
     );
   }
 }
+
+class midMatrix extends StatelessWidget {
+  const midMatrix({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              // width: size.width * 0.5,
+              // height: size.height * 0.5,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      NumPadButton(text: 'AC'),
+                      NumPadButton(
+                        icon: SvgPicture.asset("assets/icons/erase.svg",
+                            height: 15,
+                            width: 15,
+                            colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.background,
+                                BlendMode.srcIn)),
+                        text: "erase",
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
+                      NumPadButton(text: '÷'),
+                      // NumPadButton(text: 'X'),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      NumPadButton(text: '7'),
+                      NumPadButton(text: '8'),
+                      NumPadButton(text: '9'),
+                      // NumPadButton(text: '-'),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: const [
+                          NumPadButton(text: '4'),
+                          NumPadButton(text: '5'),
+                          NumPadButton(text: '6'),
+                          // NumPadButton(text: '-'),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: const [
+                          NumPadButton(text: '1'),
+                          NumPadButton(text: '2'),
+                          NumPadButton(text: '3'),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const NumPadButton(
+                        text: '0',
+                        width: 140,
+                      ),
+                      const NumPadButton(text: '.'),
+                    ],
+                  ),
+                  
+                ],
+              ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                NumPadButton(
+                  text: 'X',
+                ),
+                NumPadButton(
+                  text: '-',
+                ),
+                NumPadButton(
+                  text: '+',
+                  height: 130,
+                ),
+                const NumPadButton(text: '='),
+              ],
+            ),
+          ],
+        ),
+      
+      ],
+    );
+  }
+}
+
+
