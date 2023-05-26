@@ -129,24 +129,19 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
 
   void _onSubmitTransfer(
       SubmitTransfer event, Emitter<SendMoneyState> emit) async {
+
+    emit(state.copyWith(tamStatus: TAMStatus.initiated));
+
     var bkvc = await storage.read(key: "bkvc");
     var privateKey = await storage.read(key: "private_key");
     var token = await storage.read(key: "token");
     if (bkvc != null && privateKey != null && token != null) {
-      print("I am Here");
+      var bkvcObject =
+          BalanceKeyVerificationCertificate.fromBase64(jsonDecode(bkvc));
 
-      var bkvcObject = BalanceKeyVerificationCertificate.fromBase64(jsonDecode(bkvc));
+      var serverKey = keyPairFromBase64(serverKeyPair);
 
-      print(bkvcObject.availableBalance);
-      print(bkvcObject.messageType);
-      print(bkvcObject.publicKey);
-      print(bkvcObject.signature);
-      print(bkvcObject.timeStamp);
-      print(bkvcObject.userID);
-
-      var pubKey = "g+bG/4H87tQaxYiXhibnRDsAKdWVXpG1cFqy5kZc7tY=";
-
-      var newKey = publicKeyFromBase64(pubKey);
+      var newKey = await serverKey.extractPublicKey();
 
       print(await bkvcObject.verify(newKey));
       print(state.amount);
@@ -164,56 +159,9 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
       var keyPair = keyPairFromBase64(privateKey);
       await transferTAM.sign(keyPair);
 
-      var encodedTAM = base64Encode(transferTAM.toBytes());
-
-      var decodedTAM = base64Decode(encodedTAM);
-      TransactionAuthorizationMessage newTAM =
-          TransactionAuthorizationMessage.fromBytes(decodedTAM);
-      print("New Verify ${await newTAM.verify()}");
-      final body = {"transactions": encodedTAM};
-
-      print(body);
-
-      final url = Uri.parse('$backendBase/sync');
-      final headers = {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Cookie": "session=$token",
-      };
-
-      var amount = await storage.read(key: "amount");
-
-      var intamount = double.parse(amount!);
-      intamount = intamount - state.amount;
-      await storage.write(key: "amount", value: "$intamount");
-      emit(
-        state.copyWith(
-          submitted: true,
-          submitResponse: {
-            "amount": state.amount,
-            "date": DateTime.now(),
-            "from": bkvcObject.userID,
-            "senderName": event.senderName,
-            "receiverName": event.receiverName,
-            "receiverID": event.to.toString().substring(0, 8),
-          },
-        ),
-      );
-      // try {
-      //   var response = await httpclient.post(url, headers: headers, body: body);
-
-      //   if (response.statusCode == 202) {
-      //     TransactionVerificationCertificate submittedTVC =
-      //         TransactionVerificationCertificate.fromBase64(
-      //             jsonDecode(response.body)["transaction"]);
-
-      //     print(jsonDecode(response.body)["transaction"]);
-      //     emit(state.copyWith(submitted: true));
-      //   }
-      //   print(response.statusCode);
-      //   print(response.body);
-      // } catch (e) {
-      //   print(e);
-      // }
+      if (await transferTAM.verify()) {
+        emit(state.copyWith(tam: transferTAM,tamStatus: TAMStatus.generated));
+      }
     }
   }
 

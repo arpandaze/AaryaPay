@@ -150,6 +150,20 @@ class Transaction {
   }
 
   Map<String, dynamic> toJson() {
+    if (isSubmitted) {
+      return {
+        'id': id.toString(),
+        'sender_first_name': senderFirstName,
+        'sender_middle_name': senderMiddleName,
+        'sender_last_name': senderLastName,
+        'receiver_first_name': receiverFirstName,
+        'receiver_middle_name': receiverMiddleName,
+        'receiver_last_name': receiverLastName,
+        'sender_tvc': base64Encode(senderTvc!.toBytes()),
+        'receiver_tvc': base64Encode(receiverTvc!.toBytes()),
+      };
+    }
+
     return {
       'id': id.toString(),
       'sender_first_name': senderFirstName,
@@ -158,8 +172,6 @@ class Transaction {
       'receiver_first_name': receiverFirstName,
       'receiver_middle_name': receiverMiddleName,
       'receiver_last_name': receiverLastName,
-      'sender_tvc': base64Encode(senderTvc!.toBytes()),
-      'receiver_tvc': base64Encode(receiverTvc!.toBytes()),
     };
   }
 
