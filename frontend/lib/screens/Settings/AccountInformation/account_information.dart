@@ -210,9 +210,25 @@ class AccountInformation extends StatelessWidget {
         ),
       );
     } else if (profileUrl != "") {
-      return imageLoader(imageUrl: profileUrl, shape: ImageType.circle, width: 120, height: 120);
+      return imageLoader(
+        imageUrl: profileUrl,
+        shape: ImageType.circle,
+        width: 120,
+        height: 120,
+        errorImage: Container(
+          width: 120,
+          height: 120,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: AssetImage(("assets/images/default-pfp.png")),
+            ),
+          ),
+        ),
+      );
     } else {
-      return CircularLoadingAnimation(width: 120, height: 120);
+      return const CircularLoadingAnimation(width: 120, height: 120);
     }
   }
 }

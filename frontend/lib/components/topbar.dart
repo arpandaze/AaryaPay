@@ -1,4 +1,3 @@
-import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/components/bloc/top_bar_bloc.dart';
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/bloc/data_bloc.dart';
@@ -18,33 +17,16 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<DataBloc, DataState>(
-      listenWhen: (previous, current) => previous.isOnline != current.isOnline,
-      listener: (context, state) => {
-        if (state.isOnline)
-          {
-            SnackBarService.stopSnackBar(),
-            SnackBarService.showSnackBar(
-              msgType: MessageType.success,
-              content: "You are back Online!",
-            ),
-          }
-        else
-          {
-            SnackBarService.stopSnackBar(),
-            SnackBarService.showSnackBar(
-              msgType: MessageType.error,
-              content: "You are currently Offline!",
-            ),
-          }
-      },
+    return BlocBuilder<DataBloc, DataState>(
       buildWhen: (previous, current) => previous.isOnline != current.isOnline,
       builder: (context, state) {
         var onlineState = state.isOnline;
         return BlocProvider(
           create: (context) => TopBarBloc(),
           child: BlocConsumer<TopBarBloc, TopBarState>(
-            listener: (context, state) {},
+            listener: (context, state) {
+              // TODO: implement listener
+            },
             builder: (context, state) {
               return Container(
                 decoration: BoxDecoration(
@@ -131,8 +113,6 @@ class TopBar extends StatelessWidget {
                       children: [
                         Container(
                           margin: const EdgeInsets.all(10),
-                          // decoration: BoxDecoration(
-                          //     borderRadius: BorderRadius.circular(20)),
                           child: GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: () => Utils.mainAppNav.currentState!.push(
@@ -173,26 +153,40 @@ class TopBar extends StatelessWidget {
                                 },
                               ),
                             ),
-                            child: Stack(children: [
+                            child: Stack(clipBehavior: Clip.none, children: [
                               imageLoader(
                                 imageUrl: state.uuid ?? "",
                                 shape: ImageType.rectangle,
                                 radius: 20,
                                 width: 100,
                                 height: 100,
+                                errorImage: Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)),
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: AssetImage(
+                                          ("assets/images/default-pfp.png")),
+                                    ),
+                                  ),
+                                ),
                               ),
                               Positioned(
-                                bottom: 0,
-                                right: 10,
+                                bottom: -10,
+                                right: -5,
                                 child: Container(
                                   decoration: BoxDecoration(
                                       color:
                                           Theme.of(context).colorScheme.primary,
                                       // .withOpacity(0.2),
                                       borderRadius: BorderRadius.circular(20)),
-                                  width: 20,
-                                  height: 20,
-                                  padding: EdgeInsets.all(3),
+                                  width: 30,
+                                  height: 30,
+                                  padding: const EdgeInsets.all(6),
                                   child: Container(
                                     decoration: BoxDecoration(
                                         color: onlineState
@@ -205,8 +199,8 @@ class TopBar extends StatelessWidget {
                                         // .withOpacity(0.2),
                                         borderRadius:
                                             BorderRadius.circular(20)),
-                                    width: 15,
-                                    height: 15,
+                                    width: 20,
+                                    height: 20,
                                   ),
                                 ),
                               ),
