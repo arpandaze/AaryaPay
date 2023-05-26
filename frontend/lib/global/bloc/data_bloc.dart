@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:aaryapay/helper/utils.dart';
 import 'package:cryptography/cryptography.dart';
@@ -28,13 +29,27 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     on<SubmitTAMEvent>(_onSubmitTAM);
     on<UserAuthenticatedEvent>(_onUserAuthenticated);
     on<UpdateServerKeyEvent>(_onUpdateServerKey);
+    on<CheckInternet>(_onCheckInternet);
     add(LoadDataEvent());
+  }
+
+  Future<void> _onCheckInternet(
+      CheckInternet event, Emitter<DataState> emit) async {
+    bool isOnline = await checkInternetConnectivity();
+
+    if (state.isOnline != isOnline) {
+      emit(state.copyWith(isOnline: isOnline));
+    }
+    return;
   }
 
   Future<void> _onLoadData(
     LoadDataEvent event,
     Emitter<DataState> emit,
   ) async {
+    Timer.periodic(Duration(seconds: 1), (Timer t) {
+      add(CheckInternet());
+    });
     emit(await DataState.fromStorage(storage));
     add(RequestSyncEvent());
   }
@@ -46,7 +61,6 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     bool isOnline = await checkInternetConnectivity();
 
     if (isOnline) {
-      print("ONLINE");
       var url = Uri.parse('$backendBase/sync');
 
       var transactionToSubmit =
@@ -117,7 +131,8 @@ class DataBloc extends Bloc<DataEvent, DataState> {
           primary: state.primary,
           serverPublicKey: state.serverPublicKey,
           sessionToken: state.sessionToken,
-          isLoaded: true,));
+          isLoaded: true,
+        ));
       }
     } else {
       print("Offline");
