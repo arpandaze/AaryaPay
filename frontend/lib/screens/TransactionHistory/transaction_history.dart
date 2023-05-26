@@ -79,18 +79,19 @@ class TransactionHistory extends StatelessWidget {
             buildWhen: (previous, current) => previous != current,
             builder: (context, state) {
               return Container(
-                clipBehavior: Clip.none,
                 width: size.width,
                 height: size.height * 0.75,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black12,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(35),
+                    topRight: Radius.circular(35),
                   ),
-                  color: Theme.of(context).colorScheme.background,
+                  color: Color(0xfff4f6f4),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(15.0, 0, 15, 0),
-                  child: SingleChildScrollView(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 20),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,7 +103,7 @@ class TransactionHistory extends StatelessWidget {
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                         ),
-                        if (state.loaded )
+                        if (state.loaded)
                           ...state.transactionHistory!.transactions
                               .map((item) => GestureDetector(
                                     onTapDown: (details) => {
@@ -116,7 +117,9 @@ class TransactionHistory extends StatelessWidget {
                                                   .senderTvc!.bkvc.userID
                                                   .toString()))
                                     },
-                                    onTap: () => context.read<TranscationBloc>().add(ClearLoadedUser()),
+                                    onTap: () => context
+                                        .read<TranscationBloc>()
+                                        .add(ClearLoadedUser()),
                                     child: RecentPaymentCard(
                                       isDebit: item.isDebit,
                                       label: !item.isDebit
@@ -132,8 +135,7 @@ class TransactionHistory extends StatelessWidget {
                                   ))
                               .toList()
                               .reversed,
-                        if (!(state.loaded ))
-                          const CircularProgressIndicator(),
+                        if (!(state.loaded)) const CircularProgressIndicator(),
                       ],
                     ),
                   ),

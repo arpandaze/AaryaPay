@@ -20,146 +20,157 @@ class RecentCard extends StatelessWidget {
         print("DATA STATE STATUS : ${dataState.isLoaded}");
       },
       builder: (context, dataState) {
-        return 
-          dataState.isLoaded ? BlocProvider<RecentCardBloc>(
-          create: (context) => RecentCardBloc()
-            ..add(TransactionLoad(transactions: dataState.transactions)),
-          child: BlocConsumer<RecentCardBloc, RecentCardState>(
-            listener: (context, state) {
-              if (state.senderName != null &&
-                  state.receiverName != null &&
-                  state.item != null) {
-                print(state.item);
-                Utils.mainAppNav.currentState!.push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation1, animation2) =>
-                        TransactionDetailsScreen(
-                      transactionItem: state.item,
-                      recieverName: state.receiverName,
-                      senderName: state.senderName,
-                    ),
-                    transitionDuration: Duration.zero,
-                    reverseTransitionDuration: Duration.zero,
-                    transitionsBuilder:
-                        (context, animation, secondaryAnimation, child) {
-                      final curve = CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.decelerate,
-                      );
+        return dataState.isLoaded
+            ? BlocProvider<RecentCardBloc>(
+                create: (context) => RecentCardBloc()
+                  ..add(TransactionLoad(transactions: dataState.transactions)),
+                child: BlocConsumer<RecentCardBloc, RecentCardState>(
+                  listener: (context, state) {
+                    if (state.senderName != null &&
+                        state.receiverName != null &&
+                        state.item != null) {
+                      print(state.item);
+                      Utils.mainAppNav.currentState!.push(
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation1, animation2) =>
+                              TransactionDetailsScreen(
+                            transactionItem: state.item,
+                            recieverName: state.receiverName,
+                            senderName: state.senderName,
+                          ),
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) {
+                            final curve = CurvedAnimation(
+                              parent: animation,
+                              curve: Curves.decelerate,
+                            );
 
-                      return Stack(
-                        children: [
-                          FadeTransition(
-                            opacity: Tween<double>(
-                              begin: 1.0,
-                              end: 0.0,
-                            ).animate(curve),
-                          ),
-                          SlideTransition(
-                            position: Tween<Offset>(
-                              begin: const Offset(0.0, 1.0),
-                              end: Offset.zero,
-                            ).animate(curve),
-                            child: FadeTransition(
-                                opacity: Tween<double>(
-                                  begin: 0.0,
-                                  end: 1.0,
-                                ).animate(curve),
-                                child: TransactionDetailsScreen(
-                                  transactionItem: state.item,
-                                  recieverName: state.receiverName,
-                                  senderName: state.senderName,
-                                )),
-                          ),
-                        ],
+                            return Stack(
+                              children: [
+                                FadeTransition(
+                                  opacity: Tween<double>(
+                                    begin: 1.0,
+                                    end: 0.0,
+                                  ).animate(curve),
+                                ),
+                                SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: const Offset(0.0, 1.0),
+                                    end: Offset.zero,
+                                  ).animate(curve),
+                                  child: FadeTransition(
+                                      opacity: Tween<double>(
+                                        begin: 0.0,
+                                        end: 1.0,
+                                      ).animate(curve),
+                                      child: TransactionDetailsScreen(
+                                        transactionItem: state.item,
+                                        recieverName: state.receiverName,
+                                        senderName: state.senderName,
+                                      )),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
                       );
-                    },
-                  ),
-                );
-              }
-            },
-            builder: (context, state) {
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 8),
-                alignment: Alignment.centerLeft,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    }
+                  },
+                  builder: (context, state) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                      alignment: Alignment.centerLeft,
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              padding: const EdgeInsets.only(left: 15),
-                              child: Text(
-                                "Recent Transactions",
-                                style: Theme.of(context).textTheme.titleMedium,
+                              margin: const EdgeInsets.symmetric(vertical: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.only(left: 15),
+                                    child: Text(
+                                      "Recent Transactions",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.only(left: 10, bottom: 5),
-                        width: double.infinity,
-                        child: Column(
-                          children: state.isLoaded
-                              ? [
-                                  ...state.transactionHistory!.transactions
-                                      .take(min(
-                                          5,
-                                          state.transactionHistory!.transactions
-                                              .length))
-                                      .map(
-                                        (item) => GestureDetector(
-                                          onTapDown: (details) => {
-                                            context.read<RecentCardBloc>().add(
-                                                  LoadParticularUser(
-                                                    item: item,
-                                                    receiverID: item
-                                                        .receiverTvc!
-                                                        .bkvc
-                                                        .userID
-                                                        .toString(),
-                                                    senderID: item
-                                                        .senderTvc!.bkvc.userID
-                                                        .toString(),
-                                                  ),
+                            Container(
+                              padding:
+                                  const EdgeInsets.only(left: 10, bottom: 5),
+                              width: double.infinity,
+                              child: Column(
+                                children: state.isLoaded
+                                    ? [
+                                        ...state
+                                            .transactionHistory!.transactions
+                                            .take(min(
+                                                5,
+                                                state.transactionHistory!
+                                                    .transactions.length))
+                                            .map(
+                                              (item) => GestureDetector(
+                                                onTapDown: (details) => {
+                                                  context
+                                                      .read<RecentCardBloc>()
+                                                      .add(
+                                                        LoadParticularUser(
+                                                          item: item,
+                                                          receiverID: item
+                                                              .receiverTvc!
+                                                              .bkvc
+                                                              .userID
+                                                              .toString(),
+                                                          senderID: item
+                                                              .senderTvc!
+                                                              .bkvc
+                                                              .userID
+                                                              .toString(),
+                                                        ),
+                                                      ),
+                                                },
+                                                onTap: () => context
+                                                    .read<RecentCardBloc>()
+                                                    .add(ClearLoadedUser()),
+                                                child: RecentPaymentCard(
+                                                  isDebit: item.isDebit,
+                                                  label: !item.isDebit
+                                                      ? "${item.receiverFirstName!} ${item.receiverLastName!}"
+                                                      : "${item.senderFirstName!} ${item.senderLastName!}",
+                                                  finalAmt: dataState
+                                                      .bkvc!.availableBalance
+                                                      .toString(),
+                                                  transactionAmt:
+                                                      item.amount.toString(),
+                                                  date: DateFormat.yMMMMd()
+                                                      .format(item.receiverTvc!
+                                                          .timeStamp
+                                                          .toLocal()),
                                                 ),
-                                          },
-                                          onTap: () => context
-                                              .read<RecentCardBloc>()
-                                              .add(ClearLoadedUser()),
-                                          child: RecentPaymentCard(
-                                            isDebit: item.isDebit,
-                                            label: !item.isDebit
-                                                ? "${item.receiverFirstName!} ${item.receiverLastName!}"
-                                                : "${item.senderFirstName!} ${item.senderLastName!}",
-                                            finalAmt: dataState
-                                                .bkvc!.availableBalance
-                                                .toString(),
-                                            transactionAmt:
-                                                item.amount.toString(),
-                                            date: DateFormat.yMMMMd().format(
-                                                item.receiverTvc!.timeStamp
-                                                    .toLocal()),
-                                          ),
-                                        ),
-                                      )
-                                      .toList()
-                                      .reversed,
-                                ]
-                              : [
-                                  const CircularProgressIndicator(),
-                                ],
-                        ),
-                      ),
-                    ]),
-              );
-            },
-          ),
-        ) : const Center(child: CircularProgressIndicator());
+                                              ),
+                                            )
+                                            .toList()
+                                            .reversed,
+                                      ]
+                                    : [
+                                        const CircularProgressIndicator(),
+                                      ],
+                              ),
+                            ),
+                          ]),
+                    );
+                  },
+                ),
+              )
+            : const Center(child: CircularProgressIndicator());
       },
     );
   }

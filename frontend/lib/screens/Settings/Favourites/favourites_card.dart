@@ -38,9 +38,11 @@ class FavouritesCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-             imageLoader(imageUrl: "xx", shape: ImageType.initial), 
               Container(
-                width: constraints.maxWidth * 0.55,
+                child: imageLoader(imageUrl: "xx", shape: ImageType.initial),
+              ),
+              Container(
+                width: constraints.maxWidth * 0.45,
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

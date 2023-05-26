@@ -54,11 +54,18 @@ class Payments extends StatelessWidget {
         senderName: "John Doe",
       ),
     ];
-    return SizedBox(
+    return Container(
       width: size.width,
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(35),
+          topRight: Radius.circular(35),
+        ),
+        color: Color(0xfff4f6f4),
+      ),
       child: SingleChildScrollView(
         child: Container(
-          color: Theme.of(context).colorScheme.background,
+          padding: const EdgeInsets.symmetric(vertical: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
