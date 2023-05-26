@@ -1,33 +1,33 @@
-part of 'transaction_bloc.dart';
+part of 'recent_card_bloc.dart';
 
-class TranscationState extends Equatable {
-  final bool loaded;
+class RecentCardState extends Equatable {
   final Transactions? transactionHistory;
+  final bool isLoaded;
   final String? senderName;
   final String? receiverName;
   final Transaction? item;
   final bool clear;
 
-  const TranscationState({
-    this.loaded = false,
+  const RecentCardState({
     this.transactionHistory,
+    this.isLoaded = false,
     this.senderName,
     this.receiverName,
     this.item,
     this.clear = false,
   });
 
-  TranscationState copywith({
-    bool? loaded,
+  RecentCardState copywith({
     Transactions? transactionHistory,
+    bool? isLoaded,
     String? senderName,
     String? receiverName,
     Transaction? item,
     bool? clear,
   }) {
-    return TranscationState(
-      loaded: loaded ?? this.loaded,
+    return RecentCardState(
       transactionHistory: transactionHistory ?? this.transactionHistory,
+      isLoaded: isLoaded ?? this.isLoaded,
       senderName: senderName ?? this.senderName,
       receiverName: receiverName ?? this.receiverName,
       item: item ?? this.item,
@@ -37,8 +37,8 @@ class TranscationState extends Equatable {
 
   @override
   List<Object?> get props => [
-        loaded,
         transactionHistory,
+        isLoaded,
         senderName,
         receiverName,
         item,

@@ -1,20 +1,22 @@
-part of 'transaction_bloc.dart';
+part of 'recent_card_bloc.dart';
 
-abstract class TranscationEvent extends Equatable {
+abstract class RecentCardEvent extends Equatable {
+  const RecentCardEvent();
+
   @override
   List<Object?> get props => [];
 }
 
-class LoadTransaction extends TranscationEvent {
+class TransactionLoad extends RecentCardEvent {
   final Transactions? transactions;
 
-  LoadTransaction({this.transactions});
+  TransactionLoad({this.transactions});
 
   @override
   List<Object?> get props => [transactions];
 }
 
-class LoadParticularUser extends TranscationEvent {
+class LoadParticularUser extends RecentCardEvent {
   final String? receiverID;
   final String? senderID;
   final Transaction? item;
@@ -25,4 +27,4 @@ class LoadParticularUser extends TranscationEvent {
   List<Object?> get props => [senderID, receiverID, item];
 }
 
-class ClearLoadedUser extends TranscationEvent {}
+class ClearLoadedUser extends RecentCardEvent {}
