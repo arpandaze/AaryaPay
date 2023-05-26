@@ -22,6 +22,8 @@ class SubmitTAMEvent extends DataEvent {
   List<Object> get props => [tam];
 }
 
+class TimerUp extends DataEvent {}
+
 class SubmitTVCEvent extends DataEvent {
   final TransactionVerificationCertificate tvc;
 

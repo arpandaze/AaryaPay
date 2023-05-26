@@ -1,3 +1,4 @@
+import 'package:aaryapay/global/caching/transaction.dart';
 import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Send/components/green_box.dart';
 import 'package:aaryapay/screens/Send/components/trans_details.dart';
@@ -12,7 +13,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:lottie/lottie.dart';
 
 class PaymentComplete extends StatelessWidget {
-  final Map<String, dynamic> tvc;
+  final Transaction tvc;
   const PaymentComplete({Key? key, required this.tvc}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -29,6 +30,7 @@ class PaymentComplete extends StatelessWidget {
   }
 
   Widget body(Size size, BuildContext context) {
+    print(tvc.senderFirstName);
     void onClick() {
       Utils.mainAppNav.currentState!.push(
         PageRouteBuilder(
@@ -41,7 +43,6 @@ class PaymentComplete extends StatelessWidget {
     }
 
     return Column(
-      
       children: <Widget>[
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -91,9 +92,7 @@ class PaymentComplete extends StatelessWidget {
                     // padding: const EdgeInsets.symmetric(vertical: 2),
                     ),
                 Stack(children: [
-
                   Container(
-              
                       child: CustomAnimationWidget(
                     assetSrc: 'assets/animations/check.json',
                   )
@@ -123,7 +122,7 @@ class PaymentComplete extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 5, vertical: 10),
                         child: Text(
-                          tvc["amount"].toString(),
+                          tvc.amount.toString(),
                           style: Theme.of(context).textTheme.labelLarge!.merge(
                                 TextStyle(
                                   fontWeight: FontWeight.w600,
@@ -136,22 +135,22 @@ class PaymentComplete extends StatelessWidget {
                   ),
                 ),
                 GreenBox(
-                    recipient: tvc["receiverName"] ?? "",
-                    amount: tvc["amount"].toString(),
-                    date: DateFormat.yMMMMd().format(tvc["date"]),
-                    sender: tvc["senderName"] ?? "",
+                    recipient:
+                        "${tvc.receiverFirstName} ${tvc.receiverLastName}",
+                    amount: tvc.amount.toString(),
+                    date: DateFormat.yMMMMd().format(tvc.generationTime),
+                    sender: "${tvc.senderFirstName} ${tvc.senderLastName}",
                     status: "Verified"),
                 TransactionDetails(
-                  recieverID: tvc["receiverID"],
+                  recieverID: tvc.receiverId.toString().substring(0, 8),
                   transactionNo: "1x903412321",
-                  time: DateFormat.jm().format(tvc["date"]),
+                  time: DateFormat.jm().format(tvc.generationTime),
                 ),
               ],
             ),
           ),
           Positioned(top: 100, child: Container(child: Utils.background)),
         ]),
-        
       ],
     );
   }

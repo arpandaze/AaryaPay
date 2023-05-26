@@ -129,12 +129,15 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
 
   void _onSubmitTransfer(
       SubmitTransfer event, Emitter<SendMoneyState> emit) async {
-
+    print("Send Initiated");
     emit(state.copyWith(tamStatus: TAMStatus.initiated));
 
     var bkvc = await storage.read(key: "bkvc");
     var privateKey = await storage.read(key: "private_key");
     var token = await storage.read(key: "token");
+    print(bkvc);
+    print(privateKey);
+    print(token);
     if (bkvc != null && privateKey != null && token != null) {
       var bkvcObject =
           BalanceKeyVerificationCertificate.fromBase64(jsonDecode(bkvc));
@@ -160,7 +163,9 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
       await transferTAM.sign(keyPair);
 
       if (await transferTAM.verify()) {
-        emit(state.copyWith(tam: transferTAM,tamStatus: TAMStatus.generated));
+        print("Send Verified");
+
+        emit(state.copyWith(tam: transferTAM, tamStatus: TAMStatus.generated));
       }
     }
   }

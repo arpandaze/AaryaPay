@@ -44,7 +44,15 @@ class Transactions {
   }
 
   Future<Transaction> getLatest() async {
-    return transactions.last;
+    Transaction latest = transactions[0];
+    for (var transaction in transactions) {
+      print(transaction.generationTime);
+      if (transaction.generationTime.compareTo(latest.generationTime) > 0) {
+        latest = transaction;
+      }
+    }
+    print(latest.generationTime);
+    return latest;
   }
 }
 

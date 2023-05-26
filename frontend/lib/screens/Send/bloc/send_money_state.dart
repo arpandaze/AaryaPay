@@ -5,14 +5,6 @@ enum DisplayState {
   idle,
 }
 
-enum TAMStatus {
-  other,
-  initiated,
-  generated,
-  completed,
-  interrupted,
-}
-
 class SendMoneyState extends Equatable {
   final double amount;
   final String displayAmount;

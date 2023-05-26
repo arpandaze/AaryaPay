@@ -1,5 +1,11 @@
 part of 'data_bloc.dart';
 
+enum GoToScreen {
+  unknown,
+  offlineTrans,
+  onlineTrans,
+}
+
 class DataState extends Equatable {
   final SimplePublicKey? serverPublicKey;
 
@@ -11,6 +17,9 @@ class DataState extends Equatable {
   final bool? primary;
   final bool isLoaded;
   final bool isOnline;
+  final TAMStatus tamStatus;
+  final GoToScreen goToScreen;
+  final Transaction? latestTransaction;
 
   SimplePublicKey get userPublicKey {
     return bkvc!.getPublicKey();
@@ -50,6 +59,9 @@ class DataState extends Equatable {
     this.sessionToken,
     this.isLoaded = false,
     this.isOnline = false,
+    this.tamStatus = TAMStatus.other,
+    this.goToScreen = GoToScreen.unknown,
+    this.latestTransaction,
   });
 
   DataState copyWith({
@@ -62,6 +74,9 @@ class DataState extends Equatable {
     String? sessionToken,
     bool? isLoaded,
     bool? isOnline,
+    TAMStatus? tamStatus,
+    GoToScreen? goToScreen,
+    Transaction? latestTransaction,
   }) {
     return DataState(
       profile: profile ?? this.profile,
@@ -73,6 +88,9 @@ class DataState extends Equatable {
       sessionToken: sessionToken ?? this.sessionToken,
       isLoaded: isLoaded ?? this.isLoaded,
       isOnline: isOnline ?? this.isOnline,
+      tamStatus: tamStatus ?? this.tamStatus,
+      goToScreen: goToScreen ?? this.goToScreen,
+      latestTransaction: latestTransaction ?? this.latestTransaction,
     );
   }
 
@@ -159,5 +177,8 @@ class DataState extends Equatable {
         sessionToken,
         isLoaded,
         isOnline,
+        tamStatus,
+        goToScreen,
+        latestTransaction,
       ];
 }

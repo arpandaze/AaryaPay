@@ -6,6 +6,7 @@ import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Send/bloc/send_money_bloc.dart';
 import 'package:aaryapay/screens/Send/components/balance_box.dart';
 import 'package:aaryapay/screens/Send/components/numpad_button.dart';
+import 'package:aaryapay/screens/Send/offline_send.dart';
 import 'package:aaryapay/screens/Send/payment_complete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -48,57 +49,94 @@ class SendMoney extends StatelessWidget {
   Widget body(Size size, BuildContext context) {
     return BlocConsumer<DataBloc, DataState>(
       listener: (context, dataState) {
+        if (dataState.goToScreen == GoToScreen.offlineTrans) {
+          Utils.mainAppNav.currentState!.push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  OfflineSend(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                final curve = CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.decelerate,
+                );
+
+                return Stack(
+                  children: [
+                    FadeTransition(
+                      opacity: Tween<double>(
+                        begin: 1.0,
+                        end: 0.0,
+                      ).animate(curve),
+                    ),
+                    SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0.0, 1.0),
+                        end: Offset.zero,
+                      ).animate(curve),
+                      child: FadeTransition(
+                        opacity: Tween<double>(
+                          begin: 0.0,
+                          end: 1.0,
+                        ).animate(curve),
+                        child: OfflineSend(),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          );
+        }
+        if (dataState.goToScreen == GoToScreen.onlineTrans) {
+          Utils.mainAppNav.currentState!.push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  PaymentComplete(tvc: dataState.latestTransaction!),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                final curve = CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.decelerate,
+                );
+
+                return Stack(
+                  children: [
+                    FadeTransition(
+                      opacity: Tween<double>(
+                        begin: 1.0,
+                        end: 0.0,
+                      ).animate(curve),
+                    ),
+                    SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0.0, 1.0),
+                        end: Offset.zero,
+                      ).animate(curve),
+                      child: FadeTransition(
+                        opacity: Tween<double>(
+                          begin: 0.0,
+                          end: 1.0,
+                        ).animate(curve),
+                        child:
+                            PaymentComplete(tvc: dataState.latestTransaction!),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          );
+        }
         // TODO: implement listener
       },
       builder: (context, dataState) {
         return BlocConsumer<SendMoneyBloc, SendMoneyState>(
           listener: (context, state) => {
-          
             if (state.tamStatus == TAMStatus.generated)
               {
                 context.read<DataBloc>().add(SubmitTAMEvent(state.tam!)),
               },
-            if (state.submitted)
-              {
-                Utils.mainAppNav.currentState!.push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        PaymentComplete(tvc: state.submitResponse!),
-                    transitionsBuilder:
-                        (context, animation, secondaryAnimation, child) {
-                      final curve = CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.decelerate,
-                      );
-
-                      return Stack(
-                        children: [
-                          FadeTransition(
-                            opacity: Tween<double>(
-                              begin: 1.0,
-                              end: 0.0,
-                            ).animate(curve),
-                          ),
-                          SlideTransition(
-                            position: Tween<Offset>(
-                              begin: const Offset(0.0, 1.0),
-                              end: Offset.zero,
-                            ).animate(curve),
-                            child: FadeTransition(
-                              opacity: Tween<double>(
-                                begin: 0.0,
-                                end: 1.0,
-                              ).animate(curve),
-                              child:
-                                  PaymentComplete(tvc: state.submitResponse!),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ),
-              }
           },
           builder: (context, state) {
             return Column(

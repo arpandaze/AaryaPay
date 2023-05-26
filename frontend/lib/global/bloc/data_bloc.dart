@@ -30,7 +30,21 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     on<UserAuthenticatedEvent>(_onUserAuthenticated);
     on<UpdateServerKeyEvent>(_onUpdateServerKey);
     on<CheckInternet>(_onCheckInternet);
+    on<TimerUp>(_onTimerUp);
     add(LoadDataEvent());
+  }
+
+  Future<void> _onTimerUp(TimerUp event, Emitter<DataState> emit) async {
+    print("3 seconds up");
+
+    if (state.tamStatus == TAMStatus.initiated) {
+      emit(state.copyWith(goToScreen: GoToScreen.offlineTrans));
+    }
+    if (state.tamStatus == TAMStatus.completed) {
+      emit(state.copyWith(goToScreen: GoToScreen.onlineTrans));
+    }
+    emit(state.copyWith(tamStatus: TAMStatus.other));
+    return;
   }
 
   Future<void> _onCheckInternet(
@@ -58,19 +72,21 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     RequestSyncEvent event,
     Emitter<DataState> emit,
   ) async {
+    print("Send Data Bloc Entered");
+
     var url = Uri.parse('$backendBase/sync');
 
     var transactionToSubmit =
         await state.transactions.getUnsubmittedTransactions();
-
     print(transactionToSubmit);
+
+    var latest = await state.transactions.getLatest();
+    emit(state.copyWith(latestTransaction: latest));
 
     final headers = {
       "Content-Type": "application/x-www-form-urlencoded",
       "Cookie": "session=${state.sessionToken}",
     };
-
-    print("Encoded");
 
     http.Response response;
     if (transactionToSubmit.isEmpty) {
@@ -89,11 +105,14 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       print("here");
       response = await httpclient.post(url, headers: headers, body: body);
       print(response.statusCode);
+      print(response.body);
     }
 
     if (response.statusCode != 202) {
       return;
     }
+
+    emit(state.copyWith(tamStatus: TAMStatus.completed));
 
     print("submit resposnse");
 
@@ -131,6 +150,8 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       print("Loading Storage: $newState");
       newState.save(storage);
 
+      Transaction latestTransaction = await transactions.getLatest();
+
       emit(
         state.copyWith(
           profile: profile,
@@ -141,6 +162,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
           serverPublicKey: state.serverPublicKey,
           sessionToken: state.sessionToken,
           isLoaded: true,
+          latestTransaction: latestTransaction,
         ),
       );
     }
@@ -150,6 +172,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     SubmitTAMEvent event,
     Emitter<DataState> emit,
   ) async {
+    emit(state.copyWith(tamStatus: TAMStatus.initiated));
     print("Data bloc TAM");
     var transaction = Transaction(
       authorizationMessage: event.tam,
@@ -160,15 +183,15 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       transactions: [...state.transactions.transactions, transaction],
     );
     print(newTransactions.toJson());
-
+    print("Latest Transaction ${transaction}");
     DataState newState = state.copyWith(
       transactions: newTransactions,
     );
 
     newState.save(storage);
     emit(newState);
-
     add(RequestSyncEvent());
+    Timer(Duration(seconds: 3), () => {add(TimerUp())});
   }
 
   Future<void> _onSubmitTVC(
