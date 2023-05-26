@@ -13,11 +13,8 @@ import (
 )
 
 func TestInit() (*gin.Engine, *gin.Context, *httptest.ResponseRecorder) {
-	tracerShutdown := telemetry.InitTracer()
+	tracerShutdown := telemetry.InitTestTracer()
 	defer tracerShutdown()
-
-	// core.DB.Exec("DELETE * FROM users")
-	// core.DB.Exec("DELETE * FROM users")
 
 	r := initTestRouter()
 	w := initTestRecorder()
@@ -40,7 +37,7 @@ func initTestRouter() *gin.Engine {
 	core.ConnectRedis()
 
 	router := gin.New()
-	router.Use(otelgin.Middleware("aaryapay"))
+	router.Use(otelgin.Middleware("aaryapay-test"))
 
 	router.Use(telemetry.GinzapInstance)
 	router.Use(ginzap.RecoveryWithZap(telemetry.Logger(nil), true))

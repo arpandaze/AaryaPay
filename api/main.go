@@ -8,7 +8,7 @@ import (
 func main() {
 	core.LoadConfig()
 
-	tracerShutdown := telemetry.InitTracer()
+	tracerShutdown := telemetry.InitTracer(core.Configs.TEMPO_ADDRESS(), core.Configs.SERVER_NAME)
 	defer tracerShutdown()
 
 	r := Init()

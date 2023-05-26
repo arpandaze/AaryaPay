@@ -12,7 +12,7 @@ import (
 )
 
 func PopulationInit() (*gin.Engine, *gin.Context, *httptest.ResponseRecorder) {
-	tracerShutdown := telemetry.InitTracer()
+	tracerShutdown := telemetry.InitTestTracer()
 	defer tracerShutdown()
 
 	r := initPopulationRouter()
