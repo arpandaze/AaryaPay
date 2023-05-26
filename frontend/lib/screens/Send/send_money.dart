@@ -17,14 +17,12 @@ class SendMoney extends StatelessWidget {
   final String? firstname;
   final String? lastname;
   final String? uuid;
-  final String? email;
   final String displayAmount;
 
   const SendMoney(
       {Key? key,
       required this.firstname,
       required this.uuid,
-      required this.email,
       required this.lastname,
       required this.displayAmount})
       : super(key: key);
@@ -156,7 +154,7 @@ class SendMoney extends StatelessWidget {
                   ),
                   Container(
                       margin: const EdgeInsets.only(left: 15),
-                      child: Text("${state.displayAmount}",
+                      child: Text(state.displayAmount,
                           style: Theme.of(context)
                               .textTheme
                               .displaySmall!
@@ -223,9 +221,6 @@ class SendMoney extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      // width: double.infinity,
-                      // decoration:
-                      //     BoxDecoration(border: Border.all(color: Colors.red)),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
