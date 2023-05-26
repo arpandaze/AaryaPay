@@ -55,6 +55,7 @@ Widget imageLoader({
   double height = 60,
   ImageType shape = ImageType.initial,
   double radius = 0,
+  
   Widget errorImage = const CustomFavoritesAvatar(
     imagesUrl: "assets/images/default-pfp.png",
   ),
