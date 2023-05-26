@@ -15,6 +15,7 @@ class HomeFavoritesBloc extends Bloc<HomeFavoritesEvent, HomeFavoritesState> {
     on<HomeFavoritesLoadEvent>(_onFavoritesLoad);
     on<LoadParticularUser>(_onLoadParticularUser);
     on<ClearEvent>(_onClearEvent);
+    
   }
 
   void _onFavoritesLoad(
@@ -36,11 +37,14 @@ class HomeFavoritesBloc extends Bloc<HomeFavoritesEvent, HomeFavoritesState> {
   void _onLoadParticularUser(
       LoadParticularUser event, Emitter<HomeFavoritesState> emit) async {
     try {
-      var particularUser = event.favorites.where((element) => element.id.toString() == event.uuid).toList();
+      var particularUser = event.favorites
+          .where((element) => element.id.toString() == event.uuid)
+          .toList();
       emit(state.copyWith(particularUser: particularUser[0].toJson()));
-          } catch (e) {
+    } catch (e) {
       print(e.toString());
     }
   }
 
-  }
+ 
+}

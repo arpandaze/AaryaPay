@@ -11,7 +11,7 @@ class TopBarBloc extends Bloc<TopBarEvent, TopBarState> {
   TopBarBloc() : super(TopBarState()) {
     on<GetInformation>(_onGetInfo);
     on<EyeTapped>(_onEyeTapped);
-
+    on<SyncingEvent>(_onSyncingEvent);
     add(GetInformation());
   }
 
@@ -26,5 +26,9 @@ class TopBarBloc extends Bloc<TopBarEvent, TopBarState> {
 
   void _onEyeTapped(EyeTapped event, Emitter<TopBarState> emit) async {
     emit(state.copyWith(hide: event.tapped));
+  }
+  
+  void _onSyncingEvent(SyncingEvent event, Emitter<TopBarState> emit) {
+    emit(state.copyWith(syncing: event.syncing));
   }
 }

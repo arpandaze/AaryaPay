@@ -28,3 +28,4 @@ class LoadParticularUser extends HomeFavoritesEvent {
   @override
   List<Object?> get props => [uuid];
 }
+
