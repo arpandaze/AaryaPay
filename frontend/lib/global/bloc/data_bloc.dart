@@ -65,21 +65,9 @@ class DataBloc extends Bloc<DataEvent, DataState> {
 
     print(transactionToSubmit);
 
-    var base64Transactions = transactionToSubmit
-        .map(
-          (transaction) => base64.encode(
-            transaction.authorizationMessage!.toBytes(),
-          ),
-        )
-        .toList();
-
     final headers = {
       "Content-Type": "application/x-www-form-urlencoded",
       "Cookie": "session=${state.sessionToken}",
-    };
-
-    var body = {
-      'transactions': base64Transactions[0],
     };
 
     print("Encoded");
@@ -88,9 +76,18 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     if (transactionToSubmit.isEmpty) {
       response = await httpclient.post(url, headers: headers);
     } else {
+      var base64Transactions = transactionToSubmit
+          .map(
+            (transaction) => base64.encode(
+              transaction.authorizationMessage!.toBytes(),
+            ),
+          )
+          .toList();
+      var body = {
+        'transactions': base64Transactions[0],
+      };
       print("here");
-      response =
-          await httpclient.post(url, headers: headers, body: body);
+      response = await httpclient.post(url, headers: headers, body: body);
       print(response.statusCode);
     }
 
@@ -131,17 +128,21 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         isLoaded: true,
       );
 
+      print("Loading Storage: $newState");
       newState.save(storage);
-      emit(state.copyWith(
-        profile: profile,
-        transactions: transactions,
-        favorites: favorites,
-        bkvc: bkvc,
-        primary: state.primary,
-        serverPublicKey: state.serverPublicKey,
-        sessionToken: state.sessionToken,
-        isLoaded: true,
-      ));
+
+      emit(
+        state.copyWith(
+          profile: profile,
+          transactions: transactions,
+          favorites: favorites,
+          bkvc: bkvc,
+          primary: state.primary,
+          serverPublicKey: state.serverPublicKey,
+          sessionToken: state.sessionToken,
+          isLoaded: true,
+        ),
+      );
     }
   }
 
