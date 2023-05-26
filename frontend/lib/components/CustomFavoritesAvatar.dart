@@ -24,7 +24,7 @@ class CustomFavoritesAvatar extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           image: DecorationImage(
-            fit: BoxFit.contain,
+            fit: BoxFit.cover,
             image: AssetImage(imagesUrl),
           ),
         ),

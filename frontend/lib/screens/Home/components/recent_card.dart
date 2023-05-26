@@ -5,7 +5,7 @@ import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Home/components/bloc/recent_card_bloc.dart';
 import 'package:aaryapay/screens/TransactionHistory/components/transaction_detail_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:aaryapay/components/TransactionsCard.dart';
+import 'package:aaryapay/components/RecentPaymentCard.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
@@ -141,6 +141,8 @@ class RecentCard extends StatelessWidget {
                                                     .read<RecentCardBloc>()
                                                     .add(ClearLoadedUser()),
                                                 child: RecentPaymentCard(
+                                                  uuid: item.receiverId
+                                                      .toString(),
                                                   isDebit: item.isDebit,
                                                   label: !item.isDebit
                                                       ? "${item.receiverFirstName!} ${item.receiverLastName!}"

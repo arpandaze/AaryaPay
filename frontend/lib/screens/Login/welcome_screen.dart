@@ -53,7 +53,7 @@ class WelcomeScreen extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         Text(
-          "Does anyone even read this text. No. Why are you reading this text. Just login already, this text is worthless.",
+          "Welcome to our app, where payments are a breeze and financial worries vanish. Join us on this journey to effortless transactions and hassle-free banking. Welcome aboard!",
           style: Theme.of(context).textTheme.titleMedium!.merge(
                 const TextStyle(height: 1.5),
               ),

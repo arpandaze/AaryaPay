@@ -24,20 +24,13 @@ class LastSynchronized extends StatelessWidget {
             listener: (context, state) {},
             builder: (context, state) {
               return Container(
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    color: Color(0xffffffff),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 4),
-                        spreadRadius: -22,
-                        blurRadius: 29,
-                        color: Color(0x19000000),
-                      )
-                    ]),
-                margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0x20000000)),
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                ),
+                margin: const EdgeInsets.symmetric(vertical: 5),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+                    const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
                 width: size.width * 0.9,
                 height: size.height * 0.25,
                 child: Row(
@@ -60,7 +53,8 @@ class LastSynchronized extends StatelessWidget {
                               style: Theme.of(context)
                                   .textTheme
                                   .labelLarge!
-                                  .merge(TextStyle(fontSize: 65, height: 0)),
+                                  .merge(
+                                      const TextStyle(fontSize: 65, height: 0)),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10),
@@ -108,15 +102,16 @@ class LastSynchronized extends StatelessWidget {
                           ],
                         ),
                         CustomStatusButton(
-                          width: size.width * 0.20,
+                          width: size.width * 0.22,
                           height: size.height * 0.04,
                           label: "Sync",
                           onTap: () => context
                               .read<TopBarBloc>()
                               .add(SyncingEvent(syncing: !state.syncing)),
-                          textStyle: textTheme.labelSmall!
-                              .merge(const TextStyle(height: 0)),
-                          widget: CustomSyncRotation(syncing: state.syncing),
+                          textStyle: textTheme.labelMedium!
+                              .merge(const TextStyle(fontSize: 14, height: 0)),
+                          widget: CustomSyncRotation(
+                              size: 17, syncing: state.syncing),
                         ),
                       ],
                     ),

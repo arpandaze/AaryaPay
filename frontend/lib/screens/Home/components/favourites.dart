@@ -168,8 +168,8 @@ class Favourites extends StatelessWidget {
                                             CrossAxisAlignment.center,
                                         children: [
                                           Container(
-                                            width: 82,
-                                            height: 82,
+                                            width: 80,
+                                            height: 80,
                                             margin: EdgeInsets.only(right: 10),
                                             padding: EdgeInsets.all(30),
                                             decoration: BoxDecoration(
@@ -227,8 +227,8 @@ class Favourites extends StatelessWidget {
                                                 imageLoader(
                                                   imageUrl: item.id.toString(),
                                                   shape: ImageType.circle,
-                                                  width: 82,
-                                                  height: 82,
+                                                  width: 80,
+                                                  height: 80,
                                                 ),
                                                 Container(
                                                   padding: const EdgeInsets

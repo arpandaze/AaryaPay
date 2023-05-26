@@ -17,6 +17,7 @@ class HomeScreen extends StatelessWidget {
       onRefresh: _refresh,
       child: GestureDetector(
         child: Container(
+          clipBehavior: Clip.hardEdge,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(35),

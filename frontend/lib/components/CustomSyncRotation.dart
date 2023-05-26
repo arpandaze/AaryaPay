@@ -3,8 +3,9 @@ import 'package:flutter_svg/svg.dart';
 
 class CustomSyncRotation extends StatefulWidget {
   final bool? syncing;
+  final double size;
 
-  const CustomSyncRotation({super.key, this.syncing});
+  const CustomSyncRotation({super.key, this.size = 14, this.syncing});
   @override
   _CustomSyncRotationState createState() => _CustomSyncRotationState();
 }
@@ -42,8 +43,8 @@ class _CustomSyncRotationState extends State<CustomSyncRotation>
       turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
       child: SvgPicture.asset(
         "assets/icons/sync.svg",
-        height: 14,
-        width: 14,
+        width: widget.size,
+        height: widget.size,
       ),
     );
   }

@@ -32,8 +32,8 @@ class Payments extends StatelessWidget {
         sender: "321371",
         senderName: "John Doe",
         reciever: "213621",
-        startDate: "1682985600",
-        endDate: "1685024671",
+        startDate: "1685130226",
+        endDate: "1685475826",
       ),
       Payment(
         title: "Payment for momo",
@@ -41,20 +41,12 @@ class Payments extends StatelessWidget {
         sender: "321371",
         senderName: "John Doe",
         reciever: "213621",
-        startDate: "1682899200",
-        endDate: "1683027008",
-      ),
-      Payment(
-        title: "Payment for momo",
-        amount: "300",
-        sender: "321371",
-        reciever: "213621",
-        startDate: "1682812800",
-        endDate: "1682985600",
-        senderName: "John Doe",
+        startDate: "1685130226",
+        endDate: "1685475826",
       ),
     ];
     return Container(
+      clipBehavior: Clip.hardEdge,
       width: size.width,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
