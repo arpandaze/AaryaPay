@@ -1,7 +1,6 @@
 import 'package:aaryapay/components/CustomSyncRotation.dart';
 import 'package:aaryapay/components/bloc/top_bar_bloc.dart';
 import 'package:aaryapay/global/bloc/data_bloc.dart';
-import 'package:aaryapay/screens/Home/components/bloc/home_favorites_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
