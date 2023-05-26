@@ -1,13 +1,16 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:aaryapay/components/CircularLoadingAnimation.dart';
 import 'package:aaryapay/components/CustomCircularAvatar.dart';
 import 'package:aaryapay/components/CustomFavoritesAvatar.dart';
 import 'package:aaryapay/constants.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:jovial_svg/jovial_svg.dart';
-import 'package:http/http.dart' as http;
 
 class Utils {
   static GlobalKey<NavigatorState> mainAppNav = GlobalKey();
@@ -109,4 +112,15 @@ Widget imageLoader({
       }
     },
   );
+}
+
+Future<bool> checkInternetConnectivity() async {
+
+  var connectivityResult = await (Connectivity().checkConnectivity());
+
+  if (connectivityResult == ConnectivityResult.none) {
+    return false;
+  } else {
+    return true;
+  }
 }

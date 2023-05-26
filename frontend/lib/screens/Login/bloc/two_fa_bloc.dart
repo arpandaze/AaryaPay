@@ -55,6 +55,7 @@ class TwoFaBloc extends Bloc<TwoFaEvent, TwoFaState> {
       );
 
       storage.write(key: "user", value: jsonEncode(decodedResponse["user"]));
+      storage.write(key: "amount", value: "10000");
       storage.write(key: "user_id", value: bkvcObject.userID.toString());
 
       storage.write(

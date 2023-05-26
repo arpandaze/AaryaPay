@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:libaaryapay/libaaryapay.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -17,32 +18,11 @@ class QrScannerBloc extends Bloc<QrScannerEvent, QrScannerState> {
   QrScannerBloc() : super(const QrScannerState()) {
     on<QrCodeScanned>(_onQrCodeScanned);
     on<QrScanDataCreate>(_onQrScanDataCreate);
-    on<InitializeScanner>(_onInitializeScanner);
     on<CloseScanner>(_onCloseScanner);
-    on<PlatformInitializer>(_onPlatformInitializer);
     add(QrScanDataCreate());
   }
 
-  void _onPlatformInitializer(
-      PlatformInitializer event, Emitter<QrScannerState> emit) {
-    QRViewController? newController = state.controller;
-
-    if (Platform.isAndroid) {
-      newController!.pauseCamera();
-    }
-
-    if (Platform.isIOS) {
-      newController!.resumeCamera();
-    }
-
-    emit(state.copyWith(controller: newController));
-  }
-
-  void _onInitializeScanner(
-      InitializeScanner event, Emitter<QrScannerState> emit) {
-    emit(QrScannerState(controller: event.controller));
-  }
-
+ 
   void _onCloseScanner(CloseScanner event, Emitter<QrScannerState> emit) {
     state.controller?.dispose();
   }
@@ -50,7 +30,7 @@ class QrScannerBloc extends Bloc<QrScannerEvent, QrScannerState> {
   void _onQrScanDataCreate(
       QrScanDataCreate event, Emitter<QrScannerState> emit) async {
     var qrData = await generateQRData();
-    emit(state.copyWith(qrData: qrData));
+    emit(state.copyWith(qrData: jsonEncode(qrData)));
   }
 
   void _onQrCodeScanned(
@@ -61,11 +41,20 @@ class QrScannerBloc extends Bloc<QrScannerEvent, QrScannerState> {
     emit(state.copyWith(code: event.code));
   }
 
-  Future<String> generateQRData() async {
-    final serverKeyPair = keyPairFromBase64(
-      "fzAng9P5nxQCaxh4+sExTCdRI2++KmwBRKohfBJ8RuuD5sb/gfzu1BrFiJeGJudEOwAp1ZVekbVwWrLmRlzu1g==",
-    );
+ 
+  Future<Map> generateQRData() async {
+    var storage = const FlutterSecureStorage();
 
-    return "Hello";
+    var profileStorage = await storage.read(key: 'profile');
+
+    var profileDecoded = jsonDecode(profileStorage!);
+
+    var id = profileDecoded['id'];
+    var name = profileDecoded['first_name'] + " " +profileDecoded['last_name'];
+
+    return {
+      "id": id,
+      "name": name,
+    }; 
   }
 }

@@ -10,6 +10,7 @@ class SendMoneyState extends Equatable {
   final String displayAmount;
   final DisplayState status;
   final bool submitted;
+  final bool isOnline;
   final Map<String, dynamic>? submitResponse;
 
   const SendMoneyState({
@@ -18,6 +19,7 @@ class SendMoneyState extends Equatable {
     this.displayAmount = "0.0",
     this.status = DisplayState.idle,
     this.submitResponse,
+    this.isOnline = true,
   });
 
   SendMoneyState copyWith({
@@ -26,6 +28,7 @@ class SendMoneyState extends Equatable {
     DisplayState? status,
     bool? submitted,
     Map<String, dynamic>? submitResponse,
+    bool? isOnline,
   }) {
     return SendMoneyState(
       amount: amount ?? this.amount,
@@ -33,6 +36,7 @@ class SendMoneyState extends Equatable {
       status: status ?? this.status,
       submitted: submitted ?? this.submitted,
       submitResponse: submitResponse ?? this.submitResponse,
+      isOnline: isOnline ?? this.isOnline,
     );
   }
 
@@ -43,5 +47,6 @@ class SendMoneyState extends Equatable {
         status,
         submitted,
         submitResponse,
+        isOnline,
       ];
 }

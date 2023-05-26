@@ -19,6 +19,7 @@ class AuthenticationBloc
     on<LoggedOut>(_onLoggedOut);
     on<LoadAuthStatus>(_onLoadAuthStatus);
     on<TwoFA>(_onTwoFA);
+    on<EverythingLoaded>(_onEverythingLoaded);
     add(LoadAuthStatus());
   }
 
@@ -46,5 +47,10 @@ class AuthenticationBloc
   void _onTwoFA(TwoFA event, Emitter<AuthenticationState> emit) async {
     emit(state.copyWith(status: AuthenticationStatus.twoFA));
     emit(state.copyWith(status: AuthenticationStatus.none));
+  }
+
+  void _onEverythingLoaded(
+      EverythingLoaded event, Emitter<AuthenticationState> emit) async {
+    emit(state.copyWith(status: AuthenticationStatus.loaded));
   }
 }

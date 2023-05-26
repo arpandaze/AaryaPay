@@ -1,10 +1,12 @@
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
+import 'package:aaryapay/global/bloc/data_bloc.dart';
 import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Login/bloc/two_fa_bloc.dart';
 import 'package:aaryapay/screens/Login/components/register_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class LoginTwoFA extends StatelessWidget {
@@ -13,14 +15,23 @@ class LoginTwoFA extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var storage = const FlutterSecureStorage();
+
     return BlocProvider(
       create: (context) => TwoFaBloc(),
       child: BlocConsumer<TwoFaBloc, TwoFaState>(
-        listener: (context, state) => {
-          if (state.status == FAStatus.success)
-            {
-              context.read<AuthenticationBloc>().add(LoggedIn()),
+        listener: (context, state) async {
+          if (state.status == FAStatus.success) {
+            context.read<AuthenticationBloc>().add(LoggedIn());
+            if (context.read<AuthenticationBloc>().state.loaded) {
+              String? token = await storage.read(key: "token");
+              bool isPrimary = await storage.read(key: "isPrimary") == "true";
+              // ignore: use_build_context_synchronously
+              context
+                  .read<DataBloc>()
+                  .add(UserAuthenticatedEvent(token!, isPrimary));
             }
+          }
         },
         builder: (context, state) => RegisterWrapper(
           backButton: true,

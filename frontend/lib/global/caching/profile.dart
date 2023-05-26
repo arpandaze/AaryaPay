@@ -1,41 +1,43 @@
 import 'package:uuid/uuid.dart';
 
-class Favorite {
+class Profile {
   UuidValue? id;
   String firstName;
   String? middleName;
   String lastName;
+  DateTime dob;
   String email;
-  DateTime dateAdded;
 
-  Favorite({
-    this.id,
+  Profile({
+    required this.id,
     required this.firstName,
-    this.middleName,
+    required this.middleName,
     required this.lastName,
+    required this.dob,
     required this.email,
-    required this.dateAdded,
   });
 
-  factory Favorite.fromJson(Map<String, dynamic> json) {
-    return Favorite(
+  factory Profile.fromJson(Map<String, dynamic> json) {
+    print("getter");
+    print(json['dob'].runtimeType);
+    return Profile(
       id: UuidValue.fromList(Uuid.parse(json['id'])),
       firstName: json['first_name'],
       middleName: json['middle_name'],
       lastName: json['last_name'],
+      dob:  DateTime.fromMillisecondsSinceEpoch(json['dob'] * 1000),
       email: json['email'],
-      dateAdded: DateTime.fromMillisecondsSinceEpoch(json['date_added'] * 1000),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'id': id.toString(),
       'first_name': firstName,
       'middle_name': middleName,
       'last_name': lastName,
+      'dob': (dob.millisecondsSinceEpoch ~/ 1000).toString(),
       'email': email,
-      'date_added': dateAdded.millisecondsSinceEpoch ~/ 1000,
     };
   }
 }

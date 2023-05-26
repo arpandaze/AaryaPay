@@ -11,4 +11,6 @@ class LoggedOut extends AuthenticationEvent {}
 
 class LoadAuthStatus extends AuthenticationEvent {}
 
+class EverythingLoaded extends AuthenticationEvent {}
+
 class TwoFA extends AuthenticationEvent {}

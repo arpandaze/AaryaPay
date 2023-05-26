@@ -1,5 +1,6 @@
 import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
+import 'package:aaryapay/global/bloc/data_bloc.dart';
 import 'package:aaryapay/helper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:aaryapay/routes.dart';
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<AuthenticationBloc>(
           create: (context) => AuthenticationBloc(),
+        ),
+        BlocProvider<DataBloc>(
+          create: (context) => DataBloc(),
         ),
       ],
       child: MaterialApp(

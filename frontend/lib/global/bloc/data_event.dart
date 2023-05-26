@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:libaaryapay/transaction/tam.dart';
-import 'package:libaaryapay/transaction/tvc.dart';
+part of 'data_bloc.dart';
 
 abstract class DataEvent extends Equatable {
   const DataEvent();

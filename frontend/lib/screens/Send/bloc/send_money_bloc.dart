@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:aaryapay/constants.dart';
@@ -13,7 +13,7 @@ part 'send_money_event.dart';
 part 'send_money_state.dart';
 
 class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
-  final storage = FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
   final httpclient = http.Client();
 
   SendMoneyBloc() : super(const SendMoneyState(amount: 0.0)) {
@@ -25,6 +25,14 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
     on<SendMoneyClearEvent>(_onSendMoneyClear);
     on<SendMoneyEraseEvent>(_onSendMoneyErase);
     on<SubmitTransfer>(_onSubmitTransfer);
+    on<OnlineEvent>(_onOnlineEvent);
+    add(OnlineEvent());
+  }
+
+  void _onOnlineEvent(OnlineEvent event, Emitter<SendMoneyState> emit) async {
+    bool isOnline = await checkInternetConnectivity();
+    print("isOnline: $isOnline");
+    emit(state.copyWith(isOnline: isOnline));
   }
 
   final _calculator = Calculator();
@@ -127,7 +135,7 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
     if (bkvc != null && privateKey != null && token != null) {
       print("I am Here");
 
-      var bkvcObject = BalanceKeyVerificationCertificate.fromBase64(bkvc);
+      var bkvcObject = BalanceKeyVerificationCertificate.fromBase64(jsonDecode(bkvc));
 
       print(bkvcObject.availableBalance);
       print(bkvcObject.messageType);
