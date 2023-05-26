@@ -257,6 +257,7 @@ class Settings extends StatelessWidget {
       },
       builder: (context, state) {
         return Container(
+          clipBehavior: Clip.hardEdge,
           width: size.width,
           height: size.height * 0.72,
           decoration: const BoxDecoration(

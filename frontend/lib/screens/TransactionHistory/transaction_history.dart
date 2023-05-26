@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:aaryapay/components/TransactionsCard.dart';
+import 'package:aaryapay/components/RecentPaymentCard.dart';
 import 'package:aaryapay/global/bloc/data_bloc.dart';
 import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/TransactionHistory/bloc/transaction_bloc.dart';
@@ -79,6 +79,7 @@ class TransactionHistory extends StatelessWidget {
             buildWhen: (previous, current) => previous != current,
             builder: (context, state) {
               return Container(
+                clipBehavior: Clip.hardEdge,
                 width: size.width,
                 height: size.height * 0.75,
                 decoration: const BoxDecoration(
@@ -96,46 +97,55 @@ class TransactionHistory extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Container(
+                        //   padding: const EdgeInsets.symmetric(vertical: 15),
+                        //   child: Text(
+                        //     "Transaction History",
+                        //     style: Theme.of(context).textTheme.titleLarge,
+                        //   ),
+                        // ),
                         Container(
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          child: Text(
-                            "Transaction History",
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                        ),
-                        if (state.loaded)
-                          ...state.transactionHistory!.transactions
-                              .map((item) => GestureDetector(
-                                    onTapDown: (details) => {
-                                      context.read<TranscationBloc>().add(
-                                          LoadParticularUser(
-                                              item: item,
-                                              receiverID: item
-                                                  .receiverTvc!.bkvc.userID
-                                                  .toString(),
-                                              senderID: item
-                                                  .senderTvc!.bkvc.userID
-                                                  .toString()))
-                                    },
-                                    onTap: () => context
-                                        .read<TranscationBloc>()
-                                        .add(ClearLoadedUser()),
-                                    child: RecentPaymentCard(
-                                      isDebit: item.isDebit,
-                                      label: !item.isDebit
-                                          ? "${item.receiverFirstName!} ${item.receiverLastName!}"
-                                          : "${item.senderFirstName!} ${item.senderLastName!}",
-                                      finalAmt: dataState.bkvc!.availableBalance
-                                          .toString(),
-                                      transactionAmt: item.amount.toString(),
-                                      date: DateFormat.yMMMMd().format(item
-                                          .receiverTvc!.timeStamp
-                                          .toLocal()),
-                                    ),
-                                  ))
-                              .toList()
-                              .reversed,
-                        if (!(state.loaded)) const CircularProgressIndicator(),
+                          margin: const EdgeInsets.only(top: 10.0),
+                          child: Column(children: [
+                            if (state.loaded)
+                              ...state.transactionHistory!.transactions
+                                  .map((item) => GestureDetector(
+                                        onTapDown: (details) => {
+                                          context.read<TranscationBloc>().add(
+                                              LoadParticularUser(
+                                                  item: item,
+                                                  receiverID: item
+                                                      .receiverTvc!.bkvc.userID
+                                                      .toString(),
+                                                  senderID: item
+                                                      .senderTvc!.bkvc.userID
+                                                      .toString()))
+                                        },
+                                        onTap: () => context
+                                            .read<TranscationBloc>()
+                                            .add(ClearLoadedUser()),
+                                        child: RecentPaymentCard(
+                                          uuid: item.receiverId.toString(),
+                                          isDebit: item.isDebit,
+                                          label: !item.isDebit
+                                              ? "${item.receiverFirstName!} ${item.receiverLastName!}"
+                                              : "${item.senderFirstName!} ${item.senderLastName!}",
+                                          finalAmt: dataState
+                                              .bkvc!.availableBalance
+                                              .toString(),
+                                          transactionAmt:
+                                              item.amount.toString(),
+                                          date: DateFormat.yMMMMd().format(item
+                                              .receiverTvc!.timeStamp
+                                              .toLocal()),
+                                        ),
+                                      ))
+                                  .toList()
+                                  .reversed,
+                            if (!(state.loaded))
+                              const CircularProgressIndicator(),
+                          ]),
+                        )
                       ],
                     ),
                   ),

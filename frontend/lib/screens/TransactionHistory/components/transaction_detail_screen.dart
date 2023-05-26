@@ -310,7 +310,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                   "${transactionItem!.senderFirstName} ${transactionItem!.senderLastName}" ?? "__",
+                                  "${transactionItem!.senderFirstName} ${transactionItem!.senderLastName}",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
@@ -338,7 +338,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                 "${transactionItem!.receiverFirstName} ${transactionItem!.receiverLastName}" ?? "__",
+                                  "${transactionItem!.receiverFirstName} ${transactionItem!.receiverLastName}",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
