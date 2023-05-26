@@ -38,6 +38,7 @@ class FavouritesBloc extends Bloc<FavouritesEvent, FavouritesState> {
       emit(state.copyWith(
           msgType: MessageType.error, errorText: "The field cannot be empty"));
     }
+    emit(state.copyWith(msgType: MessageType.idle));
   }
 
   void _onRemoveEvent(RemoveEvent event, Emitter<FavouritesState> emit) async {
