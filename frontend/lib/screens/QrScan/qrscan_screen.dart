@@ -89,6 +89,8 @@ class QrScanScreen extends StatelessWidget {
                   },
                 ),
               );
+
+              context.read<QrScannerBloc>().add(CloseScanner());
             }
           },
           buildWhen: ((prev, next) => prev != next),

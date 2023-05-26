@@ -58,84 +58,90 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     RequestSyncEvent event,
     Emitter<DataState> emit,
   ) async {
-    bool isOnline = await checkInternetConnectivity();
+    var url = Uri.parse('$backendBase/sync');
 
-    if (isOnline) {
-      var url = Uri.parse('$backendBase/sync');
+    var transactionToSubmit =
+        await state.transactions.getUnsubmittedTransactions();
 
-      var transactionToSubmit =
-          await state.transactions.getUnsubmittedTransactions();
+    print(transactionToSubmit);
 
-      var base64Transactions = transactionToSubmit
-          .map(
-            (transaction) => base64.encode(
-              transaction.authorizationMessage!.toBytes(),
-            ),
+    var base64Transactions = transactionToSubmit
+        .map(
+          (transaction) => base64.encode(
+            transaction.authorizationMessage!.toBytes(),
+          ),
+        )
+        .toList();
+
+    final headers = {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Cookie": "session=${state.sessionToken}",
+    };
+
+    var body = {
+      'transactions': base64Transactions[0],
+    };
+
+    print("Encoded");
+
+    http.Response response;
+    if (transactionToSubmit.isEmpty) {
+      response = await httpclient.post(url, headers: headers);
+    } else {
+      print("here");
+      response =
+          await httpclient.post(url, headers: headers, body: body);
+      print(response.statusCode);
+    }
+
+    if (response.statusCode != 202) {
+      return;
+    }
+
+    print("submit resposnse");
+
+    var responseData = jsonDecode(response.body);
+    print(responseData);
+
+    if (responseData.containsKey('success')) {
+      List<Favorite> favorites = responseData['favorites']
+          .map<Favorite>(
+            (favorite) => Favorite.fromJson(favorite),
           )
           .toList();
 
-      final headers = {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Cookie": "session=${state.sessionToken}",
-      };
+      BalanceKeyVerificationCertificate bkvc =
+          BalanceKeyVerificationCertificate.fromBase64(responseData['bkvc']);
 
-      http.Response response;
-      if (transactionToSubmit.isEmpty) {
-        response = await httpclient.post(url, headers: headers);
-      } else {
-        response = await httpclient.post(url, headers: headers, body: {
-          'transactions': base64Transactions,
-        });
-      }
+      Profile profile = Profile.fromJson(responseData['profile']);
 
-      if (response.statusCode != 202) {
-        return;
-      }
+      Transactions transactions = Transactions.fromJson(
+        responseData['transactions'],
+        bkvc.userID,
+      );
 
-      var responseData = jsonDecode(response.body);
+      DataState newState = DataState(
+        profile: profile,
+        transactions: transactions,
+        favorites: favorites,
+        bkvc: bkvc,
+        primary: state.primary,
+        serverPublicKey: state.serverPublicKey,
+        sessionToken: state.sessionToken,
+        isLoaded: true,
+      );
 
-      if (responseData.containsKey('success')) {
-        List<Favorite> favorites = responseData['favorites']
-            .map<Favorite>(
-              (favorite) => Favorite.fromJson(favorite),
-            )
-            .toList();
-
-        BalanceKeyVerificationCertificate bkvc =
-            BalanceKeyVerificationCertificate.fromBase64(responseData['bkvc']);
-
-        Profile profile = Profile.fromJson(responseData['profile']);
-
-        Transactions transactions = Transactions.fromJson(
-          responseData['transactions'],
-          bkvc.userID,
-        );
-
-        DataState newState = DataState(
-          profile: profile,
-          transactions: transactions,
-          favorites: favorites,
-          bkvc: bkvc,
-          primary: state.primary,
-          serverPublicKey: state.serverPublicKey,
-          sessionToken: state.sessionToken,
-          isLoaded: true,
-        );
-
-        newState.save(storage);
-        emit(state.copyWith(
-          profile: profile,
-          transactions: transactions,
-          favorites: favorites,
-          bkvc: bkvc,
-          primary: state.primary,
-          serverPublicKey: state.serverPublicKey,
-          sessionToken: state.sessionToken,
-          isLoaded: true,
-        ));
-      }
-    } else {
-      print("Offline");
+      newState.save(storage);
+      emit(state.copyWith(
+        profile: profile,
+        transactions: transactions,
+        favorites: favorites,
+        bkvc: bkvc,
+        primary: state.primary,
+        serverPublicKey: state.serverPublicKey,
+        sessionToken: state.sessionToken,
+        isLoaded: true,
+      ));
     }
   }
 
@@ -143,6 +149,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     SubmitTAMEvent event,
     Emitter<DataState> emit,
   ) async {
+    print("Data bloc TAM");
     var transaction = Transaction(
       authorizationMessage: event.tam,
       credit: event.tam.to == state.bkvc!.userID,
@@ -151,6 +158,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     var newTransactions = Transactions(
       transactions: [...state.transactions.transactions, transaction],
     );
+    print(newTransactions.toJson());
 
     DataState newState = state.copyWith(
       transactions: newTransactions,
@@ -246,7 +254,6 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     UserAuthenticatedEvent event,
     Emitter<DataState> emit,
   ) async {
-    print("DATA BLOC");
     emit(state.copyWith(
       sessionToken: event.sessionToken,
       primary: event.isPrimary,
