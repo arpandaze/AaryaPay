@@ -34,6 +34,7 @@ class _CircularLoadingAnimationState extends State<CircularLoadingAnimation>
     return Container(
       width: widget.width,
       height: widget.height,
+      margin: const EdgeInsets.only(right: 10),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: LinearGradient(
