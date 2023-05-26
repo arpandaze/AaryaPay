@@ -83,7 +83,6 @@ class DataBloc extends Bloc<DataEvent, DataState> {
             ),
           )
           .toList();
-
       var body = {
         'transactions': base64Transactions[0],
       };
