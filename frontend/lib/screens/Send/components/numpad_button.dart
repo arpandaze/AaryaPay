@@ -7,8 +7,15 @@ class NumPadButton extends StatelessWidget {
   final String text;
   final SvgPicture? icon;
   final Color? color;
-
-  const NumPadButton({super.key, required this.text, this.icon, this.color});
+  final double? width;
+  final double? height;
+  const NumPadButton(
+      {super.key,
+      required this.text,
+      this.icon,
+      this.color,
+      this.width,
+      this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +41,20 @@ class NumPadButton extends StatelessWidget {
           case '=':
             bloc.add(SendMoneyEqualsEvent());
             break;
+          case 'AC':
+            bloc.add(SendMoneyClearEvent());
+            break;
           default:
             bloc.add(SendMoneyDigitEvent(int.parse(text)));
             break;
         }
       },
       child: Container(
-        constraints: const BoxConstraints(
-            minWidth: 60, minHeight: 55, maxWidth: 70, maxHeight: 65),
+        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        constraints: BoxConstraints(
+          minWidth: width ?? 65,
+          minHeight: height ?? 65,
+        ),
         decoration: BoxDecoration(
             color: color ?? Theme.of(context).colorScheme.primary,
             borderRadius: const BorderRadius.all(Radius.circular(10))),

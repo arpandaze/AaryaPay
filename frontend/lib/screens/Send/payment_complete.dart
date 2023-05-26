@@ -5,9 +5,11 @@ import 'package:aaryapay/screens/Send/receiver_scan_confirmation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:aaryapay/components/CustomActionButton.dart';
+import 'package:aaryapay/components/CustomAnimationWidget.dart';
 import 'package:intl/intl.dart';
 import 'package:libaaryapay/libaaryapay.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:lottie/lottie.dart';
 
 class PaymentComplete extends StatelessWidget {
   final Map<String, dynamic> tvc;
@@ -39,6 +41,7 @@ class PaymentComplete extends StatelessWidget {
     }
 
     return Column(
+      
       children: <Widget>[
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -78,104 +81,77 @@ class PaymentComplete extends StatelessWidget {
             ),
           ],
         ),
-        Column(
-          children: [
-            Container(
-                // padding: const EdgeInsets.symmetric(vertical: 2),
-                ),
-            Container(
-              margin: const EdgeInsets.only(top: 20),
-              child: SvgPicture.asset('assets/icons/check.svg',
-                  width: 80,
-                  colorFilter: const ColorFilter.mode(
-                      Color(0xff274233), BlendMode.srcIn)),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 30),
-              child: Text("You Have Successfully sent!",
-                  style: Theme.of(context).textTheme.titleMedium),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 10, bottom: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset('assets/icons/rupee.svg',
-                      width: 24,
-                      colorFilter: const ColorFilter.mode(
-                          Color(0xff274233), BlendMode.srcIn)),
+        Stack(alignment: Alignment.topCenter, children: [
+          Container(
+            height: size.height * 0.9,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                    // padding: const EdgeInsets.symmetric(vertical: 2),
+                    ),
+                Stack(children: [
+
                   Container(
-                    margin: const EdgeInsets.only(left: 10),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                    child: Text(
-                      tvc["amount"].toString(),
-                      style: Theme.of(context).textTheme.labelLarge!.merge(
-                            TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            GreenBox(
-                recipient: tvc["receiverName"] ?? "",
-                amount: tvc["amount"].toString(),
-                date: DateFormat.yMMMMd().format(tvc["date"]),
-                sender: tvc["senderName"] ?? "",
-                status: "Verified"),
-            TransactionDetails(
-              recieverID: tvc["receiverID"],
-              transactionNo: "1x903412321",
-              time: DateFormat.jm().format(tvc["date"]),
-            ),
-          ],
-        ),
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              CustomActionButton(
-                width: size.width * 0.6,
-                label: "Back to Home",
-                onClick: () => Utils.mainAppNav.currentState!
-                    .popUntil(ModalRoute.withName("/app")),
-                textTheme: Theme.of(context).textTheme.titleMedium!.merge(
-                      TextStyle(
-                          color: Theme.of(context).colorScheme.background),
-                    ),
-                borderRadius: 10,
-              ),
-              GestureDetector(
-                onTap: () => {},
-                behavior: HitTestBehavior.opaque,
-                child: Container(
-                  width: 70,
-                  alignment: Alignment.center,
-                  height: 50,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.outline,
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10))),
+              
+                      child: CustomAnimationWidget(
+                    assetSrc: 'assets/animations/check.json',
+                  )
+
+                      // child: SvgPicture.asset('assets/icons/check.svg',
+                      //     width: 80,
+                      //     colorFilter: const ColorFilter.mode(
+                      //         Color(0xff274233), BlendMode.srcIn)),
+                      )
+                ]),
+                Container(
+                  margin: const EdgeInsets.only(top: 30),
+                  child: Text("You Have Successfully sent!",
+                      style: Theme.of(context).textTheme.titleMedium),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10, bottom: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset('assets/icons/share.svg',
-                          width: 20,
-                          height: 20,
-                          colorFilter: ColorFilter.mode(
-                              Theme.of(context).colorScheme.background,
-                              BlendMode.srcIn))
+                      SvgPicture.asset('assets/icons/rupee.svg',
+                          width: 24,
+                          colorFilter: const ColorFilter.mode(
+                              Color(0xff274233), BlendMode.srcIn)),
+                      Container(
+                        margin: const EdgeInsets.only(left: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5, vertical: 10),
+                        child: Text(
+                          tvc["amount"].toString(),
+                          style: Theme.of(context).textTheme.labelLarge!.merge(
+                                TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-              )
-            ],
+                GreenBox(
+                    recipient: tvc["receiverName"] ?? "",
+                    amount: tvc["amount"].toString(),
+                    date: DateFormat.yMMMMd().format(tvc["date"]),
+                    sender: tvc["senderName"] ?? "",
+                    status: "Verified"),
+                TransactionDetails(
+                  recieverID: tvc["receiverID"],
+                  transactionNo: "1x903412321",
+                  time: DateFormat.jm().format(tvc["date"]),
+                ),
+              ],
+            ),
           ),
-        )
+          Positioned(top: 100, child: Container(child: Utils.background)),
+        ]),
+        
       ],
     );
   }

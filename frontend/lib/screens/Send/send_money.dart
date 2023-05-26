@@ -166,8 +166,11 @@ class SendMoney extends StatelessWidget {
                 ],
               ),
             ),
-            Text("Max Limit is 2000.00",
-                style: Theme.of(context).textTheme.bodyMedium),
+            Text("*Max Limit is 2000.00",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .merge(TextStyle(fontWeight: FontWeight.w800))),
             Expanded(
               child: Container(
                 width: size.width,
@@ -219,54 +222,107 @@ class SendMoney extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: const [
-                        NumPadButton(text: '7'),
-                        NumPadButton(text: '8'),
-                        NumPadButton(text: '9'),
-                        NumPadButton(text: 'X'),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: const [
-                        NumPadButton(text: '4'),
-                        NumPadButton(text: '5'),
-                        NumPadButton(text: '6'),
-                        NumPadButton(text: '-'),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: const [
-                        NumPadButton(text: '1'),
-                        NumPadButton(text: '2'),
-                        NumPadButton(text: '3'),
-                        NumPadButton(text: '+'),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const NumPadButton(text: '.'),
-                        const NumPadButton(text: '0'),
-                        NumPadButton(
-                          icon: SvgPicture.asset("assets/icons/erase.svg",
-                              height: 15,
-                              width: 15,
-                              colorFilter: ColorFilter.mode(
-                                  Theme.of(context).colorScheme.background,
-                                  BlendMode.srcIn)),
-                          text: "erase",
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
-                        const NumPadButton(text: '='),
-                      ],
+                    Container(
+                      // width: double.infinity,
+                      // decoration:
+                      //     BoxDecoration(border: Border.all(color: Colors.red)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              NumPadButton(text: 'AC'),
+                              NumPadButton(
+                                icon: SvgPicture.asset("assets/icons/erase.svg",
+                                    height: 15,
+                                    width: 15,
+                                    colorFilter: ColorFilter.mode(
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .background,
+                                        BlendMode.srcIn)),
+                                text: "erase",
+                                color: Theme.of(context).colorScheme.outline,
+                              ),
+                              NumPadButton(text: '÷'),
+                              NumPadButton(text: 'X'),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              NumPadButton(text: '7'),
+                              NumPadButton(text: '8'),
+                              NumPadButton(text: '9'),
+                              NumPadButton(text: '-'),
+                            ],
+                          ),
+                          Container(
+                            width: double.infinity,
+                            // decoration: BoxDecoration(
+                            //     border: Border.all(color: Colors.red)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  // width: double.infinity,
+                                  // decoration: BoxDecoration(
+                                  //     border: Border.all(color: Colors.red)),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: const [
+                                          NumPadButton(text: '4'),
+                                          NumPadButton(text: '5'),
+                                          NumPadButton(text: '6'),
+                                          // NumPadButton(text: '-'),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: const [
+                                          NumPadButton(text: '1'),
+                                          NumPadButton(text: '2'),
+                                          NumPadButton(text: '3'),
+                                        
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                NumPadButton(
+                                  text: '+',
+                                  height: 145,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const NumPadButton(
+                                text: '0',
+                                width: 150,
+                              ),
+                              const NumPadButton(text: '.'),
+                                      
+                              const NumPadButton(text: '='),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                     CustomActionButton(
                       label: "Send",
-                      width: size.width,
+                      width: size.width * 0.7,
                       borderRadius: 10,
                       onClick: () => {
                         context.read<SendMoneyBloc>().add(SubmitTransfer(

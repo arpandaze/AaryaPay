@@ -66,7 +66,7 @@ class TopBar extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          width: size.width * 0.45,
+                          // width: size.width * 0.45,
                           child: Text(
                             !state.hide ? state.amount : "XXX.XXX",
                             style: Theme.of(context)
@@ -146,12 +146,38 @@ class TopBar extends StatelessWidget {
                             },
                           ),
                         ),
-                        child: imageLoader(
-                          imageUrl: state.uuid ?? "",
-                          shape: ImageType.rectangle,
-                          radius: 20,
-                          width: 80,
-                          height: 80,
+                        child: Stack(children: [
+                          imageLoader(
+                            imageUrl: state.uuid ?? "",
+                            shape: ImageType.rectangle,
+                            radius: 20,
+                            width: 100,
+                            height: 100,
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 10,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  // .withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(20)),
+                              width: 20,
+                              height: 20,
+                              padding: EdgeInsets.all(3),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .surfaceVariant,
+                                    // .withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(20)),
+                                width: 15,
+                                height: 15,
+                              ),
+                            ),
+                          ),
+                        ]
                         ),
                       ),
                     ),
