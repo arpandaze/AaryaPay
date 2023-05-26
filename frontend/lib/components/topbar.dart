@@ -1,3 +1,4 @@
+import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/components/bloc/top_bar_bloc.dart';
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/bloc/data_bloc.dart';
@@ -17,16 +18,33 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DataBloc, DataState>(
+    return BlocConsumer<DataBloc, DataState>(
+      listenWhen: (previous, current) => previous.isOnline != current.isOnline,
+      listener: (context, state) => {
+        if (state.isOnline)
+          {
+            SnackBarService.stopSnackBar(),
+            SnackBarService.showSnackBar(
+              msgType: MessageType.success,
+              content: "You are back Online!",
+            ),
+          }
+        else
+          {
+            SnackBarService.stopSnackBar(),
+            SnackBarService.showSnackBar(
+              msgType: MessageType.error,
+              content: "You are currently Offline!",
+            ),
+          }
+      },
       buildWhen: (previous, current) => previous.isOnline != current.isOnline,
       builder: (context, state) {
         var onlineState = state.isOnline;
         return BlocProvider(
           create: (context) => TopBarBloc(),
           child: BlocConsumer<TopBarBloc, TopBarState>(
-            listener: (context, state) {
-              // TODO: implement listener
-            },
+            listener: (context, state) {},
             builder: (context, state) {
               return Container(
                 decoration: BoxDecoration(
