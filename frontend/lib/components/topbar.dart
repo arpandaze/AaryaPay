@@ -29,11 +29,6 @@ class TopBar extends StatelessWidget {
             },
             builder: (context, state) {
               return Container(
-                decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
-                    borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(10),
-                        bottomRight: Radius.circular(10))),
                 width: size.width,
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Row(
@@ -92,7 +87,6 @@ class TopBar extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            
                           ],
                         ),
                       ],
@@ -168,6 +162,14 @@ class TopBar extends StatelessWidget {
                                 right: -5,
                                 child: Container(
                                   decoration: BoxDecoration(
+                                      gradient: const SweepGradient(
+                                        colors: [
+                                          Color(0xff274233),
+                                          Color(0xff39a669)
+                                        ],
+                                        stops: [0, 1],
+                                        center: Alignment.topRight,
+                                      ),
                                       color:
                                           Theme.of(context).colorScheme.primary,
                                       // .withOpacity(0.2),

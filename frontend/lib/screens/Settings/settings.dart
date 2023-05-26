@@ -256,18 +256,27 @@ class Settings extends StatelessWidget {
           },
       },
       builder: (context, state) {
-        return SingleChildScrollView(
-          child: Container(
-            width: size.width,
-            height: size.height * 0.72,
-            color: Theme.of(context).colorScheme.background,
-            child: Column(
-              children: [
-                CustomMenuSelection(
-                  itemList: itemList,
-                ),
-                button(context, size),
-              ],
+        return Container(
+          width: size.width,
+          height: size.height * 0.72,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(35),
+              topRight: Radius.circular(35),
+            ),
+            color: Color(0xfff4f6f4),
+          ),
+          child: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Column(
+                children: [
+                  CustomMenuSelection(
+                    itemList: itemList,
+                  ),
+                  button(context, size),
+                ],
+              ),
             ),
           ),
         );

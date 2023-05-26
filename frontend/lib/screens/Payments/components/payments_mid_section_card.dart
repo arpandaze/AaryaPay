@@ -154,7 +154,10 @@ class PaymentsMidSectionCard extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  imageLoader(imageUrl: "imageUrxl"),
+                  Container(
+                    margin: const EdgeInsets.only(right: 15.0),
+                    child: imageLoader(imageUrl: "imageUrxl"),
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

@@ -50,8 +50,8 @@ class MySVG extends AssetBundle {
 
 Widget imageLoader({
   required String imageUrl,
-  double width = 60,
-  double height = 60,
+  double width = 82,
+  double height = 82,
   ImageType shape = ImageType.circle,
   double radius = 0,
   Widget errorImage = const CustomFavoritesAvatar(
@@ -80,7 +80,6 @@ Widget imageLoader({
             return Container(
               width: width,
               height: height,
-              margin: EdgeInsets.only(right: 10),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(

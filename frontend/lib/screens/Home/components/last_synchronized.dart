@@ -22,39 +22,104 @@ class LastSynchronized extends StatelessWidget {
         return BlocProvider(
           create: (context) => TopBarBloc(),
           child: BlocConsumer<TopBarBloc, TopBarState>(
-            listener: (context, state) {
-              // TODO: implement listener
-            },
+            listener: (context, state) {},
             builder: (context, state) {
               return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 15),
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                width: size.width,
-                height: size.height * 0.08,
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Color(0xffffffff),
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(0, 4),
+                        spreadRadius: -22,
+                        blurRadius: 29,
+                        color: Color(0x19000000),
+                      )
+                    ]),
+                margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+                width: size.width * 0.9,
+                height: size.height * 0.25,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      "Last Synchronization",
-                      style: textTheme.bodyLarge!
-                          .merge(TextStyle(color: colorScheme.outline)),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Unverified Transactions",
+                          style: textTheme.titleMedium!.merge(
+                              TextStyle(color: colorScheme.onBackground)),
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "3",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge!
+                                  .merge(TextStyle(fontSize: 65, height: 0)),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Text(
+                                "Transactions",
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                            )
+                          ],
+                        ),
+                        Text(
+                          "12/04/2023 5:45 pm",
+                          style: textTheme.bodyLarge!
+                              .merge(TextStyle(color: colorScheme.outline)),
+                        ),
+                      ],
                     ),
-                    Text(
-                      "12/04/2023 5:45 pm",
-                      style: textTheme.bodyMedium!
-                          .merge(TextStyle(color: colorScheme.outline)),
-                    ),
-                    CustomStatusButton(
-                      width: size.width * 0.20,
-                      height: size.height * 0.04,
-                      label: "Sync",
-                      onTap: () => context
-                          .read<TopBarBloc>()
-                          .add(SyncingEvent(syncing: !state.syncing)),
-                      textStyle: textTheme.labelSmall!
-                          .merge(const TextStyle(height: 0)),
-                      widget: CustomSyncRotation(syncing: state.syncing),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: SvgPicture.asset(
+                                "assets/icons/rupee.svg",
+                                colorFilter: ColorFilter.mode(
+                                    Theme.of(context).colorScheme.onBackground,
+                                    BlendMode.srcIn),
+                                width: 40,
+                                height: 40,
+                              ),
+                            ),
+                            Text(
+                              "600",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge!
+                                  .merge(
+                                    const TextStyle(fontSize: 45, height: 0),
+                                  ),
+                            ),
+                          ],
+                        ),
+                        CustomStatusButton(
+                          width: size.width * 0.20,
+                          height: size.height * 0.04,
+                          label: "Sync",
+                          onTap: () => context
+                              .read<TopBarBloc>()
+                              .add(SyncingEvent(syncing: !state.syncing)),
+                          textStyle: textTheme.labelSmall!
+                              .merge(const TextStyle(height: 0)),
+                          widget: CustomSyncRotation(syncing: state.syncing),
+                        ),
+                      ],
                     ),
                   ],
                 ),
