@@ -11,6 +11,8 @@ class LoadDataEvent extends DataEvent {}
 
 class RequestSyncEvent extends DataEvent {}
 
+class CheckInternet extends DataEvent {}
+
 class SubmitTAMEvent extends DataEvent {
   final TransactionAuthorizationMessage tam;
 

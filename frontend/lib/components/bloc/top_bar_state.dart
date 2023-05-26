@@ -23,5 +23,9 @@ class TopBarState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [amount, uuid, hide];
+  List<Object?> get props => [
+        amount,
+        uuid,
+        hide,
+      ];
 }
