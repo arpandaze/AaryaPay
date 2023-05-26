@@ -72,39 +72,27 @@ class TopBar extends StatelessWidget {
                                 height: 20,
                               ),
                             ),
-                            SizedBox(
-                              // width: size.width * 0.45,
-                              child: Text(
-                                !state.hide ? state.amount : "XXX.XXX",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelLarge!
-                                    .merge(TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary)),
-                              ),
-                            ),
                             GestureDetector(
                               onTap: () => {
                                 context
                                     .read<TopBarBloc>()
                                     .add(EyeTapped(tapped: !state.hide)),
                               },
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: SvgPicture.asset(
-                                  !state.hide
-                                      ? "assets/icons/invisible.svg"
-                                      : "assets/icons/show.svg",
-                                  colorFilter: ColorFilter.mode(
-                                      Theme.of(context).colorScheme.background,
-                                      BlendMode.srcIn),
-                                  width: 22,
-                                  height: 22,
+                              child: SizedBox(
+                                // width: size.width * 0.45,
+                                child: Text(
+                                  !state.hide ? state.amount : "XXX.XXX",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelLarge!
+                                      .merge(TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary)),
                                 ),
                               ),
                             ),
+                            
                           ],
                         ),
                       ],

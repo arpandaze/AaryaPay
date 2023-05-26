@@ -80,6 +80,7 @@ Widget imageLoader({
             return Container(
               width: width,
               height: height,
+              margin: EdgeInsets.only(right: 10),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(

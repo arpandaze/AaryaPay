@@ -27,7 +27,6 @@ class AccountInformation extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var colorScheme = Theme.of(context).colorScheme;
-    var textTheme = Theme.of(context).textTheme;
 
     return Container(
       color: colorScheme.background,
@@ -57,7 +56,7 @@ class AccountInformation extends StatelessWidget {
           Utils.mainAppNav.currentState!.popUntil(ModalRoute.withName('/app'));
         }
         if (state.imageSuccess) {
-          Utils.mainAppNav.currentState!.pop(ModalRoute.withName('/app'));
+          Utils.mainAppNav.currentState!.popUntil(ModalRoute.withName('/app'));
           await Utils()
               .cacheManager
               .removeFile("$fileServerBase/${state.photoUrl}");
