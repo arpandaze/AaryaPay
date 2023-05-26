@@ -155,26 +155,40 @@ class TopBar extends StatelessWidget {
                                 },
                               ),
                             ),
-                            child: Stack(children: [
+                            child: Stack(clipBehavior: Clip.none, children: [
                               imageLoader(
                                 imageUrl: state.uuid ?? "",
                                 shape: ImageType.rectangle,
                                 radius: 20,
-                                width: 100,
-                                height: 100,
+                                width: 150,
+                                height: 150,
+                                errorImage: Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)),
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: AssetImage(
+                                          ("assets/images/default-pfp.png")),
+                                    ),
+                                  ),
+                                ),
                               ),
                               Positioned(
-                                bottom: 0,
-                                right: 10,
+                                bottom: -10,
+                                right: -5,
                                 child: Container(
                                   decoration: BoxDecoration(
                                       color:
                                           Theme.of(context).colorScheme.primary,
                                       // .withOpacity(0.2),
                                       borderRadius: BorderRadius.circular(20)),
-                                  width: 20,
-                                  height: 20,
-                                  padding: EdgeInsets.all(3),
+                                  width: 30,
+                                  height: 30,
+                                  padding: EdgeInsets.all(6),
                                   child: Container(
                                     decoration: BoxDecoration(
                                         color: onlineState
@@ -187,8 +201,8 @@ class TopBar extends StatelessWidget {
                                         // .withOpacity(0.2),
                                         borderRadius:
                                             BorderRadius.circular(20)),
-                                    width: 15,
-                                    height: 15,
+                                    width: 20,
+                                    height: 20,
                                   ),
                                 ),
                               ),
