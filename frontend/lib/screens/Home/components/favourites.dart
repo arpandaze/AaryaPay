@@ -123,7 +123,7 @@ class Favourites extends StatelessWidget {
                                                         state.favouritesList!)),
                                             child: imageLoader(
                                               imageUrl: item.id.toString(),
-                                              shape: ImageType.initial,
+                                              shape: ImageType.circle,
                                               width: 60,
                                               height: 60,
                                             ),

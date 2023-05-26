@@ -4,7 +4,7 @@ abstract class TopBarEvent extends Equatable {
   const TopBarEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class GetInformation extends TopBarEvent {}
@@ -16,4 +16,13 @@ class EyeTapped extends TopBarEvent {
 
   @override
   List<Object> get props => [tapped];
+}
+
+class SyncingEvent extends TopBarEvent {
+  final bool syncing;
+
+  SyncingEvent({this.syncing = false});
+
+  @override
+  List<Object?> get props => [syncing];
 }

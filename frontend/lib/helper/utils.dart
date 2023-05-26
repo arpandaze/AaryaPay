@@ -52,7 +52,7 @@ Widget imageLoader({
   required String imageUrl,
   double width = 60,
   double height = 60,
-  ImageType shape = ImageType.initial,
+  ImageType shape = ImageType.circle,
   double radius = 0,
   Widget errorImage = const CustomFavoritesAvatar(
     imagesUrl: "assets/images/default-pfp.png",
@@ -105,16 +105,19 @@ Widget imageLoader({
             return CustomCircularAvatar(image: FileImage(snapshot.data!.file));
         }
       } else if (snapshot.hasError) {
-        return errorImage;
+        return errorImage; 
       } else {
-        return CircularLoadingAnimation(width: width, height: height);
+        return CircularLoadingAnimation(
+          width: width,
+          height: height,
+          shape: shape,
+        );
       }
     },
   );
 }
 
 Future<bool> checkInternetConnectivity() async {
-
   var connectivityResult = await (Connectivity().checkConnectivity());
 
   if (connectivityResult == ConnectivityResult.none) {
