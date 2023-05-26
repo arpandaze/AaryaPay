@@ -93,9 +93,8 @@ class DataState extends Equatable {
     print("HERE");
     var decodedProfile = jsonDecode(storageProfile!);
     decodedProfile['dob'] = int.parse(decodedProfile['dob']);
-    Profile? storageProfileObj = decodedProfile == null
-        ? null
-        : Profile.fromJson(decodedProfile);
+    Profile? storageProfileObj =
+        decodedProfile == null ? null : Profile.fromJson(decodedProfile);
 
     var userID = storageProfileObj?.id;
 
@@ -134,7 +133,7 @@ class DataState extends Equatable {
         ? null
         : jsonDecode(storageSessionToken) as String;
 
-    return DataState(
+    DataState newState = DataState(
       profile: storageProfileObj,
       transactions: storageTransactionsObj,
       favorites: storageFavoritesObj,
@@ -144,6 +143,9 @@ class DataState extends Equatable {
       sessionToken: storageSessionTokenObj,
       isLoaded: true,
     );
+
+    print("From Storage Load: $newState");
+    return newState;
   }
 
   @override
