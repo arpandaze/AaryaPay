@@ -1,6 +1,7 @@
 package telemetry
 
 import (
+	"context"
 	"time"
 
 	ginzap "github.com/gin-contrib/zap"
@@ -29,7 +30,33 @@ func FieldsFromContext(c *gin.Context) []zapcore.Field {
 	return fields
 }
 
-func initGinzap() (*zap.Logger, gin.HandlerFunc) {
+var zinzapLogger *zap.Logger
+var GinzapInstance gin.HandlerFunc
+
+func InitGinzap(lokiAddress string, appName string) (*zap.Logger, gin.HandlerFunc) {
+	zapConfig := zap.NewProductionConfig()
+
+	loki := NewZapLoki(context.Background(), Config{
+		Url:          lokiAddress,
+		BatchMaxSize: 1000,
+		BatchMaxWait: 10 * time.Second,
+		Labels:       map[string]string{"app": appName},
+	})
+
+	logger, _ := loki.WithCreateLogger(zapConfig)
+
+	ginzapInstance := ginzap.GinzapWithConfig(logger, &ginzap.Config{
+		UTC:        true,
+		TimeFormat: time.RFC3339,
+		Context:    ginzap.Fn(FieldsFromContext),
+	})
+
+	zinzapLogger = logger
+	GinzapInstance = ginzapInstance
+	return logger, ginzapInstance
+}
+
+func InitTestGinzap() (*zap.Logger, gin.HandlerFunc) {
 	logger, _ := zap.NewProduction()
 
 	ginzapInstance := ginzap.GinzapWithConfig(logger, &ginzap.Config{
@@ -38,10 +65,10 @@ func initGinzap() (*zap.Logger, gin.HandlerFunc) {
 		Context:    ginzap.Fn(FieldsFromContext),
 	})
 
+	zinzapLogger = logger
+	GinzapInstance = ginzapInstance
 	return logger, ginzapInstance
 }
-
-var zinzapLogger, GinzapInstance = initGinzap()
 
 func Logger(c *gin.Context) *zap.Logger {
 	if c != nil {

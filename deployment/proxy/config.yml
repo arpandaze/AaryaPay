@@ -41,6 +41,15 @@ http:
         domains:
           - main: "mail.arpandaze.tech"
       service: mailpit
+    grafana:
+      entryPoints:
+        - websecure
+      rule: "Host(`grafana.arpandaze.tech`)"
+      tls:
+        certResolver: "tlsresolver"
+        domains:
+          - main: "grafana.arpandaze.tech"
+      service: grafana
   services:
     nginx:
       loadBalancer:
@@ -54,6 +63,10 @@ http:
       loadBalancer:
         servers:
           - url: http://localhost:32147
+    grafana:
+      loadBalancer:
+        servers:
+          - url: http://localhost:3000
 tcp:
   routers:
     postgres:
