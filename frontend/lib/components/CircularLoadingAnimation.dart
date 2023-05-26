@@ -59,27 +59,35 @@ class _CircularLoadingAnimationState extends State<CircularLoadingAnimation>
             child: AnimatedBuilder(
               animation: _animationController,
               builder: (context, child) {
-                return Transform.translate(
-                  offset: Offset(
-                    -widget.width +
-                        (_animationController.value * 4 * widget.width),
-                    0.0,
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(20),
-                      gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: [
-                          Colors.white.withOpacity(0.0),
-                          Colors.white.withOpacity(0.4),
-                          Colors.white.withOpacity(0.0),
-                        ],
-                        stops: [0.0, 0.5, 1.0],
+                return ClipRect(
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        left: -widget.width +
+                            (_animationController.value *
+                                2 *
+                                widget
+                                    .width), // Adjust the multiplication factor as needed
+                        child: Container(
+                          width: widget.width * 0.9,
+                          height: widget.height,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.circular(35),
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: [
+                                Colors.white.withOpacity(0.0),
+                                Colors.white.withOpacity(0.25),
+                                Colors.white.withOpacity(0.0),
+                              ],
+                              stops: [0.0, 0.5, 1.0],
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 );
               },
@@ -105,27 +113,37 @@ class _CircularLoadingAnimationState extends State<CircularLoadingAnimation>
             child: AnimatedBuilder(
               animation: _animationController,
               builder: (context, child) {
-                return Transform.translate(
-                  offset: Offset(
-                    -widget.width +
-                        (_animationController.value * 4 * widget.width),
-                    0.0,
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(20),
-                      gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: [
-                          Colors.white.withOpacity(0.0),
-                          Colors.white.withOpacity(0.4),
-                          Colors.white.withOpacity(0.0),
-                        ],
-                        stops: const [0.0, 0.5, 1.0],
+                return ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(
+                      20)), 
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        left: -widget.width +
+                            (_animationController.value *
+                                2 *
+                                widget
+                                    .width), // Adjust the multiplication factor as needed
+                        child: Container(
+                          width: widget.width * 0.95,
+                          height: widget.height,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.circular(25),
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: [
+                                Colors.white.withOpacity(0.0),
+                                Colors.white.withOpacity(0.25),
+                                Colors.white.withOpacity(0.0),
+                              ],
+                              stops: const [0.0, 0.5, 1.0],
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 );
               },
