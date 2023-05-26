@@ -1,12 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:libaaryapay/libaaryapay.dart';
+import 'package:libaaryapay/transaction/tam.dart';
+import 'package:libaaryapay/transaction/tvc.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 part 'qrscan_event.dart';
@@ -22,7 +21,6 @@ class QrScannerBloc extends Bloc<QrScannerEvent, QrScannerState> {
     add(QrScanDataCreate());
   }
 
- 
   void _onCloseScanner(CloseScanner event, Emitter<QrScannerState> emit) {
     state.controller?.dispose();
   }
@@ -35,13 +33,32 @@ class QrScannerBloc extends Bloc<QrScannerEvent, QrScannerState> {
 
   void _onQrCodeScanned(
       QrCodeScanned event, Emitter<QrScannerState> emit) async {
-    print("This is Scanned ${event.code}");
-    print("This is Scanned ${utf8.decode(event.code)}");
+
+    try {
+      TransactionAuthorizationMessage.fromBytes(event.code);
+      emit(state.copyWith(codeType: CodeType.TAM));
+    } on Exception {
+      try {
+        TransactionVerificationCertificate.fromBytes(event.code);
+        emit(state.copyWith(codeType: CodeType.TVC));
+      } on Exception {
+        var decodedCode = jsonDecode(utf8.decode(event.code));
+        if (decodedCode.containsKey('id') &&
+            decodedCode.containsKey('firstName') &&
+            decodedCode.containsKey('lastName')) {
+          emit(state.copyWith(codeType: CodeType.user));
+        } else {
+          emit(state.copyWith(codeType: CodeType.other));
+        }
+      }
+    }
 
     emit(state.copyWith(code: event.code));
+    if (state.code != null) {
+      emit(state.copyWith(isScanned: true));
+    }
   }
 
- 
   Future<Map> generateQRData() async {
     var storage = const FlutterSecureStorage();
 
@@ -50,11 +67,13 @@ class QrScannerBloc extends Bloc<QrScannerEvent, QrScannerState> {
     var profileDecoded = jsonDecode(profileStorage!);
 
     var id = profileDecoded['id'];
-    var name = profileDecoded['first_name'] + " " +profileDecoded['last_name'];
+    var firstName = profileDecoded['first_name'];
+    var lastName = profileDecoded['last_name'];
 
     return {
       "id": id,
-      "name": name,
-    }; 
+      "firstName": firstName,
+      "lastName": lastName,
+    };
   }
 }

@@ -42,7 +42,6 @@ class Favourites extends StatelessWidget {
                             uuid: state.particularUser!['id'],
                             firstname: state.particularUser!['first_name'],
                             lastname: state.particularUser!['last_name'],
-                            email: state.particularUser!['email'],
                             displayAmount: state.displayAmount!,
                           ),
                           transitionsBuilder:
@@ -76,7 +75,6 @@ class Favourites extends StatelessWidget {
                                           state.particularUser!['first_name'],
                                       lastname:
                                           state.particularUser!['last_name'],
-                                      email: state.particularUser!['email'],
                                       displayAmount: state.displayAmount!,
                                     ),
                                   ),

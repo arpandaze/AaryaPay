@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:aaryapay/components/CircularLoadingAnimation.dart';
 import 'package:aaryapay/components/CustomCircularAvatar.dart';
