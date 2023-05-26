@@ -175,13 +175,21 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   decoration: InputDecoration(
                     // labelText: label ?? " ",
                     icon: widget.prefixIcon,
-                    suffixIconConstraints:
-                        const BoxConstraints(maxWidth: 25, maxHeight: 25),
+                    suffixIconConstraints: const BoxConstraints(
+                        minWidth: 40,
+                        minHeight: 40,
+                        maxWidth: 40,
+                        maxHeight: 40),
                     suffixIcon: widget.isPassword
                         ? GestureDetector(
                             onTap: () => togglePassword(),
                             child: Container(
-                              margin: const EdgeInsets.only(right: 8),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: const Color.fromARGB(0, 0, 0, 0),
+                                ),
+                              ),
+                              padding: const EdgeInsets.all(10),
                               child: SvgPicture.asset(
                                 "assets/icons/${showPassword ? 'show' : 'invisible'}.svg",
                                 colorFilter: ColorFilter.mode(
