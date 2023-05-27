@@ -25,7 +25,6 @@ func PopulationInit() (*gin.Engine, *gin.Context, *httptest.ResponseRecorder) {
 func initPopulationRouter() *gin.Engine {
 	gin.SetMode(gin.TestMode)
 
-	core.LoadConfig()
 	core.ConnectDatabase()
 	core.ConnectRedis()
 
