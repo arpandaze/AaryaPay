@@ -107,7 +107,7 @@ class TransactionHistory extends StatelessWidget {
                           margin: const EdgeInsets.only(top: 10.0),
                           child: Column(children: [
                             if (state.loaded)
-                              ...state.transactionHistory!.transactions
+                              ...state.transactionHistory!
                                   .map((item) => GestureDetector(
                                         onTapDown: (details) => {
                                           context.read<TranscationBloc>().add(
@@ -140,7 +140,7 @@ class TransactionHistory extends StatelessWidget {
                                         ),
                                       ))
                                   .toList()
-                                  .reversed,
+                                  ,
                             if (!(state.loaded))
                               const CircularProgressIndicator(),
                           ]),

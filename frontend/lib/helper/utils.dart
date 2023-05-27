@@ -106,7 +106,7 @@ Widget imageLoader({
             return CustomCircularAvatar(image: FileImage(snapshot.data!.file));
         }
       } else if (snapshot.hasError) {
-        return errorImage; 
+        return errorImage;
       } else {
         return CircularLoadingAnimation(
           width: width,
@@ -129,20 +129,19 @@ Future<bool> checkInternetConnectivity() async {
 }
 
 Future<void> dialogBuilder(BuildContext context, String asset) {
-    return showDialog<void>(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
+  return showDialog<void>(
+    barrierDismissible: false,
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+          shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
-            content: CustomAnimationWidget(
-              repeat: true,
-              assetSrc: asset,
-              width: 200,
-              height:200,
-            ));
-      },
-    );
-  }
-
+          content: CustomAnimationWidget(
+            repeat: true,
+            assetSrc: asset,
+            width: 200,
+            height: 200,
+          ));
+    },
+  );
+}

@@ -43,6 +43,10 @@ class Transactions {
     return transactions.where((element) => !element.isSubmitted).toList();
   }
 
+  Future<List<Transaction>> getSubmittedTransactions() async {
+    return transactions.where((element) => element.isSubmitted).toList();
+  }
+
   Future<Transaction> getLatest() async {
     Transaction latest = transactions[0];
     for (var transaction in transactions) {

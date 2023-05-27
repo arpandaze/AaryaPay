@@ -2,7 +2,7 @@ part of 'transaction_bloc.dart';
 
 class TranscationState extends Equatable {
   final bool loaded;
-  final Transactions? transactionHistory;
+  final List<Transaction>? transactionHistory;
   final String? senderName;
   final String? receiverName;
   final Transaction? item;
@@ -19,7 +19,7 @@ class TranscationState extends Equatable {
 
   TranscationState copywith({
     bool? loaded,
-    Transactions? transactionHistory,
+    List<Transaction>? transactionHistory,
     String? senderName,
     String? receiverName,
     Transaction? item,

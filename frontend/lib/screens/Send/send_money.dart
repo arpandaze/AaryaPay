@@ -147,11 +147,16 @@ class SendMoney extends StatelessWidget {
         double sentAmount = dataState.transactions.getSentAmount();
         double balance = dataState.bkvc!.availableBalance;
         double availableAmount = balance - sentAmount;
+
+        print(availableAmount);
         return BlocConsumer<SendMoneyBloc, SendMoneyState>(
           listenWhen: (previous, current) => previous != current,
           listener: (context, state) => {
-            if (state.tamStatus == TAMStatus.initiated)
-              {dialogBuilder(context, 'assets/animations/paperplane.json')},
+            if (state.tamStatus == TAMStatus.clicked ||
+                state.tamStatus == TAMStatus.initiated)
+              {
+                dialogBuilder(context, 'assets/animations/paperplane.json'),
+              },
             if (state.tamStatus == TAMStatus.generated)
               {
                 context.read<DataBloc>().add(SubmitTAMEvent(state.tam!)),
@@ -214,7 +219,7 @@ class SendMoney extends StatelessWidget {
                       ),
                     ),
                     BalanceBox(
-                      balance: displayAmount.toString(),
+                      balance: availableAmount.toString(),
                     ),
                     Container(
                       constraints:

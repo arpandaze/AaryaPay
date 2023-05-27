@@ -109,12 +109,12 @@ class RecentCard extends StatelessWidget {
                               child: Column(
                                 children: state.isLoaded
                                     ? [
-                                        ...state
-                                            .transactionHistory!.transactions
+                                        ...state.transactionHistory!
                                             .take(min(
                                                 5,
                                                 state.transactionHistory!
-                                                    .transactions.length))
+                                                    .length))
+                                            .toList()
                                             .map(
                                               (item) => GestureDetector(
                                                 onTapDown: (details) => {
@@ -160,8 +160,6 @@ class RecentCard extends StatelessWidget {
                                                 ),
                                               ),
                                             )
-                                            .toList()
-                                            .reversed,
                                       ]
                                     : [
                                         const CircularProgressIndicator(),

@@ -29,7 +29,6 @@ class PaymentComplete extends StatelessWidget {
   }
 
   Widget body(Size size, BuildContext context) {
-    print(transaction.senderFirstName);
     void onClick() {
       Utils.mainAppNav.currentState!.push(
         PageRouteBuilder(
@@ -98,6 +97,7 @@ class PaymentComplete extends StatelessWidget {
                     Container(
                         child: CustomAnimationWidget(
                       assetSrc: 'assets/animations/check.json',
+                      repeat: true,
                     )
 
                         // child: SvgPicture.asset('assets/icons/check.svg',
