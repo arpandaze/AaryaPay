@@ -1,3 +1,4 @@
+import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/components/bloc/top_bar_bloc.dart';
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/bloc/data_bloc.dart';
@@ -17,10 +18,29 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DataBloc, DataState>(
-      buildWhen: (previous, current) => previous.isOnline != current.isOnline,
-      builder: (context, state) {
-        var onlineState = state.isOnline;
+    return BlocConsumer<DataBloc, DataState>(
+      listenWhen: (previous, current) => previous.isOnline != current.isOnline,
+      listener: (context, dataState) => {
+        if (dataState.isOnline)
+          {
+            SnackBarService.stopSnackBar(),
+            SnackBarService.showSnackBar(
+              msgType: MessageType.success,
+              content: "You are back Online!",
+            ),
+          }
+        else
+          {
+            SnackBarService.stopSnackBar(),
+            SnackBarService.showSnackBar(
+              msgType: MessageType.error,
+              content: "You are currently Offline!",
+            ),
+          }
+      },
+      buildWhen: (previous, current) => previous != current,
+      builder: (context, dataState) {
+        var onlineState = dataState.isOnline;
         return BlocProvider(
           create: (context) => TopBarBloc(),
           child: BlocConsumer<TopBarBloc, TopBarState>(
@@ -65,6 +85,23 @@ class TopBar extends StatelessWidget {
                                     BlendMode.srcIn),
                                 width: 20,
                                 height: 20,
+                              ),
+                            ),
+                            SizedBox(
+                              // width: size.width * 0.45,
+                              child: Text(
+                                !state.hide
+                                    ? dataState.bkvc?.availableBalance
+                                            .toString() ??
+                                        "1200"
+                                    : "XXX.XXX",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge!
+                                    .merge(TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary)),
                               ),
                             ),
                             GestureDetector(

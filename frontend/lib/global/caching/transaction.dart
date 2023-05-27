@@ -44,7 +44,29 @@ class Transactions {
   }
 
   Future<Transaction> getLatest() async {
-    return transactions.last;
+    Transaction latest = transactions[0];
+    for (var transaction in transactions) {
+      print(transaction.generationTime);
+      if (transaction.generationTime.compareTo(latest.generationTime) > 0) {
+        latest = transaction;
+      }
+    }
+    print(latest.generationTime);
+    return latest;
+  }
+
+  double getSentAmount() {
+    double sentAmount = 0;
+
+    var unsubmittedTransactions =
+        transactions.where((element) => !element.isSubmitted).toList();
+    for (var transaction in unsubmittedTransactions) {
+      if (transaction.isDebit) {
+        sentAmount += transaction.amount;
+      }
+    }
+
+    return sentAmount;
   }
 }
 
@@ -118,7 +140,11 @@ class Transaction {
   }
 
   DateTime get generationTime {
-    return senderTvc!.timeStamp;
+    if (isSubmitted) {
+      return senderTvc!.timeStamp;
+    } else {
+      return authorizationMessage!.timeStamp;
+    }
   }
 
   factory Transaction.fromJson(Map<String, dynamic> json, UuidValue userId) {

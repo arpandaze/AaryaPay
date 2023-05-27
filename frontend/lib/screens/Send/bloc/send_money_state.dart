@@ -5,14 +5,6 @@ enum DisplayState {
   idle,
 }
 
-enum TAMStatus {
-  other,
-  initiated,
-  generated,
-  completed,
-  interrupted,
-}
-
 class SendMoneyState extends Equatable {
   final double amount;
   final String displayAmount;
@@ -22,16 +14,21 @@ class SendMoneyState extends Equatable {
   final Map<String, dynamic>? submitResponse;
   final TAMStatus tamStatus;
   final TransactionAuthorizationMessage? tam;
+  final bool error;
+  final String? errorText;
 
-  const SendMoneyState(
-      {required this.amount,
-      this.submitted = false,
-      this.displayAmount = "0.0",
-      this.status = DisplayState.idle,
-      this.submitResponse,
-      this.isOnline = true,
-      this.tamStatus = TAMStatus.other,
-      this.tam});
+  const SendMoneyState({
+    required this.amount,
+    this.submitted = false,
+    this.displayAmount = "0.0",
+    this.status = DisplayState.idle,
+    this.submitResponse,
+    this.isOnline = true,
+    this.tamStatus = TAMStatus.other,
+    this.tam,
+    this.error = false,
+    this.errorText,
+  });
 
   SendMoneyState copyWith({
     double? amount,
@@ -42,6 +39,8 @@ class SendMoneyState extends Equatable {
     bool? isOnline,
     TAMStatus? tamStatus,
     TransactionAuthorizationMessage? tam,
+    bool? error,
+    String? errorText,
   }) {
     return SendMoneyState(
       amount: amount ?? this.amount,
@@ -52,6 +51,8 @@ class SendMoneyState extends Equatable {
       isOnline: isOnline ?? this.isOnline,
       tamStatus: tamStatus ?? this.tamStatus,
       tam: tam ?? this.tam,
+      error: error ?? this.error,
+      errorText: errorText ?? this.errorText,
     );
   }
 
@@ -65,5 +66,7 @@ class SendMoneyState extends Equatable {
         isOnline,
         tamStatus,
         tam,
+        error,
+        errorText,
       ];
 }

@@ -13,28 +13,40 @@ class QrScannerState extends Equatable {
   final String? qrData;
   final bool isScanned;
   final CodeType codeType;
+  final TransactionAuthorizationMessage? tam;
+  final TransactionVerificationCertificate? tvc;
+  final bool scannedOnce;
 
   const QrScannerState({
+    this.tvc,
     this.controller,
     this.code,
     this.qrData,
     this.isScanned = false,
+    this.tam,
     this.codeType = CodeType.other,
+    this.scannedOnce = false,
   });
 
   QrScannerState copyWith({
+    TransactionVerificationCertificate? tvc,
     QRViewController? controller,
     List<int>? code,
     String? qrData,
     bool? isScanned,
+    TransactionAuthorizationMessage? tam,
     CodeType? codeType,
+    bool? scannedOnce,
   }) {
     return QrScannerState(
+      tam: tam ?? this.tam,
       controller: controller ?? this.controller,
       code: code ?? this.code,
       qrData: qrData ?? this.qrData,
       isScanned: isScanned ?? this.isScanned,
       codeType: codeType ?? this.codeType,
+      tvc: tvc ?? this.tvc,
+      scannedOnce: scannedOnce ?? this.scannedOnce,
     );
   }
 
@@ -45,5 +57,8 @@ class QrScannerState extends Equatable {
         qrData,
         isScanned,
         codeType,
+        tam,
+        tvc,
+        scannedOnce,
       ];
 }

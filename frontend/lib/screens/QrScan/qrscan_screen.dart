@@ -5,6 +5,9 @@ import 'package:aaryapay/global/bloc/data_bloc.dart';
 import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/QrScan/components/bottom_bar.dart';
 import 'package:aaryapay/screens/QrScan/components/qr_scanner_overlay.dart';
+import 'package:aaryapay/screens/Send/payment_complete.dart';
+import 'package:aaryapay/screens/Send/payment_recorded.dart';
+import 'package:aaryapay/screens/Send/receiver_scan_confirmation.dart';
 import 'package:aaryapay/screens/Send/send_money.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -33,10 +36,103 @@ class QrScanScreen extends StatelessWidget {
 
   Widget body(Size size, BuildContext context) {
     return BlocConsumer<DataBloc, DataState>(
-      listener: (context, dataState) {},
+      listener: (context, dataState) {
+        print("New Data State on Scan: ${dataState.goToScreen}");
+        if (dataState.goToScreen == GoToScreen.onlineTrans) {
+          Utils.mainAppNav.currentState!.push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  PaymentComplete(
+                transaction: dataState.latestTransaction!,
+                sender: false,
+              ),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                final curve = CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.decelerate,
+                );
+
+                return Stack(
+                  children: [
+                    FadeTransition(
+                      opacity: Tween<double>(
+                        begin: 1.0,
+                        end: 0.0,
+                      ).animate(curve),
+                    ),
+                    SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0.0, 1.0),
+                        end: Offset.zero,
+                      ).animate(curve),
+                      child: FadeTransition(
+                        opacity: Tween<double>(
+                          begin: 0.0,
+                          end: 1.0,
+                        ).animate(curve),
+                        child: PaymentComplete(
+                          transaction: dataState.latestTransaction!,
+                          sender: false,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          );
+        }
+        if (dataState.goToScreen == GoToScreen.recOfflineTrans) {
+          Utils.mainAppNav.currentState!.push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  PaymentRecorded(tvc: dataState.latestTransaction!),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                final curve = CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.decelerate,
+                );
+
+                return Stack(
+                  children: [
+                    FadeTransition(
+                      opacity: Tween<double>(
+                        begin: 1.0,
+                        end: 0.0,
+                      ).animate(curve),
+                    ),
+                    SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0.0, 1.0),
+                        end: Offset.zero,
+                      ).animate(curve),
+                      child: FadeTransition(
+                        opacity: Tween<double>(
+                          begin: 0.0,
+                          end: 1.0,
+                        ).animate(curve),
+                        child:
+                            PaymentRecorded(tvc: dataState.latestTransaction!),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          );
+        }
+      },
       builder: (context, dataState) {
         return BlocConsumer<QrScannerBloc, QrScannerState>(
           listener: (context, state) {
+            if (state.isScanned && state.codeType == CodeType.TAM) {
+              context.read<DataBloc>().add(SubmitTAMEvent(
+                    state.tam!,
+                    ticking: false,
+                  ));
+            }
             if (state.isScanned && state.codeType == CodeType.user) {
               var result = utf8.decode(state.code!);
               var data = jsonDecode(result);
@@ -173,3 +269,44 @@ class QrScanScreen extends StatelessWidget {
     );
   }
 }
+
+
+// Utils.mainAppNav.currentState!.push(
+//             PageRouteBuilder(
+//               pageBuilder: (context, animation, secondaryAnimation) =>
+//                   ReceiverConfirmation(
+//                       transaction: dataState.latestTransaction),
+//               transitionsBuilder:
+//                   (context, animation, secondaryAnimation, child) {
+//                 final curve = CurvedAnimation(
+//                   parent: animation,
+//                   curve: Curves.decelerate,
+//                 );
+
+//                 return Stack(
+//                   children: [
+//                     FadeTransition(
+//                       opacity: Tween<double>(
+//                         begin: 1.0,
+//                         end: 0.0,
+//                       ).animate(curve),
+//                     ),
+//                     SlideTransition(
+//                       position: Tween<Offset>(
+//                         begin: const Offset(0.0, 1.0),
+//                         end: Offset.zero,
+//                       ).animate(curve),
+//                       child: FadeTransition(
+//                         opacity: Tween<double>(
+//                           begin: 0.0,
+//                           end: 1.0,
+//                         ).animate(curve),
+//                         child: ReceiverConfirmation(
+//                             transaction: dataState.latestTransaction),
+//                       ),
+//                     ),
+//                   ],
+//                 );
+//               },
+//             ),
+//           );

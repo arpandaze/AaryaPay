@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:aaryapay/global/caching/transaction.dart';
 import 'package:aaryapay/screens/Send/components/trans_details_outlined.dart';
 import 'package:flutter/material.dart';
@@ -5,9 +7,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class ReceiverConfirmation extends StatelessWidget {
-  Transaction? transaction;
-  ReceiverConfirmation({Key? key, this.transaction}) : super(key: key);
+class TVCDisplay extends StatelessWidget {
+  bool sender;
+  Transaction transaction;
+  TVCDisplay({Key? key, required this.transaction, this.sender = true})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -36,7 +40,7 @@ class ReceiverConfirmation extends StatelessWidget {
                 children: [
                   Container(
                     alignment: Alignment.center,
-                    child: Text("Transfer Initiated",
+                    child: Text("Transfer Completed",
                         style: Theme.of(context).textTheme.headlineMedium!),
                   ),
                   Container(
@@ -63,28 +67,29 @@ class ReceiverConfirmation extends StatelessWidget {
             Container(
               margin: const EdgeInsets.only(top: 20),
               child: QrImageView(
-                data:
-                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
+                data: sender
+                    ? base64Encode(transaction.receiverTvc!.toBytes())
+                    : base64Encode(transaction.senderTvc!.toBytes()),
                 size: 240,
               ),
             ),
             Container(
               margin: const EdgeInsets.only(top: 10),
-              child: Text("Let the Sender Scan the",
+              child: Text("Let the ${sender ? "Reciver" : "Sender"} Scan the",
                   style: Theme.of(context).textTheme.headlineSmall),
             ),
             Container(
               margin: const EdgeInsets.only(top: 10, bottom: 20),
               child: Text(
-                "QR Code to complete Offline Transaction",
+                "QR Code to Sync the Completed Transaction",
                 style: Theme.of(context).textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),
             ),
             TransactionDetailsOutlineBox(
-              initiator: transaction!.senderId.toString().substring(0, 8),
-              amount: "Rs. ${transaction?.amount}",
-              date: DateFormat.yMMMMEEEEd().format(transaction!.generationTime),
+              initiator: transaction.senderId.toString().substring(0, 8),
+              amount: "Rs. ${transaction.amount}",
+              date: DateFormat.yMMMMEEEEd().format(transaction.generationTime),
             ),
           ],
         )
