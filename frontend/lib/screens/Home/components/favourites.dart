@@ -19,18 +19,16 @@ class Favourites extends StatelessWidget {
     var textTheme = Theme.of(context).textTheme;
     Size size = MediaQuery.of(context).size;
     return BlocConsumer<DataBloc, DataState>(
-      listener: (context, dataState) {},
+      listener: (context, dataState) {
+        print("loaded: ${dataState.isLoaded}");
+        print(dataState.favorites.last.id);
+      },
+      buildWhen: (previous, current) => previous != current,
       builder: (context, dataState) {
         return dataState.isLoaded
             ? BlocProvider<HomeFavoritesBloc>(
                 create: (context) {
-                  final authenticationBloc = context.read<AuthenticationBloc>();
-                  return HomeFavoritesBloc(
-                    favouritesRepository: FavouritesRepository(
-                        token: authenticationBloc.state.token),
-                  )..add(HomeFavoritesLoadEvent(
-                      favorites: dataState.favorites,
-                      amount: dataState.balance));
+                  return HomeFavoritesBloc();
                 },
                 child: BlocConsumer<HomeFavoritesBloc, HomeFavoritesState>(
                   listener: (context, state) {
@@ -76,7 +74,7 @@ class Favourites extends StatelessWidget {
                                           state.particularUser!['first_name'],
                                       lastname:
                                           state.particularUser!['last_name'],
-                                      displayAmount: state.displayAmount!,
+                                      displayAmount: dataState.balance.toString(),
                                     ),
                                   ),
                                 ),
@@ -207,8 +205,8 @@ class Favourites extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                    if (state.isLoaded)
-                                      ...state.favouritesList!.map(
+                                    if (dataState.isLoaded)
+                                      ...dataState.favorites.map(
                                         (item) => GestureDetector(
                                           onTapDown: (details) => context
                                               .read<HomeFavoritesBloc>()
@@ -216,7 +214,7 @@ class Favourites extends StatelessWidget {
                                                 LoadParticularUser(
                                                   uuid: item.id.toString(),
                                                   favorites:
-                                                      state.favouritesList!,
+                                                      dataState.favorites,
                                                 ),
                                               ),
                                           onTap: () => context
@@ -252,8 +250,8 @@ class Favourites extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    if (!state.isLoaded)
+                                      ).toList().reversed,
+                                    if (!dataState.isLoaded)
                                       const CircularLoadingAnimation(
                                           width: 60, height: 60),
                                   ],

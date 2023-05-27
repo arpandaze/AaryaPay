@@ -9,6 +9,7 @@ class SynchronizationBloc
   SynchronizationBloc() : super(const SynchronizationState()) {
     on<EyeTapped>(_onEyeTapped);
     on<SyncingEvent>(_onSyncingEvent);
+    on<RotatingEvent>(_onRotatingEvent);
   }
 
   void _onEyeTapped(EyeTapped event, Emitter<SynchronizationState> emit) async {
@@ -17,5 +18,10 @@ class SynchronizationBloc
 
   void _onSyncingEvent(SyncingEvent event, Emitter<SynchronizationState> emit) {
     emit(state.copyWith(syncing: event.syncing));
+  }
+
+  void _onRotatingEvent(
+      RotatingEvent event, Emitter<SynchronizationState> emit) {
+    emit(state.copyWith(rotating: event.rotating));
   }
 }

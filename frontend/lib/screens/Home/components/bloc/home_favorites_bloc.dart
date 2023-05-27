@@ -8,28 +8,15 @@ part 'home_favorites_event.dart';
 part 'home_favorites_state.dart';
 
 class HomeFavoritesBloc extends Bloc<HomeFavoritesEvent, HomeFavoritesState> {
-  final FavouritesRepository favouritesRepository;
   static const storage = FlutterSecureStorage();
-  HomeFavoritesBloc({required this.favouritesRepository})
+  HomeFavoritesBloc()
       : super(const HomeFavoritesState()) {
-    on<HomeFavoritesLoadEvent>(_onFavoritesLoad);
     on<LoadParticularUser>(_onLoadParticularUser);
     on<ClearEvent>(_onClearEvent);
     add(ClearEvent());
   }
 
-  void _onFavoritesLoad(
-      HomeFavoritesLoadEvent event, Emitter<HomeFavoritesState> emit) async {
-    try {
-      emit(state.copyWith(
-          favouritesList: event.favorites,
-          isLoaded: true,
-          displayAmount: event.amount.toString()));
-    } catch (e) {
-      emit(state.copyWith(isLoaded: false));
-    }
-  }
-
+  
   void _onClearEvent(ClearEvent event, Emitter<HomeFavoritesState> emit) {
     emit(state.copyWith(clear: !state.clear));
   }

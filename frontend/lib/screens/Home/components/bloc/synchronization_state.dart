@@ -5,11 +5,13 @@ class SynchronizationState extends Equatable {
   final String? uuid;
   final bool hide;
   final bool syncing;
+  final bool rotating;
   const SynchronizationState({
     this.amount = "0.0",
     this.uuid,
-    this.hide = true,
+    this.hide = false,
     this.syncing = false,
+    this.rotating = false,
   });
 
   SynchronizationState copyWith({
@@ -17,12 +19,14 @@ class SynchronizationState extends Equatable {
     String? uuid,
     bool? hide,
     bool? syncing,
+    bool? rotating,
   }) {
     return SynchronizationState(
       amount: amount ?? this.amount,
       uuid: uuid ?? this.uuid,
       hide: hide ?? this.hide,
       syncing: syncing ?? this.syncing,
+      rotating: rotating ?? this.rotating,
     );
   }
 
@@ -32,5 +36,6 @@ class SynchronizationState extends Equatable {
         uuid,
         hide,
         syncing,
+        rotating,
       ];
 }

@@ -6,7 +6,6 @@ import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Settings/AccountInformation/account_information.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class TopBar extends StatelessWidget {
   const TopBar({
