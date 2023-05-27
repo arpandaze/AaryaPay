@@ -174,19 +174,26 @@ class QrScanScreen extends StatelessWidget {
             print("State Changed");
 
             if (state.isScanned && state.codeType == CodeType.TAM) {
-              context.read<DataBloc>().add(SubmitTAMEvent(
-                    state.tam!,
-                    ticking: false,
-                  ));
+              dialogBuilder(context, 'assets/animations/paperplane.json');
+              context.read<DataBloc>().add(
+                    SubmitTAMEvent(
+                      state.tam!,
+                      ticking: false,
+                    ),
+                  );
             }
 
             print(state.codeType);
             if (state.isScanned && state.codeType == CodeType.TVC) {
-              context.read<DataBloc>().add(SubmitTVCEvent(
-                    state.tvc!,
-                  ));
+              dialogBuilder(context, 'assets/animations/paperplane.json');
+              context.read<DataBloc>().add(
+                    SubmitTVCEvent(
+                      state.tvc!,
+                    ),
+                  );
             }
             if (state.isScanned && state.codeType == CodeType.user) {
+              dialogBuilder(context, 'assets/animations/paperplane.json');
               var result = utf8.decode(state.code!);
               var data = jsonDecode(result);
               print(data);

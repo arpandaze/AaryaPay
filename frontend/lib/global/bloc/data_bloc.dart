@@ -35,9 +35,6 @@ class DataBloc extends Bloc<DataEvent, DataState> {
   }
 
   Future<void> _onTimerUp(TimerUp event, Emitter<DataState> emit) async {
-    print("3 seconds up");
-    print(state.tamStatus);
-
     if (event.ticking) {
       if (state.tamStatus == TAMStatus.initiated) {
         emit(state.copyWith(goToScreen: GoToScreen.offlineTrans));
@@ -99,6 +96,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     if (transactionToSubmit.isEmpty) {
       response = await httpclient.post(url, headers: headers);
     } else {
+      print("No of Transactions to Submit : ${transactionToSubmit.length}");
       var base64Transactions = transactionToSubmit
           .map(
             (transaction) => base64.encode(
@@ -106,6 +104,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
             ),
           )
           .toList();
+      print(base64Transactions);
       var body = {
         'transactions': base64Transactions[0],
       };
@@ -147,7 +146,6 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         isLoaded: true,
       );
 
-      print("Loading Storage: $newState");
       newState.save(storage);
 
       Transaction latestTransaction = await transactions.getLatest();
@@ -192,7 +190,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     emit(newState);
     add(RequestSyncEvent());
 
-    Timer(Duration(seconds: 3), () => {add(TimerUp(event.ticking))});
+    Timer(Duration(seconds: 4), () => {add(TimerUp(event.ticking))});
   }
 
   Future<void> _onSubmitTVC(

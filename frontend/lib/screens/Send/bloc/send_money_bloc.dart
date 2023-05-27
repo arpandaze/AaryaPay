@@ -131,17 +131,28 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
 
   void _onSubmitTransfer(
       SubmitTransfer event, Emitter<SendMoneyState> emit) async {
-    if (event.available > state.amount && state.amount > 0) {
-      print("Send Initiated");
-      emit(state.copyWith(tamStatus: TAMStatus.initiated));
+    print("SEND PRESSSED");
+    print("SEND PRESSSED");
+    print("SEND PRESSSED");
+    print("SEND PRESSSED");
+
+    if (event.available > state.amount &&
+        state.amount > 0 &&
+        state.tamStatus == TAMStatus.other) {
+      print("SEND Initiated");
+      print("SEND Initiated");
+      print("SEND Initiated");
+      print("SEND Initiated");
+
+      emit(state.copyWith(tamStatus: TAMStatus.clicked));
 
       var bkvc = await storage.read(key: "bkvc");
       var privateKey = await storage.read(key: "private_key");
       var token = await storage.read(key: "token");
-      print(bkvc);
-      print(privateKey);
-      print(token);
+
       if (bkvc != null && privateKey != null && token != null) {
+        emit(state.copyWith(tamStatus: TAMStatus.initiated));
+
         var bkvcObject =
             BalanceKeyVerificationCertificate.fromBase64(jsonDecode(bkvc));
 
@@ -171,13 +182,18 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
           emit(
               state.copyWith(tam: transferTAM, tamStatus: TAMStatus.generated));
         }
-        emit(state.copyWith(tamStatus: TAMStatus.other));
+      } else if (privateKey == null) {
+        emit(state.copyWith(error: true, errorText: "Device Not Primary!"));
       }
     } else if (state.amount > 0) {
       emit(state.copyWith(error: true, errorText: "Balance Insufficient!"));
+    } else if (state.tamStatus != TAMStatus.other) {
+      emit(state.copyWith(
+          error: true, errorText: "A Send Action has already been initiated!"));
     } else {
       emit(state.copyWith(error: true, errorText: "The amount must not be 0!"));
     }
+    emit(state.copyWith(tamStatus: TAMStatus.other));
 
     emit(state.copyWith(error: false));
   }

@@ -110,12 +110,12 @@ class DataState extends Equatable {
 
   static Future<DataState> fromStorage(FlutterSecureStorage storage) async {
     var storageProfile = await storage.read(key: 'profile');
-    print("HERE");
+    print(storageProfile);
     var decodedProfile = jsonDecode(storageProfile!);
     decodedProfile['dob'] = int.parse(decodedProfile['dob']);
+
     Profile? storageProfileObj =
         decodedProfile == null ? null : Profile.fromJson(decodedProfile);
-
     var userID = storageProfileObj?.id;
 
     var storageTransactions = await storage.read(key: 'transactions');
