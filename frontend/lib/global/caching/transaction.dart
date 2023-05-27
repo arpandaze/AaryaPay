@@ -54,6 +54,16 @@ class Transactions {
     print(latest.generationTime);
     return latest;
   }
+
+  Future<bool> checkAlreadyExists(DateTime? timeStamp, double amount) async {
+    for (var transaction in transactions) {
+      if (transaction.generationTime == timeStamp &&
+          transaction.amount == amount) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
 
 class Transaction {
