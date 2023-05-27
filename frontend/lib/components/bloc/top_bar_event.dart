@@ -18,11 +18,3 @@ class EyeTapped extends TopBarEvent {
   List<Object> get props => [tapped];
 }
 
-class SyncingEvent extends TopBarEvent {
-  final bool syncing;
-
-  SyncingEvent({this.syncing = false});
-
-  @override
-  List<Object?> get props => [syncing];
-}

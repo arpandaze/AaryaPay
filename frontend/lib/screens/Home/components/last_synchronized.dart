@@ -1,10 +1,8 @@
 import 'package:aaryapay/components/CustomSyncRotation.dart';
-import 'package:aaryapay/components/bloc/top_bar_bloc.dart';
 import 'package:aaryapay/global/bloc/data_bloc.dart';
-import 'package:aaryapay/screens/Home/components/bloc/home_favorites_bloc.dart';
+import 'package:aaryapay/screens/Home/components/bloc/last_syncronized_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:aaryapay/components/CustomStatusButton.dart';
 
@@ -20,8 +18,8 @@ class LastSynchronized extends StatelessWidget {
       buildWhen: (prev, next) => prev.isOnline != next.isOnline,
       builder: (context, state) {
         return BlocProvider(
-          create: (context) => TopBarBloc(),
-          child: BlocConsumer<TopBarBloc, TopBarState>(
+          create: (context) => LastSyncronizedBloc(),
+          child: BlocConsumer<LastSyncronizedBloc, LastSyncronizedState>(
             listener: (context, state) {
               // TODO: implement listener
             },
@@ -50,7 +48,7 @@ class LastSynchronized extends StatelessWidget {
                       height: size.height * 0.04,
                       label: "Sync",
                       onTap: () => context
-                          .read<TopBarBloc>()
+                          .read<LastSyncronizedBloc>()
                           .add(SyncingEvent(syncing: !state.syncing)),
                       textStyle: textTheme.labelSmall!
                           .merge(const TextStyle(height: 0)),
