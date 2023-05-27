@@ -1,18 +1,12 @@
 import 'package:aaryapay/global/caching/transaction.dart';
 import 'package:aaryapay/helper/utils.dart';
-import 'package:aaryapay/screens/QrScan/qrscan_screen.dart';
 import 'package:aaryapay/screens/Send/components/green_box.dart';
-import 'package:aaryapay/screens/Send/components/trans_details.dart';
-import 'package:aaryapay/screens/Send/receiver_scan_confirmation.dart';
 import 'package:aaryapay/screens/Send/tvc_display_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/components/CustomAnimationWidget.dart';
 import 'package:intl/intl.dart';
-import 'package:libaaryapay/libaaryapay.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:lottie/lottie.dart';
 
 class PaymentComplete extends StatelessWidget {
   final Transaction transaction;
