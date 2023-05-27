@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 class CustomAnimationWidget extends StatefulWidget {
-  const CustomAnimationWidget({super.key, required this.assetSrc});
+  final double width;
+  final double height;
+  final bool repeat;
+  const CustomAnimationWidget({super.key,this.width = 200, this.height = 200, this.repeat=false,required this.assetSrc});
   final String assetSrc;
   @override
   State<CustomAnimationWidget> createState() => _MyAppState();
@@ -29,15 +32,17 @@ class _MyAppState extends State<CustomAnimationWidget>
   Widget build(BuildContext context) {
     return Lottie.asset(
       widget.assetSrc,
-      width: 200,
-      height: 200,
+      width: widget.width,
+      height: widget.height,
       controller: _controller,
       onLoaded: (composition) {
         // Configure the AnimationController with the duration of the
         // Lottie file and start the animation.
         _controller
-          ..duration = composition.duration
-          ..forward();
+          .duration = composition.duration;
+          widget.repeat
+              ? _controller.repeat()
+              : _controller.forward().whenComplete(() => _controller.reset());
       },
     );
   }

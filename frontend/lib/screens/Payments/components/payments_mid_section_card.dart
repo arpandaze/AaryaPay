@@ -154,16 +154,20 @@ class PaymentsMidSectionCard extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  imageLoader(imageUrl: "imageUrxl"),
+                  Container(
+                    margin: const EdgeInsets.only(right: 15.0),
+                    child: imageLoader(imageUrl: "imageUrxl"),
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "$senderName",
+                        senderName,
                         style: textTheme.bodyLarge!
-                            .merge(TextStyle(fontWeight: FontWeight.w800)),
+                            .merge(
+                            const TextStyle(fontWeight: FontWeight.w800)),
                       ),
-                      Text("$sender")
+                      Text(sender)
                     ],
                   )
                 ],
@@ -220,8 +224,8 @@ class PaymentsMidSectionCard extends StatelessWidget {
                   children: [
                     SvgPicture.asset(
                       "assets/icons/calendar.svg",
-                      width: 16,
-                      height: 16,
+                      width: 18,
+                      height: 18,
                       colorFilter: ColorFilter.mode(
                         Theme.of(context).colorScheme.primary,
                         BlendMode.srcIn,
@@ -231,8 +235,8 @@ class PaymentsMidSectionCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 5.0),
                       child: Text(
                         " $startTimeFormattedString, $startDateFormattedString ",
-                        style: textTheme.bodySmall!.merge(
-                          TextStyle(
+                        style: textTheme.bodyMedium!.merge(
+                          const TextStyle(
                             fontWeight: FontWeight.w800,
                           ),
                         ),
@@ -242,7 +246,7 @@ class PaymentsMidSectionCard extends StatelessWidget {
                 ),
                 Container(
                   width: size.width * 0.23,
-                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  padding: const EdgeInsets.symmetric(vertical: 6),
                   decoration: BoxDecoration(
                     color: timeRemaining.inMilliseconds > 0
                         ? colorScheme.secondary
@@ -251,13 +255,14 @@ class PaymentsMidSectionCard extends StatelessWidget {
                   ),
                   child: Text(
                     timeRemaining.inMilliseconds > 0
-                        ? "$expiryString"
+                        ? expiryString
                         : "Expired",
                     textAlign: TextAlign.center,
                     style: textTheme.bodyMedium!.merge(
                       TextStyle(
+                        fontWeight: FontWeight.bold,
                         color: timeRemaining.inMilliseconds > 0
-                            ? colorScheme.onSecondary
+                            ? Color(0xb8000000)
                             : colorScheme.background,
                       ),
                     ),

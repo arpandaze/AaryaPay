@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:aaryapay/global/caching/transaction.dart';
 import 'package:aaryapay/helper/utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:aaryapay/constants.dart';
@@ -129,46 +131,55 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
 
   void _onSubmitTransfer(
       SubmitTransfer event, Emitter<SendMoneyState> emit) async {
-    print("Send Initiated");
-    emit(state.copyWith(tamStatus: TAMStatus.initiated));
+    if (event.available > state.amount && state.amount > 0) {
+      print("Send Initiated");
+      emit(state.copyWith(tamStatus: TAMStatus.initiated));
 
-    var bkvc = await storage.read(key: "bkvc");
-    var privateKey = await storage.read(key: "private_key");
-    var token = await storage.read(key: "token");
-    print(bkvc);
-    print(privateKey);
-    print(token);
-    if (bkvc != null && privateKey != null && token != null) {
-      var bkvcObject =
-          BalanceKeyVerificationCertificate.fromBase64(jsonDecode(bkvc));
+      var bkvc = await storage.read(key: "bkvc");
+      var privateKey = await storage.read(key: "private_key");
+      var token = await storage.read(key: "token");
+      print(bkvc);
+      print(privateKey);
+      print(token);
+      if (bkvc != null && privateKey != null && token != null) {
+        var bkvcObject =
+            BalanceKeyVerificationCertificate.fromBase64(jsonDecode(bkvc));
 
-      var serverKey = keyPairFromBase64(serverKeyPair);
+        var serverKey = keyPairFromBase64(serverKeyPair);
 
-      var newKey = await serverKey.extractPublicKey();
+        var newKey = await serverKey.extractPublicKey();
 
-      print(await bkvcObject.verify(newKey));
-      print(state.amount);
-      print(event.to);
-      print(DateTime.now());
+        print(await bkvcObject.verify(newKey));
+        print(state.amount);
+        print(event.to);
+        print(DateTime.now());
 
-      var transferTAM = TransactionAuthorizationMessage(
-        TAM_MESSAGE_TYPE,
-        state.amount,
-        event.to,
-        bkvcObject,
-        DateTime.now(),
-      );
+        var transferTAM = TransactionAuthorizationMessage(
+          TAM_MESSAGE_TYPE,
+          state.amount,
+          event.to,
+          bkvcObject,
+          DateTime.now(),
+        );
 
-      var keyPair = keyPairFromBase64(privateKey);
-      await transferTAM.sign(keyPair);
+        var keyPair = keyPairFromBase64(privateKey);
+        await transferTAM.sign(keyPair);
 
-      if (await transferTAM.verify()) {
-        print("Send Verified");
+        if (await transferTAM.verify()) {
+          print("Send Verified");
 
-        emit(state.copyWith(tam: transferTAM, tamStatus: TAMStatus.generated));
+          emit(
+              state.copyWith(tam: transferTAM, tamStatus: TAMStatus.generated));
+        }
+        emit(state.copyWith(tamStatus: TAMStatus.other));
       }
-      emit(state.copyWith(tamStatus: TAMStatus.other));
+    } else if (state.amount > 0) {
+      emit(state.copyWith(error: true, errorText: "Balance Insufficient!"));
+    } else {
+      emit(state.copyWith(error: true, errorText: "The amount must not be 0!"));
     }
+
+    emit(state.copyWith(error: false));
   }
 
   String _getOperator(SendMoneyEvent event) {

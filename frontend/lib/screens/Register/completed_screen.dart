@@ -39,7 +39,7 @@ class CompletedScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 40),
                       child: Text(
-                        "Does anyone even read this text. No. Why are you reading this text. Just login already, this text is worthless.",
+                        "Congratulations! You've cracked the code and gained access to a world of smooth transactions and digital enchantment. Get ready for a magical journey! Welcome aboard!",
                         style: Theme.of(context)
                             .textTheme
                             .titleMedium!

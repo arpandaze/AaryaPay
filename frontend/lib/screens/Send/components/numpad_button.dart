@@ -52,8 +52,8 @@ class NumPadButton extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         constraints: BoxConstraints(
-          minWidth: width ?? 65,
-          minHeight: height ?? 65,
+          minWidth: width ?? 60,
+          minHeight: height ?? 60,
         ),
         decoration: BoxDecoration(
             color: color ?? Theme.of(context).colorScheme.primary,
@@ -62,10 +62,7 @@ class NumPadButton extends StatelessWidget {
           child: icon ??
               Text(
                 text,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleSmall!
-                    .merge(
+                style: Theme.of(context).textTheme.titleSmall!.merge(
                     TextStyle(color: Theme.of(context).colorScheme.background)),
               ),
         ),

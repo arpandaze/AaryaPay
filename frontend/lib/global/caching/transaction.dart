@@ -64,6 +64,20 @@ class Transactions {
     }
     return false;
   }
+
+  double getSentAmount() {
+    double sentAmount = 0;
+
+    var unsubmittedTransactions =
+        transactions.where((element) => !element.isSubmitted).toList();
+    for (var transaction in unsubmittedTransactions) {
+      if (transaction.isDebit) {
+        sentAmount += transaction.amount;
+      }
+    }
+
+    return sentAmount;
+  }
 }
 
 class Transaction {
