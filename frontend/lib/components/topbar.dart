@@ -62,7 +62,7 @@ class TopBar extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Text(
-                            "Balance",
+                            "Welcome Back!",
                             style:
                                 Theme.of(context).textTheme.labelMedium!.merge(
                                       TextStyle(
@@ -72,46 +72,12 @@ class TopBar extends StatelessWidget {
                                     ),
                           ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: SvgPicture.asset(
-                                "assets/icons/rupee.svg",
-                                colorFilter: ColorFilter.mode(
-                                    Theme.of(context).colorScheme.background,
-                                    BlendMode.srcIn),
-                                width: 20,
-                                height: 20,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () => {
-                                context
-                                    .read<TopBarBloc>()
-                                    .add(EyeTapped(tapped: !state.hide)),
-                              },
-                              child: SizedBox(
-                                width: size.width * 0.45,
-                                child: Text(
-                                  !state.hide
-                                      ? dataState.bkvc?.availableBalance
-                                              .toString() ??
-                                          "1200"
-                                      : "XXX.XXX",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge!
-                                      .merge(TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary)),
-                                ),
-                              ),
-                            ),
-                          ],
+                        Text(
+                          "${dataState.profile!.firstName} ${dataState.profile!.lastName}",
+                          style: Theme.of(context).textTheme.labelLarge!.merge(
+                              TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary)),
                         ),
                       ],
                     ),
