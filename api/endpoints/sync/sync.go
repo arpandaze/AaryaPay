@@ -3,6 +3,7 @@ package sync
 import (
 	"context"
 	"encoding/base64"
+	"encoding/json"
 	"main/core"
 	"main/endpoints/favorites"
 	"main/endpoints/profile"
@@ -47,11 +48,11 @@ type SyncController struct{}
 func (SyncController) Sync(c *gin.Context) {
 	l := Logger(c).Sugar()
 
-	var transactionSubmitForm struct {
-		EncodedTransaction []string `form:"transactions"`
+	var transactionsForm struct {
+		JSONEncodedTransactions string `form:"transactions"`
 	}
 
-	if err := c.Bind(&transactionSubmitForm); err != nil {
+	if err := c.Bind(&transactionsForm); err != nil {
 		msg := "Invalid request payload on transaction submission!"
 
 		l.Errorw(msg,
@@ -59,6 +60,20 @@ func (SyncController) Sync(c *gin.Context) {
 		)
 
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": msg, "context": TraceIDFromContext(c)})
+		return
+	}
+
+	var transactionSubmitForm struct {
+		EncodedTransaction []string `json:"data"`
+	}
+
+	err := json.Unmarshal([]byte(transactionsForm.JSONEncodedTransactions), &transactionSubmitForm)
+
+	if err != nil {
+		l.Errorw("Failed to decode JSON transactions!",
+			"error", err,
+		)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
 		return
 	}
 

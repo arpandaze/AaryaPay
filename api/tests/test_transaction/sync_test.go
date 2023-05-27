@@ -3,6 +3,7 @@ package test_transaction
 import (
 	"context"
 	"encoding/base64"
+	"encoding/json"
 	"main/core"
 	"main/endpoints/sync"
 	"main/payloads"
@@ -14,6 +15,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -52,7 +54,17 @@ func TestSubmitTransaction(t *testing.T) {
 
 	// Make a test request to log in the user.
 	requestBody := url.Values{}
-	requestBody.Set("transactions", base64.StdEncoding.EncodeToString(testTransaction.ToBytes(c)))
+	// requestBody.Set("transactions", base64.StdEncoding.EncodeToString(testTransaction.ToBytes(c)))
+
+	var payload = gin.H{
+		"data": []string{base64.StdEncoding.EncodeToString(testTransaction.ToBytes(c)), base64.StdEncoding.EncodeToString(testTransaction.ToBytes(c))},
+	}
+
+	jsonData, err := json.Marshal(payload)
+
+	assert.Equal(t, nil, err)
+
+	requestBody.Set("transactions", string(jsonData))
 
 	req, err := http.NewRequest("POST", "/v1/sync", strings.NewReader(requestBody.Encode()))
 	if err != nil {
