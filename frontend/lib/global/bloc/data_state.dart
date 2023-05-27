@@ -22,6 +22,7 @@ class DataState extends Equatable {
   final TAMStatus tamStatus;
   final GoToScreen goToScreen;
   final Transaction? latestTransaction;
+  final Transaction? recentTransaction;
 
   SimplePublicKey get userPublicKey {
     return bkvc!.getPublicKey();
@@ -64,6 +65,7 @@ class DataState extends Equatable {
     this.tamStatus = TAMStatus.other,
     this.goToScreen = GoToScreen.unknown,
     this.latestTransaction,
+    this.recentTransaction,
   });
 
   DataState copyWith({
@@ -79,6 +81,7 @@ class DataState extends Equatable {
     TAMStatus? tamStatus,
     GoToScreen? goToScreen,
     Transaction? latestTransaction,
+    Transaction? recentTransaction,
   }) {
     return DataState(
       profile: profile ?? this.profile,
@@ -93,6 +96,7 @@ class DataState extends Equatable {
       tamStatus: tamStatus ?? this.tamStatus,
       goToScreen: goToScreen ?? this.goToScreen,
       latestTransaction: latestTransaction ?? this.latestTransaction,
+      recentTransaction: recentTransaction ?? this.recentTransaction,
     );
   }
 
@@ -182,5 +186,6 @@ class DataState extends Equatable {
         tamStatus,
         goToScreen,
         latestTransaction,
+        recentTransaction,
       ];
 }

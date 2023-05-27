@@ -87,6 +87,7 @@ class TVCSuccess extends StatelessWidget {
                     Container(
                         child: CustomAnimationWidget(
                       assetSrc: 'assets/animations/check.json',
+                      repeat: true,
                     )
 
                         // child: SvgPicture.asset('assets/icons/check.svg',

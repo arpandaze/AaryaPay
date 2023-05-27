@@ -44,7 +44,7 @@ class QrScanScreen extends StatelessWidget {
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
                   TVCSuccess(
-                transaction: dataState.transactions.transactions.last,
+                transaction: dataState.recentTransaction!,
               ),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
@@ -72,7 +72,7 @@ class QrScanScreen extends StatelessWidget {
                           end: 1.0,
                         ).animate(curve),
                         child: TVCSuccess(
-                          transaction: dataState.transactions.transactions.last,
+                          transaction: dataState.recentTransaction!,
                         ),
                       ),
                     ),
@@ -174,7 +174,6 @@ class QrScanScreen extends StatelessWidget {
             print("State Changed");
 
             if (state.isScanned && state.codeType == CodeType.TAM) {
-              dialogBuilder(context, 'assets/animations/paperplane.json');
               context.read<DataBloc>().add(
                     SubmitTAMEvent(
                       state.tam!,
@@ -185,7 +184,6 @@ class QrScanScreen extends StatelessWidget {
 
             print(state.codeType);
             if (state.isScanned && state.codeType == CodeType.TVC) {
-              dialogBuilder(context, 'assets/animations/paperplane.json');
               context.read<DataBloc>().add(
                     SubmitTVCEvent(
                       state.tvc!,
@@ -193,7 +191,6 @@ class QrScanScreen extends StatelessWidget {
                   );
             }
             if (state.isScanned && state.codeType == CodeType.user) {
-              dialogBuilder(context, 'assets/animations/paperplane.json');
               var result = utf8.decode(state.code!);
               var data = jsonDecode(result);
               print(data);
