@@ -27,6 +27,7 @@ class TopBarBloc extends Bloc<TopBarEvent, TopBarState> {
   void _onEyeTapped(EyeTapped event, Emitter<TopBarState> emit) async {
     emit(state.copyWith(hide: event.tapped));
   }
+
   void _onSyncingEvent(SyncingEvent event, Emitter<TopBarState> emit) {
     emit(state.copyWith(syncing: event.syncing));
   }
