@@ -5,6 +5,7 @@ enum GoToScreen {
   offlineTrans,
   onlineTrans,
   recOfflineTrans,
+  tvcSuccess,
 }
 
 class DataState extends Equatable {

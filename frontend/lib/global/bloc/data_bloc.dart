@@ -208,8 +208,10 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     Emitter<DataState> emit,
   ) async {
     Transaction? transaction;
+    var serverKey = keyPairFromBase64(serverKeyPair);
 
-    bool verified = await event.tvc.verify(state.serverPublicKey!);
+    var serverPublic = await serverKey.extractPublicKey();
+    bool verified = await event.tvc.verify(serverPublic);
 
     if (event.tvc.bkvc.userID != state.bkvc!.userID) {
       throw Exception('TVC is not for this user!');
@@ -269,10 +271,14 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     DataState newState = state.copyWith(
       transactions: newTransactions,
       bkvc: newBKVC,
+      goToScreen: GoToScreen.tvcSuccess,
     );
 
     newState.save(storage);
     emit(newState);
+    emit(state.copyWith(
+      goToScreen: GoToScreen.unknown,
+    ));
   }
 
   Future<void> _onUpdateServerKey(
