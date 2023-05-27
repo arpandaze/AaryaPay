@@ -67,14 +67,16 @@ func (SyncController) Sync(c *gin.Context) {
 		EncodedTransaction []string `json:"data"`
 	}
 
-	err := json.Unmarshal([]byte(transactionsForm.JSONEncodedTransactions), &transactionSubmitForm)
+	if transactionsForm.JSONEncodedTransactions != "" {
+		err := json.Unmarshal([]byte(transactionsForm.JSONEncodedTransactions), &transactionSubmitForm)
 
-	if err != nil {
-		l.Errorw("Failed to decode JSON transactions!",
-			"error", err,
-		)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
-		return
+		if err != nil {
+			l.Errorw("Failed to decode JSON transactions!",
+				"error", err,
+			)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"msg": "Unknown error occured!", "context": TraceIDFromContext(c)})
+			return
+		}
 	}
 
 	var responses []TransactionSubmissionResponse
