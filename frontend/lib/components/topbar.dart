@@ -73,7 +73,7 @@ class TopBar extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "${dataState.profile!.firstName} ${dataState.profile!.lastName}",
+                          "${dataState.profile?.firstName} ${dataState.profile?.lastName}",
                           style: Theme.of(context).textTheme.labelLarge!.merge(
                               TextStyle(
                                   color:
