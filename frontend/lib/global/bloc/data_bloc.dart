@@ -109,22 +109,15 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       var body = {
         'transactions': base64Transactions[0],
       };
-      print("here");
       response = await httpclient.post(url, headers: headers, body: body);
-      print(response.statusCode);
-      print(response.body);
     }
 
     if (response.statusCode != 202) {
       return;
     }
-
     emit(state.copyWith(tamStatus: TAMStatus.completed));
 
-    print("submit resposnse");
-
     var responseData = jsonDecode(response.body);
-    print(responseData);
 
     if (responseData.containsKey('success')) {
       List<Favorite> favorites = responseData['favorites']
@@ -190,7 +183,6 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     var newTransactions = Transactions(
       transactions: [...state.transactions.transactions, transaction],
     );
-    print(newTransactions.toJson());
 
     DataState newState = state.copyWith(
       transactions: newTransactions,

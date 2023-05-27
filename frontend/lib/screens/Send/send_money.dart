@@ -1,4 +1,5 @@
 import 'package:aaryapay/components/CustomFavoritesAvatar.dart';
+import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
 import 'package:aaryapay/global/bloc/data_bloc.dart';
@@ -146,14 +147,24 @@ class SendMoney extends StatelessWidget {
         // TODO: implement listener
       },
       builder: (context, dataState) {
+        double sentAmount = dataState.transactions.getSentAmount();
+        double balance = dataState.bkvc!.availableBalance;
+        double availableAmount = balance - sentAmount;
         return BlocConsumer<SendMoneyBloc, SendMoneyState>(
-          listenWhen: (previous, current) =>
-              previous.tamStatus != current.tamStatus,
+          listenWhen: (previous, current) => previous != current,
           listener: (context, state) => {
             if (state.tamStatus == TAMStatus.generated)
               {
                 context.read<DataBloc>().add(SubmitTAMEvent(state.tam!)),
               },
+            if (state.error)
+              {
+                SnackBarService.stopSnackBar(),
+                SnackBarService.showSnackBar(
+                  msgType: MessageType.error,
+                  content: state.errorText,
+                ),
+              }
           },
           builder: (context, state) {
             return Column(
@@ -198,7 +209,7 @@ class SendMoney extends StatelessWidget {
                   ),
                 ),
                 BalanceBox(
-                  balance: displayAmount,
+                  balance: availableAmount.toString(),
                 ),
                 Container(
                   padding: const EdgeInsets.all(15),
@@ -234,11 +245,6 @@ class SendMoney extends StatelessWidget {
                     ],
                   ),
                 ),
-                Text("*Max Limit is 2000.00",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .merge(TextStyle(fontWeight: FontWeight.w800))),
                 Expanded(
                   child: Container(
                     width: size.width,
@@ -395,10 +401,14 @@ class SendMoney extends StatelessWidget {
                           width: size.width * 0.7,
                           borderRadius: 10,
                           onClick: () => {
-                            context.read<SendMoneyBloc>().add(SubmitTransfer(
-                                UuidValue.fromList(Uuid.parse(uuid!)),
-                                "${context.read<AuthenticationBloc>().state.user!["first_name"]} ${context.read<AuthenticationBloc>().state.user!["last_name"]}",
-                                "$firstname $lastname")),
+                            context.read<SendMoneyBloc>().add(
+                                  SubmitTransfer(
+                                    UuidValue.fromList(Uuid.parse(uuid!)),
+                                    "${context.read<AuthenticationBloc>().state.user!["first_name"]} ${context.read<AuthenticationBloc>().state.user!["last_name"]}",
+                                    "$firstname $lastname",
+                                    availableAmount,
+                                  ),
+                                ),
                           },
                         )
                       ],
