@@ -310,6 +310,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  flutter_octicons:
+    dependency: "direct main"
+    description:
+      name: flutter_octicons
+      sha256: "6e7538c782a8bb8cc06789b9b62ccf20b36f76180499dba7f51d8582bf519262"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.32.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
