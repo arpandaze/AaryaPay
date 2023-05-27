@@ -113,6 +113,8 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       };
 
       response = await httpclient.post(url, headers: headers, body: body);
+      print(response.statusCode);
+      print(response.body);
     }
 
     if (response.statusCode != 202) {
@@ -159,6 +161,8 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       print(transactions.transactions.last.senderFirstName);
       print(bkvc.availableBalance);
       print(bkvc.timeStamp);
+
+      Transaction latestTransaction = await transactions.getLatest();
       emit(
         state.copyWith(
           profile: profile,
@@ -169,7 +173,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
           serverPublicKey: state.serverPublicKey,
           sessionToken: state.sessionToken,
           isLoaded: true,
-          latestTransaction: transactions.transactions.last,
+          latestTransaction: latestTransaction,
         ),
       );
     }

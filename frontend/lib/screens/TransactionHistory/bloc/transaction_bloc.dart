@@ -14,6 +14,7 @@ class TranscationBloc extends Bloc<TranscationEvent, TranscationState> {
 
   TranscationBloc() : super(const TranscationState()) {
     on<LoadParticularUser>(_onLoadParticularUser);
+    on<LoadTransaction>(_onLoadTransaction);
     on<ClearLoadedUser>(_onClearLoadedUser);
     add(ClearLoadedUser());
   }
@@ -29,5 +30,16 @@ class TranscationBloc extends Bloc<TranscationEvent, TranscationState> {
         senderName: event.senderID,
         receiverName: event.receiverID,
         item: event.item));
+  }
+
+  void _onLoadTransaction(
+      LoadTransaction event, Emitter<TranscationState> emit) async {
+    List<Transaction> transactions;
+    if (event.transactions != null) {
+      transactions = await event.transactions!;
+      transactions.sort ((a, b) => b.receiverTvc!.generationTime.compareTo(a.receiverTvc!.generationTime));
+      emit(state.copywith(transactionHistory: transactions));
+    }
+    return;
   }
 }

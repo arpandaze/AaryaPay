@@ -1,6 +1,9 @@
+import 'package:aaryapay/global/bloc/data_bloc.dart';
+import 'package:aaryapay/screens/Payments/bloc/payments_bloc.dart';
 import 'package:aaryapay/screens/Payments/components/payments_mid_section_card.dart';
 import 'package:aaryapay/screens/Payments/components/payments_top_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Payment {
   //modal class
@@ -45,43 +48,88 @@ class Payments extends StatelessWidget {
         endDate: "1685475826",
       ),
     ];
-    return Container(
-      clipBehavior: Clip.hardEdge,
-      width: size.width,
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(35),
-          topRight: Radius.circular(35),
-        ),
-        color: Color(0xfff4f6f4),
-      ),
-      child: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              PaymentsTopBar(
-                items_length: list.length,
-                total_amount: "900",
-              ),
-              ...list
-                  .map(
-                    (e) => PaymentsMidSectionCard(
-                      title: e.title,
-                      amount: e.amount,
-                      sender: e.sender,
-                      reciever: e.reciever,
-                      senderName: e.senderName,
-                      startDate: e.startDate,
-                      endDate: e.endDate,
+    return BlocConsumer<DataBloc, DataState>(
+      listener: (context, dataState) {
+        // TODO: implement listener
+      },
+      buildWhen: (previous, current) => previous != current,
+      builder: (context, dataState) {
+        return BlocProvider(
+          create: (context) => PaymentsBloc()
+            ..add(PaymentsLoad(
+                transactions:
+                    dataState.transactions.getUnsubmittedTransactions())),
+          child: BlocConsumer<PaymentsBloc, PaymentsState>(
+            listener: (context, state) {},
+            buildWhen: (previous, current) => previous != current,
+            builder: (context, state) {
+              return Container(
+                clipBehavior: Clip.hardEdge,
+                width: size.width,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(35),
+                    topRight: Radius.circular(35),
+                  ),
+                  color: Color(0xfff4f6f4),
+                ),
+                child: SingleChildScrollView(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        PaymentsTopBar(
+                          items_length: state.transactions?.length ?? 0,
+                          total_amount: (state.transactions != null &&
+                                  state.transactions!.isNotEmpty)
+                              ? state.transactions!
+                                  .map((e) => e.amount)
+                                  .reduce((value, element) => value + element)
+                                  .toString()
+                              : "0",
+                        ),
+                        if (dataState.isLoaded && state.transactions != null)
+                          ...state.transactions!
+                              .map(
+                                (item) => PaymentsMidSectionCard(
+                                  title: item.isDebit
+                                      ? "Debited Payment"
+                                      : "Credited Payment",
+                                  amount: item.amount.toString(),
+                                  sender:
+                                      item.senderId.toString().substring(0, 8),
+                                  reciever: item.isDebit
+                                      ? item.receiverId
+                                          .toString()
+                                          .substring(0, 8)
+                                      : "${dataState.profile?.firstName} ${dataState.profile?.lastName}",
+                                  senderName: !item.isDebit
+                                      ? item.senderId.toString().substring(0, 8)
+                                      : "${dataState.profile?.firstName} ${dataState.profile?.lastName}",
+                                  startDate: (item.generationTime
+                                              .millisecondsSinceEpoch ~/
+                                          1000)
+                                      .toString(),
+                                  endDate: (item.generationTime
+                                                  .millisecondsSinceEpoch ~/
+                                              1000 +
+                                          3 * 24 * 60 * 61)
+                                      .toString(),
+                                ),
+                              )
+                              .toList(),
+                        if (!(dataState.isLoaded && state.transactions == null))
+                          Text("No Pending transactions"),
+                      ],
                     ),
-                  )
-                  .toList()
-            ],
+                  ),
+                ),
+              );
+            },
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

@@ -6,7 +6,7 @@ abstract class TranscationEvent extends Equatable {
 }
 
 class LoadTransaction extends TranscationEvent {
-  final Transactions? transactions;
+  final Future<List<Transaction>>? transactions;
 
   LoadTransaction({this.transactions});
 
