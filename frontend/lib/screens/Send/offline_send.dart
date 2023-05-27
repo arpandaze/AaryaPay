@@ -108,15 +108,13 @@ class OfflineSend extends StatelessWidget {
             ),
           ],
         ),
-        Expanded(
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: CustomActionButton(
-                label: "Scan Confirmation",
-                onClick: onClick,
-              ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: CustomActionButton(
+              label: "Scan Confirmation",
+              onClick: onClick,
             ),
           ),
         )

@@ -5,6 +5,7 @@ enum CodeType {
   TVC,
   user,
   other,
+  scanned,
 }
 
 class QrScannerState extends Equatable {
@@ -16,6 +17,7 @@ class QrScannerState extends Equatable {
   final TransactionAuthorizationMessage? tam;
   final TransactionVerificationCertificate? tvc;
   final bool scannedOnce;
+  final bool animationPlaying;
 
   const QrScannerState({
     this.tvc,
@@ -26,6 +28,7 @@ class QrScannerState extends Equatable {
     this.tam,
     this.codeType = CodeType.other,
     this.scannedOnce = false,
+    this.animationPlaying = false,
   });
 
   QrScannerState copyWith({
@@ -37,6 +40,7 @@ class QrScannerState extends Equatable {
     TransactionAuthorizationMessage? tam,
     CodeType? codeType,
     bool? scannedOnce,
+    bool? animationPlaying,
   }) {
     return QrScannerState(
       tam: tam ?? this.tam,
@@ -47,6 +51,7 @@ class QrScannerState extends Equatable {
       codeType: codeType ?? this.codeType,
       tvc: tvc ?? this.tvc,
       scannedOnce: scannedOnce ?? this.scannedOnce,
+      animationPlaying: animationPlaying ?? this.animationPlaying,
     );
   }
 
@@ -60,5 +65,6 @@ class QrScannerState extends Equatable {
         tam,
         tvc,
         scannedOnce,
+        animationPlaying,
       ];
 }

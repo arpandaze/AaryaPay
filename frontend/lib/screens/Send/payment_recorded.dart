@@ -96,7 +96,7 @@ class PaymentRecorded extends StatelessWidget {
                   Stack(children: [
                     Container(
                         child: CustomAnimationWidget(
-                      assetSrc: 'assets/animations/check.json',
+                      assetSrc: 'assets/animations/recorded.json',
                       repeat: true,
                     )
 

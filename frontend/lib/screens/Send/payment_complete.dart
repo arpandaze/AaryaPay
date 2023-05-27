@@ -158,15 +158,13 @@ class PaymentComplete extends StatelessWidget {
               child: Container(child: Utils.background),
             ),
             Container(
-              child: Expanded(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(),
-                    child: CustomActionButton(
-                      label: "Show Certificate",
-                      onClick: onClick,
-                    ),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(),
+                  child: CustomActionButton(
+                    label: "Show Certificate",
+                    onClick: onClick,
                   ),
                 ),
               ),

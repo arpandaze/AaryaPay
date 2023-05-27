@@ -203,7 +203,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     emit(newState);
     add(RequestSyncEvent());
 
-    Timer(Duration(seconds: 1), () => {add(TimerUp(event.ticking))});
+    Timer(Duration(seconds: 3), () => {add(TimerUp(event.ticking))});
   }
 
   Future<void> _onSubmitTVC(

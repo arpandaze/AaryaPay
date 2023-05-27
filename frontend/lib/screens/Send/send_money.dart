@@ -152,8 +152,7 @@ class SendMoney extends StatelessWidget {
         return BlocConsumer<SendMoneyBloc, SendMoneyState>(
           listenWhen: (previous, current) => previous != current,
           listener: (context, state) => {
-            if (state.tamStatus == TAMStatus.clicked ||
-                state.tamStatus == TAMStatus.initiated)
+            if (state.tamStatus == TAMStatus.clicked)
               {
                 dialogBuilder(context, 'assets/animations/paperplane.json'),
               },

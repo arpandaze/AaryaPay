@@ -18,8 +18,7 @@ class HomeScreen extends StatelessWidget {
         context.read<DataBloc>().add(RequestSyncEvent());
       },
       child: BlocConsumer<DataBloc, DataState>(
-        listener: (context, state) {
-        },
+        listener: (context, state) {},
         listenWhen: (previous, current) => previous != current,
         buildWhen: (previous, current) => previous != current,
         builder: (context, state) {
@@ -33,7 +32,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 color: Color(0xfff4f6f4),
               ),
-              child: const SingleChildScrollView(
+              child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
