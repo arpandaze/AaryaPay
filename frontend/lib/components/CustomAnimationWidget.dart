@@ -5,7 +5,7 @@ class CustomAnimationWidget extends StatefulWidget {
   final double width;
   final double height;
   final bool repeat;
-  const CustomAnimationWidget({super.key,this.width = 200, this.height = 200, this.repeat=false,required this.assetSrc});
+  CustomAnimationWidget({super.key,this.width = 200, this.height = 200, this.repeat=false,required this.assetSrc});
   final String assetSrc;
   @override
   State<CustomAnimationWidget> createState() => _MyAppState();

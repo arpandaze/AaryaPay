@@ -1,4 +1,6 @@
+import 'package:aaryapay/components/CustomAnimationWidget.dart';
 import 'package:aaryapay/components/CustomFavoritesAvatar.dart';
+import 'package:aaryapay/components/PlaneAnimation.dart';
 import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
@@ -154,6 +156,8 @@ class SendMoney extends StatelessWidget {
         return BlocConsumer<SendMoneyBloc, SendMoneyState>(
           listenWhen: (previous, current) => previous != current,
           listener: (context, state) => {
+            if (state.tamStatus == TAMStatus.initiated)
+              {dialogBuilder(context,'assets/animations/paperplane.json')},
             if (state.tamStatus == TAMStatus.generated)
               {
                 context.read<DataBloc>().add(SubmitTAMEvent(state.tam!)),
@@ -322,7 +326,7 @@ class SendMoney extends StatelessWidget {
                           label: "Send",
                           width: size.width * 0.7,
                           borderRadius: 10,
-                          onClick: () => {
+                          onClick: () {
                             context.read<SendMoneyBloc>().add(
                                   SubmitTransfer(
                                     UuidValue.fromList(Uuid.parse(uuid!)),
@@ -330,7 +334,9 @@ class SendMoney extends StatelessWidget {
                                     "$firstname $lastname",
                                     availableAmount,
                                   ),
-                                ),
+                                );
+                            print("HERE");
+                            print(dataState.tamStatus);
                           },
                         )
                       ],
@@ -344,4 +350,5 @@ class SendMoney extends StatelessWidget {
       },
     );
   }
-}
+
+  }

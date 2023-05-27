@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:aaryapay/components/CircularLoadingAnimation.dart';
+import 'package:aaryapay/components/CustomAnimationWidget.dart';
 import 'package:aaryapay/components/CustomCircularAvatar.dart';
 import 'package:aaryapay/components/CustomFavoritesAvatar.dart';
 import 'package:aaryapay/constants.dart';
@@ -126,3 +127,22 @@ Future<bool> checkInternetConnectivity() async {
     return true;
   }
 }
+
+Future<void> dialogBuilder(BuildContext context, String asset) {
+    return showDialog<void>(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+            content: CustomAnimationWidget(
+              repeat: true,
+              assetSrc: asset,
+              width: 200,
+              height:200,
+            ));
+      },
+    );
+  }
+
