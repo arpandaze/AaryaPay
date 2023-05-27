@@ -1,6 +1,6 @@
 import 'package:aaryapay/components/CustomSyncRotation.dart';
-import 'package:aaryapay/components/bloc/top_bar_bloc.dart';
 import 'package:aaryapay/global/bloc/data_bloc.dart';
+import 'package:aaryapay/screens/Home/components/bloc/synchronization_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,12 +15,13 @@ class LastSynchronized extends StatelessWidget {
     var textTheme = Theme.of(context).textTheme;
     var colorScheme = Theme.of(context).colorScheme;
     Size size = MediaQuery.of(context).size;
-    return BlocBuilder<DataBloc, DataState>(
+    return BlocConsumer<DataBloc, DataState>(
+      listener: (context, dataState) {},
       buildWhen: (prev, next) => prev.isOnline != next.isOnline,
-      builder: (context, state) {
+      builder: (context, dataState) {
         return BlocProvider(
-          create: (context) => TopBarBloc(),
-          child: BlocConsumer<TopBarBloc, TopBarState>(
+          create: (context) => SynchronizationBloc(),
+          child: BlocConsumer<SynchronizationBloc, SynchronizationState>(
             listener: (context, state) {},
             builder: (context, state) {
               return Container(
@@ -72,13 +73,17 @@ class LastSynchronized extends StatelessWidget {
                             GestureDetector(
                               onTap: () => {
                                 context
-                                    .read<TopBarBloc>()
+                                    .read<SynchronizationBloc>()
                                     .add(EyeTapped(tapped: !state.hide)),
                               },
                               child: SizedBox(
                                 width: size.width * 0.45,
                                 child: Text(
-                                  "XXX.XXX",
+                                  state.hide
+                                      ? dataState.bkvc?.availableBalance
+                                              .toString() ??
+                                          "1200"
+                                      : "XXX.XXX",
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelLarge!
@@ -147,7 +152,7 @@ class LastSynchronized extends StatelessWidget {
                           label: "Sync",
                           color: Colors.white,
                           onTap: () => context
-                              .read<TopBarBloc>()
+                              .read<SynchronizationBloc>()
                               .add(SyncingEvent(syncing: !state.syncing)),
                           textStyle: textTheme.labelMedium!.merge(
                               const TextStyle(
