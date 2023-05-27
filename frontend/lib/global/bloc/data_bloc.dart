@@ -154,11 +154,8 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       );
 
       newState.save(storage);
-      print(transactions.transactions.last.amount);
-      print(transactions.transactions.last.receiverFirstName);
-      print(transactions.transactions.last.senderFirstName);
-      print(bkvc.availableBalance);
-      print(bkvc.timeStamp);
+
+      Transaction latestTransaction = await transactions.getLatest();
       emit(
         state.copyWith(
           profile: profile,
@@ -169,7 +166,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
           serverPublicKey: state.serverPublicKey,
           sessionToken: state.sessionToken,
           isLoaded: true,
-          latestTransaction: transactions.transactions.last,
+          latestTransaction: latestTransaction,
         ),
       );
     }
@@ -199,7 +196,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     emit(newState);
     add(RequestSyncEvent());
 
-    Timer(Duration(seconds: 1), () => {add(TimerUp(event.ticking))});
+    Timer(Duration(seconds: 3), () => {add(TimerUp(event.ticking))});
   }
 
   Future<void> _onSubmitTVC(
