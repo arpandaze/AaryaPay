@@ -9,8 +9,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:math' as math;
 
-import 'package:jovial_svg/jovial_svg.dart';
-
 class AccountScreen extends StatelessWidget {
   const AccountScreen({Key? key}) : super(key: key);
 
@@ -33,7 +31,7 @@ class AccountScreen extends StatelessWidget {
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(
-                              color: Theme.of(context).colorScheme.background),
+                              color: Colors.transparent),
                         ),
                         padding: const EdgeInsets.all(15),
                         child: Transform.rotate(

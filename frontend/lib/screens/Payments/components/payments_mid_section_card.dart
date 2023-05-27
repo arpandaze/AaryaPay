@@ -88,12 +88,9 @@ class PaymentsMidSectionCard extends StatelessWidget {
     var endTimeFormattedString = DateFormat.jms().format(endDateObj.toLocal());
     var expiryString = d1.display();
 
-    print(timeRemaining.inHours);
-    print(expiryString);
-
     return Container(
       padding: const EdgeInsets.all(15),
-      margin: const EdgeInsets.only(bottom: 10),
+      margin: const EdgeInsets.only(top: 10, bottom: 10),
       width: size.width * 0.9,
       decoration: BoxDecoration(
           border: Border.all(
@@ -163,8 +160,7 @@ class PaymentsMidSectionCard extends StatelessWidget {
                     children: [
                       Text(
                         senderName,
-                        style: textTheme.bodyLarge!
-                            .merge(
+                        style: textTheme.bodyLarge!.merge(
                             const TextStyle(fontWeight: FontWeight.w800)),
                       ),
                       Text(sender)
@@ -234,7 +230,7 @@ class PaymentsMidSectionCard extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5.0),
                       child: Text(
-                        " $startTimeFormattedString, $startDateFormattedString ",
+                        " $startDateFormattedString, $startTimeFormattedString ",
                         style: textTheme.bodyMedium!.merge(
                           const TextStyle(
                             fontWeight: FontWeight.w800,
@@ -254,15 +250,13 @@ class PaymentsMidSectionCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    timeRemaining.inMilliseconds > 0
-                        ? expiryString
-                        : "Expired",
+                    timeRemaining.inMilliseconds > 0 ? expiryString : "Expired",
                     textAlign: TextAlign.center,
                     style: textTheme.bodyMedium!.merge(
                       TextStyle(
                         fontWeight: FontWeight.bold,
                         color: timeRemaining.inMilliseconds > 0
-                            ? Color(0xb8000000)
+                            ? const Color(0xb8000000)
                             : colorScheme.background,
                       ),
                     ),

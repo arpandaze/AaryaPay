@@ -1,14 +1,11 @@
 import 'package:aaryapay/components/AuthenticationStatusWrapper.dart';
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/helper/utils.dart';
-import 'package:aaryapay/screens/Login/bloc/login_verify_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'dart:math' as math;
 
-import 'package:jovial_svg/jovial_svg.dart';
 
 class LoginWrapper extends StatelessWidget {
   const LoginWrapper({
@@ -32,7 +29,7 @@ class LoginWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: const Color(0xfff4f6fa),
       body: AuthenticationStateWrapper(
         child: SafeArea(
           top: true,

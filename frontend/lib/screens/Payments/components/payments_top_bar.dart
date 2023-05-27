@@ -10,15 +10,17 @@ class PaymentsTopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var textTheme = Theme.of(context).textTheme;
-    var colorScheme = Theme.of(context).colorScheme;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 16),
       padding: const EdgeInsets.all(10),
       width: size.width * 0.9,
-      height: size.height * 0.09,
+      height: size.height * 0.1,
       decoration: BoxDecoration(
-          border: Border.all(color: Color.fromARGB(50, 0, 0, 0)),
-          borderRadius: BorderRadius.circular(10)),
+        border: Border.all(
+          color: const Color.fromARGB(50, 0, 0, 0),
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,

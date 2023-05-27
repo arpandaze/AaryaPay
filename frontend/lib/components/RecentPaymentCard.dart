@@ -1,10 +1,9 @@
 import 'package:aaryapay/components/CustomFavoritesAvatar.dart';
 import 'package:aaryapay/helper/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class RecentPaymentCard extends StatelessWidget {
-  RecentPaymentCard({
+  const RecentPaymentCard({
     Key? key,
     required this.label,
     required this.date,
@@ -13,12 +12,12 @@ class RecentPaymentCard extends StatelessWidget {
     required this.finalAmt,
     required this.uuid,
   }) : super(key: key);
-  String label;
-  String date;
-  bool isDebit;
-  String transactionAmt;
-  String finalAmt;
-  String uuid;
+  final String label;
+  final String date;
+  final bool isDebit;
+  final String transactionAmt;
+  final String finalAmt;
+  final String uuid;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -62,7 +61,7 @@ class RecentPaymentCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
+              SizedBox(
                 width: size.width * 0.25,
                 child: Text(
                   isDebit ? "-$transactionAmt" : "+$transactionAmt",
