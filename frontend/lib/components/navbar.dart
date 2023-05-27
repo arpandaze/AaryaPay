@@ -60,9 +60,10 @@ class _NavBarState extends State<NavBar> {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                color:
-                                    Theme.of(context).colorScheme.background)),
+                          border: Border.all(
+                            color: Colors.transparent,
+                          ),
+                        ),
                         width: size.width * 0.20,
                         // height: 100,
                         child: Column(
@@ -79,11 +80,15 @@ class _NavBarState extends State<NavBar> {
                               width: 25,
                               height: 25,
                             ),
-                            Text(
-                              "Home",
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  color: Theme.of(context).colorScheme.primary),
+                            Container(
+                              margin: const EdgeInsets.only(top: 5),
+                              child: Text(
+                                "Home",
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
+                              ),
                             )
                           ],
                         ),
@@ -99,9 +104,10 @@ class _NavBarState extends State<NavBar> {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                color:
-                                    Theme.of(context).colorScheme.background)),
+                          border: Border.all(
+                            color: Colors.transparent,
+                          ),
+                        ),
                         width: size.width * 0.20,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -117,11 +123,15 @@ class _NavBarState extends State<NavBar> {
                               width: 25,
                               height: 25,
                             ),
-                            Text(
-                              "Payments",
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  color: Theme.of(context).colorScheme.primary),
+                            Container(
+                              margin: const EdgeInsets.only(top: 5),
+                              child: Text(
+                                "Payments",
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
+                              ),
                             )
                           ],
                         ),
@@ -142,9 +152,8 @@ class _NavBarState extends State<NavBar> {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                color:
-                                    Theme.of(context).colorScheme.background)),
+                          border: Border.all(color: Colors.transparent),
+                        ),
                         width: size.width * 0.20,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -160,11 +169,15 @@ class _NavBarState extends State<NavBar> {
                               width: 25,
                               height: 25,
                             ),
-                            Text(
-                              "Statements",
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  color: Theme.of(context).colorScheme.primary),
+                            Container(
+                              margin: const EdgeInsets.only(top: 5),
+                              child: Text(
+                                "Statements",
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
+                              ),
                             )
                           ],
                         ),
@@ -180,9 +193,10 @@ class _NavBarState extends State<NavBar> {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                color:
-                                    Theme.of(context).colorScheme.background)),
+                          border: Border.all(
+                            color: Colors.transparent,
+                          ),
+                        ),
                         width: size.width * 0.20,
                         // height: double.infinity,
                         child: Column(
@@ -200,11 +214,15 @@ class _NavBarState extends State<NavBar> {
                               width: 25,
                               height: 25,
                             ),
-                            Text(
-                              "Settings",
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  color: Theme.of(context).colorScheme.primary),
+                            Container(
+                              margin: const EdgeInsets.only(top: 5),
+                              child: Text(
+                                "Settings",
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
+                              ),
                             )
                           ],
                         ),
