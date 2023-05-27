@@ -20,8 +20,8 @@ class TopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<DataBloc, DataState>(
       listenWhen: (previous, current) => previous.isOnline != current.isOnline,
-      listener: (context, state) => {
-        if (state.isOnline)
+      listener: (context, dataState) => {
+        if (dataState.isOnline)
           {
             SnackBarService.stopSnackBar(),
             SnackBarService.showSnackBar(
@@ -38,9 +38,9 @@ class TopBar extends StatelessWidget {
             ),
           }
       },
-      buildWhen: (previous, current) => previous.isOnline != current.isOnline,
-      builder: (context, state) {
-        var onlineState = state.isOnline;
+      buildWhen: (previous, current) => previous != current,
+      builder: (context, dataState) {
+        var onlineState = dataState.isOnline;
         return BlocProvider(
           create: (context) => TopBarBloc(),
           child: BlocConsumer<TopBarBloc, TopBarState>(
@@ -93,7 +93,11 @@ class TopBar extends StatelessWidget {
                             SizedBox(
                               // width: size.width * 0.45,
                               child: Text(
-                                !state.hide ? state.amount : "XXX.XXX",
+                                !state.hide
+                                    ? dataState.bkvc?.availableBalance
+                                            .toString() ??
+                                        "1200"
+                                    : "XXX.XXX",
                                 style: Theme.of(context)
                                     .textTheme
                                     .labelLarge!
