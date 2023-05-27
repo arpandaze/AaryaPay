@@ -19,6 +19,9 @@ class QrScanStopped extends QrScannerEvent {}
 
 class QrScanDataCreate extends QrScannerEvent {}
 
+class AnimationStarted extends QrScannerEvent {}
+
+class AnimationStopped extends QrScannerEvent {}
 
 class InitializeScanner extends QrScannerEvent {
   final QRViewController controller;

@@ -18,6 +18,8 @@ class QrScannerBloc extends Bloc<QrScannerEvent, QrScannerState> {
     on<QrCodeScanned>(_onQrCodeScanned);
     on<QrScanDataCreate>(_onQrScanDataCreate);
     on<CloseScanner>(_onCloseScanner);
+    on<AnimationStarted>(_onAnimationStarted);
+    on<AnimationStopped>(_onAnimationStopped);
     add(QrScanDataCreate());
   }
 
@@ -71,14 +73,23 @@ class QrScannerBloc extends Bloc<QrScannerEvent, QrScannerState> {
               decodedCode.containsKey('lastName')) {
             emit(state.copyWith(codeType: CodeType.user));
           } else {
-            emit(state.copyWith(
-                isScanned: true, code: event.code, codeType: CodeType.other));
+            emit(state.copyWith(isScanned: true, code: event.code));
           }
         }
       }
       emit(state.copyWith(
           scannedOnce: false, isScanned: false, codeType: CodeType.other));
     }
+  }
+
+  void _onAnimationStarted(
+      AnimationStarted event, Emitter<QrScannerState> emit) {
+    emit(state.copyWith(animationPlaying: true));
+  }
+
+  void _onAnimationStopped(
+      AnimationStopped event, Emitter<QrScannerState> emit) {
+    emit(state.copyWith(animationPlaying: false));
   }
 
   Future<Map> generateQRData() async {

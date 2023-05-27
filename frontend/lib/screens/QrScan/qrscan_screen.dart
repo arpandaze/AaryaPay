@@ -23,16 +23,17 @@ class QrScanScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return BlocProvider(
-      create: (context) => QrScannerBloc(),
+      create: (context) => QrScannerBloc()..add(AnimationStopped()),
       child: Scaffold(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          body: SafeArea(
-            top: true,
-            bottom: true,
-            left: true,
-            right: true,
-            child: body(size, context),
-          )),
+        backgroundColor: Theme.of(context).colorScheme.background,
+        body: SafeArea(
+          top: true,
+          bottom: true,
+          left: true,
+          right: true,
+          child: body(size, context),
+        ),
+      ),
     );
   }
 
@@ -171,7 +172,10 @@ class QrScanScreen extends StatelessWidget {
       builder: (context, dataState) {
         return BlocConsumer<QrScannerBloc, QrScannerState>(
           listener: (context, state) {
-            print("State Changed");
+            if (state.scannedOnce && !state.animationPlaying) {
+              dialogBuilder(context, 'assets/animations/paperplane.json');
+              context.read<QrScannerBloc>().add(AnimationStarted());
+            }
 
             if (state.isScanned && state.codeType == CodeType.TAM) {
               context.read<DataBloc>().add(
