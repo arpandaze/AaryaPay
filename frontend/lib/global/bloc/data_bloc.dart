@@ -102,23 +102,25 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       response = await httpclient.post(url, headers: headers);
     } else {
       print("No of Transactions to Submit : ${transactionToSubmit.length}");
-      var base64Transactions = transactionToSubmit
-          .map(
-            (transaction) => base64.encode(
-              transaction.authorizationMessage!.toBytes(),
-            ),
-          )
-          .toList();
+      var base64Trans = [];
+
+      for (var i in transactionToSubmit) {
+        base64Trans
+            .add(base64Encode(i.authorizationMessage!.toBytes()).toString());
+      }
       var body = {
-        "transactions": "{'data' : $base64Transactions}",
+        "transactions": "{\"data\" : ${jsonEncode(base64Trans)}}",
       };
-      response =
-          await httpclient.post(url, headers: headers, body: jsonEncode(body));
+
+      response = await httpclient.post(url, headers: headers, body: body);
     }
 
     if (response.statusCode != 202) {
       return;
     }
+
+    print(response.statusCode);
+    print(response.body);
     emit(state.copyWith(tamStatus: TAMStatus.completed));
 
     var responseData = jsonDecode(response.body);
@@ -129,7 +131,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
             (favorite) => Favorite.fromJson(favorite),
           )
           .toList();
-
+      print(responseData['bkvc']);
       BalanceKeyVerificationCertificate bkvc =
           BalanceKeyVerificationCertificate.fromBase64(responseData['bkvc']);
 
@@ -178,22 +180,20 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     Emitter<DataState> emit,
   ) async {
     print("Submit TAM");
-
+    print(base64.encode(event.tam.toBytes()));
     emit(state.copyWith(tamStatus: TAMStatus.initiated));
+
     var transaction = Transaction(
       authorizationMessage: event.tam,
       credit: event.tam.to == state.bkvc!.userID,
     );
-    print(transaction.amount);
-    emit(state.copyWith(latestTransaction: transaction));
 
     var newTransactions = Transactions(
       transactions: [...state.transactions.transactions, transaction],
     );
 
     DataState newState = state.copyWith(
-      transactions: newTransactions,
-    );
+        transactions: newTransactions, latestTransaction: transaction);
 
     newState.save(storage);
     emit(newState);
@@ -219,7 +219,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     if (!verified) {
       throw Exception('TVC could not be verified!');
     }
-
+    Transaction recentTransaction;
     var credit = event.tvc.from != state.bkvc!.userID;
 
     bool alreadyExists = await state.transactions
@@ -242,6 +242,8 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       } else {
         specificTransaction.senderTvc = event.tvc;
       }
+
+      recentTransaction = specificTransaction;
     } else {
       if (credit) {
         transaction = Transaction(
@@ -258,6 +260,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       newTransactions = Transactions(
         transactions: [...state.transactions.transactions, transaction],
       );
+      recentTransaction = transaction;
     }
 
     BalanceKeyVerificationCertificate newBKVC;
@@ -271,6 +274,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       transactions: newTransactions,
       bkvc: newBKVC,
       goToScreen: GoToScreen.tvcSuccess,
+      recentTransaction: recentTransaction,
     );
 
     newState.save(storage);
