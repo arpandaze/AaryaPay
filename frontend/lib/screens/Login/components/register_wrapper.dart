@@ -2,7 +2,6 @@ import 'package:aaryapay/helper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:aaryapay/components/CustomActionButton.dart';
-import 'package:jovial_svg/jovial_svg.dart';
 
 class RegisterWrapper extends StatelessWidget {
   const RegisterWrapper(
@@ -24,14 +23,15 @@ class RegisterWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        body: SafeArea(
-          top: true,
-          bottom: true,
-          left: true,
-          right: true,
-          child: body(size, context),
-        ));
+      backgroundColor: const Color(0xfff4f6fa),
+      body: SafeArea(
+        top: true,
+        bottom: true,
+        left: true,
+        right: true,
+        child: body(size, context),
+      ),
+    );
   }
 
   Widget body(Size size, BuildContext context) {
@@ -71,10 +71,7 @@ class RegisterWrapper extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
-            height: size.height * 0.3,
-            child: Utils.mainlogo 
-          ),
+          SizedBox(height: size.height * 0.3, child: Utils.mainlogo),
           Container(
             height: size.height * 0.48,
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),

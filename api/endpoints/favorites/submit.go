@@ -6,6 +6,7 @@ import (
 	"main/core"
 	"main/telemetry"
 	. "main/telemetry"
+	"main/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -115,7 +116,7 @@ func (AddFavoriteController) AddFavorite(c *gin.Context) {
       INSERT INTO favorites
       (
         favorite_owner,
-		favorite_account
+        favorite_account
       )
       VALUES
       (
@@ -126,7 +127,7 @@ func (AddFavoriteController) AddFavorite(c *gin.Context) {
       date_added;
   `
 
-	var r_date_added string
+	var r_date_added utils.UnixTimestamp
 	row := core.DB.QueryRow(context.Background(), query, user, favUUID)
 
 	err = row.Scan(&r_date_added)

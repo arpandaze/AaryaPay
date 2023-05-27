@@ -41,9 +41,10 @@ class SubmitTransfer extends SendMoneyEvent {
   final UuidValue to;
   final String senderName;
   final String receiverName;
+  final double available;
 
-  SubmitTransfer(this.to, this.senderName, this.receiverName);
+  SubmitTransfer(this.to, this.senderName, this.receiverName, this.available);
 
   @override
-  List<Object> get props => [to, senderName, receiverName];
+  List<Object> get props => [to, senderName, receiverName, available];
 }

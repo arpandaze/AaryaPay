@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         routes: routes,
         title: 'AaryaPay',
         initialRoute: '/welcome',
-        color: Theme.of(context).colorScheme.background,
+        color: const Color(0xfff4f6fa),
         theme: AppTheme.lightTheme,
       ),
     );

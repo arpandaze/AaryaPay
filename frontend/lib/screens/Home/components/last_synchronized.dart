@@ -25,6 +25,11 @@ class LastSynchronized extends StatelessWidget {
             builder: (context, state) {
               return Container(
                 decoration: BoxDecoration(
+                  gradient: const SweepGradient(
+                    colors: [Color(0xff274233), Color(0xff39a669)],
+                    stops: [0, 1],
+                    center: Alignment.topRight,
+                  ),
                   border: Border.all(color: const Color(0x20000000)),
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                 ),
@@ -41,9 +46,50 @@ class LastSynchronized extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Unverified Transactions",
-                          style: textTheme.titleMedium!.merge(
-                              TextStyle(color: colorScheme.onBackground)),
+                          "Balance",
+                          style: Theme.of(context).textTheme.labelMedium!.merge(
+                                TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
+                              ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: SvgPicture.asset(
+                                "assets/icons/rupee.svg",
+                                colorFilter: ColorFilter.mode(
+                                    Theme.of(context).colorScheme.background,
+                                    BlendMode.srcIn),
+                                width: 20,
+                                height: 20,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () => {
+                                context
+                                    .read<TopBarBloc>()
+                                    .add(EyeTapped(tapped: !state.hide)),
+                              },
+                              child: SizedBox(
+                                width: size.width * 0.45,
+                                child: Text(
+                                  "XXX.XXX",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelLarge!
+                                      .merge(TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary)),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -53,65 +99,65 @@ class LastSynchronized extends StatelessWidget {
                               style: Theme.of(context)
                                   .textTheme
                                   .labelLarge!
-                                  .merge(
-                                      const TextStyle(fontSize: 65, height: 0)),
+                                  .merge(const TextStyle(
+                                      color: Color(0xffffffff),
+                                      fontSize: 65,
+                                      height: 0)),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10),
                               child: Text(
-                                "Transactions",
-                                style: Theme.of(context).textTheme.bodyLarge,
+                                "Unverified Transactions",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .merge(
+                                        const TextStyle(color: Colors.white)),
                               ),
                             )
                           ],
                         ),
-                        Text(
-                          "12/04/2023 5:45 pm",
-                          style: textTheme.bodyLarge!
-                              .merge(TextStyle(color: colorScheme.outline)),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Last Synchronized Time",
+                              style: textTheme.bodySmall!.merge(
+                                  TextStyle(color: colorScheme.background)),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 5.0),
+                              child: Text(
+                                "12/04/2023 5:45 pm",
+                                style: textTheme.bodyLarge!.merge(
+                                    TextStyle(color: colorScheme.background)),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                     Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: SvgPicture.asset(
-                                "assets/icons/rupee.svg",
-                                colorFilter: ColorFilter.mode(
-                                    Theme.of(context).colorScheme.onBackground,
-                                    BlendMode.srcIn),
-                                width: 40,
-                                height: 40,
-                              ),
-                            ),
-                            Text(
-                              "600",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge!
-                                  .merge(
-                                    const TextStyle(fontSize: 45, height: 0),
-                                  ),
-                            ),
-                          ],
-                        ),
                         CustomStatusButton(
                           width: size.width * 0.22,
                           height: size.height * 0.04,
                           label: "Sync",
+                          color: Colors.white,
                           onTap: () => context
                               .read<TopBarBloc>()
                               .add(SyncingEvent(syncing: !state.syncing)),
-                          textStyle: textTheme.labelMedium!
-                              .merge(const TextStyle(fontSize: 14, height: 0)),
+                          textStyle: textTheme.labelMedium!.merge(
+                              const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  height: 0)),
                           widget: CustomSyncRotation(
-                              size: 17, syncing: state.syncing),
+                              color: Colors.white,
+                              size: 17,
+                              syncing: state.syncing),
                         ),
                       ],
                     ),

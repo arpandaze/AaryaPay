@@ -161,47 +161,50 @@ class Favourites extends StatelessWidget {
                                           },
                                         ),
                                       ),
-                                    
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            width: 80,
-                                            height: 80,
-                                            margin: EdgeInsets.only(right: 10),
-                                            padding: EdgeInsets.all(30),
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .outline,
+                                      child: Container(
+                                        margin:
+                                            const EdgeInsets.only(right: 10),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              width: 80,
+                                              height: 80,
+                                              padding: const EdgeInsets.all(30),
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .outline,
+                                                ),
+                                              ),
+                                              child: SvgPicture.asset(
+                                                "assets/icons/plus.svg",
+                                                colorFilter: ColorFilter.mode(
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .onBackground,
+                                                    BlendMode.srcIn),
                                               ),
                                             ),
-                                            child: SvgPicture.asset(
-                                              "assets/icons/plus.svg",
-                                              colorFilter: ColorFilter.mode(
-                                                  Theme.of(context)
-                                                      .colorScheme
-                                                      .onBackground,
-                                                  BlendMode.srcIn),
-                                            ),
-                                          ),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 5),
-                                            child: Text(
-                                              "Add Favorite",
-                                              textAlign: TextAlign.center,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText2,
-                                            ),
-                                          )
-                                        ],
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 5),
+                                              child: Text(
+                                                "Add Favorite",
+                                                textAlign: TextAlign.center,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText2,
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
                                     if (state.isLoaded)
@@ -216,7 +219,9 @@ class Favourites extends StatelessWidget {
                                                       state.favouritesList!,
                                                 ),
                                               ),
-                                          onTap: ()=> context.read<HomeFavoritesBloc>().add(ClearEvent()),
+                                          onTap: () => context
+                                              .read<HomeFavoritesBloc>()
+                                              .add(ClearEvent()),
                                           child: Container(
                                             margin: const EdgeInsets.only(
                                                 right: 10),

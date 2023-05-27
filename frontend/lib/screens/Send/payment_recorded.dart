@@ -1,19 +1,21 @@
 import 'package:aaryapay/global/caching/transaction.dart';
 import 'package:aaryapay/helper/utils.dart';
+import 'package:aaryapay/screens/QrScan/qrscan_screen.dart';
 import 'package:aaryapay/screens/Send/components/green_box.dart';
-import 'package:aaryapay/screens/Send/tvc_display_screen.dart';
+import 'package:aaryapay/screens/Send/components/trans_details.dart';
+import 'package:aaryapay/screens/Send/receiver_scan_confirmation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:aaryapay/components/CustomAnimationWidget.dart';
 import 'package:intl/intl.dart';
+import 'package:libaaryapay/libaaryapay.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:lottie/lottie.dart';
 
-class PaymentComplete extends StatelessWidget {
-  final Transaction transaction;
-  final bool sender;
-  const PaymentComplete(
-      {Key? key, required this.transaction, required this.sender})
-      : super(key: key);
+class PaymentRecorded extends StatelessWidget {
+  final Transaction tvc;
+  const PaymentRecorded({Key? key, required this.tvc}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -29,18 +31,16 @@ class PaymentComplete extends StatelessWidget {
   }
 
   Widget body(Size size, BuildContext context) {
-    print(transaction.senderFirstName);
+    print(tvc.senderFirstName);
     void onClick() {
-      Utils.mainAppNav.currentState!.push(
-        PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => TVCDisplay(
-            transaction: transaction,
-            sender: sender,
-          ),
-          transitionDuration: Duration.zero,
-          reverseTransitionDuration: Duration.zero,
-        ),
-      );
+      // Utils.mainAppNav.currentState!.push(
+      //   PageRouteBuilder(
+      //     pageBuilder: (context, animation1, animation2) =>
+      //         const QrScanScreen(),
+      //     transitionDuration: Duration.zero,
+      //     reverseTransitionDuration: Duration.zero,
+      //   ),
+      // );
     }
 
     return Column(
@@ -56,7 +56,7 @@ class PaymentComplete extends StatelessWidget {
                 children: [
                   Container(
                     alignment: Alignment.center,
-                    child: Text("Transfer Completed",
+                    child: Text("Offline Payment Recorded",
                         style: Theme.of(context).textTheme.titleLarge!),
                   ),
                   Container(
@@ -108,7 +108,7 @@ class PaymentComplete extends StatelessWidget {
                   ]),
                   Container(
                     margin: const EdgeInsets.only(top: 30),
-                    child: Text("Transaction Synced Successfully!",
+                    child: Text("Transaction Recorded in your Device!",
                         style: Theme.of(context).textTheme.titleMedium),
                   ),
                   Container(
@@ -125,7 +125,7 @@ class PaymentComplete extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 5, vertical: 10),
                           child: Text(
-                            transaction.amount.toString(),
+                            tvc.amount.toString(),
                             style: Theme.of(context)
                                 .textTheme
                                 .labelLarge!
@@ -142,13 +142,10 @@ class PaymentComplete extends StatelessWidget {
                     ),
                   ),
                   GreenBox(
-                      recipient:
-                          "${transaction.receiverFirstName} ${transaction.receiverLastName}",
-                      amount: transaction.amount.toString(),
-                      date: DateFormat.yMMMMd()
-                          .format(transaction.generationTime),
-                      sender:
-                          "${transaction.senderFirstName} ${transaction.senderLastName}",
+                      recipient: tvc.receiverId.toString().substring(0, 8),
+                      amount: tvc.amount.toString(),
+                      date: DateFormat.yMMMMd().format(tvc.generationTime),
+                      sender: tvc.senderId.toString().substring(0, 8),
                       status: "Verified"),
                 ],
               ),
@@ -156,20 +153,6 @@ class PaymentComplete extends StatelessWidget {
             Positioned(
               top: 100,
               child: Container(child: Utils.background),
-            ),
-            Container(
-              child: Expanded(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(),
-                    child: CustomActionButton(
-                      label: "Show Certificate",
-                      onClick: onClick,
-                    ),
-                  ),
-                ),
-              ),
             ),
           ],
         ),
