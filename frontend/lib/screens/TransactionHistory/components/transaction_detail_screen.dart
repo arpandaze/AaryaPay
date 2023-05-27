@@ -22,7 +22,7 @@ class TransactionDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Color(0xfff4f6fa),
+      backgroundColor: Color.fromARGB(255, 237, 238, 239),
       body: SafeArea(
         top: false,
         bottom: true,
@@ -49,33 +49,16 @@ class TransactionDetailsScreen extends StatelessWidget {
       height: size.height,
       child: Stack(
         children: [
-          Container(
-            margin: const EdgeInsets.all(10),
-            height: size.height * 0.1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      // padding: const EdgeInsets.all(15),
-                      alignment: Alignment.center,
-                      child: IconButton(
-                        icon: SvgPicture.asset(
-                          "assets/icons/close.svg",
-                          width: 18,
-                          height: 18,
-                        ),
-                        onPressed: () {
-                          Utils.mainAppNav.currentState!.popUntil(
-                            ModalRoute.withName("/app"),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+          Positioned(
+            top: size.height * 0.10,
+            child: Container(
+              width: size.width,
+              height: size.height,
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: SvgPicture.asset(
+                "assets/svgs/bill.svg",
+                colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcATop),
+              ),
             ),
           ),
           Positioned(
@@ -85,9 +68,8 @@ class TransactionDetailsScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Container(
                 decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.background,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: kElevationToShadow[4]),
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -144,7 +126,8 @@ class TransactionDetailsScreen extends StatelessWidget {
                               border: Border(
                                 bottom: BorderSide(
                                     color:
-                                        Theme.of(context).colorScheme.outline),
+                                        Theme.of(context).colorScheme.outline,
+                                ),
                               ),
                             ),
                             padding: const EdgeInsets.symmetric(vertical: 40.0),
@@ -411,6 +394,35 @@ class TransactionDetailsScreen extends StatelessWidget {
                   ],
                 ),
               ),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(10),
+            height: size.height * 0.1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Column(
+                  children: [
+                    Container(
+                      // padding: const EdgeInsets.all(15),
+                      alignment: Alignment.center,
+                      child: IconButton(
+                        icon: SvgPicture.asset(
+                          "assets/icons/close.svg",
+                          width: 18,
+                          height: 18,
+                        ),
+                        onPressed: () {
+                          Utils.mainAppNav.currentState!.popUntil(
+                            ModalRoute.withName("/app"),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ],

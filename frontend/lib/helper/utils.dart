@@ -8,7 +8,6 @@ import 'package:aaryapay/constants.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:jovial_svg/jovial_svg.dart';
 
@@ -21,6 +20,14 @@ class Utils {
     si: ScalableImageSource.fromSvg(
       MySVG(imagePath: "assets/icons/logo.svg"),
       "mainLogo",
+      compact: true,
+    ),
+  );
+
+  static Widget billback = ScalableImageWidget.fromSISource(
+    si: ScalableImageSource.fromSvg(
+      MySVG(imagePath: "assets/svgs/bill.svg"),
+      "billback",
       compact: true,
     ),
   );
