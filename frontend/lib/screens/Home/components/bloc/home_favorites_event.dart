@@ -8,10 +8,10 @@ abstract class HomeFavoritesEvent extends Equatable {
 }
 
 class HomeFavoritesLoadEvent extends HomeFavoritesEvent {
-  final List<Favorite> favorites;
-  final double amount;
+  final List<Favorite>? favorites;
+  final double? amount;
 
-  HomeFavoritesLoadEvent({required this.favorites, required this.amount});
+  HomeFavoritesLoadEvent({this.favorites, this.amount});
 
   @override
   List<Object?> get props => [favorites];

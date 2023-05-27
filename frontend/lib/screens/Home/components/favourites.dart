@@ -118,7 +118,7 @@ class Favourites extends StatelessWidget {
                                 child: Row(
                                   children: [
                                     GestureDetector(
-                                      onTap: () =>
+                                      onTapDown: (details) =>
                                           Utils.mainAppNav.currentState!.push(
                                         PageRouteBuilder(
                                           pageBuilder: (context, animation,
@@ -161,6 +161,7 @@ class Favourites extends StatelessWidget {
                                           },
                                         ),
                                       ),
+                                    
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
@@ -206,7 +207,7 @@ class Favourites extends StatelessWidget {
                                     if (state.isLoaded)
                                       ...state.favouritesList!.map(
                                         (item) => GestureDetector(
-                                          onTap: () => context
+                                          onTapDown: (details) => context
                                               .read<HomeFavoritesBloc>()
                                               .add(
                                                 LoadParticularUser(
@@ -215,6 +216,7 @@ class Favourites extends StatelessWidget {
                                                       state.favouritesList!,
                                                 ),
                                               ),
+                                          onTap: ()=> context.read<HomeFavoritesBloc>().add(ClearEvent()),
                                           child: Container(
                                             margin: const EdgeInsets.only(
                                                 right: 10),
