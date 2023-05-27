@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:aaryapay/components/CustomSyncRotation.dart';
 import 'package:aaryapay/global/bloc/data_bloc.dart';
 import 'package:aaryapay/screens/Home/components/bloc/synchronization_bloc.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:aaryapay/components/CustomStatusButton.dart';
+import 'package:intl/intl.dart';
 
 class LastSynchronized extends StatelessWidget {
   const LastSynchronized({Key? key}) : super(key: key);
@@ -17,13 +20,35 @@ class LastSynchronized extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return BlocConsumer<DataBloc, DataState>(
       listener: (context, dataState) {},
-      buildWhen: (prev, next) => prev.isOnline != next.isOnline,
+      buildWhen: (prev, next) => prev != next,
       builder: (context, dataState) {
         return BlocProvider(
           create: (context) => SynchronizationBloc(),
           child: BlocConsumer<SynchronizationBloc, SynchronizationState>(
-            listener: (context, state) {},
+            listener: (context, state) {
+              Timer(Duration(seconds: 2), () {
+                context
+                    .read<SynchronizationBloc>()
+                    .add(RotatingEvent(rotating: false));
+              });
+
+              if (state.syncing) {
+                context.read<DataBloc>().add(RequestSyncEvent());
+              }
+              context
+                  .read<SynchronizationBloc>()
+                  .add(SyncingEvent(syncing: false));
+            },
             builder: (context, state) {
+              String formattedString =
+                  "${DateFormat.yMMMEd().format(DateTime.now())} ${DateFormat.jm().format(DateTime.now())}";
+              if (dataState.isLoaded) {
+                DateTime dateObj =
+                    DateTime.parse(dataState.bkvc!.timeStamp.toString());
+                formattedString =
+                    "${DateFormat.yMMMEd().format(dateObj.toLocal())} ${DateFormat.jm().format(dateObj)}";
+              }
+
               return Container(
                 decoration: BoxDecoration(
                   gradient: const SweepGradient(
@@ -79,7 +104,7 @@ class LastSynchronized extends StatelessWidget {
                               child: SizedBox(
                                 width: size.width * 0.45,
                                 child: Text(
-                                  state.hide
+                                  !state.hide
                                       ? dataState.bkvc?.availableBalance
                                               .toString() ??
                                           "1200"
@@ -100,7 +125,7 @@ class LastSynchronized extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "3",
+                              "${dataState.transactions.unsubmittedTransactionsLength()}",
                               style: Theme.of(context)
                                   .textTheme
                                   .labelLarge!
@@ -133,7 +158,7 @@ class LastSynchronized extends StatelessWidget {
                             Container(
                               margin: const EdgeInsets.only(top: 5.0),
                               child: Text(
-                                "12/04/2023 5:45 pm",
+                                "$formattedString",
                                 style: textTheme.bodyLarge!.merge(
                                     TextStyle(color: colorScheme.background)),
                               ),
@@ -151,9 +176,9 @@ class LastSynchronized extends StatelessWidget {
                           height: size.height * 0.04,
                           label: "Sync",
                           color: Colors.white,
-                          onTap: () => context
-                              .read<SynchronizationBloc>()
-                              .add(SyncingEvent(syncing: !state.syncing)),
+                          onTap: () => context.read<SynchronizationBloc>()
+                            ..add(SyncingEvent(syncing: !state.syncing))
+                            ..add(RotatingEvent(rotating: !state.rotating)),
                           textStyle: textTheme.labelMedium!.merge(
                               const TextStyle(
                                   color: Colors.white,
@@ -162,7 +187,7 @@ class LastSynchronized extends StatelessWidget {
                           widget: CustomSyncRotation(
                               color: Colors.white,
                               size: 17,
-                              syncing: state.syncing),
+                              syncing: state.rotating),
                         ),
                       ],
                     ),
