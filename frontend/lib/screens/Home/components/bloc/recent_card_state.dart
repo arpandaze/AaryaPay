@@ -1,7 +1,7 @@
 part of 'recent_card_bloc.dart';
 
 class RecentCardState extends Equatable {
-  final Transactions? transactionHistory;
+  final List<Transaction>? transactionHistory;
   final bool isLoaded;
   final String? senderName;
   final String? receiverName;
@@ -18,7 +18,7 @@ class RecentCardState extends Equatable {
   });
 
   RecentCardState copywith({
-    Transactions? transactionHistory,
+    List<Transaction>? transactionHistory,
     bool? isLoaded,
     String? senderName,
     String? receiverName,

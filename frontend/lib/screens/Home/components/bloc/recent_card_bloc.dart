@@ -15,10 +15,14 @@ class RecentCardBloc extends Bloc<RecentCardEvent, RecentCardState> {
   }
 
   void _onTransactionLoad(
-      TransactionLoad event, Emitter<RecentCardState> emit) {
+      TransactionLoad event, Emitter<RecentCardState> emit) async {
     try {
+      List<Transaction> submittedTransactions =
+          await event.transactions!.getSubmittedTransactions();
+      submittedTransactions.sort((a, b) =>
+          b.receiverTvc!.timeStamp.compareTo(a.receiverTvc!.timeStamp));
       emit(state.copywith(
-          transactionHistory: event.transactions, isLoaded: true));
+          transactionHistory: submittedTransactions, isLoaded: true));
     } catch (e) {
       emit(state.copywith(isLoaded: false));
     }
@@ -26,7 +30,8 @@ class RecentCardBloc extends Bloc<RecentCardEvent, RecentCardState> {
 
   void _onLoadParticularUser(
       LoadParticularUser event, Emitter<RecentCardState> emit) {
-    emit(state.copywith(
+    emit(
+      state.copywith(
         senderName: event.senderID,
         receiverName: event.receiverID,
         item: event.item,

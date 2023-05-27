@@ -23,8 +23,9 @@ class TranscationBloc extends Bloc<TranscationEvent, TranscationState> {
   void _onLoadTransaction(
       LoadTransaction event, Emitter<TranscationState> emit) async {
     try {
+      List<Transaction> submittedTransactions = await event.transactions!.getSubmittedTransactions();
       emit(
-          state.copywith(transactionHistory: event.transactions, loaded: true));
+          state.copywith(transactionHistory: submittedTransactions, loaded: true));
     } catch (e) {
       emit(state.copywith(loaded: false));
       print("Error: $e");
