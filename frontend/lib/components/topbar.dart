@@ -44,14 +44,11 @@ class TopBar extends StatelessWidget {
         return BlocProvider(
           create: (context) => TopBarBloc(),
           child: BlocConsumer<TopBarBloc, TopBarState>(
-            listener: (context, state) {},
+            listener: (context, state) {
+              // TODO: implement listener
+            },
             builder: (context, state) {
               return Container(
-                decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
-                    borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(10),
-                        bottomRight: Radius.circular(10))),
                 width: size.width,
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Row(
@@ -113,17 +110,17 @@ class TopBar extends StatelessWidget {
                                     .read<TopBarBloc>()
                                     .add(EyeTapped(tapped: !state.hide)),
                               },
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: SvgPicture.asset(
-                                  !state.hide
-                                      ? "assets/icons/invisible.svg"
-                                      : "assets/icons/show.svg",
-                                  colorFilter: ColorFilter.mode(
-                                      Theme.of(context).colorScheme.background,
-                                      BlendMode.srcIn),
-                                  width: 22,
-                                  height: 22,
+                              child: SizedBox(
+                                // width: size.width * 0.45,
+                                child: Text(
+                                  !state.hide ? state.amount : "XXX.XXX",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelLarge!
+                                      .merge(TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary)),
                                 ),
                               ),
                             ),
@@ -135,8 +132,6 @@ class TopBar extends StatelessWidget {
                       children: [
                         Container(
                           margin: const EdgeInsets.all(10),
-                          // decoration: BoxDecoration(
-                          //     borderRadius: BorderRadius.circular(20)),
                           child: GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: () => Utils.mainAppNav.currentState!.push(
@@ -177,26 +172,48 @@ class TopBar extends StatelessWidget {
                                 },
                               ),
                             ),
-                            child: Stack(children: [
+                            child: Stack(clipBehavior: Clip.none, children: [
                               imageLoader(
                                 imageUrl: state.uuid ?? "",
                                 shape: ImageType.rectangle,
                                 radius: 20,
                                 width: 100,
                                 height: 100,
+                                errorImage: Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)),
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: AssetImage(
+                                          ("assets/images/default-pfp.png")),
+                                    ),
+                                  ),
+                                ),
                               ),
                               Positioned(
-                                bottom: 0,
-                                right: 10,
+                                bottom: -10,
+                                right: -5,
                                 child: Container(
                                   decoration: BoxDecoration(
+                                      gradient: const SweepGradient(
+                                        colors: [
+                                          Color(0xff274233),
+                                          Color(0xff39a669)
+                                        ],
+                                        stops: [0, 1],
+                                        center: Alignment.topRight,
+                                      ),
                                       color:
                                           Theme.of(context).colorScheme.primary,
                                       // .withOpacity(0.2),
                                       borderRadius: BorderRadius.circular(20)),
-                                  width: 20,
-                                  height: 20,
-                                  padding: EdgeInsets.all(3),
+                                  width: 30,
+                                  height: 30,
+                                  padding: const EdgeInsets.all(6),
                                   child: Container(
                                     decoration: BoxDecoration(
                                         color: onlineState
@@ -209,8 +226,8 @@ class TopBar extends StatelessWidget {
                                         // .withOpacity(0.2),
                                         borderRadius:
                                             BorderRadius.circular(20)),
-                                    width: 15,
-                                    height: 15,
+                                    width: 20,
+                                    height: 20,
                                   ),
                                 ),
                               ),

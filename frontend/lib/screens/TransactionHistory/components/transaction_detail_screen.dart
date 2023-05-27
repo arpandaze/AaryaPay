@@ -1,10 +1,11 @@
+import 'package:aaryapay/global/caching/transaction.dart';
 import 'package:aaryapay/helper/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 class TransactionDetailsScreen extends StatelessWidget {
-  final Map<String, dynamic>? transactionItem;
+  final Transaction? transactionItem;
   final String? recieverName;
   final String? senderName;
 
@@ -34,13 +35,13 @@ class TransactionDetailsScreen extends StatelessWidget {
   Widget body(Size size, BuildContext context) {
     //only for formatting
     var verificationDateFormattedString = DateFormat.yMMMMd()
-        .format(transactionItem!['senderTVC'].verificationTime);
+        .format(transactionItem!.senderTvc!.verificationTime);
     var verificationTimeFormattedString =
-        DateFormat.jm().format(transactionItem!['senderTVC'].verificationTime);
-    var generationDateFormattedString = DateFormat.yMMMMd()
-        .format(transactionItem!['senderTVC'].generationTime);
+        DateFormat.jm().format(transactionItem!.senderTvc!.verificationTime);
+    var generationDateFormattedString =
+        DateFormat.yMMMMd().format(transactionItem!.senderTvc!.generationTime);
     var generationTimeFormattedString =
-        DateFormat.jm().format(transactionItem!['senderTVC'].generationTime);
+        DateFormat.jm().format(transactionItem!.senderTvc!.generationTime);
 
     return SingleChildScrollView(
       child: Column(
@@ -119,7 +120,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 5, vertical: 10),
                             child: Text(
-                              transactionItem!["senderTVC"].amount.toString(),
+                              transactionItem!.senderTvc!.amount.toString(),
                               style: Theme.of(context)
                                   .textTheme
                                   .labelLarge!
@@ -189,7 +190,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  transactionItem!["transactionID"]
+                                  transactionItem!.id!
                                       .substring(0, 8),
                                   style: Theme.of(context)
                                       .textTheme
@@ -293,7 +294,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  transactionItem!["senderTVC"]
+                                  transactionItem!.senderTvc!
                                       .bkvc
                                       .userID
                                       .toString()
@@ -309,7 +310,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  senderName ?? "__",
+                                  "${transactionItem!.senderFirstName} ${transactionItem!.senderLastName}",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!
@@ -321,7 +322,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  transactionItem!["receiverTVC"]
+                                  transactionItem!.receiverTvc!
                                       .bkvc
                                       .userID
                                       .toString()
@@ -337,7 +338,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  recieverName ?? "__",
+                                  "${transactionItem!.receiverFirstName} ${transactionItem!.receiverLastName}",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium!

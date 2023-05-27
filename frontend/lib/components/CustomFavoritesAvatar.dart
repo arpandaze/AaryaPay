@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomFavoritesAvatar extends StatelessWidget {
   const CustomFavoritesAvatar({
     Key? key,
-    this.width = 65,
+    this.width = 82,
     this.imagesUrl = "assets/images/default-pfp.png",
   }) : super(key: key);
 
@@ -15,7 +15,6 @@ class CustomFavoritesAvatar extends StatelessWidget {
     return Container(
       width: width,
       height: width,
-      margin: const EdgeInsets.only(right: 10),
       alignment: Alignment.center,
       decoration: BoxDecoration(
           border: Border.all(color: Colors.grey), shape: BoxShape.circle),
@@ -25,7 +24,7 @@ class CustomFavoritesAvatar extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           image: DecorationImage(
-            fit: BoxFit.contain,
+            fit: BoxFit.cover,
             image: AssetImage(imagesUrl),
           ),
         ),

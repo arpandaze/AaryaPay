@@ -217,33 +217,6 @@ class Settings extends StatelessWidget {
           label: "Synchronization",
           trailingWidget: const CustomArrowedButton(),
         ),
-        // MenuItemModal(
-        //   onTap: () => Utils.mainAppNav.currentState!
-        //       .pushNamed("/app/settings/language"),
-        //     icon: SvgPicture.asset(
-        //       "assets/icons/language.svg",
-        //       width: 20,
-        //       height: 20,
-        //     ),
-        //     label: "Language",
-        //     trailingWidget: SizedBox(
-        //       height: 50,
-        //       child: Row(
-        //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //         children: [
-        //           Padding(
-        //             padding: const EdgeInsets.symmetric(horizontal: 12),
-        //             child: Text(
-        //               "English",
-        //               textAlign: TextAlign.right,
-        //               style: Theme.of(context).textTheme.bodyLarge,
-        //             ),
-        //           ),
-        //           const CustomArrowedButton(),
-        //         ],
-        //       ),
-        //   ),
-        // ),
       ]),
     ];
 
@@ -256,18 +229,28 @@ class Settings extends StatelessWidget {
           },
       },
       builder: (context, state) {
-        return SingleChildScrollView(
-          child: Container(
-            width: size.width,
-            height: size.height * 0.72,
-            color: Theme.of(context).colorScheme.background,
-            child: Column(
-              children: [
-                CustomMenuSelection(
-                  itemList: itemList,
-                ),
-                button(context, size),
-              ],
+        return Container(
+          clipBehavior: Clip.hardEdge,
+          width: size.width,
+          height: size.height * 0.72,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(35),
+              topRight: Radius.circular(35),
+            ),
+            color: Color(0xfff4f6f4),
+          ),
+          child: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Column(
+                children: [
+                  CustomMenuSelection(
+                    itemList: itemList,
+                  ),
+                  button(context, size),
+                ],
+              ),
             ),
           ),
         );

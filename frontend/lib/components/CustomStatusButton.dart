@@ -10,6 +10,7 @@ class CustomStatusButton extends StatelessWidget {
     this.borderRadius,
     this.textStyle,
     this.color,
+    this.onTap,
   }) : super(key: key);
 
   final Widget widget;
@@ -19,12 +20,14 @@ class CustomStatusButton extends StatelessWidget {
   final double? borderRadius;
   final TextStyle? textStyle;
   final Color? color;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var textTheme = Theme.of(context).textTheme;
     return GestureDetector(
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(5),
         width: width ?? size.width * 0.20,
@@ -39,12 +42,12 @@ class CustomStatusButton extends StatelessWidget {
               : MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-          // SvgPicture.asset(
-          //   "assets/icons/sync.svg",
-          //   height: 11,
-          //   width: 11,
-          // ),
-          widget,
+            // SvgPicture.asset(
+            //   "assets/icons/sync.svg",
+            //   height: 11,
+            //   width: 11,
+            // ),
+            widget,
             label != null
                 ? Text(
                     label ?? "",

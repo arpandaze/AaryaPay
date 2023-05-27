@@ -27,7 +27,6 @@ class AccountInformation extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var colorScheme = Theme.of(context).colorScheme;
-    var textTheme = Theme.of(context).textTheme;
 
     return Container(
       color: colorScheme.background,
@@ -57,7 +56,7 @@ class AccountInformation extends StatelessWidget {
           Utils.mainAppNav.currentState!.popUntil(ModalRoute.withName('/app'));
         }
         if (state.imageSuccess) {
-          Utils.mainAppNav.currentState!.pop(ModalRoute.withName('/app'));
+          Utils.mainAppNav.currentState!.popUntil(ModalRoute.withName('/app'));
           await Utils()
               .cacheManager
               .removeFile("$fileServerBase/${state.photoUrl}");
@@ -210,9 +209,25 @@ class AccountInformation extends StatelessWidget {
         ),
       );
     } else if (profileUrl != "") {
-      return imageLoader(imageUrl: profileUrl, shape: ImageType.circle, width: 120, height: 120);
+      return imageLoader(
+        imageUrl: profileUrl,
+        shape: ImageType.circle,
+        width: 120,
+        height: 120,
+        errorImage: Container(
+          width: 120,
+          height: 120,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: AssetImage(("assets/images/default-pfp.png")),
+            ),
+          ),
+        ),
+      );
     } else {
-      return CircularLoadingAnimation(width: 120, height: 120);
+      return const CircularLoadingAnimation(width: 120, height: 120);
     }
   }
 }
