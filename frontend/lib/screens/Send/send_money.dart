@@ -1,4 +1,3 @@
-import 'package:aaryapay/components/CustomFavoritesAvatar.dart';
 import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
@@ -6,7 +5,6 @@ import 'package:aaryapay/global/bloc/data_bloc.dart';
 import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Send/bloc/send_money_bloc.dart';
 import 'package:aaryapay/screens/Send/components/balance_box.dart';
-import 'package:aaryapay/screens/Send/components/numpad_button.dart';
 import 'package:aaryapay/screens/Send/offline_send.dart';
 import 'package:aaryapay/screens/Send/components/midMatrix.dart';
 import 'package:aaryapay/screens/Send/payment_complete.dart';
@@ -53,7 +51,6 @@ class SendMoney extends StatelessWidget {
       listenWhen: (previous, current) =>
           previous.goToScreen != current.goToScreen,
       listener: (context, dataState) {
-        print(dataState.profile!.firstName);
         if (dataState.goToScreen == GoToScreen.offlineTrans) {
           Utils.mainAppNav.currentState!.push(
             PageRouteBuilder(
