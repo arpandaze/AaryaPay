@@ -3,6 +3,7 @@ part of 'home_favorites_bloc.dart';
 class HomeFavoritesState extends Equatable {
   final List<Favorite>? favouritesList;
   final bool isLoaded;
+  final bool clear;
   final Map? particularUser;
   final String? displayAmount;
 
@@ -11,6 +12,7 @@ class HomeFavoritesState extends Equatable {
     this.isLoaded = false,
     this.particularUser,
     this.displayAmount,
+    this.clear = false,
   });
 
   HomeFavoritesState copyWith({
@@ -18,12 +20,14 @@ class HomeFavoritesState extends Equatable {
     bool? isLoaded,
     Map? particularUser,
     String? displayAmount,
+    bool? clear,
   }) {
     return HomeFavoritesState(
       favouritesList: favouritesList ?? this.favouritesList,
       isLoaded: isLoaded ?? this.isLoaded,
       particularUser: particularUser ?? this.particularUser,
       displayAmount: displayAmount ?? this.displayAmount,
+      clear: clear ?? this.clear,
     );
   }
 
@@ -33,5 +37,6 @@ class HomeFavoritesState extends Equatable {
         isLoaded,
         particularUser,
         displayAmount,
+        clear,
       ];
 }
