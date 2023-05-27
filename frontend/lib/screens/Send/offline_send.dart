@@ -1,21 +1,19 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:aaryapay/components/QRImage.dart';
 import 'package:aaryapay/global/caching/transaction.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/QrScan/qrscan_screen.dart';
 import 'package:aaryapay/screens/Send/components/trans_details_outlined.dart';
-import 'package:aaryapay/screens/Send/receiver_scan_confirmation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:aaryapay/components/CustomActionButton.dart';
 import 'package:intl/intl.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 class OfflineSend extends StatelessWidget {
-  Transaction? transaction;
-  String? name;
-  OfflineSend({Key? key, this.transaction, this.name}) : super(key: key);
+  final Transaction? transaction;
+  final String? name;
+  const OfflineSend({Key? key, this.transaction, this.name}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -64,12 +62,16 @@ class OfflineSend extends StatelessWidget {
                     child: IconButton(
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
-                      onPressed: () => Navigator.pop(context),
-                      icon: SvgPicture.asset('assets/icons/close.svg',
-                          width: 20,
-                          height: 20,
-                          colorFilter: const ColorFilter.mode(
-                              Colors.black, BlendMode.srcIn)),
+                      onPressed: () => Utils.mainAppNav.currentState!.popUntil(
+                        ModalRoute.withName("/app"),
+                      ),
+                      icon: SvgPicture.asset(
+                        'assets/icons/close.svg',
+                        width: 20,
+                        height: 20,
+                        colorFilter: const ColorFilter.mode(
+                            Colors.black, BlendMode.srcIn),
+                      ),
                     ),
                   )
                 ],
