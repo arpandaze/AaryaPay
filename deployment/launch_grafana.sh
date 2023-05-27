@@ -4,6 +4,7 @@ set -x
 set -eo pipefail
 
 CONTAINER_NAME="grafana-aaryapay"
+DATA_DIR="./grafana"
 
 if [ "$(podman ps -q -f name=$CONTAINER_NAME)" ]; then
     echo "Grafana already running!"
@@ -21,5 +22,6 @@ echo "Creating new grafana container!"
 podman run -d \
   --name=$CONTAINER_NAME \
   --restart unless-stopped \
+  -v $DATA_DIR:/var/lib/grafana \
   --network=host \
   docker.io/grafana/grafana-oss:latest
