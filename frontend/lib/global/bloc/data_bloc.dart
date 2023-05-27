@@ -61,6 +61,10 @@ class DataBloc extends Bloc<DataEvent, DataState> {
 
     if (state.isOnline != isOnline) {
       emit(state.copyWith(isOnline: isOnline));
+
+      if (state.isOnline){
+        add(RequestSyncEvent());
+      }
     }
     return;
   }
@@ -86,6 +90,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
 
     var transactionToSubmit =
         await state.transactions.getUnsubmittedTransactions();
+    print("Transaction to submit : $transactionToSubmit");
 
     final headers = {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -104,11 +109,15 @@ class DataBloc extends Bloc<DataEvent, DataState> {
             ),
           )
           .toList();
-      print(base64Transactions);
       var body = {
-        'transactions': base64Transactions[0],
+        "transactions": "{'data' : $base64Transactions}",
       };
-      response = await httpclient.post(url, headers: headers, body: body);
+      print(body);
+      response =
+          await httpclient.post(url, headers: headers, body: jsonEncode(body));
+
+      print("Transaction Submitted Response");
+      print(response.statusCode);
     }
 
     if (response.statusCode != 202) {
