@@ -151,6 +151,8 @@ class SendMoney extends StatelessWidget {
         return BlocConsumer<SendMoneyBloc, SendMoneyState>(
           listenWhen: (previous, current) => previous != current,
           listener: (context, state) => {
+            if (state.tamStatus == TAMStatus.initiated)
+              {dialogBuilder(context, 'assets/animations/paperplane.json')},
             if (state.tamStatus == TAMStatus.generated)
               {
                 context.read<DataBloc>().add(SubmitTAMEvent(state.tam!)),
