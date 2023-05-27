@@ -97,7 +97,7 @@ class PaymentComplete extends StatelessWidget {
                     Container(
                         child: CustomAnimationWidget(
                       assetSrc: 'assets/animations/check.json',
-                      repeat: true,
+                      repeat: false,
                     )
 
                         // child: SvgPicture.asset('assets/icons/check.svg',
