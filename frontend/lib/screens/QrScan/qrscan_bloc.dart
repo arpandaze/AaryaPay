@@ -33,29 +33,51 @@ class QrScannerBloc extends Bloc<QrScannerEvent, QrScannerState> {
 
   void _onQrCodeScanned(
       QrCodeScanned event, Emitter<QrScannerState> emit) async {
+    if (!state.scannedOnce) {
+      emit(state.copyWith(scannedOnce: true));
 
-    try {
-      TransactionAuthorizationMessage.fromBytes(event.code);
-      emit(state.copyWith(codeType: CodeType.TAM));
-    } on Exception {
       try {
-        TransactionVerificationCertificate.fromBytes(event.code);
-        emit(state.copyWith(codeType: CodeType.TVC));
-      } on Exception {
-        var decodedCode = jsonDecode(utf8.decode(event.code));
-        if (decodedCode.containsKey('id') &&
-            decodedCode.containsKey('firstName') &&
-            decodedCode.containsKey('lastName')) {
-          emit(state.copyWith(codeType: CodeType.user));
+        TransactionAuthorizationMessage tam =
+            TransactionAuthorizationMessage.fromBase64(utf8.decode(event.code));
+
+        print("Verified ${await tam.verify()}");
+        if (await tam.verify()) {
+          emit(state.copyWith(
+              isScanned: true,
+              code: event.code,
+              tam: tam,
+              codeType: CodeType.TAM));
         } else {
-          emit(state.copyWith(codeType: CodeType.other));
+          throw Exception("Not a TAM");
+        }
+      } on Exception {
+        print("Exception Occurs");
+        try {
+          TransactionVerificationCertificate tvc =
+              TransactionVerificationCertificate.fromBase64(
+                  utf8.decode(event.code));
+          print(tvc);
+          print(utf8.decode(event.code));
+
+          emit(state.copyWith(
+              isScanned: true,
+              code: event.code,
+              tvc: tvc,
+              codeType: CodeType.TVC));
+        } on Exception {
+          var decodedCode = jsonDecode(utf8.decode(event.code));
+          if (decodedCode.containsKey('id') &&
+              decodedCode.containsKey('firstName') &&
+              decodedCode.containsKey('lastName')) {
+            emit(state.copyWith(codeType: CodeType.user));
+          } else {
+            emit(state.copyWith(
+                isScanned: true, code: event.code, codeType: CodeType.other));
+          }
         }
       }
-    }
-
-    emit(state.copyWith(code: event.code));
-    if (state.code != null) {
-      emit(state.copyWith(isScanned: true));
+      emit(state.copyWith(
+          scannedOnce: false, isScanned: false, codeType: CodeType.other));
     }
   }
 

@@ -1,10 +1,13 @@
 import 'package:aaryapay/components/CustomFavoritesAvatar.dart';
+import 'package:aaryapay/components/SnackBarService.dart';
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/global/authentication/authentication_bloc.dart';
 import 'package:aaryapay/global/bloc/data_bloc.dart';
 import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Send/bloc/send_money_bloc.dart';
 import 'package:aaryapay/screens/Send/components/balance_box.dart';
+import 'package:aaryapay/screens/Send/components/numpad_button.dart';
+import 'package:aaryapay/screens/Send/offline_send.dart';
 import 'package:aaryapay/screens/Send/components/midMatrix.dart';
 import 'package:aaryapay/screens/Send/payment_complete.dart';
 import 'package:flutter/material.dart';
@@ -47,53 +50,120 @@ class SendMoney extends StatelessWidget {
 
   Widget body(Size size, BuildContext context) {
     return BlocConsumer<DataBloc, DataState>(
-      listener: (context, dataState) {},
+      listenWhen: (previous, current) =>
+          previous.goToScreen != current.goToScreen,
+      listener: (context, dataState) {
+        print(dataState.profile!.firstName);
+        if (dataState.goToScreen == GoToScreen.offlineTrans) {
+          Utils.mainAppNav.currentState!.push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  OfflineSend(
+                name:
+                    "${dataState.profile!.firstName} ${dataState.profile!.lastName}",
+                transaction: dataState.latestTransaction,
+              ),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                final curve = CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.decelerate,
+                );
+
+                return Stack(
+                  children: [
+                    FadeTransition(
+                      opacity: Tween<double>(
+                        begin: 1.0,
+                        end: 0.0,
+                      ).animate(curve),
+                    ),
+                    SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0.0, 1.0),
+                        end: Offset.zero,
+                      ).animate(curve),
+                      child: FadeTransition(
+                        opacity: Tween<double>(
+                          begin: 0.0,
+                          end: 1.0,
+                        ).animate(curve),
+                        child: OfflineSend(
+                            name:
+                                "${dataState.profile!.firstName} ${dataState.profile!.lastName}",
+                            transaction: dataState.latestTransaction),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          );
+        }
+        if (dataState.goToScreen == GoToScreen.onlineTrans) {
+          Utils.mainAppNav.currentState!.push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  PaymentComplete(
+                transaction: dataState.latestTransaction!,
+                sender: true,
+              ),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                final curve = CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.decelerate,
+                );
+
+                return Stack(
+                  children: [
+                    FadeTransition(
+                      opacity: Tween<double>(
+                        begin: 1.0,
+                        end: 0.0,
+                      ).animate(curve),
+                    ),
+                    SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0.0, 1.0),
+                        end: Offset.zero,
+                      ).animate(curve),
+                      child: FadeTransition(
+                        opacity: Tween<double>(
+                          begin: 0.0,
+                          end: 1.0,
+                        ).animate(curve),
+                        child: PaymentComplete(
+                          transaction: dataState.latestTransaction!,
+                          sender: true,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          );
+        }
+        // TODO: implement listener
+      },
       builder: (context, dataState) {
+        double sentAmount = dataState.transactions.getSentAmount();
+        double balance = dataState.bkvc!.availableBalance;
+        double availableAmount = balance - sentAmount;
         return BlocConsumer<SendMoneyBloc, SendMoneyState>(
+          listenWhen: (previous, current) => previous != current,
           listener: (context, state) => {
             if (state.tamStatus == TAMStatus.generated)
               {
                 context.read<DataBloc>().add(SubmitTAMEvent(state.tam!)),
               },
-            if (state.submitted)
+            if (state.error)
               {
-                Utils.mainAppNav.currentState!.push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        PaymentComplete(tvc: state.submitResponse!),
-                    transitionsBuilder:
-                        (context, animation, secondaryAnimation, child) {
-                      final curve = CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.decelerate,
-                      );
-
-                      return Stack(
-                        children: [
-                          FadeTransition(
-                            opacity: Tween<double>(
-                              begin: 1.0,
-                              end: 0.0,
-                            ).animate(curve),
-                          ),
-                          SlideTransition(
-                            position: Tween<Offset>(
-                              begin: const Offset(0.0, 1.0),
-                              end: Offset.zero,
-                            ).animate(curve),
-                            child: FadeTransition(
-                              opacity: Tween<double>(
-                                begin: 0.0,
-                                end: 1.0,
-                              ).animate(curve),
-                              child:
-                                  PaymentComplete(tvc: state.submitResponse!),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
+                SnackBarService.stopSnackBar(),
+                SnackBarService.showSnackBar(
+                  msgType: MessageType.error,
+                  content: state.errorText,
                 ),
               }
           },
@@ -143,7 +213,7 @@ class SendMoney extends StatelessWidget {
                       ),
                     ),
                     BalanceBox(
-                      balance: displayAmount,
+                      balance: displayAmount.toString(),
                     ),
                     SingleChildScrollView(
                       child: Column(
@@ -282,10 +352,14 @@ class SendMoney extends StatelessWidget {
                             width: size.width * 0.7,
                             borderRadius: 10,
                             onClick: () => {
-                              context.read<SendMoneyBloc>().add(SubmitTransfer(
-                                  UuidValue.fromList(Uuid.parse(uuid!)),
-                                  "${context.read<AuthenticationBloc>().state.user!["first_name"]} ${context.read<AuthenticationBloc>().state.user!["last_name"]}",
-                                  "$firstname $lastname")),
+                              context.read<SendMoneyBloc>().add(
+                                    SubmitTransfer(
+                                      UuidValue.fromList(Uuid.parse(uuid!)),
+                                      "${context.read<AuthenticationBloc>().state.user!["first_name"]} ${context.read<AuthenticationBloc>().state.user!["last_name"]}",
+                                      "$firstname $lastname",
+                                      availableAmount,
+                                    ),
+                                  ),
                             },
                           ),
                         )

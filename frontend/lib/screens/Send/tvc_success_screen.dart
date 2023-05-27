@@ -14,12 +14,9 @@ import 'package:libaaryapay/libaaryapay.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:lottie/lottie.dart';
 
-class PaymentComplete extends StatelessWidget {
+class TVCSuccess extends StatelessWidget {
   final Transaction transaction;
-  final bool sender;
-  const PaymentComplete(
-      {Key? key, required this.transaction, required this.sender})
-      : super(key: key);
+  const TVCSuccess({Key? key, required this.transaction}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -35,20 +32,6 @@ class PaymentComplete extends StatelessWidget {
   }
 
   Widget body(Size size, BuildContext context) {
-    print(transaction.senderFirstName);
-    void onClick() {
-      Utils.mainAppNav.currentState!.push(
-        PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => TVCDisplay(
-            transaction: transaction,
-            sender: sender,
-          ),
-          transitionDuration: Duration.zero,
-          reverseTransitionDuration: Duration.zero,
-        ),
-      );
-    }
-
     return Column(
       children: <Widget>[
         Column(
@@ -62,7 +45,7 @@ class PaymentComplete extends StatelessWidget {
                 children: [
                   Container(
                     alignment: Alignment.center,
-                    child: Text("Transfer Completed",
+                    child: Text("TVC Synced",
                         style: Theme.of(context).textTheme.titleLarge!),
                   ),
                   Container(
@@ -114,7 +97,7 @@ class PaymentComplete extends StatelessWidget {
                   ]),
                   Container(
                     margin: const EdgeInsets.only(top: 30),
-                    child: Text("Transaction Synced Successfully!",
+                    child: Text("Transaction Certificate Synced Successfully!",
                         style: Theme.of(context).textTheme.titleMedium),
                   ),
                   Container(
@@ -162,20 +145,6 @@ class PaymentComplete extends StatelessWidget {
             Positioned(
               top: 100,
               child: Container(child: Utils.background),
-            ),
-            Container(
-              child: Expanded(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(),
-                    child: CustomActionButton(
-                      label: "Show Certificate",
-                      onClick: onClick,
-                    ),
-                  ),
-                ),
-              ),
             ),
           ],
         ),

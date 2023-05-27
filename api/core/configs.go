@@ -234,7 +234,7 @@ func LoadConfig() {
 		LoadConfigWithMode(mode)
 	}
 
-	if mode == "test" || mode == "ci-test" || mode == "dev" {
+	if mode == "test" || mode == "ci-test" || mode == "dev" || mode == "staging-remote" {
 		telemetry.InitTestGinzap()
 	} else {
 		telemetry.InitGinzap(Configs.LOKI_ADDRESS(), Configs.SERVER_NAME)
