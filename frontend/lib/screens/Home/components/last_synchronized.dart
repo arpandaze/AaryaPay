@@ -25,6 +25,11 @@ class LastSynchronized extends StatelessWidget {
             builder: (context, state) {
               return Container(
                 decoration: BoxDecoration(
+                  gradient: const SweepGradient(
+                    colors: [Color(0xff274233), Color(0xff39a669)],
+                    stops: [0, 1],
+                    center: Alignment.topRight,
+                  ),
                   border: Border.all(color: const Color(0x20000000)),
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                 ),
@@ -43,7 +48,7 @@ class LastSynchronized extends StatelessWidget {
                         Text(
                           "Unverified Transactions",
                           style: textTheme.titleMedium!.merge(
-                              TextStyle(color: colorScheme.onBackground)),
+                              TextStyle(color: colorScheme.background)),
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -54,13 +59,20 @@ class LastSynchronized extends StatelessWidget {
                                   .textTheme
                                   .labelLarge!
                                   .merge(
-                                      const TextStyle(fontSize: 65, height: 0)),
+                                      const TextStyle(
+                                      color: Color(0xffffffff),
+                                      fontSize: 65,
+                                      height: 0)),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10),
                               child: Text(
+                                
                                 "Transactions",
-                                style: Theme.of(context).textTheme.bodyLarge,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .merge(TextStyle(color: Colors.white)),
                               ),
                             )
                           ],
@@ -68,7 +80,7 @@ class LastSynchronized extends StatelessWidget {
                         Text(
                           "12/04/2023 5:45 pm",
                           style: textTheme.bodyLarge!
-                              .merge(TextStyle(color: colorScheme.outline)),
+                              .merge(TextStyle(color: colorScheme.background)),
                         ),
                       ],
                     ),
@@ -84,7 +96,7 @@ class LastSynchronized extends StatelessWidget {
                               child: SvgPicture.asset(
                                 "assets/icons/rupee.svg",
                                 colorFilter: ColorFilter.mode(
-                                    Theme.of(context).colorScheme.onBackground,
+                                    Theme.of(context).colorScheme.background,
                                     BlendMode.srcIn),
                                 width: 40,
                                 height: 40,
@@ -96,7 +108,10 @@ class LastSynchronized extends StatelessWidget {
                                   .textTheme
                                   .labelLarge!
                                   .merge(
-                                    const TextStyle(fontSize: 45, height: 0),
+                                        const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 45,
+                                            height: 0),
                                   ),
                             ),
                           ],
@@ -105,12 +120,18 @@ class LastSynchronized extends StatelessWidget {
                           width: size.width * 0.22,
                           height: size.height * 0.04,
                           label: "Sync",
+                          color: Colors.white,
                           onTap: () => context
                               .read<TopBarBloc>()
                               .add(SyncingEvent(syncing: !state.syncing)),
                           textStyle: textTheme.labelMedium!
-                              .merge(const TextStyle(fontSize: 14, height: 0)),
+                              .merge(
+                              const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  height: 0)),
                           widget: CustomSyncRotation(
+                              color: Colors.white,
                               size: 17, syncing: state.syncing),
                         ),
                       ],
