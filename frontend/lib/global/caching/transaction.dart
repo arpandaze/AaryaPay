@@ -126,7 +126,11 @@ class Transaction {
   }
 
   DateTime get generationTime {
-    return senderTvc!.timeStamp;
+    if (isSubmitted) {
+      return senderTvc!.timeStamp;
+    } else {
+      return authorizationMessage!.timeStamp;
+    }
   }
 
   factory Transaction.fromJson(Map<String, dynamic> json, UuidValue userId) {
