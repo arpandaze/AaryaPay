@@ -113,6 +113,8 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       };
 
       response = await httpclient.post(url, headers: headers, body: body);
+      print(response.statusCode);
+      print(response.body);
     }
 
     if (response.statusCode != 202) {
@@ -154,6 +156,11 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       );
 
       newState.save(storage);
+      print(transactions.transactions.last.amount);
+      print(transactions.transactions.last.receiverFirstName);
+      print(transactions.transactions.last.senderFirstName);
+      print(bkvc.availableBalance);
+      print(bkvc.timeStamp);
 
       Transaction latestTransaction = await transactions.getLatest();
       emit(

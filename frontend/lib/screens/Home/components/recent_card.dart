@@ -79,6 +79,7 @@ class RecentCard extends StatelessWidget {
                       );
                     }
                   },
+                  buildWhen: (previous, current) => previous != current,
                   builder: (context, state) {
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 8),
@@ -143,8 +144,11 @@ class RecentCard extends StatelessWidget {
                                                       .add(ClearLoadedUser());
                                                 },
                                                 child: RecentPaymentCard(
-                                                  uuid: item.receiverId
-                                                      .toString(),
+                                                  uuid: !item.isDebit
+                                                      ? item.receiverId
+                                                          .toString()
+                                                      : item.senderId
+                                                          .toString(),
                                                   isDebit: item.isDebit,
                                                   label: !item.isDebit
                                                       ? "${item.receiverFirstName!} ${item.receiverLastName!}"
@@ -173,7 +177,7 @@ class RecentCard extends StatelessWidget {
                   },
                 ),
               )
-            : const Center(child: CircularProgressIndicator());
+            : const CircularProgressIndicator();
       },
     );
   }
