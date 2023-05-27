@@ -19,8 +19,7 @@ class TransactionHistory extends StatelessWidget {
       },
       builder: (context, dataState) {
         return BlocProvider(
-          create: (context) => TranscationBloc()
-            ..add(LoadTransaction(transactions: dataState.transactions)),
+          create: (context) => TranscationBloc(),
           child: BlocConsumer<TranscationBloc, TranscationState>(
             listener: (context, state) => {
               if (state.senderName != null &&
@@ -96,18 +95,11 @@ class TransactionHistory extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Container(
-                        //   padding: const EdgeInsets.symmetric(vertical: 15),
-                        //   child: Text(
-                        //     "Transaction History",
-                        //     style: Theme.of(context).textTheme.titleLarge,
-                        //   ),
-                        // ),
                         Container(
                           margin: const EdgeInsets.only(top: 10.0),
                           child: Column(children: [
-                            if (state.loaded)
-                              ...state.transactionHistory!
+                            if (dataState.isLoaded)
+                              ...dataState.transactions.transactions
                                   .map((item) => GestureDetector(
                                         onTapDown: (details) => {
                                           context.read<TranscationBloc>().add(
@@ -141,7 +133,7 @@ class TransactionHistory extends StatelessWidget {
                                       ))
                                   .toList()
                                   ,
-                            if (!(state.loaded))
+                            if (!(dataState.isLoaded))
                               const CircularProgressIndicator(),
                           ]),
                         )

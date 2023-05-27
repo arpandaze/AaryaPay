@@ -17,28 +17,36 @@ class HomeScreen extends StatelessWidget {
       onRefresh: () async {
         context.read<DataBloc>().add(RequestSyncEvent());
       },
-      child: GestureDetector(
-        child: Container(
-          clipBehavior: Clip.hardEdge,
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(35),
-              topRight: Radius.circular(35),
+      child: BlocConsumer<DataBloc, DataState>(
+        listener: (context, state) {
+        },
+        listenWhen: (previous, current) => previous != current,
+        buildWhen: (previous, current) => previous != current,
+        builder: (context, state) {
+          return GestureDetector(
+            child: Container(
+              clipBehavior: Clip.hardEdge,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(35),
+                  topRight: Radius.circular(35),
+                ),
+                color: Color(0xfff4f6f4),
+              ),
+              child: const SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Favourites(),
+                    LastSynchronized(),
+                    RecentCard(),
+                  ],
+                ),
+              ),
             ),
-            color: Color(0xfff4f6f4),
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                Favourites(),
-                LastSynchronized(),
-                RecentCard(),
-              ],
-            ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

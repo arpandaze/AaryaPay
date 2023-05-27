@@ -43,6 +43,10 @@ class Transactions {
     return transactions.where((element) => !element.isSubmitted).toList();
   }
 
+  int unsubmittedTransactionsLength() {
+    return transactions.where((element) => !element.isSubmitted).length;
+  }
+
   Future<List<Transaction>> getSubmittedTransactions() async {
     return transactions.where((element) => element.isSubmitted).toList();
   }
