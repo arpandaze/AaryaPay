@@ -15,14 +15,20 @@ class CheckInternet extends DataEvent {}
 
 class SubmitTAMEvent extends DataEvent {
   final TransactionAuthorizationMessage tam;
-
-  const SubmitTAMEvent(this.tam);
+  final bool ticking;
+  const SubmitTAMEvent(this.tam, {this.ticking = true});
 
   @override
-  List<Object> get props => [tam];
+  List<Object> get props => [tam, ticking];
 }
 
-class TimerUp extends DataEvent {}
+class TimerUp extends DataEvent {
+  final bool ticking;
+  const TimerUp(this.ticking);
+
+  @override
+  List<Object> get props => [ticking];
+}
 
 class SubmitTVCEvent extends DataEvent {
   final TransactionVerificationCertificate tvc;

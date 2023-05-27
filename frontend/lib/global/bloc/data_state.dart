@@ -4,6 +4,7 @@ enum GoToScreen {
   unknown,
   offlineTrans,
   onlineTrans,
+  recOfflineTrans,
 }
 
 class DataState extends Equatable {

@@ -36,14 +36,25 @@ class DataBloc extends Bloc<DataEvent, DataState> {
 
   Future<void> _onTimerUp(TimerUp event, Emitter<DataState> emit) async {
     print("3 seconds up");
+    print(state.tamStatus);
 
-    if (state.tamStatus == TAMStatus.initiated) {
-      emit(state.copyWith(goToScreen: GoToScreen.offlineTrans));
+    if (event.ticking) {
+      if (state.tamStatus == TAMStatus.initiated) {
+        emit(state.copyWith(goToScreen: GoToScreen.offlineTrans));
+      }
+      if (state.tamStatus == TAMStatus.completed) {
+        emit(state.copyWith(goToScreen: GoToScreen.onlineTrans));
+      }
+    } else {
+      if (state.tamStatus == TAMStatus.initiated) {
+        emit(state.copyWith(goToScreen: GoToScreen.recOfflineTrans));
+      }
+      if (state.tamStatus == TAMStatus.completed) {
+        emit(state.copyWith(goToScreen: GoToScreen.onlineTrans));
+      }
     }
-    if (state.tamStatus == TAMStatus.completed) {
-      emit(state.copyWith(goToScreen: GoToScreen.onlineTrans));
-    }
-    emit(state.copyWith(tamStatus: TAMStatus.other));
+    emit(state.copyWith(
+        tamStatus: TAMStatus.other, goToScreen: GoToScreen.unknown));
     return;
   }
 
@@ -78,10 +89,6 @@ class DataBloc extends Bloc<DataEvent, DataState> {
 
     var transactionToSubmit =
         await state.transactions.getUnsubmittedTransactions();
-    print(transactionToSubmit);
-
-    var latest = await state.transactions.getLatest();
-    emit(state.copyWith(latestTransaction: latest));
 
     final headers = {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -173,17 +180,18 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     Emitter<DataState> emit,
   ) async {
     emit(state.copyWith(tamStatus: TAMStatus.initiated));
-    print("Data bloc TAM");
     var transaction = Transaction(
       authorizationMessage: event.tam,
       credit: event.tam.to == state.bkvc!.userID,
     );
 
+    emit(state.copyWith(latestTransaction: transaction));
+
     var newTransactions = Transactions(
       transactions: [...state.transactions.transactions, transaction],
     );
     print(newTransactions.toJson());
-    print("Latest Transaction ${transaction}");
+
     DataState newState = state.copyWith(
       transactions: newTransactions,
     );
@@ -191,7 +199,8 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     newState.save(storage);
     emit(newState);
     add(RequestSyncEvent());
-    Timer(Duration(seconds: 3), () => {add(TimerUp())});
+
+    Timer(Duration(seconds: 3), () => {add(TimerUp(event.ticking))});
   }
 
   Future<void> _onSubmitTVC(
