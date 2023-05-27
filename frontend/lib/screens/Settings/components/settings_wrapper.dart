@@ -25,6 +25,7 @@ class SettingsWrapper extends StatelessWidget {
         height: size.height,
         child: Scaffold(
           bottomNavigationBar: const SettingsBottomBar(),
+          backgroundColor: Theme.of(context).colorScheme.background,
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(150),
             child: SettingsTopBar(

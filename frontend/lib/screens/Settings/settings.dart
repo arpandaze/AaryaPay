@@ -7,6 +7,7 @@ import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Home/components/favourites.dart';
 import 'package:aaryapay/screens/Login/components/login_wrapper.dart';
 import 'package:aaryapay/screens/Settings/AccountInformation/account_information.dart';
+import 'package:aaryapay/screens/Settings/Biometric/biometric.dart';
 import 'package:aaryapay/screens/Settings/Favourites/favourites_screen.dart';
 import 'package:aaryapay/screens/Settings/Password/password_screen.dart';
 import 'package:aaryapay/screens/Settings/Synchronization/synchronization_screen.dart';
@@ -215,6 +216,54 @@ class Settings extends StatelessWidget {
             height: 20,
           ),
           label: "Synchronization",
+          trailingWidget: const CustomArrowedButton(),
+        ),
+        MenuItemModal(
+          onTap: () => {
+            Utils.mainAppNav.currentState!.push(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    const SynchronizationScreen(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  final curve = CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.decelerate,
+                  );
+
+                  return Stack(
+                    children: [
+                      FadeTransition(
+                        opacity: Tween<double>(
+                          begin: 1.0,
+                          end: 0.0,
+                        ).animate(curve),
+                      ),
+                      SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0.0, 1.0),
+                          end: Offset.zero,
+                        ).animate(curve),
+                        child: FadeTransition(
+                          opacity: Tween<double>(
+                            begin: 0.0,
+                            end: 1.0,
+                          ).animate(curve),
+                          child: const BiometricScreen(),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          },
+          icon: SvgPicture.asset(
+            "assets/icons/sync.svg",
+            width: 20,
+            height: 20,
+          ),
+          label: "Enable Bio-metric Login",
           trailingWidget: const CustomArrowedButton(),
         ),
         // MenuItemModal(
