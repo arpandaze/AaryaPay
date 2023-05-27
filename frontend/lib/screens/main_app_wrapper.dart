@@ -16,7 +16,6 @@ class MainAppWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
-      top: true,
       left: true,
       right: true,
       bottom: true,
@@ -25,10 +24,10 @@ class MainAppWrapper extends StatelessWidget {
         height: size.height,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.primary,
-          gradient: const SweepGradient(
-            colors: [Color(0xff274233), Color(0xff39a669)],
-            stops: [0, 1],
-            center: Alignment.topRight,
+          gradient: const RadialGradient(
+            colors: [Color(0xff274233), Color.fromARGB(255, 72, 131, 98)],
+            center: Alignment.topLeft,
+            radius: 2,
           ),
         ),
         child: Scaffold(

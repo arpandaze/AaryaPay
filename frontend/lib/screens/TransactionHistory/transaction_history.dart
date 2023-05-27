@@ -16,7 +16,6 @@ class TransactionHistory extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return BlocConsumer<DataBloc, DataState>(
       listener: (context, dataState) {
-        // TODO: implement listener
       },
       builder: (context, dataState) {
         return BlocProvider(

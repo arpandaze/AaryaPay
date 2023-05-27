@@ -4,8 +4,10 @@ import 'package:flutter_svg/svg.dart';
 class CustomSyncRotation extends StatefulWidget {
   final bool? syncing;
   final double size;
+  final Color color;
 
-  const CustomSyncRotation({super.key, this.size = 14, this.syncing});
+  const CustomSyncRotation(
+      {super.key, this.size = 14, this.color = Colors.black, this.syncing});
   @override
   _CustomSyncRotationState createState() => _CustomSyncRotationState();
 }
@@ -45,6 +47,7 @@ class _CustomSyncRotationState extends State<CustomSyncRotation>
         "assets/icons/sync.svg",
         width: widget.size,
         height: widget.size,
+        colorFilter: ColorFilter.mode(widget.color, BlendMode.srcIn),
       ),
     );
   }

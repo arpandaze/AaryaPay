@@ -87,23 +87,6 @@ class TopBar extends StatelessWidget {
                                 height: 20,
                               ),
                             ),
-                            SizedBox(
-                              // width: size.width * 0.45,
-                              child: Text(
-                                !state.hide
-                                    ? dataState.bkvc?.availableBalance
-                                            .toString() ??
-                                        "1200"
-                                    : "XXX.XXX",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelLarge!
-                                    .merge(TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary)),
-                              ),
-                            ),
                             GestureDetector(
                               onTap: () => {
                                 context
@@ -111,9 +94,13 @@ class TopBar extends StatelessWidget {
                                     .add(EyeTapped(tapped: !state.hide)),
                               },
                               child: SizedBox(
-                                // width: size.width * 0.45,
+                                width: size.width * 0.45,
                                 child: Text(
-                                  !state.hide ? state.amount : "XXX.XXX",
+                                  !state.hide
+                                      ? dataState.bkvc?.availableBalance
+                                              .toString() ??
+                                          "1200"
+                                      : "XXX.XXX",
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelLarge!
