@@ -42,23 +42,28 @@ class QrScannerBloc extends Bloc<QrScannerEvent, QrScannerState> {
 
         print("Verified ${await tam.verify()}");
         if (await tam.verify()) {
-          emit(state.copyWith(tam: tam, codeType: CodeType.TAM));
+          emit(state.copyWith(
+              isScanned: true,
+              code: event.code,
+              tam: tam,
+              codeType: CodeType.TAM));
         } else {
           throw Exception("Not a TAM");
         }
       } on Exception {
         print("Exception Occurs");
         try {
-          print("tvc scanned");
-
           TransactionVerificationCertificate tvc =
               TransactionVerificationCertificate.fromBase64(
                   utf8.decode(event.code));
-          print("tvc scanned");
           print(tvc);
           print(utf8.decode(event.code));
 
-          emit(state.copyWith(tvc: tvc, codeType: CodeType.TVC));
+          emit(state.copyWith(
+              isScanned: true,
+              code: event.code,
+              tvc: tvc,
+              codeType: CodeType.TVC));
         } on Exception {
           var decodedCode = jsonDecode(utf8.decode(event.code));
           if (decodedCode.containsKey('id') &&
@@ -66,15 +71,13 @@ class QrScannerBloc extends Bloc<QrScannerEvent, QrScannerState> {
               decodedCode.containsKey('lastName')) {
             emit(state.copyWith(codeType: CodeType.user));
           } else {
-            emit(state.copyWith(codeType: CodeType.other));
+            emit(state.copyWith(
+                isScanned: true, code: event.code, codeType: CodeType.other));
           }
         }
       }
-      emit(state.copyWith(code: event.code));
-      if (state.code != null) {
-        emit(state.copyWith(isScanned: true));
-      }
-      emit(state.copyWith(scannedOnce: false));
+      emit(state.copyWith(
+          scannedOnce: false, isScanned: false, codeType: CodeType.other));
     }
   }
 

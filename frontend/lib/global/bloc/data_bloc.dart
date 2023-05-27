@@ -200,35 +200,77 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     Emitter<DataState> emit,
   ) async {
     Transaction? transaction;
+    var serverKey = keyPairFromBase64(serverKeyPair);
 
-    bool verified = await event.tvc.verify(state.serverPublicKey!);
+    var serverPublic = await serverKey.extractPublicKey();
+    bool verified = await event.tvc.verify(serverPublic);
+
+    if (event.tvc.bkvc.userID != state.bkvc!.userID) {
+      throw Exception('TVC is not for this user!');
+    }
 
     if (!verified) {
       throw Exception('TVC could not be verified!');
     }
 
-    if (event.tvc.from != state.bkvc!.userID) {
-      transaction = Transaction(
-        receiverTvc: event.tvc,
-        credit: true,
+    var credit = event.tvc.from != state.bkvc!.userID;
+
+    bool alreadyExists = await state.transactions
+        .checkAlreadyExists(event.tvc.timeStamp, event.tvc.amount);
+
+    Transactions newTransactions;
+    if (alreadyExists) {
+      newTransactions = Transactions(
+        transactions: [...state.transactions.transactions],
       );
+
+      var specificTransaction =
+          newTransactions.transactions.firstWhere((element) {
+        return element.generationTime == event.tvc.timeStamp &&
+            element.amount == event.tvc.amount;
+      });
+
+      if (credit) {
+        specificTransaction.receiverTvc = event.tvc;
+      } else {
+        specificTransaction.senderTvc = event.tvc;
+      }
     } else {
-      transaction = Transaction(
-        senderTvc: event.tvc,
-        credit: false,
+      if (credit) {
+        transaction = Transaction(
+          receiverTvc: event.tvc,
+          credit: credit,
+        );
+      } else {
+        transaction = Transaction(
+          senderTvc: event.tvc,
+          credit: credit,
+        );
+      }
+
+      newTransactions = Transactions(
+        transactions: [...state.transactions.transactions, transaction],
       );
     }
 
-    var newTransactions = Transactions(
-      transactions: [...state.transactions.transactions, transaction],
-    );
+    BalanceKeyVerificationCertificate newBKVC;
+    if (event.tvc.bkvc.timeStamp.isAfter(state.bkvc!.timeStamp)) {
+      newBKVC = event.tvc.bkvc;
+    } else {
+      newBKVC = state.bkvc!;
+    }
 
     DataState newState = state.copyWith(
       transactions: newTransactions,
+      bkvc: newBKVC,
+      goToScreen: GoToScreen.tvcSuccess,
     );
 
     newState.save(storage);
     emit(newState);
+    emit(state.copyWith(
+      goToScreen: GoToScreen.unknown,
+    ));
   }
 
   Future<void> _onUpdateServerKey(
