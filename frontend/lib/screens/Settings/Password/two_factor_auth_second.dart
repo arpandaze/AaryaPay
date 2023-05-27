@@ -47,12 +47,7 @@ class TwoFactorAuthSecond extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Container(
                     height: size.height * 0.3,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        fit: BoxFit.contain,
-                        image: AssetImage("assets/images/logo.png"),
-                      ),
-                    ),
+                    child: Utils.mainlogo,
                   ),
                 ),
                 SizedBox(

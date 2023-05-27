@@ -142,7 +142,6 @@ class SendMoney extends StatelessWidget {
             ),
           );
         }
-        // TODO: implement listener
       },
       builder: (context, dataState) {
         double sentAmount = dataState.transactions.getSentAmount();
@@ -179,7 +178,10 @@ class SendMoney extends StatelessWidget {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: GestureDetector(
-                              onTap: () => Navigator.pop(context),
+                              onTap: () =>
+                                  Utils.mainAppNav.currentState!.popUntil(
+                                ModalRoute.withName("/app"),
+                              ),
                               child: Container(
                                 padding: const EdgeInsets.all(15),
                                 decoration: BoxDecoration(
@@ -214,47 +216,42 @@ class SendMoney extends StatelessWidget {
                     BalanceBox(
                       balance: displayAmount.toString(),
                     ),
-                    SingleChildScrollView(
-                      child: Column(
+                    Container(
+                      constraints:
+                          BoxConstraints(maxHeight: size.height * 0.07),
+                      height: size.height * 0.07,
+                      margin: const EdgeInsets.fromLTRB(50, 30, 50, 0),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                              width: 2.0,
+                              color: Theme.of(context).colorScheme.outline),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
-                            padding: const EdgeInsets.all(15),
-                            margin: const EdgeInsets.fromLTRB(50, 30, 50, 0),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                    width: 2.0,
-                                    color:
-                                        Theme.of(context).colorScheme.outline),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/icons/rupee.svg',
-                                  width: 30,
-                                  height: 30,
-                                  colorFilter: const ColorFilter.mode(
-                                      Color(0xff274233), BlendMode.srcIn),
-                                ),
-                                Container(
-                                    constraints: BoxConstraints(
-                                        maxWidth: size.width * 0.55),
-                                    margin: const EdgeInsets.only(left: 15),
-                                    child: Text(state.displayAmount,
-                                        textDirection: TextDirection.ltr,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .displaySmall!
-                                            .merge(TextStyle(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary)))),
-                              ],
-                            ),
+                          SvgPicture.asset(
+                            'assets/icons/rupee.svg',
+                            width: 30,
+                            height: 30,
+                            colorFilter: const ColorFilter.mode(
+                                Color(0xff274233), BlendMode.srcIn),
                           ),
+                          Container(
+                              constraints:
+                                  BoxConstraints(maxWidth: size.width * 0.55),
+                              margin: const EdgeInsets.only(left: 15),
+                              child: Text(state.displayAmount,
+                                  textDirection: TextDirection.ltr,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall!
+                                      .merge(TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary)))),
                         ],
                       ),
                     ),
@@ -264,8 +261,9 @@ class SendMoney extends StatelessWidget {
                   bottom: 0,
                   child: Container(
                     width: size.width,
+                    constraints: BoxConstraints(maxHeight: size.height * 0.6),
                     padding: const EdgeInsets.only(
-                        top: 20.0, bottom: 30.0, left: 10.0, right: 10.0),
+                        top: 10.0, bottom: 20.0, left: 10.0, right: 10.0),
                     decoration: BoxDecoration(
                         border: Border.all(
                             color: Theme.of(context).colorScheme.outline,

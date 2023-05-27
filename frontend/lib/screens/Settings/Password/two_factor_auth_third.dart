@@ -27,12 +27,7 @@ class TwoFactorAuthThird extends StatelessWidget {
                 //     border: Border.all(color: Colors.cyanAccent)),
                 child: Container(
                   height: size.height * 0.3,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      fit: BoxFit.contain,
-                      image: AssetImage("assets/images/logo.png"),
-                    ),
-                  ),
+                  child: Utils.mainlogo,
                 ),
               ),
               Column(
