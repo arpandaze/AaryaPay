@@ -167,6 +167,7 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
 
         emit(state.copyWith(tam: transferTAM, tamStatus: TAMStatus.generated));
       }
+      emit(state.copyWith(tamStatus: TAMStatus.other));
     }
   }
 

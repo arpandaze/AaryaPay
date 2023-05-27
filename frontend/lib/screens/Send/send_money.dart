@@ -48,12 +48,19 @@ class SendMoney extends StatelessWidget {
 
   Widget body(Size size, BuildContext context) {
     return BlocConsumer<DataBloc, DataState>(
+      listenWhen: (previous, current) =>
+          previous.goToScreen != current.goToScreen,
       listener: (context, dataState) {
+        print(dataState.profile!.firstName);
         if (dataState.goToScreen == GoToScreen.offlineTrans) {
           Utils.mainAppNav.currentState!.push(
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
-                  OfflineSend(),
+                  OfflineSend(
+                name:
+                    "${dataState.profile!.firstName} ${dataState.profile!.lastName}",
+                transaction: dataState.latestTransaction,
+              ),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
                 final curve = CurvedAnimation(
@@ -79,7 +86,10 @@ class SendMoney extends StatelessWidget {
                           begin: 0.0,
                           end: 1.0,
                         ).animate(curve),
-                        child: OfflineSend(),
+                        child: OfflineSend(
+                            name:
+                                "${dataState.profile!.firstName} ${dataState.profile!.lastName}",
+                            transaction: dataState.latestTransaction),
                       ),
                     ),
                   ],
@@ -92,7 +102,10 @@ class SendMoney extends StatelessWidget {
           Utils.mainAppNav.currentState!.push(
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
-                  PaymentComplete(tvc: dataState.latestTransaction!),
+                  PaymentComplete(
+                transaction: dataState.latestTransaction!,
+                sender: true,
+              ),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
                 final curve = CurvedAnimation(
@@ -118,8 +131,10 @@ class SendMoney extends StatelessWidget {
                           begin: 0.0,
                           end: 1.0,
                         ).animate(curve),
-                        child:
-                            PaymentComplete(tvc: dataState.latestTransaction!),
+                        child: PaymentComplete(
+                          transaction: dataState.latestTransaction!,
+                          sender: true,
+                        ),
                       ),
                     ),
                   ],
@@ -132,6 +147,8 @@ class SendMoney extends StatelessWidget {
       },
       builder: (context, dataState) {
         return BlocConsumer<SendMoneyBloc, SendMoneyState>(
+          listenWhen: (previous, current) =>
+              previous.tamStatus != current.tamStatus,
           listener: (context, state) => {
             if (state.tamStatus == TAMStatus.generated)
               {
