@@ -263,7 +263,7 @@ class SendMoney extends StatelessWidget {
                   ],
                 ),
                 Positioned(
-                  bottom: 0,
+                  bottom: 50,
                   child: Container(
                     width: size.width,
                     constraints: BoxConstraints(maxHeight: size.height * 0.6),
@@ -354,6 +354,7 @@ class SendMoney extends StatelessWidget {
                             width: size.width * 0.7,
                             borderRadius: 10,
                             onClick: () => {
+                              print("Send"),
                               context.read<SendMoneyBloc>().add(
                                     SubmitTransfer(
                                       UuidValue.fromList(Uuid.parse(uuid!)),

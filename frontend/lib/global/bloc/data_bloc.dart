@@ -62,7 +62,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     if (state.isOnline != isOnline) {
       emit(state.copyWith(isOnline: isOnline));
 
-      if (state.isOnline){
+      if (state.isOnline) {
         add(RequestSyncEvent());
       }
     }
@@ -112,12 +112,8 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       var body = {
         "transactions": "{'data' : $base64Transactions}",
       };
-      print(body);
       response =
           await httpclient.post(url, headers: headers, body: jsonEncode(body));
-
-      print("Transaction Submitted Response");
-      print(response.statusCode);
     }
 
     if (response.statusCode != 202) {
@@ -156,9 +152,11 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       );
 
       newState.save(storage);
-
-      Transaction latestTransaction = await transactions.getLatest();
-
+      print(transactions.transactions.last.amount);
+      print(transactions.transactions.last.receiverFirstName);
+      print(transactions.transactions.last.senderFirstName);
+      print(bkvc.availableBalance);
+      print(bkvc.timeStamp);
       emit(
         state.copyWith(
           profile: profile,
@@ -169,7 +167,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
           serverPublicKey: state.serverPublicKey,
           sessionToken: state.sessionToken,
           isLoaded: true,
-          latestTransaction: latestTransaction,
+          latestTransaction: transactions.transactions.last,
         ),
       );
     }
@@ -179,12 +177,14 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     SubmitTAMEvent event,
     Emitter<DataState> emit,
   ) async {
+    print("Submit TAM");
+
     emit(state.copyWith(tamStatus: TAMStatus.initiated));
     var transaction = Transaction(
       authorizationMessage: event.tam,
       credit: event.tam.to == state.bkvc!.userID,
     );
-
+    print(transaction.amount);
     emit(state.copyWith(latestTransaction: transaction));
 
     var newTransactions = Transactions(
@@ -199,7 +199,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     emit(newState);
     add(RequestSyncEvent());
 
-    Timer(Duration(seconds: 4), () => {add(TimerUp(event.ticking))});
+    Timer(Duration(seconds: 1), () => {add(TimerUp(event.ticking))});
   }
 
   Future<void> _onSubmitTVC(
