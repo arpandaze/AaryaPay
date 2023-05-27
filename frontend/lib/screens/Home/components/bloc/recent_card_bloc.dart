@@ -21,7 +21,6 @@ class RecentCardBloc extends Bloc<RecentCardEvent, RecentCardState> {
           transactionHistory: event.transactions, isLoaded: true));
     } catch (e) {
       emit(state.copywith(isLoaded: false));
-      print("Error: $e");
     }
   }
 
@@ -30,7 +29,9 @@ class RecentCardBloc extends Bloc<RecentCardEvent, RecentCardState> {
     emit(state.copywith(
         senderName: event.senderID,
         receiverName: event.receiverID,
-        item: event.item));
+        item: event.item,
+      ),
+    );
   }
 
   void _onClearLoadedUser(

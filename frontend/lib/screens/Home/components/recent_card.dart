@@ -29,7 +29,6 @@ class RecentCard extends StatelessWidget {
                     if (state.senderName != null &&
                         state.receiverName != null &&
                         state.item != null) {
-                      print(state.item);
                       Utils.mainAppNav.currentState!.push(
                         PageRouteBuilder(
                           pageBuilder: (context, animation1, animation2) =>
@@ -137,9 +136,11 @@ class RecentCard extends StatelessWidget {
                                                         ),
                                                       ),
                                                 },
-                                                onTap: () => context
-                                                    .read<RecentCardBloc>()
-                                                    .add(ClearLoadedUser()),
+                                                onTapUp: (details) {
+                                                  context
+                                                      .read<RecentCardBloc>()
+                                                      .add(ClearLoadedUser());
+                                                },
                                                 child: RecentPaymentCard(
                                                   uuid: item.receiverId
                                                       .toString(),
