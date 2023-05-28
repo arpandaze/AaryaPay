@@ -20,108 +20,134 @@ class Favourites extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return BlocConsumer<DataBloc, DataState>(
       listener: (context, dataState) {
-        print("loaded: ${dataState.isLoaded}");
-        print(dataState.favorites.last.id);
       },
       buildWhen: (previous, current) => previous != current,
       builder: (context, dataState) {
-        return dataState.isLoaded
-            ? BlocProvider<HomeFavoritesBloc>(
-                create: (context) {
-                  return HomeFavoritesBloc();
-                },
-                child: BlocConsumer<HomeFavoritesBloc, HomeFavoritesState>(
-                  listener: (context, state) {
-                    if (state.particularUser != null) {
-                      Utils.mainAppNav.currentState!.push(
-                        PageRouteBuilder(
-                          pageBuilder:
-                              (context, animation, secondaryAnimation) =>
-                                  SendMoney(
-                            uuid: state.particularUser!['id'],
-                            firstname: state.particularUser!['first_name'],
-                            lastname: state.particularUser!['last_name'],
-                            displayAmount: state.displayAmount!,
-                          ),
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) {
-                            final curve = CurvedAnimation(
-                              parent: animation,
-                              curve: Curves.decelerate,
-                            );
+        return Container(
+          width: size.width,
+          margin: const EdgeInsets.only(top: 15, left: 10, right: 10),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8,
+            vertical: 20,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Favorites",
+                    style: textTheme.titleLarge,
+                  ),
+                ],
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 25, bottom: 10),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTapDown: (details) =>
+                            Utils.mainAppNav.currentState!.push(
+                          PageRouteBuilder(
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) =>
+                                    const FavouritesScreen(),
+                            transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) {
+                              final curve = CurvedAnimation(
+                                parent: animation,
+                                curve: Curves.decelerate,
+                              );
 
-                            return Stack(
-                              children: [
-                                FadeTransition(
-                                  opacity: Tween<double>(
-                                    begin: 1.0,
-                                    end: 0.0,
-                                  ).animate(curve),
-                                ),
-                                SlideTransition(
-                                  position: Tween<Offset>(
-                                    begin: const Offset(0.0, 1.0),
-                                    end: Offset.zero,
-                                  ).animate(curve),
-                                  child: FadeTransition(
+                              return Stack(
+                                children: [
+                                  FadeTransition(
                                     opacity: Tween<double>(
-                                      begin: 0.0,
-                                      end: 1.0,
+                                      begin: 1.0,
+                                      end: 0.0,
                                     ).animate(curve),
-                                    child: SendMoney(
-                                      uuid: state.particularUser!['id'],
-                                      firstname:
-                                          state.particularUser!['first_name'],
-                                      lastname:
-                                          state.particularUser!['last_name'],
-                                      displayAmount: dataState.balance.toString(),
+                                  ),
+                                  SlideTransition(
+                                    position: Tween<Offset>(
+                                      begin: const Offset(0.0, 1.0),
+                                      end: Offset.zero,
+                                    ).animate(curve),
+                                    child: FadeTransition(
+                                      opacity: Tween<double>(
+                                        begin: 0.0,
+                                        end: 1.0,
+                                      ).animate(curve),
+                                      child: const FavouritesScreen(),
                                     ),
                                   ),
-                                ),
-                              ],
-                            );
-                          },
+                                ],
+                              );
+                            },
+                          ),
                         ),
-                      );
-                    }
-                  },
-                  builder: (context, state) {
-                    return Container(
-                      width: size.width,
-                      margin:
-                          const EdgeInsets.only(top: 15, left: 10, right: 10),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 20,
-                      ),
-                      // height: size.height * 0.8,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        child: Container(
+                          margin: const EdgeInsets.only(right: 10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                "Favorites",
-                                style: textTheme.titleLarge,
+                              Container(
+                                width: 80,
+                                height: 80,
+                                padding: const EdgeInsets.all(30),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color:
+                                        Theme.of(context).colorScheme.outline,
+                                  ),
+                                ),
+                                child: SvgPicture.asset(
+                                  "assets/icons/plus.svg",
+                                  colorFilter: ColorFilter.mode(
+                                    Theme.of(context).colorScheme.onBackground,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
                               ),
+                              Container(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5),
+                                child: Text(
+                                  "Add Favorite",
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.bodyText2,
+                                ),
+                              )
                             ],
                           ),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 25, bottom: 10),
-                                child: Row(
-                                  children: [
-                                    GestureDetector(
-                                      onTapDown: (details) =>
-                                          Utils.mainAppNav.currentState!.push(
+                        ),
+                      ),
+                      if (dataState.isLoaded && dataState.favorites.isNotEmpty)
+                        ...dataState.favorites
+                            .map(
+                              (item) => BlocProvider(
+                                create: (context) => HomeFavoritesBloc(),
+                                child: BlocConsumer<HomeFavoritesBloc,
+                                    HomeFavoritesState>(
+                                  listener: (context, state) {
+                                    if (state.particularUser != null) {
+                                      Utils.mainAppNav.currentState!.push(
                                         PageRouteBuilder(
                                           pageBuilder: (context, animation,
                                                   secondaryAnimation) =>
-                                              const FavouritesScreen(),
+                                              SendMoney(
+                                            uuid: state.particularUser!['id'],
+                                            firstname: state
+                                                .particularUser!['first_name'],
+                                            lastname: state
+                                                .particularUser!['last_name'],
+                                            displayAmount: state.displayAmount!,
+                                          ),
                                           transitionsBuilder: (context,
                                               animation,
                                               secondaryAnimation,
@@ -150,15 +176,42 @@ class Favourites extends StatelessWidget {
                                                       begin: 0.0,
                                                       end: 1.0,
                                                     ).animate(curve),
-                                                    child:
-                                                        const FavouritesScreen(),
+                                                    child: SendMoney(
+                                                      uuid:
+                                                          state.particularUser![
+                                                              'id'],
+                                                      firstname:
+                                                          state.particularUser![
+                                                              'first_name'],
+                                                      lastname:
+                                                          state.particularUser![
+                                                              'last_name'],
+                                                      displayAmount: dataState
+                                                          .balance
+                                                          .toString(),
+                                                    ),
                                                   ),
                                                 ),
                                               ],
                                             );
                                           },
                                         ),
-                                      ),
+                                      );
+                                    }
+                                  },
+                                  builder: (context, state) {
+                                    return GestureDetector(
+                                      onTapDown: (details) => context
+                                          .read<HomeFavoritesBloc>()
+                                          .add(
+                                            LoadParticularUser(
+                                              uuid: item.id.toString(),
+                                              favorites: dataState.favorites,
+                                            ),
+                                          ),
+                                      onTap: () => context
+                                          .read<HomeFavoritesBloc>()
+                                          .add(ClearEvent()),
                                       child: Container(
                                         margin:
                                             const EdgeInsets.only(right: 10),
@@ -168,33 +221,18 @@ class Favourites extends StatelessWidget {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
-                                            Container(
+                                            imageLoader(
+                                              imageUrl: item.id.toString(),
+                                              shape: ImageType.circle,
                                               width: 80,
                                               height: 80,
-                                              padding: const EdgeInsets.all(30),
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .outline,
-                                                ),
-                                              ),
-                                              child: SvgPicture.asset(
-                                                "assets/icons/plus.svg",
-                                                colorFilter: ColorFilter.mode(
-                                                    Theme.of(context)
-                                                        .colorScheme
-                                                        .onBackground,
-                                                    BlendMode.srcIn),
-                                              ),
                                             ),
                                             Container(
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                       vertical: 5),
                                               child: Text(
-                                                "Add Favorite",
+                                                "${item.firstName} ${item.lastName.length + item.firstName.length > 10 ? "" : item.lastName}",
                                                 textAlign: TextAlign.center,
                                                 style: Theme.of(context)
                                                     .textTheme
@@ -204,68 +242,45 @@ class Favourites extends StatelessWidget {
                                           ],
                                         ),
                                       ),
-                                    ),
-                                    if (dataState.isLoaded)
-                                      ...dataState.favorites.map(
-                                        (item) => GestureDetector(
-                                          onTapDown: (details) => context
-                                              .read<HomeFavoritesBloc>()
-                                              .add(
-                                                LoadParticularUser(
-                                                  uuid: item.id.toString(),
-                                                  favorites:
-                                                      dataState.favorites,
-                                                ),
-                                              ),
-                                          onTap: () => context
-                                              .read<HomeFavoritesBloc>()
-                                              .add(ClearEvent()),
-                                          child: Container(
-                                            margin: const EdgeInsets.only(
-                                                right: 10),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                imageLoader(
-                                                  imageUrl: item.id.toString(),
-                                                  shape: ImageType.circle,
-                                                  width: 80,
-                                                  height: 80,
-                                                ),
-                                                Container(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(vertical: 5),
-                                                  child: Text(
-                                                    "${item.firstName} ${item.lastName.length + item.firstName.length > 10 ? "" : item.lastName}",
-                                                    textAlign: TextAlign.center,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyText2,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ).toList().reversed,
-                                    if (!dataState.isLoaded)
-                                      const CircularLoadingAnimation(
-                                          width: 60, height: 60),
-                                  ],
-                                )),
+                                    );
+                                  },
+                                ),
+                              ),
+                            )
+                            .toList()
+                            .reversed,
+                      if (!dataState.isLoaded && dataState.favorites.isEmpty)
+                          Container(
+                          margin: const EdgeInsets.only(right: 10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.only(right: 30),
+                                child: const CircularLoadingAnimation(width: 80, height: 80),
+                              ),
+                              Container(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5),
+                                child: Text(
+                                  "",
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.bodyText2,
+                                ),
+                              )
+                            ],
                           ),
-                        ],
-                      ),
-                    );
-                  },
+                        ),
+                        
+                                            ],
+                  ),
                 ),
-              )
-            : const CircularLoadingAnimation(width: 60, height: 60);
+              ),
+            ],
+          ),
+        );
       },
     );
   }
 }
-//

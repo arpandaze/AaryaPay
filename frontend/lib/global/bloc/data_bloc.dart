@@ -128,11 +128,14 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     var responseData = jsonDecode(response.body);
 
     if (responseData.containsKey('success')) {
-      List<Favorite> favorites = responseData['favorites']
-          .map<Favorite>(
-            (favorite) => Favorite.fromJson(favorite),
-          )
-          .toList();
+      List<Favorite> favorites = [];
+      if (responseData['favorites'] != null) {
+        favorites = responseData['favorites']
+            .map<Favorite>(
+              (favorite) => Favorite.fromJson(favorite),
+            )
+            .toList();
+      }
       print(responseData['bkvc']);
       BalanceKeyVerificationCertificate bkvc =
           BalanceKeyVerificationCertificate.fromBase64(responseData['bkvc']);
