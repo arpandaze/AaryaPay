@@ -1,23 +1,24 @@
+import 'package:aaryapay/constants.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Send/components/CustomWhiteCircularAvatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class GreenBox extends StatelessWidget {
-  final Widget? photo;
+  final String receiveruuid;
   final String recipient;
   final String sender;
   final String amount;
   final String date;
   final String status;
-  const GreenBox({
-    super.key,
-    this.photo,
-    required this.recipient,
-    required this.amount,
-    required this.date,
-    required this.sender,
-    required this.status,
-  });
+  const GreenBox(
+      {super.key,
+      required this.recipient,
+      required this.amount,
+      required this.date,
+      required this.sender,
+      required this.status,
+      required this.receiveruuid});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class GreenBox extends StatelessWidget {
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 5,
             blurRadius: 7,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -47,11 +48,19 @@ class GreenBox extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    photo ??
-                        const CustomWhiteCircularAvatar(
-                          size: 30,
-                          imageSrc: AssetImage("assets/images/pfp.jpg"),
+                    imageLoader(
+                      imageUrl: receiveruuid,
+                      shape: ImageType.circle,
+                      errorImage: Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image:
+                                  AssetImage("assets/images/default-pfp.png")),
                         ),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
@@ -73,13 +82,15 @@ class GreenBox extends StatelessWidget {
                           ),
                           SizedBox(
                             width: 180,
-                            child: Text(recipient,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium!
-                                    .merge(TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
+                            child: Text(
+                              recipient,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .merge(
+                                    TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
                                           .background,
                                     ),
                                   ),

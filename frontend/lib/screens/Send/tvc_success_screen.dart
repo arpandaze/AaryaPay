@@ -124,6 +124,7 @@ class TVCSuccess extends StatelessWidget {
                     ),
                   ),
                   GreenBox(
+                      receiveruuid: transaction.receiverId.toString(),
                       recipient:
                           "${transaction.receiverFirstName} ${transaction.receiverLastName}",
                       amount: transaction.amount.toString(),
