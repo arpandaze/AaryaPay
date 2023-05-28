@@ -159,11 +159,21 @@ class PaymentsMidSectionCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        senderName,
+                        "From: $senderName",
                         style: textTheme.bodyLarge!.merge(
-                            const TextStyle(fontWeight: FontWeight.w800)),
+                          const TextStyle(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                       ),
-                      Text(sender)
+                      Text(
+                        "To: $sender",
+                        style: textTheme.bodyLarge!.merge(
+                          const TextStyle(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      )
                     ],
                   )
                 ],
