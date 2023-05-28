@@ -5,6 +5,7 @@ import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/SplashScreen/splash_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -59,22 +60,36 @@ class SplashScreen extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .displaySmall!
-                                .merge(
-                                    const TextStyle(fontWeight: FontWeight.w800)),
+                                .merge(const TextStyle(
+                                    fontWeight: FontWeight.w800)),
                           ),
                         ),
+
+                        //add svg icon with gesture detector
                         dataState.isLoaded == true
-                            ? CustomActionButton(
-                                width: size.width * 0.60,
-                                height: size.height * 0.07,
-                                margin: 20,
-                                borderRadius: 10,
-                                label: "Finger",
-                                onClick: () => context
-                                    .read<SplashBloc>()
-                                    .add(InitiateBiometricAuth()),
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Utils.mainAppNav.currentState!
+                                          .pushNamedAndRemoveUntil(
+                                              "/app", (_) => false);
+                                    },
+                                    child: Container(
+                                      margin: const EdgeInsets.only(bottom: 10),
+                                      child: SvgPicture.asset(
+                                        'assets/icons/fingerprint.svg',
+                                        width: 60,
+                                        height: 60,
+                                      ),
+                                    ),
+                                  ),
+                                   Text("Tap to Login", style: Theme.of(context).textTheme.titleMedium)
+                                ],
                               )
-                            : CustomAnimationWidget(
+                            : const CustomAnimationWidget(
                                 width: 50,
                                 height: 50,
                                 repeat: true,
