@@ -259,14 +259,15 @@ class Settings extends StatelessWidget {
   }
 
   Widget button(BuildContext context, Size size) {
-    return BlocBuilder<AuthenticationBloc, AuthenticationState>(
-      builder: (context, state) {
+    return BlocConsumer<AuthenticationBloc, AuthenticationState>(
+      listener: (context, state) {
         if (state.status == AuthenticationStatus.error) {
           SnackBarService.stopSnackBar();
           SnackBarService.showSnackBar(
               content: state.errorText, msgType: MessageType.error);
         }
-
+      },
+      builder: (context, state) {
         if (state.status != AuthenticationStatus.onLogOutProcess) {
           return CustomActionButton(
             label: "Logout",
