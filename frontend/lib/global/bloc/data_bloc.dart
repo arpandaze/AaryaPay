@@ -84,7 +84,6 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     RequestSyncEvent event,
     Emitter<DataState> emit,
   ) async {
-
     var url = Uri.parse('$backendBase/sync');
 
     var transactionToSubmit =
@@ -144,7 +143,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
           bkvc.userID,
         );
 
-      latestTransaction = await transactions.getLatest();
+        latestTransaction = await transactions.getLatest();
       }
 
       DataState newState = DataState(
@@ -159,7 +158,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       );
 
       newState.save(storage);
-      
+
       emit(
         state.copyWith(
           profile: profile,
@@ -184,15 +183,22 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     print(base64.encode(event.tam.toBytes()));
     emit(state.copyWith(tamStatus: TAMStatus.initiated));
 
+    bool alreadyExists = await state.transactions
+        .checkAlreadyExists(event.tam.timeStamp, event.tam.amount);
+    Transactions newTransactions;
     var transaction = Transaction(
       authorizationMessage: event.tam,
       credit: event.tam.to == state.bkvc!.userID,
     );
-
-    var newTransactions = Transactions(
-      transactions: [...state.transactions.transactions, transaction],
-    );
-
+    if (!alreadyExists) {
+      newTransactions = Transactions(
+        transactions: [...state.transactions.transactions, transaction],
+      );
+    } else {
+      newTransactions = Transactions(
+        transactions: [...state.transactions.transactions],
+      );
+    }
     DataState newState = state.copyWith(
         transactions: newTransactions, latestTransaction: transaction);
 
