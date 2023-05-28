@@ -52,18 +52,22 @@ class SplashScreen extends StatelessWidget {
                         const SizedBox(
                           height: 20,
                         ),
-                        Text(
-                          'AaryaPay',
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall!
-                              .merge(
-                                  const TextStyle(fontWeight: FontWeight.w800)),
+                        Container(
+                        margin: const EdgeInsets.only(bottom: 20),
+                          child: Text(
+                            'AaryaPay',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall!
+                                .merge(
+                                    const TextStyle(fontWeight: FontWeight.w800)),
+                          ),
                         ),
                         dataState.isLoaded == true
                             ? CustomActionButton(
                                 width: size.width * 0.60,
                                 height: size.height * 0.07,
+                                margin: 20,
                                 borderRadius: 10,
                                 label: "Finger",
                                 onClick: () => context
