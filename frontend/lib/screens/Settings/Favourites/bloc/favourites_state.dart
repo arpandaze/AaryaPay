@@ -6,6 +6,7 @@ class FavouritesState extends Equatable {
   final bool isLoaded;
   final MessageType msgType;
   final String errorText;
+  final bool start;
 
   const FavouritesState({
     this.favouritesList,
@@ -13,6 +14,7 @@ class FavouritesState extends Equatable {
     this.isLoaded = false,
     this.msgType = MessageType.idle,
     this.errorText = "",
+    this.start = false,
   });
 
   FavouritesState copyWith({
@@ -21,6 +23,7 @@ class FavouritesState extends Equatable {
     bool? isLoaded,
     MessageType? msgType,
     String? errorText,
+    bool? start,
   }) {
     return FavouritesState(
       email: email ?? this.email,
@@ -28,6 +31,7 @@ class FavouritesState extends Equatable {
       isLoaded: isLoaded ?? this.isLoaded,
       msgType: msgType ?? this.msgType,
       errorText: errorText ?? this.errorText,
+      start: start ?? this.start,
     );
   }
 
@@ -38,5 +42,6 @@ class FavouritesState extends Equatable {
         isLoaded,
         msgType,
         errorText,
+        start,
       ];
 }
