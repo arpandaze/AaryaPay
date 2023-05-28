@@ -159,8 +159,6 @@ class AccountScreen extends StatelessWidget {
             children: <Widget>[
               Container(
                 alignment: Alignment.bottomCenter,
-                margin: EdgeInsets.fromLTRB(
-                    0, 0, size.width * 0.1, size.height * 0.05),
                 child: const CircularProgressIndicator(),
               )
             ],
