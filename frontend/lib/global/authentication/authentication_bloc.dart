@@ -40,7 +40,7 @@ class AuthenticationBloc
 
     if (!response["logoutSuccess"]) {
       emit(state.copyWith(
-          status: AuthenticationStatus.error, errorText: response["msg"]));
+          status: AuthenticationStatus.error, errorText: "Logout Failed"));
     }
   }
 

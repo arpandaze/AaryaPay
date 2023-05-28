@@ -26,7 +26,7 @@ class FavouritesCard extends StatelessWidget {
     var textTheme = Theme.of(context).textTheme;
     var colorScheme = Theme.of(context).colorScheme;
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
+      margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.all(10),
       width: size.width,
       decoration: BoxDecoration(

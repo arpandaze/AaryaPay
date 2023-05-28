@@ -259,20 +259,22 @@ class Settings extends StatelessWidget {
   }
 
   Widget button(BuildContext context, Size size) {
-    return BlocBuilder<AuthenticationBloc, AuthenticationState>(
-      builder: (context, state) {
+    return BlocConsumer<AuthenticationBloc, AuthenticationState>(
+      listener: (context, state) {
         if (state.status == AuthenticationStatus.error) {
           SnackBarService.stopSnackBar();
           SnackBarService.showSnackBar(
               content: state.errorText, msgType: MessageType.error);
         }
-
+      },
+      builder: (context, state) {
         if (state.status != AuthenticationStatus.onLogOutProcess) {
           return CustomActionButton(
             label: "Logout",
             borderRadius: 10,
             width: size.width * 0.5,
             height: 45,
+            color: Theme.of(context).colorScheme.tertiary,
             onClick: () => {
               context.read<AuthenticationBloc>().add(LoggedOut()),
             },
@@ -294,7 +296,9 @@ class Settings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Container(
+      height: size.height,
       child: body(context),
     );
   }

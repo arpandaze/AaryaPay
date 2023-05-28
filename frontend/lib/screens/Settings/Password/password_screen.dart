@@ -163,6 +163,27 @@ class PasswordScreen extends StatelessWidget {
             },
           ),
         ),
+        MenuItemModal(
+          icon: SvgPicture.asset(
+            "assets/icons/2fa.svg",
+            width: 20,
+            height: 20,
+          ),
+          label: "Enable Biometrics",
+          trailingWidget: BlocConsumer<TwoFaBloc, TwoFaState>(
+            listener: (context, state) => {},
+            builder: (context, state) {
+              return CupertinoSwitch(
+                  value: state.switchValue,
+                  activeColor: colorScheme.surfaceVariant,
+                  onChanged: (bool? value) {
+                    // context.read<TwoFaBloc>().add(ChangeSwitchValue(
+                    //       currentValue: value,
+                    //     ));
+                  });
+            },
+          ),
+        )
       ]),
     ];
 
