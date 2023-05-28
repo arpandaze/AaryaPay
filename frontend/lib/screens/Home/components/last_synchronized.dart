@@ -44,7 +44,9 @@ class LastSynchronized extends StatelessWidget {
                   "${DateFormat.yMMMEd().format(DateTime.now())} ${DateFormat.jm().format(DateTime.now())}";
               if (dataState.isLoaded) {
                 DateTime dateObj =
-                    DateTime.parse(dataState.bkvc!.timeStamp.toString());
+                    DateTime.fromMillisecondsSinceEpoch(
+                  dataState.bkvc!.timeStamp.millisecondsSinceEpoch,
+                );
                 formattedString =
                     "${DateFormat.yMMMEd().format(dateObj.toLocal())} ${DateFormat.jm().format(dateObj)}";
               }
