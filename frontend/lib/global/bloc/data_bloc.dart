@@ -84,13 +84,11 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     RequestSyncEvent event,
     Emitter<DataState> emit,
   ) async {
-    print("Send Data Bloc Entered");
 
     var url = Uri.parse('$backendBase/sync');
 
     var transactionToSubmit =
         await state.transactions.getUnsubmittedTransactions();
-    print("Transaction to submit : $transactionToSubmit");
 
     final headers = {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -101,7 +99,6 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     if (transactionToSubmit.isEmpty) {
       response = await httpclient.post(url, headers: headers);
     } else {
-      print("No of Transactions to Submit : ${transactionToSubmit.length}");
       var base64Trans = [];
 
       for (var i in transactionToSubmit) {
@@ -113,16 +110,12 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       };
 
       response = await httpclient.post(url, headers: headers, body: body);
-      print(response.statusCode);
-      print(response.body);
     }
 
     if (response.statusCode != 202) {
       return;
     }
 
-    print(response.statusCode);
-    print(response.body);
     emit(state.copyWith(tamStatus: TAMStatus.completed));
 
     var responseData = jsonDecode(response.body);
@@ -142,10 +135,17 @@ class DataBloc extends Bloc<DataEvent, DataState> {
 
       Profile profile = Profile.fromJson(responseData['profile']);
 
-      Transactions transactions = Transactions.fromJson(
-        responseData['transactions'],
-        bkvc.userID,
-      );
+      Transactions transactions = Transactions(transactions: []);
+      Transaction latestTransaction = Transaction(credit: false);
+
+      if (responseData['transactions'] != null) {
+        transactions = Transactions.fromJson(
+          responseData['transactions'],
+          bkvc.userID,
+        );
+
+      latestTransaction = await transactions.getLatest();
+      }
 
       DataState newState = DataState(
         profile: profile,
@@ -159,13 +159,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       );
 
       newState.save(storage);
-      print(transactions.transactions.last.amount);
-      print(transactions.transactions.last.receiverFirstName);
-      print(transactions.transactions.last.senderFirstName);
-      print(bkvc.availableBalance);
-      print(bkvc.timeStamp);
-
-      Transaction latestTransaction = await transactions.getLatest();
+      
       emit(
         state.copyWith(
           profile: profile,

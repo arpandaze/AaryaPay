@@ -71,16 +71,20 @@ class TopBar extends StatelessWidget {
                                     ),
                           ),
                         ),
-                        Text(
-                          dataState.profile != null
-                              ? "${dataState.profile?.firstName} ${dataState.profile?.lastName}"
-                              : "AaryaPay Nepali",
-                          style: Theme.of(context).textTheme.labelLarge!.merge(
-                              TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary,
+                        SizedBox(
+                        width: 210,
+                          child: Text(
+                          overflow: TextOverflow.ellipsis,
+                            dataState.profile != null
+                                ? "${dataState.profile?.firstName} ${dataState.profile?.lastName}"
+                                : "AaryaPay Nepali",
+                            style: Theme.of(context).textTheme.labelLarge!.merge(
+                                TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                  ),
                                 ),
-                              ),
+                          ),
                         ),
                       ],
                     ),
