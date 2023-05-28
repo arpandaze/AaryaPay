@@ -41,7 +41,7 @@ class RecentCard extends StatelessWidget {
               ),
               dataState.isLoaded
                   ? BlocProvider(
-                      create: (context) => RecentCardBloc()..add(TransactionLoad(transactions: dataState.transactions)),
+                      create: (context) => RecentCardBloc(),
                       child: BlocConsumer<RecentCardBloc, RecentCardState>(
                         listener: (context, state) {
                           if (state.senderName != null &&
@@ -102,11 +102,11 @@ class RecentCard extends StatelessWidget {
                             padding: const EdgeInsets.only(left: 10, bottom: 5),
                             width: double.infinity,
                             child: Column(
-                              children: state.isLoaded && dataState.isLoaded
+                              children: dataState.isLoaded
                                   ? [
-                                      ...state.transactionHistory!
+                                      ...dataState.transactions.getSubmittedTransactions()
                                           .take(min(
-                                              state.transactionHistory!.length,
+                                              dataState.transactions.getSubmittedTransactions().length,
                                               5))
                                           .map(
                                             (item) => GestureDetector(
