@@ -273,6 +273,7 @@ class Settings extends StatelessWidget {
             borderRadius: 10,
             width: size.width * 0.5,
             height: 45,
+            color: Theme.of(context).colorScheme.tertiary,
             onClick: () => {
               context.read<AuthenticationBloc>().add(LoggedOut()),
             },
@@ -296,8 +297,8 @@ class Settings extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      child: body(context),
       height: size.height,
+      child: body(context),
     );
   }
 }

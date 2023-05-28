@@ -77,13 +77,11 @@ class RegisterWrapper extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             child: children,
           ),
-          Container(
-            child: CustomActionButton(
-              width: size.width * 0.78,
-              borderRadius: 10,
-              label: actionButtonLabel,
-              onClick: actionButtonFunction,
-            ),
+          CustomActionButton(
+            width: size.width * 0.78,
+            borderRadius: 10,
+            label: actionButtonLabel,
+            onClick: actionButtonFunction,
           ),
         ],
       ),

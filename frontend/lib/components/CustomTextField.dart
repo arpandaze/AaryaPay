@@ -101,7 +101,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                             child: SvgPicture.asset(
                               "assets/icons/${showPassword ? 'show' : 'invisible'}.svg",
                               colorFilter: ColorFilter.mode(
-                                  Theme.of(context).colorScheme.onBackground,
+                                  Theme.of(context).colorScheme.primary,
                                   BlendMode.srcIn),
                             ),
                           )
@@ -193,7 +193,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                               child: SvgPicture.asset(
                                 "assets/icons/${showPassword ? 'show' : 'invisible'}.svg",
                                 colorFilter: ColorFilter.mode(
-                                    Theme.of(context).colorScheme.onBackground,
+                                    Theme.of(context).colorScheme.primary,
                                     BlendMode.srcIn),
                               ),
                             ),
