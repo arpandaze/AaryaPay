@@ -27,58 +27,55 @@ class TransactionHistory extends StatelessWidget {
                   transactions:
                       dataState.transactions.getSubmittedTransactions())),
             child: BlocConsumer<TranscationBloc, TranscationState>(
-              listener: (context, state) => {
+              listener: (context, state) {
                 if (state.senderName != null &&
                     state.receiverName != null &&
-                    state.item != null)
-                  {
-                    Utils.mainAppNav.currentState!.push(
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation1, animation2) =>
-                            TransactionDetailsScreen(
-                          transactionItem: state.item,
-                          recieverName: state.receiverName,
-                          senderName: state.senderName,
-                        ),
-                        transitionDuration: Duration.zero,
-                        reverseTransitionDuration: Duration.zero,
-                        transitionsBuilder:
-                            (context, animation, secondaryAnimation, child) {
-                          final curve = CurvedAnimation(
-                            parent: animation,
-                            curve: Curves.decelerate,
-                          );
-
-                          return Stack(
-                            children: [
-                              FadeTransition(
-                                opacity: Tween<double>(
-                                  begin: 1.0,
-                                  end: 0.0,
-                                ).animate(curve),
-                              ),
-                              SlideTransition(
-                                position: Tween<Offset>(
-                                  begin: const Offset(0.0, 1.0),
-                                  end: Offset.zero,
-                                ).animate(curve),
-                                child: FadeTransition(
-                                    opacity: Tween<double>(
-                                      begin: 0.0,
-                                      end: 1.0,
-                                    ).animate(curve),
-                                    child: TransactionDetailsScreen(
-                                      transactionItem: state.item,
-                                      recieverName: state.receiverName,
-                                      senderName: state.senderName,
-                                    )),
-                              ),
-                            ],
-                          );
-                        },
+                    state.item != null) {
+                  Utils.mainAppNav.currentState!.push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation1, animation2) =>
+                          TransactionDetailsScreen(
+                        transactionItem: state.item,
+                        recieverName: state.receiverName,
+                        senderName: state.senderName,
                       ),
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        final curve = CurvedAnimation(
+                          parent: animation,
+                          curve: Curves.decelerate,
+                        );
+
+                        return Stack(
+                          children: [
+                            FadeTransition(
+                              opacity: Tween<double>(
+                                begin: 1.0,
+                                end: 0.0,
+                              ).animate(curve),
+                              child: child,
+                            ),
+                            SlideTransition(
+                              position: Tween<Offset>(
+                                begin: const Offset(0.0, 1.0),
+                                end: Offset.zero,
+                              ).animate(curve),
+                              child: FadeTransition(
+                                opacity: Tween<double>(
+                                  begin: 0.0,
+                                  end: 1.0,
+                                ).animate(curve),
+                                child: child,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
-                  }
+                  );
+                }
               },
               buildWhen: (previous, current) => previous != current,
               builder: (context, state) {
@@ -100,43 +97,55 @@ class TransactionHistory extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(top: 10.0),
-                            child: Column(children: [
-                              if (dataState.isReady &&
-                                  state.transactionHistory != null)
-                                ...state.transactionHistory!
-                                    .map((item) => GestureDetector(
-                                          onTapDown: (details) => {
-                                            context.read<TranscationBloc>().add(
+                        children: (dataState.isReady &&
+                                dataState.transactions
+                                    .getSubmittedTransactions()
+                                    .isNotEmpty)
+                            ? [
+                                ...dataState.transactions
+                                    .getSubmittedTransactions()
+                                    .take(min(
+                                        dataState.transactions
+                                            .getSubmittedTransactions()
+                                            .length,
+                                        5))
+                                    .map(
+                                      (item) => GestureDetector(
+                                        onTapDown: (details) {
+                                          context.read<TranscationBloc>().add(
                                                 LoadParticularUser(
-                                                    item: item,
-                                                    receiverID: item
-                                                        .receiverTvc!
-                                                        .bkvc
-                                                        .userID
-                                                        .toString(),
-                                                    senderID: item
-                                                        .senderTvc!.bkvc.userID
-                                                        .toString()))
-                                          },
-                                          onTap: () => context
+                                                  item: item,
+                                                  receiverID: item
+                                                      .receiverTvc!.bkvc.userID
+                                                      .toString(),
+                                                  senderID: item
+                                                      .senderTvc!.bkvc.userID
+                                                      .toString(),
+                                                ),
+                                              );
+                                        },
+                                        onTapUp: (details) {
+                                          context
                                               .read<TranscationBloc>()
-                                              .add(ClearLoadedUser()),
-                                          child: RecentPaymentCard(
-                                            transaction: item,
-                                            finalAmt: dataState
-                                                .bkvc!.availableBalance
-                                                .toString(),
-                                          ),
-                                        ))
+                                              .add(ClearLoadedUser());
+                                        },
+                                        child: RecentPaymentCard(
+                                          finalAmt: dataState
+                                              .bkvc!.availableBalance
+                                              .toString(),
+                                          transaction: item,
+                                        ),
+                                      ),
+                                    )
                                     .toList(),
-                              if (!(dataState.isLoaded))
-                                const CircularProgressIndicator(),
-                            ]),
-                          )
-                        ],
+                              ]
+                            : [
+                                Center(
+                                  child: Text("No Recent Transactions",
+                                      style:
+                                          Theme.of(context).textTheme.titleMedium),
+                                )
+                              ],
                       ),
                     ),
                   ),

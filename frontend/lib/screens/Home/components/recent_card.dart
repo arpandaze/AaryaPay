@@ -102,7 +102,7 @@ class RecentCard extends StatelessWidget {
                             padding: const EdgeInsets.only(left: 10, bottom: 5),
                             width: double.infinity,
                             child: Column(
-                              children: dataState.isReady
+                              children: (dataState.isReady && dataState.transactions.getSubmittedTransactions().isNotEmpty)
                                   ? [
                                       ...dataState.transactions.getSubmittedTransactions()
                                           .take(min(
