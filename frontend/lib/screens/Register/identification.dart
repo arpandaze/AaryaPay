@@ -5,10 +5,7 @@ import 'package:aaryapay/screens/Register/components/CustomRegisterButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:math' as math;
-
-import 'package:jovial_svg/jovial_svg.dart';
 
 class Identification extends StatelessWidget {
   const Identification({
@@ -29,21 +26,14 @@ class Identification extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Visibility(
                     visible: true,
-                    child: GestureDetector(
-                      onTap: () => Utils.mainAppNav.currentState!.pop(),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Theme.of(context).colorScheme.background),
-                        ),
-                        padding: const EdgeInsets.all(15),
-                        child: Transform.rotate(
-                          angle: -math.pi,
-                          child: SvgPicture.asset(
-                            "assets/icons/arrow2.svg",
-                            width: 15,
-                            height: 15,
-                          ),
+                    child: Transform.rotate(
+                      angle: -math.pi,
+                      child: IconButton(
+                        onPressed: () => Utils.mainAppNav.currentState!.pop(),
+                        icon: SvgPicture.asset(
+                          "assets/icons/arrow2.svg",
+                          width: 15,
+                          height: 15,
                         ),
                       ),
                     ),
@@ -71,10 +61,7 @@ class Identification extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
-            height: size.height * 0.3,
-            child: Utils.mainlogo 
-          ),
+          SizedBox(height: size.height * 0.3, child: Utils.mainlogo),
           Container(
             height: size.height * 0.48,
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
@@ -88,7 +75,7 @@ class Identification extends StatelessWidget {
                   children: [
                     Text(
                       "Sign Up",
-                      style: Theme.of(context).textTheme.displayMedium!.merge(
+                      style: Theme.of(context).textTheme.headlineMedium!.merge(
                             TextStyle(
                                 height: 1.8,
                                 fontWeight: FontWeight.w900,
@@ -109,14 +96,11 @@ class Identification extends StatelessWidget {
                 CustomTextField(
                   width: size.width,
                   padding: const EdgeInsets.fromLTRB(0, 15, 15, 15),
-                  prefixIcon: Container(
-                    child: SvgPicture.asset(
-                      "assets/icons/profile.svg",
-                      width: 20,
-                      colorFilter: ColorFilter.mode(
-                          Theme.of(context).colorScheme.primary,
-                          BlendMode.srcIn),
-                    ),
+                  prefixIcon: SvgPicture.asset(
+                    "assets/icons/profile.svg",
+                    width: 20,
+                    colorFilter: ColorFilter.mode(
+                        Theme.of(context).colorScheme.primary, BlendMode.srcIn),
                   ),
                   onChanged: (value) => context.read<RegisterBloc>().add(
                         FirstNameChanged(firstName: value),
@@ -160,7 +144,8 @@ class Identification extends StatelessWidget {
               ],
             ),
           ),
-          Container(
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
             child: CustomRegisterButton(
               width: size.width * 0.78,
               borderRadius: 10,

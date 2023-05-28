@@ -16,9 +16,8 @@ class RecentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return BlocConsumer<DataBloc, DataState>(
-      listener: (context, dataState) {
-        print("DATA STATE STATUS : ${dataState.isLoaded}");
-      },
+      listener: (context, dataState) {},
+      buildWhen: (previous, current) => previous != current,
       builder: (context, dataState) {
         return dataState.isLoaded
             ? BlocProvider<RecentCardBloc>(
@@ -26,6 +25,9 @@ class RecentCard extends StatelessWidget {
                   ..add(TransactionLoad(transactions: dataState.transactions)),
                 child: BlocConsumer<RecentCardBloc, RecentCardState>(
                   listener: (context, state) {
+                    context.read<RecentCardBloc>().add(
+                        TransactionLoad(transactions: dataState.transactions));
+
                     if (state.senderName != null &&
                         state.receiverName != null &&
                         state.item != null) {
@@ -77,6 +79,7 @@ class RecentCard extends StatelessWidget {
                       );
                     }
                   },
+                  buildWhen: (previous, current) => previous != current,
                   builder: (context, state) {
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 8),
@@ -107,14 +110,13 @@ class RecentCard extends StatelessWidget {
                                   const EdgeInsets.only(left: 10, bottom: 5),
                               width: double.infinity,
                               child: Column(
-                                children: state.isLoaded
+                                children: state.isLoaded && dataState.isLoaded
                                     ? [
                                         ...state.transactionHistory!
                                             .take(min(
-                                                5,
-                                                state.transactionHistory!
-                                                    .length))
-                                            .toList()
+                                                state
+                                                    .transactionHistory!.length,
+                                                5))
                                             .map(
                                               (item) => GestureDetector(
                                                 onTapDown: (details) => {
@@ -142,24 +144,14 @@ class RecentCard extends StatelessWidget {
                                                       .add(ClearLoadedUser());
                                                 },
                                                 child: RecentPaymentCard(
-                                                  uuid: item.receiverId
-                                                      .toString(),
-                                                  isDebit: item.isDebit,
-                                                  label: !item.isDebit
-                                                      ? "${item.receiverFirstName!} ${item.receiverLastName!}"
-                                                      : "${item.senderFirstName!} ${item.senderLastName!}",
                                                   finalAmt: dataState
                                                       .bkvc!.availableBalance
                                                       .toString(),
-                                                  transactionAmt:
-                                                      item.amount.toString(),
-                                                  date: DateFormat.yMMMMd()
-                                                      .format(item.receiverTvc!
-                                                          .timeStamp
-                                                          .toLocal()),
+                                                  transaction: item,
                                                 ),
                                               ),
                                             )
+                                            .toList()
                                       ]
                                     : [
                                         const CircularProgressIndicator(),
@@ -171,7 +163,7 @@ class RecentCard extends StatelessWidget {
                   },
                 ),
               )
-            : const Center(child: CircularProgressIndicator());
+            : const CircularProgressIndicator();
       },
     );
   }

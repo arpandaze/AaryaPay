@@ -13,23 +13,10 @@ class TranscationBloc extends Bloc<TranscationEvent, TranscationState> {
   static const storage = FlutterSecureStorage();
 
   TranscationBloc() : super(const TranscationState()) {
-    on<LoadTransaction>(_onLoadTransaction);
     on<LoadParticularUser>(_onLoadParticularUser);
+    on<LoadTransaction>(_onLoadTransaction);
     on<ClearLoadedUser>(_onClearLoadedUser);
-    add(LoadTransaction());
     add(ClearLoadedUser());
-  }
-
-  void _onLoadTransaction(
-      LoadTransaction event, Emitter<TranscationState> emit) async {
-    try {
-      List<Transaction> submittedTransactions = await event.transactions!.getSubmittedTransactions();
-      emit(
-          state.copywith(transactionHistory: submittedTransactions, loaded: true));
-    } catch (e) {
-      emit(state.copywith(loaded: false));
-      print("Error: $e");
-    }
   }
 
   void _onClearLoadedUser(
@@ -39,9 +26,20 @@ class TranscationBloc extends Bloc<TranscationEvent, TranscationState> {
 
   void _onLoadParticularUser(
       LoadParticularUser event, Emitter<TranscationState> emit) async {
-       emit(state.copywith(
+    emit(state.copywith(
         senderName: event.senderID,
         receiverName: event.receiverID,
         item: event.item));
+  }
+
+  void _onLoadTransaction(
+      LoadTransaction event, Emitter<TranscationState> emit) async {
+    List<Transaction> transactions;
+    if (event.transactions != null) {
+      transactions = await event.transactions!;
+      transactions.sort ((a, b) => b.receiverTvc!.generationTime.compareTo(a.receiverTvc!.generationTime));
+      emit(state.copywith(transactionHistory: transactions));
+    }
+    return;
   }
 }

@@ -15,12 +15,13 @@ class TransactionHistory extends StatelessWidget {
   Widget body(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return BlocConsumer<DataBloc, DataState>(
-      listener: (context, dataState) {
-      },
+      listener: (context, dataState) {},
       builder: (context, dataState) {
         return BlocProvider(
           create: (context) => TranscationBloc()
-            ..add(LoadTransaction(transactions: dataState.transactions)),
+            ..add(LoadTransaction(
+                transactions:
+                    dataState.transactions.getSubmittedTransactions())),
           child: BlocConsumer<TranscationBloc, TranscationState>(
             listener: (context, state) => {
               if (state.senderName != null &&
@@ -96,17 +97,11 @@ class TransactionHistory extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Container(
-                        //   padding: const EdgeInsets.symmetric(vertical: 15),
-                        //   child: Text(
-                        //     "Transaction History",
-                        //     style: Theme.of(context).textTheme.titleLarge,
-                        //   ),
-                        // ),
                         Container(
                           margin: const EdgeInsets.only(top: 10.0),
                           child: Column(children: [
-                            if (state.loaded)
+                            if (dataState.isLoaded &&
+                                state.transactionHistory != null)
                               ...state.transactionHistory!
                                   .map((item) => GestureDetector(
                                         onTapDown: (details) => {
@@ -124,24 +119,14 @@ class TransactionHistory extends StatelessWidget {
                                             .read<TranscationBloc>()
                                             .add(ClearLoadedUser()),
                                         child: RecentPaymentCard(
-                                          uuid: item.receiverId.toString(),
-                                          isDebit: item.isDebit,
-                                          label: !item.isDebit
-                                              ? "${item.receiverFirstName!} ${item.receiverLastName!}"
-                                              : "${item.senderFirstName!} ${item.senderLastName!}",
+                                          transaction: item,
                                           finalAmt: dataState
                                               .bkvc!.availableBalance
                                               .toString(),
-                                          transactionAmt:
-                                              item.amount.toString(),
-                                          date: DateFormat.yMMMMd().format(item
-                                              .receiverTvc!.timeStamp
-                                              .toLocal()),
                                         ),
                                       ))
-                                  .toList()
-                                  ,
-                            if (!(state.loaded))
+                                  .toList(),
+                            if (!(dataState.isLoaded))
                               const CircularProgressIndicator(),
                           ]),
                         )

@@ -18,9 +18,19 @@ class EyeTapped extends SynchronizationEvent {
 
 class SyncingEvent extends SynchronizationEvent {
   final bool syncing;
+  final bool rotating;
 
-  SyncingEvent({this.syncing = false});
+  SyncingEvent({this.syncing = false, this.rotating = false});
 
   @override
   List<Object?> get props => [syncing];
+}
+
+class RotatingEvent extends SynchronizationEvent {
+  final bool rotating;
+
+  RotatingEvent({this.rotating = false});
+
+  @override
+  List<Object?> get props => [rotating];
 }

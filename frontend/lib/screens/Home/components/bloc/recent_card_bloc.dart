@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:aaryapay/global/caching/transaction.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -10,7 +12,6 @@ class RecentCardBloc extends Bloc<RecentCardEvent, RecentCardState> {
     on<TransactionLoad>(_onTransactionLoad);
     on<LoadParticularUser>(_onLoadParticularUser);
     on<ClearLoadedUser>(_onClearLoadedUser);
-    add(TransactionLoad());
     add(ClearLoadedUser());
   }
 

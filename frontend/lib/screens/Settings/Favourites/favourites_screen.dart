@@ -77,7 +77,7 @@ class FavouritesScreen extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
                       child: CustomTextField(
                         outlined: true,
                         placeHolder: "Enter example@example.com",
@@ -91,6 +91,7 @@ class FavouritesScreen extends StatelessWidget {
                         width: size.width * 0.70,
                         borderRadius: 10,
                         label: "Add",
+                        color: Theme.of(context).colorScheme.tertiary,
                         onClick: () => context
                             .read<FavouritesBloc>()
                             .add(AddButtonClicked()),
@@ -103,7 +104,7 @@ class FavouritesScreen extends StatelessWidget {
                         style: textTheme.titleMedium,
                       ),
                     ),
-                    if (state.isLoaded)
+                    if (state.isLoaded && state.favouritesList!.isNotEmpty)
                       ...state.favouritesList!
                           .map(
                             (item) => FavouritesCard(
@@ -125,7 +126,19 @@ class FavouritesScreen extends StatelessWidget {
                           .toList()
                           .reversed
                     else
-                      GreyCard(),
+                      FutureBuilder<bool>(
+                        future:
+                            Future.delayed(const Duration(seconds: 5), () => false),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const GreyCard();
+                          } else {
+                            // Show the second container after the delay
+                            return const Text("No Favourites to show");
+                          }
+                        },
+                      ),
                   ],
                 ),
               ),

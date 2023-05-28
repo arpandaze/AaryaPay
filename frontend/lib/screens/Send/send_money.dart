@@ -148,12 +148,10 @@ class SendMoney extends StatelessWidget {
         double balance = dataState.bkvc!.availableBalance;
         double availableAmount = balance - sentAmount;
 
-        print(availableAmount);
         return BlocConsumer<SendMoneyBloc, SendMoneyState>(
           listenWhen: (previous, current) => previous != current,
           listener: (context, state) => {
-            if (state.tamStatus == TAMStatus.clicked ||
-                state.tamStatus == TAMStatus.initiated)
+            if (state.tamStatus == TAMStatus.clicked)
               {
                 dialogBuilder(context, 'assets/animations/paperplane.json'),
               },
@@ -182,26 +180,18 @@ class SendMoney extends StatelessWidget {
                         children: [
                           Align(
                             alignment: Alignment.centerLeft,
-                            child: GestureDetector(
-                              onTap: () =>
-                                  Utils.mainAppNav.currentState!.popUntil(
-                                ModalRoute.withName("/app"),
-                              ),
-                              child: Container(
-                                padding: const EdgeInsets.all(15),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .background),
-                                ),
-                                child: Transform.rotate(
-                                  angle: -math.pi,
-                                  child: SvgPicture.asset(
-                                    "assets/icons/arrow2.svg",
-                                    width: 15,
-                                    height: 15,
-                                  ),
+                            child: IconButton(
+                              onPressed: () {
+                                Utils.mainAppNav.currentState!.popUntil(
+                                  ModalRoute.withName("/app"),
+                                );
+                              },
+                              icon: Transform.rotate(
+                                angle: -math.pi,
+                                child: SvgPicture.asset(
+                                  "assets/icons/arrow2.svg",
+                                  width: 15,
+                                  height: 15,
                                 ),
                               ),
                             ),
@@ -266,9 +256,9 @@ class SendMoney extends StatelessWidget {
                   bottom: 0,
                   child: Container(
                     width: size.width,
-                    constraints: BoxConstraints(maxHeight: size.height * 0.6),
+                    constraints: BoxConstraints(maxHeight: size.height * 0.65),
                     padding: const EdgeInsets.only(
-                        top: 10.0, bottom: 20.0, left: 10.0, right: 10.0),
+                        bottom: 20.0, left: 10.0, right: 10.0),
                     decoration: BoxDecoration(
                         border: Border.all(
                             color: Theme.of(context).colorScheme.outline,
@@ -284,7 +274,7 @@ class SendMoney extends StatelessWidget {
                       children: [
                         Padding(
                           padding:
-                              const EdgeInsets.fromLTRB(9.0, 10.0, 9.0, 0.0),
+                              const EdgeInsets.fromLTRB(9.0, 0.0, 9.0, 0.0),
                           child: Row(
                             children: [
                               Container(
@@ -342,13 +332,13 @@ class SendMoney extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(top: 15.0),
+                          // margin: EdgeInsets.only(top: 15.0),
                           child: const Center(
                             child: midMatrix(),
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(top: 15.0),
+                          // margin: EdgeInsets.only(top: 15.0),
                           child: CustomActionButton(
                             label: "Send",
                             width: size.width * 0.7,

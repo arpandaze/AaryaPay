@@ -23,16 +23,17 @@ class QrScanScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return BlocProvider(
-      create: (context) => QrScannerBloc(),
+      create: (context) => QrScannerBloc()..add(AnimationStopped()),
       child: Scaffold(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          body: SafeArea(
-            top: true,
-            bottom: true,
-            left: true,
-            right: true,
-            child: body(size, context),
-          )),
+        backgroundColor: Theme.of(context).colorScheme.background,
+        body: SafeArea(
+          top: true,
+          bottom: true,
+          left: true,
+          right: true,
+          child: body(size, context),
+        ),
+      ),
     );
   }
 
@@ -44,7 +45,7 @@ class QrScanScreen extends StatelessWidget {
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
                   TVCSuccess(
-                transaction: dataState.transactions.transactions.last,
+                transaction: dataState.recentTransaction!,
               ),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
@@ -72,7 +73,7 @@ class QrScanScreen extends StatelessWidget {
                           end: 1.0,
                         ).animate(curve),
                         child: TVCSuccess(
-                          transaction: dataState.transactions.transactions.last,
+                          transaction: dataState.recentTransaction!,
                         ),
                       ),
                     ),
@@ -171,10 +172,12 @@ class QrScanScreen extends StatelessWidget {
       builder: (context, dataState) {
         return BlocConsumer<QrScannerBloc, QrScannerState>(
           listener: (context, state) {
-            print("State Changed");
+            if (state.scannedOnce && !state.animationPlaying) {
+              dialogBuilder(context, 'assets/animations/paperplane.json');
+              context.read<QrScannerBloc>().add(AnimationStarted());
+            }
 
             if (state.isScanned && state.codeType == CodeType.TAM) {
-              dialogBuilder(context, 'assets/animations/paperplane.json');
               context.read<DataBloc>().add(
                     SubmitTAMEvent(
                       state.tam!,
@@ -185,7 +188,6 @@ class QrScanScreen extends StatelessWidget {
 
             print(state.codeType);
             if (state.isScanned && state.codeType == CodeType.TVC) {
-              dialogBuilder(context, 'assets/animations/paperplane.json');
               context.read<DataBloc>().add(
                     SubmitTVCEvent(
                       state.tvc!,
@@ -193,7 +195,6 @@ class QrScanScreen extends StatelessWidget {
                   );
             }
             if (state.isScanned && state.codeType == CodeType.user) {
-              dialogBuilder(context, 'assets/animations/paperplane.json');
               var result = utf8.decode(state.code!);
               var data = jsonDecode(result);
               print(data);

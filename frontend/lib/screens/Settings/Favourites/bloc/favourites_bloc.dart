@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:aaryapay/constants.dart';
 import 'package:aaryapay/repository/favourites.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,7 +65,7 @@ class FavouritesBloc extends Bloc<FavouritesEvent, FavouritesState> {
     if (response["data"] != null) {
       emit(state.copyWith(isLoaded: true, favouritesList: response['data']));
     } else {
-      emit(state.copyWith(isLoaded: false));
+      emit(state.copyWith(isLoaded: false, start: true));
     }
   }
 }
