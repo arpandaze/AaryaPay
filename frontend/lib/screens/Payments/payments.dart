@@ -104,6 +104,7 @@ class Payments extends StatelessWidget {
                                     sender: item.senderId
                                         .toString()
                                         .substring(0, 8),
+                                        
                                     reciever: item.isDebit
                                         ? item.receiverId
                                             .toString()
