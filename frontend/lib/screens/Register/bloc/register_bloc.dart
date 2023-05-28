@@ -28,6 +28,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     on<FormSubmitted>(_onFormSubmit);
     on<VerifyChanged>(_onVerifyChanged);
     on<VerifyClicked>(_onVerifyClicked);
+    on<ResendVerificationClicked>(_onResendVerificationEmail);
   }
 
   void _onFirstNameChanged(
@@ -174,5 +175,28 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
   void _onVerifyChanged(VerifyChanged event, Emitter<RegisterState> emit) {
     emit(state.copyWith(token: event.token, msgType: MessageType.idle));
+  }
+
+  void _onResendVerificationEmail(
+      ResendVerificationClicked event, Emitter<RegisterState> emit) async {
+    try {
+      final url = Uri.parse('$backendBase/auth/resend-verification');
+
+      var response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        encoding: Encoding.getByName('utf-8'),
+        body: {
+          "id": state.uuid!,
+        },
+      );
+      emit(state.copyWith(
+          msgType: MessageType.success, errorText: "Verification Email sent"));
+    } catch (e) {
+      emit(state.copyWith(
+          msgType: MessageType.error, errorText: "Unknown error occurred"));
+    }
   }
 }

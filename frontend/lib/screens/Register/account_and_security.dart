@@ -30,8 +30,7 @@ class AccountScreen extends StatelessWidget {
                       onTap: () => Navigator.pop(context),
                       child: Container(
                         decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Colors.transparent),
+                          border: Border.all(color: Colors.transparent),
                         ),
                         padding: const EdgeInsets.all(15),
                         child: Transform.rotate(
@@ -68,10 +67,7 @@ class AccountScreen extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
-            height: size.height * 0.3,
-            child: Utils.mainlogo
-          ),
+          SizedBox(height: size.height * 0.3, child: Utils.mainlogo),
           Container(
             height: size.height * 0.48,
             padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
@@ -166,8 +162,6 @@ class AccountScreen extends StatelessWidget {
             children: <Widget>[
               Container(
                 alignment: Alignment.bottomCenter,
-                margin: EdgeInsets.fromLTRB(
-                    0, 0, size.width * 0.1, size.height * 0.05),
                 child: const CircularProgressIndicator(),
               )
             ],
