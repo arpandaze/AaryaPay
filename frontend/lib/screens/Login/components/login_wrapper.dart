@@ -95,31 +95,43 @@ class LoginWrapper extends StatelessWidget {
                   forgotStatus,
                 ),
                 SizedBox(
-                  height: 30,
+                  height: 40,
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "Don't have an account, ",
+                        "Don't have an account?",
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         GestureDetector(
                           behavior: HitTestBehavior.translucent,
-                          child: Text(
-                            "Register",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .merge(TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                    color:
-                                        Theme.of(context).colorScheme.primary)),
+                        child: Container(
+                          width: 80,
+                          height: 30,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.transparent)),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 5),
+                            child: Text(
+                              "Register",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .merge(TextStyle(
+                                      height: 2.0,
+                                      fontWeight: FontWeight.w900,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary)),
+                            ),
+                          ),
                           ),
                           onTap: () => Utils.mainAppNav.currentState!
                               .pushNamed("/register"),
                         )
-                      ]),
+                    ],
+                  ),
                 ),
               ],
             ),

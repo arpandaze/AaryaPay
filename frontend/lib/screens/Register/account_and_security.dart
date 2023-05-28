@@ -26,20 +26,14 @@ class AccountScreen extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Visibility(
                     visible: true,
-                    child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.transparent),
-                        ),
-                        padding: const EdgeInsets.all(15),
-                        child: Transform.rotate(
-                          angle: -math.pi,
-                          child: SvgPicture.asset(
-                            "assets/icons/arrow2.svg",
-                            width: 15,
-                            height: 15,
-                          ),
+                    child: Transform.rotate(
+                      angle: -math.pi,
+                      child: IconButton(
+                        onPressed: () => Utils.mainAppNav.currentState!.pop(),
+                        icon: SvgPicture.asset(
+                          "assets/icons/arrow2.svg",
+                          width: 15,
+                          height: 15,
                         ),
                       ),
                     ),
@@ -81,7 +75,7 @@ class AccountScreen extends StatelessWidget {
                   children: [
                     Text(
                       "Sign Up",
-                      style: Theme.of(context).textTheme.displayMedium!.merge(
+                      style: Theme.of(context).textTheme.headlineMedium!.merge(
                             TextStyle(
                                 height: 1.8,
                                 fontWeight: FontWeight.w900,
@@ -147,12 +141,15 @@ class AccountScreen extends StatelessWidget {
         if (!state.status) {
           return Column(
             children: [
-              CustomRegisterButton(
-                width: size.width * 0.78,
-                borderRadius: 10,
-                label: "Next",
-                onClick: () =>
-                    {context.read<RegisterBloc>().add(FormSubmitted())},
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: CustomRegisterButton(
+                  width: size.width * 0.78,
+                  borderRadius: 10,
+                  label: "Next",
+                  onClick: () =>
+                      {context.read<RegisterBloc>().add(FormSubmitted())},
+                ),
               ),
             ],
           );

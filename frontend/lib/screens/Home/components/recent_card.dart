@@ -144,24 +144,10 @@ class RecentCard extends StatelessWidget {
                                                       .add(ClearLoadedUser());
                                                 },
                                                 child: RecentPaymentCard(
-                                                  uuid: !item.isDebit
-                                                      ? item.receiverId
-                                                          .toString()
-                                                      : item.senderId
-                                                          .toString(),
-                                                  isDebit: item.isDebit,
-                                                  label: !item.isDebit
-                                                      ? "${item.receiverFirstName!} ${item.receiverLastName!}"
-                                                      : "${item.senderFirstName!} ${item.senderLastName!}",
                                                   finalAmt: dataState
                                                       .bkvc!.availableBalance
                                                       .toString(),
-                                                  transactionAmt:
-                                                      item.amount.toString(),
-                                                  date: DateFormat.yMMMMd()
-                                                      .format(item.receiverTvc!
-                                                          .timeStamp
-                                                          .toLocal()),
+                                                  transaction: item,
                                                 ),
                                               ),
                                             )

@@ -26,22 +26,15 @@ class VerifyScreen extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Visibility(
                         visible: true,
-                        child: GestureDetector(
-                          onTap: () => Navigator.pop(context),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color:
-                                      Theme.of(context).colorScheme.background),
-                            ),
-                            padding: const EdgeInsets.all(15),
-                            child: Transform.rotate(
-                              angle: -math.pi,
-                              child: SvgPicture.asset(
-                                "assets/icons/arrow2.svg",
-                                width: 15,
-                                height: 15,
-                              ),
+                        child: Transform.rotate(
+                          angle: -math.pi,
+                          child: IconButton(
+                            onPressed: () =>
+                                Utils.mainAppNav.currentState!.pop(),
+                            icon: SvgPicture.asset(
+                              "assets/icons/arrow2.svg",
+                              width: 15,
+                              height: 15,
                             ),
                           ),
                         ),
@@ -218,12 +211,15 @@ class VerifyScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CustomRegisterButton(
-                width: size.width * 0.78,
-                borderRadius: 10,
-                label: "Verify",
-                onClick: () =>
-                    {context.read<RegisterBloc>().add(VerifyClicked())},
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: CustomRegisterButton(
+                  width: size.width * 0.78,
+                  borderRadius: 10,
+                  label: "Verify",
+                  onClick: () =>
+                      {context.read<RegisterBloc>().add(VerifyClicked())},
+                ),
               ),
             ],
           );

@@ -5,7 +5,12 @@ class CustomAnimationWidget extends StatefulWidget {
   final double width;
   final double height;
   final bool repeat;
-  CustomAnimationWidget({super.key,this.width = 200, this.height = 200, this.repeat=false,required this.assetSrc});
+  const CustomAnimationWidget(
+      {super.key,
+      this.width = 200,
+      this.height = 200,
+      this.repeat = false,
+      required this.assetSrc});
   final String assetSrc;
   @override
   State<CustomAnimationWidget> createState() => _MyAppState();
@@ -42,7 +47,7 @@ class _MyAppState extends State<CustomAnimationWidget>
           .duration = composition.duration;
           widget.repeat
               ? _controller.repeat()
-              : _controller.forward().whenComplete(() => _controller.reset());
+              : _controller.forward();
       },
     );
   }

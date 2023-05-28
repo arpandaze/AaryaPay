@@ -72,11 +72,15 @@ class TopBar extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "${dataState.profile?.firstName} ${dataState.profile?.lastName}",
+                          dataState.profile != null
+                              ? "${dataState.profile?.firstName} ${dataState.profile?.lastName}"
+                              : "AaryaPay Nepali",
                           style: Theme.of(context).textTheme.labelLarge!.merge(
                               TextStyle(
                                   color:
-                                      Theme.of(context).colorScheme.onPrimary)),
+                                      Theme.of(context).colorScheme.onPrimary,
+                                ),
+                              ),
                         ),
                       ],
                     ),
@@ -141,7 +145,8 @@ class TopBar extends StatelessWidget {
                                     image: DecorationImage(
                                       fit: BoxFit.cover,
                                       image: AssetImage(
-                                          ("assets/images/default-pfp.png")),
+                                        ("assets/images/default-pfp.png"),
+                                      ),
                                     ),
                                   ),
                                 ),

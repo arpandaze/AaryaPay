@@ -90,7 +90,8 @@ class OfflineSend extends StatelessWidget {
             ),
             Container(
               margin: const EdgeInsets.only(top: 10),
-              child: Text("Let the Receiver Scan the",
+              child: Text(
+                  "Let the ${transaction!.isDebit ? "Receiver" : "Sender"} Scan the",
                   style: Theme.of(context).textTheme.headlineSmall),
             ),
             Container(

@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         routes: routes,
         title: 'AaryaPay',
-        initialRoute: '/welcome',
+        initialRoute: '/splash',
         color: const Color(0xfff4f6fa),
         theme: AppTheme.lightTheme,
       ),
