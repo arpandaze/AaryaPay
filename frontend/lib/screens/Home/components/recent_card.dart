@@ -41,7 +41,7 @@ class RecentCard extends StatelessWidget {
               ),
               dataState.isLoaded
                   ? BlocProvider(
-                      create: (context) => RecentCardBloc(),
+                      create: (context) => RecentCardBloc()..add(TransactionLoad(transactions: dataState.transactions)),
                       child: BlocConsumer<RecentCardBloc, RecentCardState>(
                         listener: (context, state) {
                           if (state.senderName != null &&
