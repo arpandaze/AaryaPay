@@ -26,7 +26,7 @@ class LastSynchronized extends StatelessWidget {
           create: (context) => SynchronizationBloc(),
           child: BlocConsumer<SynchronizationBloc, SynchronizationState>(
             listener: (context, state) {
-              Timer(Duration(seconds: 2), () {
+              Timer(Duration(seconds: 1), () {
                 context
                     .read<SynchronizationBloc>()
                     .add(RotatingEvent(rotating: false));
