@@ -77,7 +77,7 @@ class FavouritesScreen extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
                       child: CustomTextField(
                         outlined: true,
                         placeHolder: "Enter example@example.com",
@@ -91,6 +91,7 @@ class FavouritesScreen extends StatelessWidget {
                         width: size.width * 0.70,
                         borderRadius: 10,
                         label: "Add",
+                        color: Theme.of(context).colorScheme.tertiary,
                         onClick: () => context
                             .read<FavouritesBloc>()
                             .add(AddButtonClicked()),

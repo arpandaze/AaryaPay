@@ -1,11 +1,12 @@
 import 'dart:convert';
-
 import 'package:aaryapay/global/caching/transaction.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Send/components/trans_details_outlined.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'dart:math' as math;
 
 class TVCDisplay extends StatelessWidget {
   bool sender;
@@ -40,19 +41,25 @@ class TVCDisplay extends StatelessWidget {
                 children: [
                   Container(
                     alignment: Alignment.center,
-                    child: Text("Transfer Completed",
-                        style: Theme.of(context).textTheme.headlineMedium!),
+                    child: Text(
+                      "Transfer Completed",
+                      style: Theme.of(context).textTheme.titleLarge!.merge(
+                            const TextStyle(
+                              height: 1.2,
+                            ),
+                          ),
+                    ),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(right: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     alignment: Alignment.centerRight,
                     child: IconButton(
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => {Utils.mainAppNav.currentState!.pop()},
                       icon: SvgPicture.asset('assets/icons/close.svg',
-                          width: 20,
-                          height: 20,
+                          width: 15,
+                          height: 15,
                           colorFilter: const ColorFilter.mode(
                               Colors.black, BlendMode.srcIn)),
                     ),
@@ -63,6 +70,7 @@ class TVCDisplay extends StatelessWidget {
           ],
         ),
         Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               margin: const EdgeInsets.only(top: 20),
@@ -74,17 +82,14 @@ class TVCDisplay extends StatelessWidget {
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 10),
-              child: Text("Let the ${!sender ? "Reciver" : "Sender"} Scan the",
-                  style: Theme.of(context).textTheme.headlineSmall),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 10, bottom: 20),
+              padding: const EdgeInsets.all(20),
               child: Text(
-                "QR Code to Sync the Completed Transaction",
-                style: Theme.of(context).textTheme.headlineSmall,
-                textAlign: TextAlign.center,
-              ),
+                  "Let the ${!sender ? "Reciver" : "Sender"} Scan the \n QR Code to Sync the Completed Transaction",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineSmall!
+                      .merge(const TextStyle(height: 1.8))),
             ),
             TransactionDetailsOutlineBox(
               initiator: transaction.senderId.toString().substring(0, 8),

@@ -21,6 +21,7 @@ class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    Color navColor = Color(0xff2e6b4a);
     return Container(
       color: const Color(0xfff4f6fa),
       child: Container(
@@ -70,24 +71,25 @@ class _NavBarState extends State<NavBar> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SvgPicture.asset(
-                              currentPage == "home"
-                                  ? "assets/icons/home-fill.svg"
-                                  : "assets/icons/home.svg",
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.primary,
-                                BlendMode.srcIn,
-                              ),
+                              "assets/icons/home-fill.svg",
                               width: 25,
                               height: 25,
+                              colorFilter: ColorFilter.mode(
+                                  currentPage == "home"
+                                      ? navColor
+                                      : Theme.of(context).colorScheme.outline,
+                                  BlendMode.srcIn),
                             ),
                             Container(
                               margin: const EdgeInsets.only(top: 5),
                               child: Text(
                                 "Home",
                                 style: TextStyle(
-                                    fontSize: 10,
-                                    color:
-                                        Theme.of(context).colorScheme.primary),
+                                  fontSize: 10,
+                                  color: currentPage == "home"
+                                      ? navColor
+                                      : Theme.of(context).colorScheme.outline,
+                                ),
                               ),
                             )
                           ],
@@ -113,24 +115,25 @@ class _NavBarState extends State<NavBar> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SvgPicture.asset(
-                              currentPage == "payments"
-                                  ? "assets/icons/wallet-fill.svg"
-                                  : "assets/icons/wallet.svg",
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.primary,
-                                BlendMode.srcIn,
-                              ),
+                              "assets/icons/wallet-fill.svg",
                               width: 25,
                               height: 25,
+                              colorFilter: ColorFilter.mode(
+                                  currentPage == "payments"
+                                      ? navColor
+                                      : Theme.of(context).colorScheme.outline,
+                                  BlendMode.srcIn),
                             ),
                             Container(
                               margin: const EdgeInsets.only(top: 5),
                               child: Text(
                                 "Payments",
                                 style: TextStyle(
-                                    fontSize: 10,
-                                    color:
-                                        Theme.of(context).colorScheme.primary),
+                                  fontSize: 10,
+                                  color: currentPage == "payments"
+                                      ? navColor
+                                      : Theme.of(context).colorScheme.outline,
+                                ),
                               ),
                             )
                           ],
@@ -159,24 +162,25 @@ class _NavBarState extends State<NavBar> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SvgPicture.asset(
-                              currentPage == "transactions"
-                                  ? "assets/icons/statements-fill.svg"
-                                  : "assets/icons/statements.svg",
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.primary,
-                                BlendMode.srcIn,
-                              ),
+                              "assets/icons/statements-fill.svg",
                               width: 25,
                               height: 25,
+                              colorFilter: ColorFilter.mode(
+                                  currentPage == "transactions"
+                                      ? navColor
+                                      : Theme.of(context).colorScheme.outline,
+                                  BlendMode.srcIn),
                             ),
                             Container(
                               margin: const EdgeInsets.only(top: 5),
                               child: Text(
                                 "Statements",
                                 style: TextStyle(
-                                    fontSize: 10,
-                                    color:
-                                        Theme.of(context).colorScheme.primary),
+                                  fontSize: 10,
+                                  color: currentPage == "transaction"
+                                      ? navColor
+                                      : Theme.of(context).colorScheme.outline,
+                                ),
                               ),
                             )
                           ],
@@ -202,26 +206,26 @@ class _NavBarState extends State<NavBar> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // SvgPicture.asset("assets/icons/home.svg"),
                             SvgPicture.asset(
-                              currentPage == "settings"
-                                  ? "assets/icons/gear-fill.svg"
-                                  : "assets/icons/settings.svg",
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.primary,
-                                BlendMode.srcIn,
-                              ),
+                              "assets/icons/gear-fill.svg",
                               width: 25,
                               height: 25,
+                              colorFilter: ColorFilter.mode(
+                                  currentPage == "settings"
+                                      ? navColor
+                                      : Theme.of(context).colorScheme.outline,
+                                  BlendMode.srcIn),
                             ),
                             Container(
                               margin: const EdgeInsets.only(top: 5),
                               child: Text(
                                 "Settings",
                                 style: TextStyle(
-                                    fontSize: 10,
-                                    color:
-                                        Theme.of(context).colorScheme.primary),
+                                  fontSize: 10,
+                                  color: currentPage == "settings"
+                                      ? navColor
+                                      : Theme.of(context).colorScheme.outline,
+                                ),
                               ),
                             )
                           ],
@@ -233,19 +237,19 @@ class _NavBarState extends State<NavBar> {
               ],
             ),
             Positioned(
-              bottom: 30,
+              bottom: 50,
               left: size.width / 2 - 30,
               child: GestureDetector(
                 onTap: () {
                   Utils.mainAppNav.currentState!.pushNamed("/app/qrscan");
                 },
                 child: Container(
-                  width: 60,
-                  height: 60,
+                  width: 65,
+                  height: 65,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     boxShadow: kElevationToShadow[4],
-                    color: Theme.of(context).colorScheme.primary,
+                    color: navColor,
                     borderRadius: const BorderRadius.vertical(
                       bottom: Radius.circular(50),
                       top: Radius.circular(50),
@@ -253,8 +257,8 @@ class _NavBarState extends State<NavBar> {
                   ),
                   child: SvgPicture.asset(
                     "assets/icons/qrcode.svg",
-                    width: 25,
-                    height: 25,
+                    width: 28,
+                    height: 28,
                     colorFilter: ColorFilter.mode(
                       Theme.of(context).colorScheme.background,
                       BlendMode.srcIn,

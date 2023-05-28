@@ -97,8 +97,8 @@ class TransactionDetailsScreen extends StatelessWidget {
                           horizontal: 20, vertical: 20),
                       child: Column(
                         children: [
-                          CustomAnimationWidget(
-                            repeat: true,
+                          const CustomAnimationWidget(
+                            repeat: false,
                             assetSrc: 'assets/animations/check.json',
                           ),
                           Padding(

@@ -32,12 +32,43 @@ class PaymentComplete extends StatelessWidget {
     void onClick() {
       Utils.mainAppNav.currentState!.push(
         PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => TVCDisplay(
+          pageBuilder: (context, animation, secondaryAnimation) => TVCDisplay(
             transaction: transaction,
             sender: sender,
           ),
-          transitionDuration: Duration.zero,
-          reverseTransitionDuration: Duration.zero,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            final curve = CurvedAnimation(
+              parent: animation,
+              curve: Curves.decelerate,
+            );
+
+            return Stack(
+              children: [
+                FadeTransition(
+                  opacity: Tween<double>(
+                    begin: 1.0,
+                    end: 0.0,
+                  ).animate(curve),
+                ),
+                SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0.0, 1.0),
+                    end: Offset.zero,
+                  ).animate(curve),
+                  child: FadeTransition(
+                    opacity: Tween<double>(
+                      begin: 0.0,
+                      end: 1.0,
+                    ).animate(curve),
+                    child: TVCDisplay(
+                      transaction: transaction,
+                      sender: sender,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       );
     }
@@ -55,13 +86,17 @@ class PaymentComplete extends StatelessWidget {
                 children: [
                   Container(
                     alignment: Alignment.center,
-                    child: Text("Transfer Completed",
-                        style: Theme.of(context).textTheme.titleLarge!),
+                    child: Text(
+                      "Transfer Completed",
+                      style: Theme.of(context).textTheme.titleLarge!.merge(
+                            const TextStyle(
+                              height: 1.2,
+                            ),
+                          ),
+                    ),
                   ),
                   Container(
                     padding: const EdgeInsets.only(right: 20),
-                    decoration:
-                        BoxDecoration(border: Border.all(color: Colors.white)),
                     alignment: Alignment.centerRight,
                     child: IconButton(
                       padding: EdgeInsets.zero,
@@ -85,7 +120,11 @@ class PaymentComplete extends StatelessWidget {
         Stack(
           alignment: Alignment.topCenter,
           children: [
-            Container(
+            Positioned(
+              top: 100,
+              child: Container(child: Utils.background),
+            ),
+            SizedBox(
               height: size.height * 0.9,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -93,19 +132,21 @@ class PaymentComplete extends StatelessWidget {
                   Container(
                       // padding: const EdgeInsets.symmetric(vertical: 2),
                       ),
-                  Stack(children: [
-                    Container(
-                        child: CustomAnimationWidget(
-                      assetSrc: 'assets/animations/check.json',
-                      repeat: true,
-                    )
+                  Stack(
+                    children: [
+                      Container(
+                          child: const CustomAnimationWidget(
+                        assetSrc: 'assets/animations/check.json',
+                        repeat: false,
+                      )
 
-                        // child: SvgPicture.asset('assets/icons/check.svg',
-                        //     width: 80,
-                        //     colorFilter: const ColorFilter.mode(
-                        //         Color(0xff274233), BlendMode.srcIn)),
-                        )
-                  ]),
+                          // child: SvgPicture.asset('assets/icons/check.svg',
+                          //     width: 80,
+                          //     colorFilter: const ColorFilter.mode(
+                          //         Color(0xff274233), BlendMode.srcIn)),
+                          )
+                    ],
+                  ),
                   Container(
                     margin: const EdgeInsets.only(top: 30),
                     child: Text("Transaction Synced Successfully!",
@@ -154,18 +195,12 @@ class PaymentComplete extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: 100,
-              child: Container(child: Utils.background),
-            ),
-            Container(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(),
-                  child: CustomActionButton(
-                    label: "Show Certificate",
-                    onClick: onClick,
-                  ),
+              bottom: 50,
+              child: Padding(
+                padding: const EdgeInsets.only(),
+                child: CustomActionButton(
+                  label: "Show Certificate",
+                  onClick: onClick,
                 ),
               ),
             ),

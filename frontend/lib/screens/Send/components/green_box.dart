@@ -80,19 +80,22 @@ class GreenBox extends StatelessWidget {
                                     .merge(TextStyle(
                                         color: Theme.of(context)
                                             .colorScheme
-                                            .background))),
+                                          .background,
+                                    ),
+                                  ),
+                            ),
                           ),
                         ],
                       ),
                     ),
                   ],
                 ),
-                SvgPicture.asset('assets/icons/star.svg',
-                    width: 25,
-                    height: 25,
-                    colorFilter: ColorFilter.mode(
-                        Theme.of(context).colorScheme.background,
-                        BlendMode.srcIn)),
+                // SvgPicture.asset('assets/icons/star.svg',
+                //     width: 25,
+                //     height: 25,
+                //     colorFilter: ColorFilter.mode(
+                //         Theme.of(context).colorScheme.background,
+                //         BlendMode.srcIn)),
               ],
             ),
           ),

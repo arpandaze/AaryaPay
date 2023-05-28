@@ -13,8 +13,6 @@ class SettingsTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    var colorScheme = Theme.of(context).colorScheme;
-    var textTheme = Theme.of(context).textTheme;
     return SizedBox(
       width: size.width,
       height: size.height * 0.1,
