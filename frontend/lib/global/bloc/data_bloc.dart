@@ -76,7 +76,8 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     Timer.periodic(Duration(seconds: 1), (Timer t) {
       add(CheckInternet());
     });
-    emit(await DataState.fromStorage(storage));
+    var temp = await DataState.fromStorage(storage);
+    emit(temp);
     add(RequestSyncEvent());
   }
 

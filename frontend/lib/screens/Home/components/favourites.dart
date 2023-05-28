@@ -127,7 +127,7 @@ class Favourites extends StatelessWidget {
                           ),
                         ),
                       ),
-                      if (dataState.isLoaded && dataState.favorites.isNotEmpty)
+                      if (dataState.isReady && dataState.favorites.isNotEmpty)
                         ...dataState.favorites
                             .map(
                               (item) => BlocProvider(

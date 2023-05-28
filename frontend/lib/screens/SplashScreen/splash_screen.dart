@@ -32,9 +32,10 @@ class SplashScreen extends StatelessWidget {
                     .pushNamedAndRemoveUntil("/welcome", (_) => false);
               }
             },
-            buildWhen: (previous, current) =>
-                current.isLoaded == true ? true : false,
+            buildWhen: (previous, current) => previous != current,
             builder: (context, dataState) {
+              print("IS ready");
+              print(dataState.isReady);
               return SafeArea(
                 top: false,
                 bottom: true,
@@ -66,7 +67,7 @@ class SplashScreen extends StatelessWidget {
                         ),
 
                         //add svg icon with gesture detector
-                        dataState.isLoaded == true
+                        ( dataState.isReady && dataState.profile != null)
                             ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,

@@ -104,7 +104,7 @@ class TransactionHistory extends StatelessWidget {
                           Container(
                             margin: const EdgeInsets.only(top: 10.0),
                             child: Column(children: [
-                              if (dataState.isLoaded &&
+                              if (dataState.isReady &&
                                   state.transactionHistory != null)
                                 ...state.transactionHistory!
                                     .map((item) => GestureDetector(
