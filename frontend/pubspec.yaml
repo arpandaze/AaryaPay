@@ -62,6 +62,7 @@ dependencies:
   jovial_svg: ^1.1.14
   flutter_cache_manager: ^3.3.0
   connectivity_plus: ^4.0.1
+  local_auth: ^2.1.6
   lottie: ^2.3.2
   flutter_octicons: ^0.32.0
 dev_dependencies:

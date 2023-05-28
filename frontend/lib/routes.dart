@@ -4,6 +4,7 @@ import 'package:aaryapay/screens/Login/reset_password.dart';
 import 'package:aaryapay/screens/Login/welcome_screen.dart';
 import 'package:aaryapay/screens/QrScan/qrscan_screen.dart';
 import 'package:aaryapay/screens/Register/register_screen.dart';
+import 'package:aaryapay/screens/SplashScreen/splash_screen.dart';
 import 'package:aaryapay/screens/main_app_wrapper.dart';
 
 final routes = {
@@ -14,4 +15,5 @@ final routes = {
   '/forgot_password': (context) => const ForgotPassword(),
   '/app': (context) => const MainAppWrapper(),
   '/app/qrscan': (context) => const QrScanScreen(),
+  '/splash': (context) => const SplashScreen(),
 };
