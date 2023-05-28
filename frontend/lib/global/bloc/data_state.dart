@@ -86,12 +86,9 @@ class DataState extends Equatable {
     TAMStatus? tamStatus,
     GoToScreen? goToScreen,
     Transaction? latestTransaction,
-<<<<<<< HEAD
     bool? biometricEnabled,
     bool? isReady,
-=======
     Transaction? recentTransaction,
->>>>>>> main
   }) {
     return DataState(
       profile: profile ?? this.profile,
@@ -106,12 +103,9 @@ class DataState extends Equatable {
       tamStatus: tamStatus ?? this.tamStatus,
       goToScreen: goToScreen ?? this.goToScreen,
       latestTransaction: latestTransaction ?? this.latestTransaction,
-<<<<<<< HEAD
       biometricEnabled: biometricEnabled ?? this.biometricEnabled,
       isReady: isReady ?? this.isReady,
-=======
       recentTransaction: recentTransaction ?? this.recentTransaction,
->>>>>>> main
     );
   }
 
@@ -216,10 +210,7 @@ class DataState extends Equatable {
         tamStatus,
         goToScreen,
         latestTransaction,
-<<<<<<< HEAD
         biometricEnabled,
-=======
         recentTransaction,
->>>>>>> main
       ];
 }

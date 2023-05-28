@@ -132,14 +132,6 @@ class PaymentComplete extends StatelessWidget {
                   Container(
                       // padding: const EdgeInsets.symmetric(vertical: 2),
                       ),
-<<<<<<< HEAD
-                  Stack(children: [
-                    Container(
-                        child: CustomAnimationWidget(
-                      assetSrc: 'assets/animations/check.json',
-                      repeat: false,
-                    )
-=======
                   Stack(
                     children: [
                       Container(
@@ -147,7 +139,6 @@ class PaymentComplete extends StatelessWidget {
                         assetSrc: 'assets/animations/check.json',
                         repeat: false,
                       )
->>>>>>> main
 
                           // child: SvgPicture.asset('assets/icons/check.svg',
                           //     width: 80,
