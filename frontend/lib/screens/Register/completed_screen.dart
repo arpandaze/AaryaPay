@@ -52,7 +52,8 @@ class CompletedScreen extends StatelessWidget {
               ],
             ),
           ),
-          Container(
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
             child: CustomActionButton(
               width: size.width * 0.78,
               borderRadius: 10,

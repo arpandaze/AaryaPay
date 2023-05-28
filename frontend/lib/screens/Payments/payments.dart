@@ -66,6 +66,7 @@ class Payments extends StatelessWidget {
               return Container(
                 clipBehavior: Clip.hardEdge,
                 width: size.width,
+                height: size.height,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(35),
