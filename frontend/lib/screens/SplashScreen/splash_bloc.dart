@@ -126,7 +126,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
 
     final List<BiometricType> availableBiometrics =
         await auth.getAvailableBiometrics();
-
+    print(availableBiometrics);
     if (canAuthenticate && availableBiometrics.isNotEmpty) {
       emit(
         state.copyWith(isBiometricAvailable: true),

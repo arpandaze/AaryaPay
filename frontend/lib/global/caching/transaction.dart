@@ -47,8 +47,9 @@ class Transactions {
     return transactions.where((element) => !element.isSubmitted).length;
   }
 
-  Future<List<Transaction>> getSubmittedTransactions() async {
-    return transactions.where((element) => element.isSubmitted).toList();
+  List<Transaction> getSubmittedTransactions() {
+    return transactions.where((element) => element.isSubmitted).toList()
+      ..sort((a, b) => b.generationTime.compareTo(a.generationTime));
   }
 
   Future<Transaction> getLatest() async {

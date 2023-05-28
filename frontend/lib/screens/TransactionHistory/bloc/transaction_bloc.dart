@@ -36,8 +36,7 @@ class TranscationBloc extends Bloc<TranscationEvent, TranscationState> {
       LoadTransaction event, Emitter<TranscationState> emit) async {
     List<Transaction> transactions;
     if (event.transactions != null) {
-      transactions = await event.transactions!;
-      transactions.sort ((a, b) => b.receiverTvc!.generationTime.compareTo(a.receiverTvc!.generationTime));
+      transactions =  event.transactions!;
       emit(state.copywith(transactionHistory: transactions));
     }
     return;

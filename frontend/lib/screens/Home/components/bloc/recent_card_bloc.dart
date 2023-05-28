@@ -19,9 +19,7 @@ class RecentCardBloc extends Bloc<RecentCardEvent, RecentCardState> {
       TransactionLoad event, Emitter<RecentCardState> emit) async {
     try {
       List<Transaction> submittedTransactions =
-          await event.transactions!.getSubmittedTransactions();
-      submittedTransactions.sort((a, b) =>
-          b.receiverTvc!.timeStamp.compareTo(a.receiverTvc!.timeStamp));
+          event.transactions!.getSubmittedTransactions();
       emit(state.copywith(
           transactionHistory: submittedTransactions, isLoaded: true));
     } catch (e) {
