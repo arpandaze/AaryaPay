@@ -39,7 +39,7 @@ class RecentCard extends StatelessWidget {
                   ],
                 ),
               ),
-              dataState.isLoaded
+              dataState.isReady
                   ? BlocProvider(
                       create: (context) => RecentCardBloc(),
                       child: BlocConsumer<RecentCardBloc, RecentCardState>(
@@ -102,7 +102,7 @@ class RecentCard extends StatelessWidget {
                             padding: const EdgeInsets.only(left: 10, bottom: 5),
                             width: double.infinity,
                             child: Column(
-                              children: dataState.isLoaded
+                              children: dataState.isReady
                                   ? [
                                       ...dataState.transactions.getSubmittedTransactions()
                                           .take(min(

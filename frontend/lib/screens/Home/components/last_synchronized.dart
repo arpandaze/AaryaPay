@@ -42,7 +42,7 @@ class LastSynchronized extends StatelessWidget {
             builder: (context, state) {
               String formattedString =
                   "${DateFormat.yMMMEd().format(DateTime.now())} ${DateFormat.jm().format(DateTime.now())}";
-              if (dataState.isLoaded) {
+              if (dataState.isReady) {
                 DateTime dateObj =
                     DateTime.fromMillisecondsSinceEpoch(
                   dataState.bkvc!.timeStamp.millisecondsSinceEpoch,

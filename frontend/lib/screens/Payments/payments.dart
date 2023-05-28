@@ -92,7 +92,7 @@ class Payments extends StatelessWidget {
                                   .toString()
                               : "0",
                         ),
-                        if (dataState.isLoaded && state.transactions != null)
+                        if (dataState.isReady && state.transactions != null)
                           ...state.transactions!
                               .map(
                                 (item) => GestureDetector(
@@ -184,7 +184,7 @@ class Payments extends StatelessWidget {
                                 ),
                               )
                               .toList(),
-                        if (!(dataState.isLoaded && state.transactions == null))
+                        if (!(dataState.isReady && state.transactions == null))
                           Text("No Pending transactions"),
                       ],
                     ),

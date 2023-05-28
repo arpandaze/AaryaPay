@@ -146,15 +146,6 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
         var bkvcObject =
             BalanceKeyVerificationCertificate.fromBase64(jsonDecode(bkvc));
 
-        var serverKey = keyPairFromBase64(serverKeyPair);
-
-        var newKey = await serverKey.extractPublicKey();
-
-        print(await bkvcObject.verify(newKey));
-        print(state.amount);
-        print(event.to);
-        print(DateTime.now());
-
         var transferTAM = TransactionAuthorizationMessage(
           TAM_MESSAGE_TYPE,
           state.amount,
@@ -167,7 +158,6 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
         await transferTAM.sign(keyPair);
 
         if (await transferTAM.verify()) {
-          print("Send Verified");
 
           emit(
               state.copyWith(tam: transferTAM, tamStatus: TAMStatus.generated));
