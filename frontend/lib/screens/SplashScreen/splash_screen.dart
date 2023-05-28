@@ -54,7 +54,7 @@ class SplashScreen extends StatelessWidget {
                           height: 20,
                         ),
                         Container(
-                        margin: const EdgeInsets.only(bottom: 20),
+                          margin: const EdgeInsets.only(bottom: 20),
                           child: Text(
                             'AaryaPay',
                             style: Theme.of(context)
@@ -73,9 +73,9 @@ class SplashScreen extends StatelessWidget {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      Utils.mainAppNav.currentState!
-                                          .pushNamedAndRemoveUntil(
-                                              "/app", (_) => false);
+                                      context
+                                          .read<SplashBloc>()
+                                          .add(InitiateBiometricAuth());
                                     },
                                     child: Container(
                                       margin: const EdgeInsets.only(bottom: 10),
@@ -86,7 +86,10 @@ class SplashScreen extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                   Text("Tap to Login", style: Theme.of(context).textTheme.titleMedium)
+                                  Text("Tap to Login",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium)
                                 ],
                               )
                             : const CustomAnimationWidget(
