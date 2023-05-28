@@ -119,21 +119,10 @@ class TransactionHistory extends StatelessWidget {
                                             .read<TranscationBloc>()
                                             .add(ClearLoadedUser()),
                                         child: RecentPaymentCard(
-                                          uuid: !item.isDebit
-                                              ? item.receiverId.toString()
-                                              : item.senderId.toString(),
-                                          isDebit: item.isDebit,
-                                          label: !item.isDebit
-                                              ? "${item.receiverFirstName!} ${item.receiverLastName!}"
-                                              : "${item.senderFirstName!} ${item.senderLastName!}",
+                                          transaction: item,
                                           finalAmt: dataState
                                               .bkvc!.availableBalance
                                               .toString(),
-                                          transactionAmt:
-                                              item.amount.toString(),
-                                          date: DateFormat.yMMMMd().format(item
-                                              .receiverTvc!.timeStamp
-                                              .toLocal()),
                                         ),
                                       ))
                                   .toList(),
