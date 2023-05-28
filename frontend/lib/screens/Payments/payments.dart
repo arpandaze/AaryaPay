@@ -1,7 +1,9 @@
 import 'package:aaryapay/global/bloc/data_bloc.dart';
+import 'package:aaryapay/helper/utils.dart';
 import 'package:aaryapay/screens/Payments/bloc/payments_bloc.dart';
 import 'package:aaryapay/screens/Payments/components/payments_mid_section_card.dart';
 import 'package:aaryapay/screens/Payments/components/payments_top_bar.dart';
+import 'package:aaryapay/screens/Send/offline_send.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -93,30 +95,91 @@ class Payments extends StatelessWidget {
                         if (dataState.isLoaded && state.transactions != null)
                           ...state.transactions!
                               .map(
-                                (item) => PaymentsMidSectionCard(
-                                  title: item.isDebit
-                                      ? "Debited Payment"
-                                      : "Credited Payment",
-                                  amount: item.amount.toString(),
-                                  sender:
-                                      item.senderId.toString().substring(0, 8),
-                                  reciever: item.isDebit
-                                      ? item.receiverId
-                                          .toString()
-                                          .substring(0, 8)
-                                      : "${dataState.profile?.firstName} ${dataState.profile?.lastName}",
-                                  senderName: !item.isDebit
-                                      ? item.senderId.toString().substring(0, 8)
-                                      : "${dataState.profile?.firstName} ${dataState.profile?.lastName}",
-                                  startDate: (item.generationTime
-                                              .millisecondsSinceEpoch ~/
-                                          1000)
-                                      .toString(),
-                                  endDate: (item.generationTime
-                                                  .millisecondsSinceEpoch ~/
-                                              1000 +
-                                          3 * 24 * 60 * 61)
-                                      .toString(),
+                                (item) => GestureDetector(
+                                  child: PaymentsMidSectionCard(
+                                    title: item.isDebit
+                                        ? "Debited Payment"
+                                        : "Credited Payment",
+                                    amount: item.amount.toString(),
+                                    sender: item.senderId
+                                        .toString()
+                                        .substring(0, 8),
+                                    reciever: item.isDebit
+                                        ? item.receiverId
+                                            .toString()
+                                            .substring(0, 8)
+                                        : "${dataState.profile?.firstName} ${dataState.profile?.lastName}",
+                                    senderName: !item.isDebit
+                                        ? item.senderId
+                                            .toString()
+                                            .substring(0, 8)
+                                        : "${dataState.profile?.firstName} ${dataState.profile?.lastName}",
+                                    startDate: (item.generationTime
+                                                .millisecondsSinceEpoch ~/
+                                            1000)
+                                        .toString(),
+                                    endDate: (item.generationTime
+                                                    .millisecondsSinceEpoch ~/
+                                                1000 +
+                                            3 * 24 * 60 * 61)
+                                        .toString(),
+                                  ),
+                                  onTap: () => {
+                                    Utils.mainAppNav.currentState!.push(
+                                      PageRouteBuilder(
+                                        pageBuilder: (context, animation,
+                                                secondaryAnimation) =>
+                                            OfflineSend(
+                                          name: item.senderId ==
+                                                  dataState.profile!.id
+                                              ? "${dataState.profile!.firstName} ${dataState.profile!.lastName}"
+                                              : item.senderId
+                                                  .toString()
+                                                  .substring(0, 8),
+                                          transaction: item,
+                                        ),
+                                        transitionsBuilder: (context, animation,
+                                            secondaryAnimation, child) {
+                                          final curve = CurvedAnimation(
+                                            parent: animation,
+                                            curve: Curves.decelerate,
+                                          );
+
+                                          return Stack(
+                                            children: [
+                                              FadeTransition(
+                                                opacity: Tween<double>(
+                                                  begin: 1.0,
+                                                  end: 0.0,
+                                                ).animate(curve),
+                                              ),
+                                              SlideTransition(
+                                                position: Tween<Offset>(
+                                                  begin: const Offset(0.0, 1.0),
+                                                  end: Offset.zero,
+                                                ).animate(curve),
+                                                child: FadeTransition(
+                                                  opacity: Tween<double>(
+                                                    begin: 0.0,
+                                                    end: 1.0,
+                                                  ).animate(curve),
+                                                  child: OfflineSend(
+                                                      name: item.senderId ==
+                                                              dataState
+                                                                  .profile!.id
+                                                          ? "${dataState.profile!.firstName} ${dataState.profile!.lastName}"
+                                                          : item.senderId
+                                                              .toString()
+                                                              .substring(0, 8),
+                                                      transaction: item),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  },
                                 ),
                               )
                               .toList(),

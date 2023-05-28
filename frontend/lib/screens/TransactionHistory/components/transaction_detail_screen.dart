@@ -1,6 +1,7 @@
 import 'package:aaryapay/components/CustomAnimationWidget.dart';
 import 'package:aaryapay/global/caching/transaction.dart';
 import 'package:aaryapay/helper/utils.dart';
+import 'package:aaryapay/screens/Send/tvc_display_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -139,155 +140,175 @@ class TransactionDetailsScreen extends StatelessWidget {
                               )
                             ],
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                    color:
-                                        Theme.of(context).colorScheme.outline),
+                          GestureDetector(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .outline),
+                                ),
+                              ),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 40.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Transaction No.",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .merge(
+                                              const TextStyle(
+                                                height: 3.0,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                      ),
+                                      Text(
+                                        "Initiated Date",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .merge(
+                                              const TextStyle(
+                                                height: 3.0,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                      ),
+                                      Text(
+                                        "Initiated Time",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .merge(
+                                              const TextStyle(
+                                                height: 3.0,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                      ),
+                                      Text(
+                                        "Verification Date",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .merge(
+                                              const TextStyle(
+                                                height: 3.0,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                      ),
+                                      Text(
+                                        "Verification Time",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .merge(
+                                              const TextStyle(
+                                                height: 3.0,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        transactionItem!.id!.substring(0, 8),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .merge(
+                                              const TextStyle(
+                                                height: 3.0,
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                      ),
+                                      Text(
+                                        generationDateFormattedString,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .merge(
+                                              const TextStyle(
+                                                height: 3.0,
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                      ),
+                                      Text(
+                                        generationTimeFormattedString,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .merge(
+                                              const TextStyle(
+                                                height: 3.0,
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                      ),
+                                      Text(
+                                        verificationDateFormattedString,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .merge(
+                                              const TextStyle(
+                                                height: 3.0,
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                      ),
+                                      Text(
+                                        verificationTimeFormattedString,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .merge(
+                                              const TextStyle(
+                                                height: 3.0,
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                            padding: const EdgeInsets.symmetric(vertical: 40.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Transaction No.",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .merge(
-                                            const TextStyle(
-                                              height: 3.0,
-                                              fontSize: 13,
-                                            ),
-                                          ),
-                                    ),
-                                    Text(
-                                      "Initiated Date",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .merge(
-                                            const TextStyle(
-                                              height: 3.0,
-                                              fontSize: 13,
-                                            ),
-                                          ),
-                                    ),
-                                    Text(
-                                      "Initiated Time",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .merge(
-                                            const TextStyle(
-                                              height: 3.0,
-                                              fontSize: 13,
-                                            ),
-                                          ),
-                                    ),
-                                    Text(
-                                      "Verification Date",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .merge(
-                                            const TextStyle(
-                                              height: 3.0,
-                                              fontSize: 13,
-                                            ),
-                                          ),
-                                    ),
-                                    Text(
-                                      "Verification Time",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .merge(
-                                            const TextStyle(
-                                              height: 3.0,
-                                              fontSize: 13,
-                                            ),
-                                          ),
-                                    ),
-                                  ],
+                            onTap: () => {
+                              Utils.mainAppNav.currentState!.push(
+                                PageRouteBuilder(
+                                  pageBuilder:
+                                      (context, animation1, animation2) =>
+                                          TVCDisplay(
+                                    transaction: transactionItem!,
+                                    sender: transactionItem!.isDebit,
+                                  ),
+                                  transitionDuration: Duration.zero,
+                                  reverseTransitionDuration: Duration.zero,
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      transactionItem!.id!.substring(0, 8),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .merge(
-                                            const TextStyle(
-                                              height: 3.0,
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                    ),
-                                    Text(
-                                      generationDateFormattedString,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .merge(
-                                            const TextStyle(
-                                              height: 3.0,
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                    ),
-                                    Text(
-                                      generationTimeFormattedString,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .merge(
-                                            const TextStyle(
-                                              height: 3.0,
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                    ),
-                                    Text(
-                                      verificationDateFormattedString,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .merge(
-                                            const TextStyle(
-                                              height: 3.0,
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                    ),
-                                    Text(
-                                      verificationTimeFormattedString,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .merge(
-                                            const TextStyle(
-                                              height: 3.0,
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                              ),
+                            },
                           ),
                           Container(
                             padding: const EdgeInsets.only(top: 30),
