@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:aaryapay/helper/utils.dart';
+import 'package:local_auth_android/local_auth_android.dart';
+import 'package:local_auth_ios/local_auth_ios.dart';
 import 'package:cryptography/cryptography.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -77,9 +79,20 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
       final LocalAuthentication auth = LocalAuthentication();
       final bool didAuthenticate = await auth.authenticate(
         localizedReason: 'Touch your finger on the sensor to login',
+        authMessages: const <AuthMessages>[
+          AndroidAuthMessages(
+            signInTitle: 'Biometric authentication required!',
+            cancelButton: 'No thanks',
+          ),
+          IOSAuthMessages(
+            cancelButton: 'No thanks',
+          ),
+        ],
         options: const AuthenticationOptions(
+          biometricOnly: false,
           stickyAuth: true,
           sensitiveTransaction: true,
+          useErrorDialogs: true,
         ),
       );
       if (didAuthenticate) {
@@ -87,6 +100,9 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
       } else {
         print("biometric auth failed");
       }
+    } else {
+      print("No biometric available!");
+      add(BiometricAuthSuccess());
     }
   }
 
