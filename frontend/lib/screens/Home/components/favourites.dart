@@ -120,7 +120,7 @@ class Favourites extends StatelessWidget {
                                 child: Text(
                                   "Add Favorite",
                                   textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.bodyText2,
+                                  style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                               )
                             ],
@@ -236,7 +236,7 @@ class Favourites extends StatelessWidget {
                                                 textAlign: TextAlign.center,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .bodyText2,
+                                                    .bodyMedium,
                                               ),
                                             )
                                           ],

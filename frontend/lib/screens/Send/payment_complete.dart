@@ -73,135 +73,124 @@ class PaymentComplete extends StatelessWidget {
       );
     }
 
-    return Column(
-      children: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 80,
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Transfer Completed",
-                      style: Theme.of(context).textTheme.titleLarge!.merge(
-                            const TextStyle(
-                              height: 1.2,
-                            ),
-                          ),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(right: 20),
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                      onPressed: () => {
-                        Utils.mainAppNav.currentState!
-                            .popUntil(ModalRoute.withName("/app"))
-                      },
-                      icon: SvgPicture.asset('assets/icons/close.svg',
-                          width: 15,
-                          height: 15,
-                          colorFilter: const ColorFilter.mode(
-                              Colors.black, BlendMode.srcIn)),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-        Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            Positioned(
-              top: 100,
-              child: Container(child: Utils.background),
-            ),
-            SizedBox(
-              height: size.height * 0.9,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                      // padding: const EdgeInsets.symmetric(vertical: 2),
+    return Stack(
+      alignment: Alignment.topCenter,
+      children: [
+        SizedBox(
+          height: 80,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                alignment: Alignment.center,
+                child: Text(
+                  "Transfer Completed",
+                  style: Theme.of(context).textTheme.titleLarge!.merge(
+                        const TextStyle(
+                          height: 1.2,
+                        ),
                       ),
-                  Stack(
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(right: 20),
+                alignment: Alignment.centerRight,
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  onPressed: () => {
+                    Utils.mainAppNav.currentState!
+                        .popUntil(ModalRoute.withName("/app"))
+                  },
+                  icon: SvgPicture.asset('assets/icons/close.svg',
+                      width: 15,
+                      height: 15,
+                      colorFilter: const ColorFilter.mode(
+                          Colors.black, BlendMode.srcIn)),
+                ),
+              )
+            ],
+          ),
+        ),
+        Positioned(
+          top: 50,
+          child: Container(child: Utils.background),
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  Column(
                     children: [
                       Container(
-                          child: const CustomAnimationWidget(
-                        assetSrc: 'assets/animations/check.json',
-                        repeat: false,
-                      )
-
-                          // child: SvgPicture.asset('assets/icons/check.svg',
-                          //     width: 80,
-                          //     colorFilter: const ColorFilter.mode(
-                          //         Color(0xff274233), BlendMode.srcIn)),
-                          )
+                        child: const CustomAnimationWidget(
+                          assetSrc: 'assets/animations/check.json',
+                          repeat: false,
+                        ),
+                      ),
+                      Text("Transaction Synced Successfully!",
+                          style: Theme.of(context).textTheme.titleMedium),
+                      Container(
+                        margin: const EdgeInsets.only(top: 10, bottom: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset('assets/icons/rupee.svg',
+                                width: 24,
+                                colorFilter: const ColorFilter.mode(
+                                    Color(0xff274233), BlendMode.srcIn)),
+                            Container(
+                              margin: const EdgeInsets.only(left: 10),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 5, vertical: 10),
+                              child: Text(
+                                transaction.amount.toString(),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge!
+                                    .merge(
+                                      TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                   Container(
-                    margin: const EdgeInsets.only(top: 30),
-                    child: Text("Transaction Synced Successfully!",
-                        style: Theme.of(context).textTheme.titleMedium),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 10, bottom: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    height: size.height * 0.35,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SvgPicture.asset('assets/icons/rupee.svg',
-                            width: 24,
-                            colorFilter: const ColorFilter.mode(
-                                Color(0xff274233), BlendMode.srcIn)),
-                        Container(
-                          margin: const EdgeInsets.only(left: 10),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 5, vertical: 10),
-                          child: Text(
-                            transaction.amount.toString(),
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge!
-                                .merge(
-                                  TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                  ),
-                                ),
-                          ),
+                        GreenBox(
+                          receiveruuid: transaction.receiverId.toString(),
+                          recipient:
+                              "${transaction.receiverFirstName} ${transaction.receiverLastName}",
+                          amount: transaction.amount.toString(),
+                          date: DateFormat.yMMMMd()
+                              .format(transaction.generationTime),
+                          sender:
+                              "${transaction.senderFirstName} ${transaction.senderLastName}",
+                          status: "Verified",
+                        ),
+                        CustomActionButton(
+                          width: size.width * 0.7,
+                          borderRadius: 10,
+                          label: "Show Certificate",
+                          onClick: onClick,
                         ),
                       ],
                     ),
                   ),
-                  GreenBox(
-                      recipient:
-                          "${transaction.receiverFirstName} ${transaction.receiverLastName}",
-                      amount: transaction.amount.toString(),
-                      date: DateFormat.yMMMMd()
-                          .format(transaction.generationTime),
-                      sender:
-                          "${transaction.senderFirstName} ${transaction.senderLastName}",
-                      status: "Verified"),
                 ],
-              ),
-            ),
-            Positioned(
-              bottom: 50,
-              child: Padding(
-                padding: const EdgeInsets.only(),
-                child: CustomActionButton(
-                  label: "Show Certificate",
-                  onClick: onClick,
-                ),
               ),
             ),
           ],

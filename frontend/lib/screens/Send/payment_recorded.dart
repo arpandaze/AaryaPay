@@ -135,6 +135,7 @@ class PaymentRecorded extends StatelessWidget {
                     ),
                   ),
                   GreenBox(
+                      receiveruuid: tvc.receiverId.toString(),
                       recipient: tvc.receiverId.toString().substring(0, 8),
                       amount: tvc.amount.toString(),
                       date: DateFormat.yMMMMd().format(tvc.generationTime),
