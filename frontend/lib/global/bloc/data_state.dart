@@ -11,6 +11,9 @@ enum GoToScreen {
 class DataState extends Equatable {
   final SimplePublicKey? serverPublicKey;
 
+  final bool biometricEnabled;
+  final bool isReady;
+
   final Profile? profile;
   final Transactions transactions;
   final List<Favorite> favorites;
@@ -60,6 +63,8 @@ class DataState extends Equatable {
     this.primary,
     this.serverPublicKey,
     this.sessionToken,
+    this.biometricEnabled = false,
+    this.isReady = false,
     this.isLoaded = false,
     this.isOnline = false,
     this.tamStatus = TAMStatus.other,
@@ -81,6 +86,8 @@ class DataState extends Equatable {
     TAMStatus? tamStatus,
     GoToScreen? goToScreen,
     Transaction? latestTransaction,
+    bool? biometricEnabled,
+    bool? isReady,
     Transaction? recentTransaction,
   }) {
     return DataState(
@@ -96,6 +103,8 @@ class DataState extends Equatable {
       tamStatus: tamStatus ?? this.tamStatus,
       goToScreen: goToScreen ?? this.goToScreen,
       latestTransaction: latestTransaction ?? this.latestTransaction,
+      biometricEnabled: biometricEnabled ?? this.biometricEnabled,
+      isReady: isReady ?? this.isReady,
       recentTransaction: recentTransaction ?? this.recentTransaction,
     );
   }
@@ -109,14 +118,20 @@ class DataState extends Equatable {
     storage.write(key: 'primary', value: jsonEncode(primary));
     storage.write(key: 'serverPublicKey', value: jsonEncode(serverPublicKey));
     storage.write(key: 'sessionToken', value: jsonEncode(sessionToken));
+    storage.write(key: 'biometricEnabled', value: jsonEncode(biometricEnabled));
     return true;
   }
 
   static Future<DataState> fromStorage(FlutterSecureStorage storage) async {
     var storageProfile = await storage.read(key: 'profile');
     print(storageProfile);
-    var decodedProfile = jsonDecode(storageProfile!);
-    decodedProfile['dob'] = int.parse(decodedProfile['dob']);
+
+    var decodedProfile =
+        storageProfile == null ? null : jsonDecode(storageProfile);
+
+    if (decodedProfile != null) {
+      decodedProfile['dob'] = int.parse(decodedProfile['dob']);
+    }
 
     Profile? storageProfileObj =
         decodedProfile == null ? null : Profile.fromJson(decodedProfile);
@@ -137,7 +152,9 @@ class DataState extends Equatable {
         storagePrimary == null ? false : jsonDecode(storagePrimary) as bool;
 
     var favorites = await storage.read(key: 'favorites');
-    var decodedFavorites = jsonDecode(favorites!);
+
+    var decodedFavorites = favorites == null ? [] : jsonDecode(favorites);
+    // var decodedFavorites = jsonDecode(favorites!);
     decodedFavorites.forEach((element) {
       element['date_added'] = int.parse(element['date_added']);
     });
@@ -157,6 +174,11 @@ class DataState extends Equatable {
         ? null
         : jsonDecode(storageSessionToken) as String;
 
+    var storageBiometricEnabled = await storage.read(key: 'biometricEnabled');
+    bool storageBiometricEnabledObj = storageBiometricEnabled == null
+        ? false
+        : jsonDecode(storageBiometricEnabled) as bool;
+
     DataState newState = DataState(
       profile: storageProfileObj,
       transactions: storageTransactionsObj,
@@ -165,7 +187,9 @@ class DataState extends Equatable {
       primary: storagePrimaryObj,
       serverPublicKey: storageServerPublicKeyObj,
       sessionToken: storageSessionTokenObj,
-      isLoaded: true,
+      isReady: true,
+      biometricEnabled: storageBiometricEnabledObj,
+      isOnline: true,
     );
 
     print("From Storage Load: $newState");
@@ -186,6 +210,7 @@ class DataState extends Equatable {
         tamStatus,
         goToScreen,
         latestTransaction,
+        biometricEnabled,
         recentTransaction,
       ];
 }

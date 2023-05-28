@@ -84,3 +84,5 @@ class PreviousPage extends RegisterEvent {}
 class FormSubmitted extends RegisterEvent {}
 
 class VerifyClicked extends RegisterEvent {}
+
+class ResendVerificationClicked extends RegisterEvent {}

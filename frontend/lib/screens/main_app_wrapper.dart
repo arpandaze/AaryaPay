@@ -16,6 +16,7 @@ class MainAppWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
+      top: false,
       left: true,
       right: true,
       bottom: true,

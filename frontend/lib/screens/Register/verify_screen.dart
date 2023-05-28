@@ -162,20 +162,34 @@ class VerifyScreen extends StatelessWidget {
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             GestureDetector(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "Resend Code",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .merge(TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary)),
+                                behavior: HitTestBehavior.translucent,
+                                child: Container(
+                                  width: 80,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.transparent)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 5),
+                                    child: Text(
+                                      "Resend",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .merge(TextStyle(
+                                              height: 2.0,
+                                              fontWeight: FontWeight.w900,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary)),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            )
+                                onTap: () {
+                                  context
+                                      .read<RegisterBloc>()
+                                      .add(ResendVerificationClicked());
+                                })
                           ]),
                     ),
                   ],

@@ -134,13 +134,13 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
     if (event.available > state.amount &&
         state.amount > 0 &&
         state.tamStatus == TAMStatus.other) {
-      emit(state.copyWith(tamStatus: TAMStatus.clicked));
-
       var bkvc = await storage.read(key: "bkvc");
       var privateKey = await storage.read(key: "private_key");
       var token = await storage.read(key: "token");
 
       if (bkvc != null && privateKey != null && token != null) {
+        emit(state.copyWith(tamStatus: TAMStatus.clicked));
+
         emit(state.copyWith(tamStatus: TAMStatus.initiated));
 
         var bkvcObject =

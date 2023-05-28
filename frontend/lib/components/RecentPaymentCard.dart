@@ -1,23 +1,19 @@
 import 'package:aaryapay/components/CustomFavoritesAvatar.dart';
+import 'package:aaryapay/global/caching/transaction.dart';
 import 'package:aaryapay/helper/utils.dart';
+import 'package:aaryapay/screens/Send/tvc_display_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class RecentPaymentCard extends StatelessWidget {
   const RecentPaymentCard({
     Key? key,
-    required this.label,
-    required this.date,
-    this.isDebit = false,
-    required this.transactionAmt,
+    required this.transaction,
     required this.finalAmt,
-    required this.uuid,
   }) : super(key: key);
-  final String label;
-  final String date;
-  final bool isDebit;
-  final String transactionAmt;
+
+  final Transaction transaction;
   final String finalAmt;
-  final String uuid;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -33,7 +29,9 @@ class RecentPaymentCard extends StatelessWidget {
         children: [
           Container(
             child: imageLoader(
-              imageUrl: uuid,
+              imageUrl: !transaction.isDebit
+                  ? transaction.receiverId.toString()
+                  : transaction.senderId.toString(),
               width: 55,
               errorImage: const CustomFavoritesAvatar(
                   width: 55, imagesUrl: "assets/images/default-pfp.png"),
@@ -45,13 +43,17 @@ class RecentPaymentCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label,
+                Text(
+                    !transaction.isDebit
+                        ? "${transaction.receiverFirstName!} ${transaction.receiverLastName!}"
+                        : "${transaction.senderFirstName!} ${transaction.senderLastName!}",
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.titleMedium),
                 Container(
                   margin: const EdgeInsets.only(top: 15),
                   child: Text(
-                    date,
+                    DateFormat.yMMMMd()
+                        .format(transaction.receiverTvc!.timeStamp.toLocal()),
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.titleSmall!.merge(
                           TextStyle(
@@ -69,12 +71,14 @@ class RecentPaymentCard extends StatelessWidget {
               SizedBox(
                 width: size.width * 0.25,
                 child: Text(
-                  !isDebit ? "-$transactionAmt" : "+$transactionAmt",
+                  !transaction.isDebit
+                      ? "-${transaction.amount.toString()}"
+                      : "+${transaction.amount.toString()}",
                   textAlign: TextAlign.right,
                   style: Theme.of(context).textTheme.labelMedium!.merge(
                       TextStyle(
                           fontSize: 18,
-                          color: !isDebit
+                          color: !transaction.isDebit
                               ? Theme.of(context).colorScheme.onSurface
                               : Theme.of(context).colorScheme.surfaceVariant)),
                 ),
