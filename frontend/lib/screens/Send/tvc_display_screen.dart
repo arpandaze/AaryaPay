@@ -67,7 +67,7 @@ class TVCDisplay extends StatelessWidget {
             Container(
               margin: const EdgeInsets.only(top: 20),
               child: QrImageView(
-                data: !sender
+                data: !transaction.isDebit
                     ? base64Encode(transaction.receiverTvc!.toBytes())
                     : base64Encode(transaction.senderTvc!.toBytes()),
                 size: 240,
@@ -75,7 +75,8 @@ class TVCDisplay extends StatelessWidget {
             ),
             Container(
               margin: const EdgeInsets.only(top: 10),
-              child: Text("Let the ${!sender ? "Reciver" : "Sender"} Scan the",
+              child: Text(
+                  "Let the ${!transaction.isDebit ? "Receiver" : "Sender"} Scan the",
                   style: Theme.of(context).textTheme.headlineSmall),
             ),
             Container(
