@@ -347,7 +347,7 @@ class SendMoney extends StatelessWidget {
                               context.read<SendMoneyBloc>().add(
                                     SubmitTransfer(
                                       UuidValue.fromList(Uuid.parse(uuid!)),
-                                      "${context.read<AuthenticationBloc>().state.user!["first_name"]} ${context.read<AuthenticationBloc>().state.user!["last_name"]}",
+                                      "${dataState.profile!.firstName} ${dataState.profile!.lastName}",
                                       "$firstname $lastname",
                                       availableAmount,
                                     ),
