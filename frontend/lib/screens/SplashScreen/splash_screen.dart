@@ -74,9 +74,9 @@ class SplashScreen extends StatelessWidget {
                               children: [
                                 GestureDetector(
                                   onTap: () {
-                                    Utils.mainAppNav.currentState!
-                                        .pushNamedAndRemoveUntil(
-                                            "/app", (_) => false);
+                                    context
+                                        .read<SplashBloc>()
+                                        .add(InitiateBiometricAuth());
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.only(bottom: 10),
