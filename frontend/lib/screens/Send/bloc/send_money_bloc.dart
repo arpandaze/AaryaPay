@@ -23,6 +23,7 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
     on<SendMoneyAddEvent>(_onSendMoneyAdd);
     on<SendMoneySubtractEvent>(_onSendMoneySubtract);
     on<SendMoneyMultiplyEvent>(_onSendMoneyMultiply);
+    on<SendMoneyDivideEvent>(_onSendMoneyDivide);
     on<SendMoneyEqualsEvent>(_onSendMoneyEquals);
     on<SendMoneyClearEvent>(_onSendMoneyClear);
     on<SendMoneyEraseEvent>(_onSendMoneyErase);
@@ -96,12 +97,24 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
         amount: 0.0, displayAmount: newOutput, status: DisplayState.idle));
   }
 
+  void _onSendMoneyDivide(
+      SendMoneyDivideEvent event, Emitter<SendMoneyState> emit) async {
+    if (_operator != "") {
+      _onSendMoneyEquals(SendMoneyEqualsEvent(), emit);
+    }
+    _operand = state.amount;
+    _operator = _getOperator(event);
+    final newOutput = "${state.amount.toInt()}$_operator";
+    emit(state.copyWith(
+        amount: 0.0, displayAmount: newOutput, status: DisplayState.idle));
+  }
+
   void _onSendMoneyEquals(
       SendMoneyEqualsEvent event, Emitter<SendMoneyState> emit) async {
     final newAmount = _calculator.calculate(state.amount, _operand, _operator);
     _operand = 0.0;
     _operator = "";
-    final newInput = "$newAmount";
+    final newInput = "${newAmount.toStringAsFixed(2)}";
     emit(state.copyWith(
         amount: newAmount,
         displayAmount: newInput,

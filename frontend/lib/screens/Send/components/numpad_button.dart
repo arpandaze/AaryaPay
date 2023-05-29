@@ -32,7 +32,7 @@ class NumPadButton extends StatelessWidget {
           case 'X':
             bloc.add(SendMoneyMultiplyEvent());
             break;
-          case '/':
+          case '÷':
             bloc.add(SendMoneyDivideEvent());
             break;
           case 'erase':
