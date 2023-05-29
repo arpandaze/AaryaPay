@@ -62,6 +62,9 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
 
   void _onSendMoneyAdd(
       SendMoneyAddEvent event, Emitter<SendMoneyState> emit) async {
+    if (_operator != "") {
+      _onSendMoneyEquals(SendMoneyEqualsEvent(), emit);
+    }
     _operand = state.amount;
     _operator = _getOperator(event);
     final newOutput = "${_operand.toInt()}$_operator";
@@ -71,6 +74,9 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
 
   void _onSendMoneySubtract(
       SendMoneySubtractEvent event, Emitter<SendMoneyState> emit) async {
+    if (_operator != "") {
+      _onSendMoneyEquals(SendMoneyEqualsEvent(), emit);
+    }
     _operand = state.amount;
     _operator = _getOperator(event);
     final newOutput = "${state.amount.toInt()}$_operator";
@@ -80,6 +86,9 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
 
   void _onSendMoneyMultiply(
       SendMoneyMultiplyEvent event, Emitter<SendMoneyState> emit) async {
+    if (_operator != "") {
+      _onSendMoneyEquals(SendMoneyEqualsEvent(), emit);
+    }
     _operand = state.amount;
     _operator = _getOperator(event);
     final newOutput = "${state.amount.toInt()}$_operator";
@@ -101,6 +110,7 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
 
   void _onSendMoneyClear(
       SendMoneyClearEvent event, Emitter<SendMoneyState> emit) async {
+    _operator = "";
     emit(state.copyWith(
         amount: 0.0, displayAmount: "0.0", status: DisplayState.idle));
   }
@@ -158,7 +168,6 @@ class SendMoneyBloc extends Bloc<SendMoneyEvent, SendMoneyState> {
         await transferTAM.sign(keyPair);
 
         if (await transferTAM.verify()) {
-
           emit(
               state.copyWith(tam: transferTAM, tamStatus: TAMStatus.generated));
         }
@@ -201,6 +210,9 @@ class Calculator {
       case '-':
         return operand - currentValue;
       case '*':
+        if (currentValue == 0.0) {
+          return operand;
+        }
         return operand * currentValue;
       case '/':
         return operand / currentValue;
