@@ -115,7 +115,7 @@ func PopulateTransactions() {
 			// Print populated transaction data
 			log.Printf("Transaction from %s to %s for %f generated!", sender.first_name, receiver.first_name, SAMPLE_TRANSACTIONS[transactionIdx].amount)
 
-			_, err := core.DB.Exec(context.Background(),"INSERT INTO Transactions (sender_id, receiver_id, amount, generation_time, verification_time, sender_tvc, receiver_tvc, signature) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
+			_, err := core.DB.Exec(context.Background(), "INSERT INTO Transactions (sender_id, receiver_id, amount, generation_time, verification_time, sender_tvc, receiver_tvc, signature) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
 				sender.id,
 				receiver.id,
 				SAMPLE_TRANSACTIONS[transactionIdx].amount,
